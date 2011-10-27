@@ -1,0 +1,216 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="93F712B9-9FCA-351D-7D13-5E6672B41C53" directorySegmentName="seg_0" name="dod_admin_actions">
+   <createdBy>rgaspar</createdBy>
+   <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+   <changedBy>rgaspar</changedBy>
+   <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+   <generatorID>205FB74C-F048-E8B0-BAFE-133800635084</generatorID>
+   <ownerDesignName>dod</ownerDesignName>
+   <pkName>PK_dod_admin_actions</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="creation_time" id="C96A7B1B-F59E-C97E-4B47-7DBF199AED7C">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>0DB5E2FE-31AC-F28C-3BB5-031C4C451F9C</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT008</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="completition_time" id="1C3FF2AB-BA99-7422-9564-A47C9B5DEC9D">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>8F64A37E-7B8B-8DF0-F176-696A8E8EA3D1</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT008</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="result" id="757D693D-930D-D38E-C968-7FF63BAD6F42">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>D6128DF1-5008-5F31-7CC5-BB41F8C109BA</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="state" id="5C33E27A-A2D9-0F1A-DA04-55CC9342375A">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>C302608C-C24F-CB66-59DC-B83318F8C58D</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="logfile_locator" id="8FCCD9CC-E4E4-359E-B1A8-F2E9C3238411">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>F0E6ED7E-51FD-A08E-10AF-31386AEA6778</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>1024</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="username" id="029738BD-A917-21D4-2244-FBC95859E1F2">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>748907F7-4446-6737-0480-50C654D5349A</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <delegate>0017694C-FE7B-29C4-432D-8AF7657DACF5</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="9D8DFA01-7408-8782-9F5E-BDF945A0F579" referredColumn="0017694C-FE7B-29C4-432D-8AF7657DACF5"/>
+         </associations>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_name" id="B1E5F369-8E76-014A-AC68-E7F16A087549">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>3C4DF32C-D8AD-DF0A-40B5-91FE770AB948</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+         <delegate>9E139527-A414-A552-44F8-680FE9143102</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="9D8DFA01-7408-8782-9F5E-BDF945A0F579" referredColumn="9E139527-A414-A552-44F8-680FE9143102"/>
+         </associations>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="command_name" id="40C5EB6A-BF57-6650-5012-7B22C1D87A62">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>BE99AC2A-F20C-19F4-C564-82D75031037A</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>64</dataTypeSize>
+         <delegate>EDADED52-49BB-4C61-578D-C92B6B3D0B53</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="39D1B345-051E-D440-B93F-84E7A6D2A7E7" referredColumn="EDADED52-49BB-4C61-578D-C92B6B3D0B53"/>
+         </associations>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="type" id="D7F69B5C-2A7D-EB4E-A1A4-EC72A8DEBA0A">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>8CD12A5D-3229-E12B-861D-7FE3DD449DB0</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>64</dataTypeSize>
+         <delegate>E7D52DD5-258A-8444-E485-059FA8287755</delegate>
+         <previousColumn>false</previousColumn>
+         <associations>
+            <colAssociation fkAssociation="39D1B345-051E-D440-B93F-84E7A6D2A7E7" referredColumn="E7D52DD5-258A-8444-E485-059FA8287755"/>
+         </associations>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="34FCD80C-1913-75DA-B17F-D2D2B7369EAE" name="PK_dod_admin_actions">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>9D6BB86B-37C4-2585-38D3-BD9F2F96B997</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="029738BD-A917-21D4-2244-FBC95859E1F2"/>
+            <colUsage columnID="B1E5F369-8E76-014A-AC68-E7F16A087549"/>
+            <colUsage columnID="40C5EB6A-BF57-6650-5012-7B22C1D87A62"/>
+            <colUsage columnID="D7F69B5C-2A7D-EB4E-A1A4-EC72A8DEBA0A"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D9352DC7-B8C3-1654-CFD0-2594CC26C252" name="Relation_17">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>7F92248D-89EC-25F1-FF9B-72EBFE17E2E5</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <indexColumnUsage>
+            <colUsage columnID="029738BD-A917-21D4-2244-FBC95859E1F2"/>
+            <colUsage columnID="B1E5F369-8E76-014A-AC68-E7F16A087549"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="88F69352-3A65-65D1-E728-AF77F5E5264F" name="Relation_25">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>68FE55F6-D2E0-1C59-F7D5-EB69BBA3124A</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <indexColumnUsage>
+            <colUsage columnID="40C5EB6A-BF57-6650-5012-7B22C1D87A62"/>
+            <colUsage columnID="D7F69B5C-2A7D-EB4E-A1A4-EC72A8DEBA0A"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

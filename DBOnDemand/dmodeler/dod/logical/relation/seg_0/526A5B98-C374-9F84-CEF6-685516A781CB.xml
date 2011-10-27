@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="dod_params_jobs" id="526A5B98-C374-9F84-CEF6-685516A781CB" directorySegmentName="seg_0">
+   <createdBy>rgaspar</createdBy>
+   <createdTime>2011-08-29 14:31:44 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2011-09-20 07:16:34 UTC</changedTime>
+   <ownerDesignName>dod</ownerDesignName>
+   <identifying>true</identifying>
+   <optionalSource>false</optionalSource>
+   <optionalTarget>false</optionalTarget>
+   <sourceCardinality>1</sourceCardinality>
+   <sourceEntity>6BD31477-31FB-EC7D-0DFE-BFC3D581868E</sourceEntity>
+   <targetCardinalityString>*</targetCardinalityString>
+   <targetEntity>C228877D-3551-9634-33DA-99DCD4958D4E</targetEntity>
+   <transferable>true</transferable>
+</Relation>

@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" id="F55C1580-7FAA-8541-6E20-D5485CAD8AF3" directorySegmentName="seg_0" name="dod_params_jobs">
+   <createdBy>root</createdBy>
+   <createdTime>2011-10-13 08:38:14 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2011-10-13 08:38:14 UTC</changedTime>
+   <generatorID>526A5B98-C374-9F84-CEF6-685516A781CB</generatorID>
+   <ownerDesignName>dod</ownerDesignName>
+   <containerWithKeyObject>A4ED575D-DA74-C9E7-A2C4-99DB205D4318</containerWithKeyObject>
+   <deleteRule>CASCADE</deleteRule>
+   <localFKIndex>8DBEB5C3-5F70-CA17-6346-2E98EA580752</localFKIndex>
+   <keyObject>06171643-4D86-0FFA-474A-3E5ED77116FB</keyObject>
+   <mandatory>true</mandatory>
+   <transferable>true</transferable>
+</FKIndexAssociation>

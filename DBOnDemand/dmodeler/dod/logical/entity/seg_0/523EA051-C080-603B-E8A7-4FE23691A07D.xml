@@ -1,0 +1,215 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="523EA051-C080-603B-E8A7-4FE23691A07D" directorySegmentName="seg_0" name="dod_instances">
+   <createdBy>rgaspar</createdBy>
+   <createdTime>2011-08-24 18:48:38 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2011-10-13 08:35:59 UTC</changedTime>
+   <ownerDesignName>dod</ownerDesignName>
+   <pkName>dod_instances PK</pkName>
+   <adequatelyNormalized>NO</adequatelyNormalized>
+   <expectedVolumes>0</expectedVolumes>
+   <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+   <growthPercent>0</growthPercent>
+   <growthType>Year</growthType>
+   <maxVolumes>9999999</maxVolumes>
+   <minVolumes>0</minVolumes>
+   <normalForm>Third</normalForm>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribute</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <attributes>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="username" id="056E5230-E6F9-8FDD-FAEB-D8FDFA7E2C68">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:51:42 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 18:53:54 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="db_name" id="95E058F1-1CBF-2F59-4C78-94DA56A288D3">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:52:36 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 18:54:20 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="e_group" id="3869DADC-F357-EE6A-EE69-6E46BCB3C5F8">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:54:33 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 18:55:31 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>256</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="category" id="14FAAD4F-9D09-F24D-2639-F3D28118C391">
+         <createdBy>root</createdBy>
+         <createdTime>2011-10-13 08:33:55 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2011-10-13 08:35:26 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="creation_date" id="22FD4CDA-A4AD-B55A-CB79-24654E169AC0">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:55:31 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 18:57:14 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT007</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="expiry_date" id="15375044-5D2E-A3EF-0D6E-98A291AB578A">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:57:14 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 18:59:10 UTC</changedTime>
+         <comment>In case null -&amp;gt; for ever.&amp;lt;br/&amp;gt;</comment>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT007</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="db_type" id="6020967E-8317-6DA7-3ABF-7408E74626C3">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 18:58:54 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 19:01:05 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="db_size" id="080D16D3-1A49-A7FA-0343-8FA9421B2A08">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:01:05 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 19:04:10 UTC</changedTime>
+         <comment>always in GB. Original request of size.&amp;lt;br/&amp;gt;</comment>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="no_connections" id="19537129-7FE9-88A6-3BE3-BEF8470534E1">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:03:19 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2011-08-30 13:24:02 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="project" id="1F633A7B-4A73-3DDB-F04C-F106C8AE9110">
+         <createdBy>root</createdBy>
+         <createdTime>2011-10-13 08:35:15 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2011-10-13 08:35:54 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="description" id="5D812E68-9E0C-AC09-CE30-936D4A0D2DD3">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:04:31 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 19:04:51 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>1024</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="state" id="3074074B-4719-EB2E-23A4-B09AB115A8B0">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:48:23 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 19:48:46 UTC</changedTime>
+         <comment>Running, Stop, ...</comment>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="status" id="0F458A12-E8CA-9B70-A7CD-F0B5907D9F2F">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:48:01 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-24 19:48:23 UTC</changedTime>
+         <comment>Active or not</comment>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT006</logicalDatatype>
+         <dataTypeSize>1</dataTypeSize>
+      </Attribute>
+   </attributes>
+   <identifiers>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="F0C9FD6C-B623-4DF5-C695-9DBDF3824238" name="pk_dod_instances">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-24 19:06:53 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2011-09-20 07:26:21 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <pk>true</pk>
+         <usedAttributes>
+            <attributeRef>056E5230-E6F9-8FDD-FAEB-D8FDFA7E2C68</attributeRef>
+            <attributeRef>95E058F1-1CBF-2F59-4C78-94DA56A288D3</attributeRef>
+         </usedAttributes>
+      </identifier>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="2EB546F5-5C7B-707A-E4C9-663E1050FF85" name="unique_db_name">
+         <createdBy>root</createdBy>
+         <createdTime>2011-10-03 09:01:18 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2011-10-03 09:01:48 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <usedAttributes>
+            <attributeRef>95E058F1-1CBF-2F59-4C78-94DA56A288D3</attributeRef>
+         </usedAttributes>
+      </identifier>
+   </identifiers>
+</Entity>

@@ -1,0 +1,10 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.logical.LogicalDesign>
+   <object objectType="Entity" objectID="84C76706-F93A-0181-576B-5DEE04B4E68E" name="dod_command_definition" seqName="seg_0"/>
+   <object objectType="Entity" objectID="C228877D-3551-9634-33DA-99DCD4958D4E" name="dod_command_params" seqName="seg_0"/>
+   <object objectType="Entity" objectID="523EA051-C080-603B-E8A7-4FE23691A07D" name="dod_instances" seqName="seg_0"/>
+   <object objectType="Entity" objectID="6BD31477-31FB-EC7D-0DFE-BFC3D581868E" name="dod_jobs" seqName="seg_0"/>
+   <object objectType="Relation" objectID="07A42512-E84A-85CF-911C-1E008CBA6505" name="dod_jobs_definitions" seqName="seg_0"/>
+   <object objectType="Relation" objectID="7B28F948-B8B2-79AD-59C0-C046F02742AD" name="dod_jobs_instances" seqName="seg_0"/>
+   <object objectType="Relation" objectID="526A5B98-C374-9F84-CEF6-685516A781CB" name="dod_params_jobs" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.logical.LogicalDesign>

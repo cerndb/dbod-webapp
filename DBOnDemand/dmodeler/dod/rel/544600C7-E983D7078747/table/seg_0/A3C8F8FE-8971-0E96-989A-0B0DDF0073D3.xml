@@ -1,0 +1,203 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="A3C8F8FE-8971-0E96-989A-0B0DDF0073D3" directorySegmentName="seg_0" name="dod_instances">
+   <createdBy>rgaspar</createdBy>
+   <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+   <changedBy>rgaspar</changedBy>
+   <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+   <generatorID>523EA051-C080-603B-E8A7-4FE23691A07D</generatorID>
+   <ownerDesignName>dod</ownerDesignName>
+   <pkName>dod_instances PK</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="username" id="0017694C-FE7B-29C4-432D-8AF7657DACF5">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>056E5230-E6F9-8FDD-FAEB-D8FDFA7E2C68</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_name" id="9E139527-A414-A552-44F8-680FE9143102">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>95E058F1-1CBF-2F59-4C78-94DA56A288D3</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="e_group" id="98DB09BA-5FBF-7D57-8AB2-F1A7C3F7B012">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>3869DADC-F357-EE6A-EE69-6E46BCB3C5F8</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>256</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="creation_date" id="44DA47FD-8B66-F59E-125A-CB1AD2EEEC81">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>22FD4CDA-A4AD-B55A-CB79-24654E169AC0</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT007</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="expiry_date" id="B2FF6EA6-96B7-AF93-40CA-6190B93F6AEF">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <comment>In case null -&amp;gt; for ever.&amp;lt;br/&amp;gt;</comment>
+         <generatorID>15375044-5D2E-A3EF-0D6E-98A291AB578A</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT007</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_type" id="D77296C3-CBA3-E31C-D272-01B6B1168320">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>6020967E-8317-6DA7-3ABF-7408E74626C3</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_size" id="DDA5DD21-3737-208A-CF1C-50FC12F2FAEF">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <comment>always in GB. Original request of size.&amp;lt;br/&amp;gt;</comment>
+         <generatorID>080D16D3-1A49-A7FA-0343-8FA9421B2A08</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT011</logicalDatatype>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="no_connections" id="E55ABC70-D6D4-F0A6-8EC0-D1EAB5CD5BC7">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>19537129-7FE9-88A6-3BE3-BEF8470534E1</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT019</logicalDatatype>
+         <dataTypePrecision>0</dataTypePrecision>
+         <dataTypeScale>10</dataTypeScale>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="description" id="CF74EF9C-9791-FA88-8E72-7475CE2AD0A8">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>5D812E68-9E0C-AC09-CE30-936D4A0D2DD3</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>1024</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="status" id="3051B6A6-89E9-518F-D6AD-8CDC86353D42">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <comment>Active or not</comment>
+         <generatorID>0F458A12-E8CA-9B70-A7CD-F0B5907D9F2F</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT006</logicalDatatype>
+         <dataTypeSize>1</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="state" id="38CCB4FB-A31F-2F6E-942F-4186327E727D">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <comment>Running, Stop, ...</comment>
+         <generatorID>3074074B-4719-EB2E-23A4-B09AB115A8B0</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="93B8F650-D7AF-226E-D391-1F8333C9F4CB" name="dod_instances PK">
+         <createdBy>rgaspar</createdBy>
+         <createdTime>2011-08-28 12:58:51 UTC</createdTime>
+         <changedBy>rgaspar</changedBy>
+         <changedTime>2011-08-28 12:58:51 UTC</changedTime>
+         <generatorID>F0C9FD6C-B623-4DF5-C695-9DBDF3824238</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="0017694C-FE7B-29C4-432D-8AF7657DACF5"/>
+            <colUsage columnID="9E139527-A414-A552-44F8-680FE9143102"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

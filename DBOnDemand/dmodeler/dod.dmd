@@ -1,0 +1,10 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="dod" id="351A47C4-2F36-B880-535D-25DCA1DB865F" version="3.4">
+   <createdBy>rgaspar</createdBy>
+   <createdTime>2011-08-24 18:31:48 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2011-10-13 08:38:05 UTC</changedTime>
+   <ownerDesignName>dod</ownerDesignName>
+   <capitalNames>false</capitalNames>
+   <designId>351A47C4-2F36-B880-535D-25DCA1DB865F</designId>
+</OSDM_Design>
