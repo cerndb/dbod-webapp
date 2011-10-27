@@ -1,0 +1,234 @@
+<?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
+<?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
+<?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
+<?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
+<?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+
+<zk>
+    <!-- Import controllers -->
+    <zscript>
+        <![CDATA[
+            import ch.cern.dod.ui.controller.InstanceController;
+            import ch.cern.dod.ui.controller.TopBarController;
+            import org.zkoss.util.resource.Labels;
+        ]]>
+    </zscript>
+
+    <!-- Include top bar -->
+    <topBar/>
+
+    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+        <!-- Main container for the databases overview (calls init method when created)-->
+        <hbox use="InstanceController" id="controller" align="top">
+            <!-- Error window -->
+            <error/>
+            <!-- Timer to update the instances every minute -->
+            <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInfo();"/>
+            <!-- Script to mark the snapshot days in the calendar -->
+            <script src="/scripts/markSnapshots.js"/>
+
+            <!-- Groupbox for the actions -->
+            <groupbox width="100px" mold="3d" closable="false">
+                <caption label=" ">
+                    <div height="24px">
+                        <label value="${c:l('actions')}" sclass="title" style="float:left;"/>
+                    </div>
+                </caption>
+                <vbox width="100%" align="center">
+                    <!-- Buttons -->
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="startup" image="/img/startup_big.png" onClick="controller.doStartup();" tooltiptext="${c:l('jobActionSTARTUP')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="shutdown" image="/img/shutdown_big.png" onClick="controller.doShutdown();" tooltiptext="${c:l('jobActionSHUTDOWN')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="config" image="/img/config_big.png" onClick="controller.doConfig();"  tooltiptext="${c:l('configTitle')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="backup" image="/img/backup_big.png" onClick="controller.doBackup();" tooltiptext="${c:l('jobActionBACKUP')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="restore" image="/img/restore_big.png" onClick="controller.doRestore();" tooltiptext="${c:l('jobActionRESTORE')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="monitor" image="/img/monitor_big.png" onClick="controller.doMonitor();" tooltiptext="${c:l('jobActionMONITOR')}"/>
+                    </div>
+                    <div width="52px" height="52px">
+                        <toolbarbutton id="destroy" image="/img/destroy_big.png" onClick="controller.doDestroy();" tooltiptext="${c:l('jobActionDESTROY')}"/>
+                    </div>
+                </vbox>
+            </groupbox>
+
+            <!-- Instance info -->
+            <groupbox mold="3d" style="min-width:1040px;" closable="false">
+                <caption label=" ">
+                    <label id="instanceTitle" sclass="title" style="float:left;"/>
+                    <hbox height="24px" style="float:right" align="bottom">
+                        <label sclass="title" value="${c:l('refreshInstance')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInfo();"/>
+                        <toolbarbutton tooltiptext="${c:l('refreshInstance')}" sclass="button" image="/img/refresh.png" onClick="controller.refreshInfo();"/>
+                    </hbox>
+                </caption>
+                <hbox align="bottom" height="22px">
+                    <!-- State -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('state')}: " style="font-weight:bold"/>
+                        <label id="stateLabel"/>
+                        <image id="stateImage"/>
+                    </hbox>
+                    <!-- Username -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('username')}: " style="font-weight:bold"/>
+                        <label id="username"/>
+                    </hbox>
+                </hbox>  
+                <hbox align="bottom" height="22px">
+                    <!-- DB type -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('dbType')}: " style="font-weight:bold"/>
+                        <label id="dbType"/>
+                    </hbox>
+                    <!-- e-group -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('eGroup')}: " style="font-weight:bold"/>
+                        <hbox id="eGroupBox" align="bottom">
+                            <label id="eGroup"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="eGroupBox.setVisible(false);eGroupEditBox.setVisible(true);"/>
+                        </hbox>
+                        <hbox id="eGroupEditBox" visible="false" align="bottom">
+                            <textbox id="eGroupEdit" width="219px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.checkAndEditEGroup();"/>
+                        </hbox>
+                    </hbox>
+                </hbox>
+                <hbox align="bottom" height="22px">
+                    <!-- Creation date -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
+                        <label id="creationDate"/>
+                    </hbox>
+                    <!-- Expiry date -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('expiryDate')}: " style="font-weight:bold"/>
+                        <hbox id="expiryDateBox" align="bottom">
+                            <label id="expiryDate"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="expiryDateBox.setVisible(false);expiryDateEditBox.setVisible(true);"/>
+                        </hbox>
+                        <hbox id="expiryDateEditBox" visible="false" align="bottom">
+                            <datebox id="expiryDateEdit" width="200px" />
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
+                        </hbox>
+                    </hbox>
+                </hbox>
+                <hbox align="bottom" height="22px">
+                    <!-- Category -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('category')}: " style="font-weight:bold"/>
+                        <label id="category"/>
+                    </hbox>
+                    <!-- Project -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('project')}: " style="font-weight:bold"/>
+                        <hbox id="projectBox" align="bottom">
+                            <label id="project"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="projectBox.setVisible(false);projectEditBox.setVisible(true);"/>
+                        </hbox>
+                        <hbox id="projectEditBox" visible="false" align="bottom">
+                            <textbox id="projectEdit" width="224px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
+                        </hbox>
+                    </hbox>
+                </hbox>
+                <hbox align="bottom" height="22px">
+                    <!-- Number of connections -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
+                        <label id="noConnections"/>
+                    </hbox>
+                    <!-- DB size -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
+                        <label id="dbSize"/>
+                    </hbox>
+                </hbox>
+                <hbox align="bottom">
+                    <!-- Description -->
+                    <hbox width="1000px">
+                        <div style="margin-top:8px">
+                            <label value="${c:l('description')}: " style="font-weight:bold;"/>
+                        </div>
+                        <hbox id="descriptionBox" align="bottom">
+                            <div style="margin-top:8px">
+                                <label id="description"/>
+                            </div>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="descriptionBox.setVisible(false);descriptionEditBox.setVisible(true);"/>
+                        </hbox>
+                        <hbox id="descriptionEditBox" visible="false" align="bottom">
+                            <textbox id="descriptionEdit" width="900px" multiline="true" style="margin-top:8px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editDescription();"/>
+                        </hbox>
+                    </hbox>
+                </hbox>
+
+                <!-- Job info -->
+                <groupbox id="jobInfo" mold="3d" closable="false" open="false" style="margin-top:20px">
+                    <caption label=" ">
+                        <div align="center" style="float:left">
+                            <label value="${c:l('jobInfo')} " sclass="titleSmall"/>
+                            <!-- Job Selector -->
+                            <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
+                        </div>
+                    </caption>
+                    <hbox align="bottom">
+                        <!-- Requester -->
+                        <hbox align="bottom" width="500px">
+                            <label value="${c:l('requester')}: " style="font-weight:bold"/>
+                            <label id="jobRequester" value="-"/>
+                        </hbox>
+                        <!-- State -->
+                        <hbox align="bottom" width="500px">
+                            <label value="${c:l('state')}: " style="font-weight:bold"/>
+                            <label id="jobStateLabel" value="-"/>
+                            <image id="jobStateImage"/>
+                        </hbox>
+                    </hbox>
+                    <hbox>
+                        <!-- Creation date -->
+                        <hbox width="500px">
+                            <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
+                            <label id="jobCreationDate" value="-"/>
+                        </hbox>
+                        <!-- Completion date -->
+                        <hbox width="500px">
+                            <label value="${c:l('completionDate')}: " style="font-weight:bold"/>
+                            <label id="jobCompletionDate" value="-"/>
+                        </hbox>
+                    </hbox>
+                    <!-- Log -->
+                    <vbox  width="1000px">
+                        <label value="${c:l('log')}:" style="font-weight:bold"/>
+                        <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true"/>
+                    </vbox>
+                </groupbox>
+            </groupbox>
+             <!-- Confirm window to create e-group -->
+            <window id="eGroupConfirm" title="${c:l('eGroupConfirmTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
+                <hbox width="100%" align="top">
+                    <image src="/img/warning.png" style="margin-right:10px"/>
+                    <label value="${c:l('eGroupConfirm')}" />
+                </hbox>
+                <div width="100%">
+                    <hbox height="24px" align="bottom" style="float:left">
+                        <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="eGroupConfirm.setVisible(false);"/>
+                        <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
+                    </hbox>
+                    <hbox height="24px" align="bottom" style="float:right">
+                        <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);controller.editEGroup(false);"/>
+                        <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);controller.editEGroup(false);"/>
+                    </hbox>
+                </div>
+            </window>
+        </hbox>
+    </vbox>
+</zk>

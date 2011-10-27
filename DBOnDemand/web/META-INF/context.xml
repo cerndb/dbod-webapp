@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/DBOnDemand">
+    <Resource name="jdbc/dbondemand" auth="Container"
+              type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
+              url="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oradev11.cern.ch)(PORT=10121))(ENABLE=BROKEN)(CONNECT_DATA= (SID=DEVDB11)))"
+              username="dbondemand" 
+	      password="Sup3rN0va11" 
+              maxActive="10" 
+              minIdle="1" 
+              maxIdle="2" 
+              maxWait="20000" 
+              testOnBorrow="true" 
+	      validationQuery="select sysdate from dual"
+    />
+    <Parameter name="wsUser" value="dodws" override="false"/>
+    <Parameter name="wsPswd" value="Sup3rN0va11" override="false"/>
+</Context>

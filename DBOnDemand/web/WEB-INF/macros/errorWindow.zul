@@ -1,0 +1,13 @@
+<window id="errorWindow" title="${c:l('errorTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
+    <hbox width="100%" align="top">
+        <image src="/img/error.png" style="margin-right:10px"/>
+        <label id="errorMessage" />
+    </hbox>
+    <vbox width="100%" align="right">
+        <hbox height="24px" align="bottom">
+            <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="errorWindow.setVisible(false);"/>
+            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="errorWindow.setVisible(false);"/>
+        </hbox>
+    </vbox>
+</window>
+

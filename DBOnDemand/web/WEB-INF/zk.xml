@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk>
+    <system-config>
+        <disable-event-thread/>
+    </system-config>
+    <!-- Session config -->
+    <session-config>
+        <session-timeout>600</session-timeout>
+        <timer-keep-alive>false</timer-keep-alive>
+        <max-desktops-per-session>15</max-desktops-per-session>
+        <max-requests-per-session>5</max-requests-per-session>
+        <max-pushes-per-session>3</max-pushes-per-session>
+        <timeout-uri>/timeout.zul</timeout-uri>
+    </session-config>
+    
+    <!-- Locale provider -->
+    <listener>
+	<listener-class>ch.cern.dod.util.LocaleProvider</listener-class>
+    </listener>
+</zk>

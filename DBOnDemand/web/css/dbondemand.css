@@ -1,0 +1,102 @@
+.z-toolbarbutton-over,
+.z-toolbarbutton-over:hover,
+.z-toolbarbutton-body,
+.z-toolbarbutton-body:hover,
+.z-toolbarbutton-cnt,
+.z-toolbarbutton-cnt:hover{
+    border: 0px !important;
+    background-image: none !important;
+}
+
+.z-upload {
+    margin-right: 200px;
+}
+
+.button,
+.buttonDisabled {
+   width: 20px !important;
+   height: 20px !important;
+}
+
+.button img,
+.buttonDisabled img {
+    width: 20px;
+    height: 20px;
+}
+
+.button:hover img {
+    width: 18px;
+    height: 18px;
+    padding: 1px !important;
+}
+
+.bigButton,
+.bigButtonDisabled {
+   width: 52px !important;
+   height: 52px !important;
+}
+
+.bigButton img,
+.bigButtonDisabled img {
+    width: 52px;
+    height: 52px;
+}
+
+.bigButton:hover img {
+    width: 48px;
+    height: 48px;
+    padding: 2px !important;
+}
+
+.appTitle {
+    color: #3861AA;
+    font: 20pt verdana;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.title,
+.title button{
+    color: #3861AA !important;
+    font: 12pt verdana !important;
+    text-decoration: none;
+}
+
+.titleSmall {
+    color: #3861AA !important;
+    font: 10pt verdana !important;
+    text-decoration: none;
+}
+
+.titleLinks span,
+.titleLinks a:link,
+.titleLinks a:visited,
+.titleLinks a:active{
+    color: #3861AA;
+    font: 12pt verdana;
+    text-decoration: none;
+    margin-right:5px;
+    margin-left:5px;
+}
+
+.z-menubar-hor, .z-menubar-ver {
+    border: 1px solid #D8D8D8;
+}
+
+.toolbar {
+    border: 0px;
+    border-bottom: 1px solid #D8D8D8;
+    padding-left: 30px;
+    margin-top: 10px;
+}
+
+.jobState img {
+    width: 12px;
+    height: 12px;
+    padding: 1px;
+}
+
+.text {
+    font-size:12px;
+    font-family: arial,helvetica,sans-serif;
+}

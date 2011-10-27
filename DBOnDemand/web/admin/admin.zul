@@ -1,0 +1,74 @@
+<?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
+<?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
+<?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
+<?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
+<?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+
+<zk>
+    <!-- Import controllers -->
+    <zscript>
+        <![CDATA[
+            import ch.cern.dod.ui.controller.AdminController;
+            import ch.cern.dod.ui.controller.TopBarController;
+        ]]>
+    </zscript>
+
+    <!-- Include top bar -->
+    <topBar/>
+
+    <!-- Main container for the databases overview (calls init method when created)-->
+    <vbox use="AdminController" id="controller" style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+        <!-- Error window -->
+        <error/>
+        <!-- Timer to update the instances every minute -->
+        <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();" if="${controller.instancesSize > 0}"/>
+        <!-- Script to mark the snapshot days in the calendar -->
+        <script src="/scripts/markSnapshots.js"/>
+
+        <!-- Groupbox forthe instances overview -->
+        <groupbox width="1200px" mold="3d" closable="false">
+            <caption label=" ">
+                <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
+                <hbox height="24px" style="float:right" align="bottom" if="${controller.instancesSize > 0}">
+                    <hbox style="margin-right:400px" align="bottom">
+                        <label sclass="title" value="${c:l('collectiveActions')}" style="font-size:10pt !important"/>
+                        <toolbarbutton id="startupAllBtn" tooltiptext="${c:l('collectiveStartup')}" sclass="button" image="/img/startup.png" onClick="controller.startupAll();" disabled="true"/>
+                        <toolbarbutton id="shutdownAllBtn" tooltiptext="${c:l('collectiveShutdown')}" sclass="button" image="/img/shutdown.png" onClick="controller.shutdownAll();" disabled="true"/>
+                        <toolbarbutton id="backupAllBtn" tooltiptext="${c:l('collectiveBackup')}" sclass="button" image="/img/backup.png" onClick="controller.backupAll();" disabled="true"/>
+                    </hbox>
+                    <label sclass="title" value="${c:l('refreshInstances')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInstances();"/>
+                    <toolbarbutton tooltiptext="${c:l('refreshInstances')}" sclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
+                </hbox>
+            </caption>
+            <vbox width="100%" align="right">
+                <vbox width="100%" align="left">
+                    <!-- Overview grid (only shown when there are instances) -->
+                    <grid id="overviewGrid" mold="paging" pageSize="10" if="${controller.instancesSize > 0}">
+                        <columns>
+                            <column width="40px">
+                                <checkbox id="checkAll" onCheck="controller.checkAll()"/>
+                            </column>
+                            <column label="${c:l('dbName')}" sort="auto(dbName)" width="150px"/>
+                            <column label="${c:l('username')}" sort="auto(username)" width="90px"/>
+                            <column label="${c:l('eGroup')}" sort="auto(eGroup)" width="150px"/>
+                            <column label="${c:l('category')}" sort="auto(category)" width="65px"/>
+                            <column label="${c:l('project')}" sort="auto(project)" width="85px"/>
+                            <column label="${c:l('creationDate')}" sort="auto(creationDate)" width="90px"/>
+                            <column label="${c:l('expiryDate')}" sort="auto(expiryDate)" width="80px"/>
+                            <column label="${c:l('dbType')}" sort="auto(dbType)" width="65px"/>
+                            <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="65px"/>
+                            <column label="${c:l('noConn')}" sort="auto(noConnections)" width="65px"/>
+                            <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
+                            <column label="${c:l('actions')}" width="200px" />
+                        </columns>
+                    </grid>
+                </vbox>
+                <!--Show a message in case there no instances  -->
+                <div if="${controller.instancesSize == 0}" style="padding-right:500px">
+                    <label value="${c:l('emptyInstancesListAdmin')}"/>
+                </div>
+            </vbox>
+        </groupbox>
+    </vbox>
+</zk>

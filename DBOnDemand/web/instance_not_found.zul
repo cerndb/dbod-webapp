@@ -1,0 +1,31 @@
+<?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
+<?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
+<?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
+<?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+
+<zk>
+    <!-- Import controllers -->
+    <zscript>
+        <![CDATA[
+            import org.zkoss.zk.ui.Executions;
+            import ch.cern.dod.ui.controller.TopBarController;
+        ]]>
+    </zscript>
+
+    <!-- Include top bar -->
+    <topBar/>
+
+    <div align="center" style="width:100%;padding-top:30px">
+        <hbox>
+            <label value="${c:l('instanceNotFoundMessage')}"/>
+            <label value="${c:l('homePage')}" style="color:blue;cursor:pointer;text-decoration:underline">
+                <attribute name="onClick">
+                    <![CDATA[
+                        Executions.sendRedirect("index.zul");
+                    ]]>
+                </attribute>
+            </label>
+        </hbox>
+    </div>
+</zk>
