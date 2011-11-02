@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	targetNamespace="https://syscontrol.cern.ch/Dod/"
+	xmlns:impl="https://syscontrol.cern.ch/Dod/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="https://syscontrol.cern.ch/Dod/">
+
+    <wsdl:message name="GetSnapshotsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetSnapshotsResponse">
+        <wsdl:part name="snapshots" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetFileRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+		<wsdl:part name="filePath" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetFileResponse">
+        <wsdl:part name="file" type="xsd:string" />
+    </wsdl:message>
+
+	<wsdl:message name="GetParamRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+		<wsdl:part name="param" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetParamResponse">
+        <wsdl:part name="paramValue" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:portType name="DODWebServicePortType">
+        <wsdl:operation name="GetSnapshots">
+            <wsdl:input message="impl:GetSnapshotsRequest" name="GetSnapshotsRequest" />
+            <wsdl:output message="impl:GetSnapshotsResponse" name="GetSnapshotsResponse" />
+        </wsdl:operation>
+		<wsdl:operation name="GetFile">
+            <wsdl:input message="impl:GetFileRequest" name="GetFileRequest" />
+            <wsdl:output message="impl:GetFileResponse" name="GetFileResponse" />
+        </wsdl:operation>
+		<wsdl:operation name="GetParam">
+            <wsdl:input message="impl:GetParamRequest" name="GetParamRequest" />
+            <wsdl:output message="impl:GetParamResponse" name="GetParamResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="DODWebServiceSoapBinding" type="impl:DODWebServicePortType">
+        <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GetSnapshots">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetSnapshots"/>
+            <wsdl:input name="GetSnapshotsRequest">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:input>
+            <wsdl:output name="GetSnapshotsResponse">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:output>
+        </wsdl:operation>
+		<wsdl:operation name="GetFile">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetFile"/>
+            <wsdl:input name="GetFileRequest">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:input>
+            <wsdl:output name="GetFileResponse">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:output>
+        </wsdl:operation>
+		<wsdl:operation name="GetParam">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetParam"/>
+            <wsdl:input name="GetParamRequest">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:input>
+            <wsdl:output name="GetParamResponse">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="DODWebService">
+        <wsdl:port binding="impl:DODWebServiceSoapBinding" name="DODWebServicePort">
+            <wsdlsoap:address location="https://syscontrol.cern.ch/dod/webservices/dod.cgi" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
