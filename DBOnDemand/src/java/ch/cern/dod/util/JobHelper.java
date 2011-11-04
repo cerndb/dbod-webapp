@@ -13,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.event.UploadEvent;
@@ -92,6 +94,7 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "STARTUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
@@ -137,6 +140,7 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "SHUTDOWN JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
@@ -210,6 +214,7 @@ public class JobHelper {
                 int result = jobDAO.insert(job, params);
                 //If everything went OK update instance object
                 if (result > 0) {
+                    Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "UPLOAD CONFIG FILE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
                     instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
                     return true;
                 } else {
@@ -260,11 +265,15 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
+            if (hours > 0)
+                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB AND SCHEDULE FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+            else
+                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
         }
-    }
+    }   
 
     /**
      * Restore a backup for an instance.
@@ -313,6 +322,7 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "RESTORE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
@@ -332,6 +342,7 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setStatus(false);
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "DESTROY JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;

@@ -182,10 +182,25 @@ public class BackupController extends Window {
      */
     public void doDisable() {
         DODJobDAO jobDAO = new DODJobDAO();
-        int result = jobDAO.deleteScheduledBackup(instance);
-        automatic.getFellow("backupWindow").detach();
+        int result = 0;
+        if (jobHelper.isAdminMode())
+             result = jobDAO.deleteScheduledBackup(instance, username, 1);
+        else
+            result = jobDAO.deleteScheduledBackup(instance, username, 0);
         if (result <= 0) {
             showError(DODConstants.ERROR_DISABLING_AUTO_BACKUPS);
+        }
+        else {
+            //If we are in the overview page
+            if (interval.getRoot().getFellowIfAny("overviewGrid") != null) {
+                Grid grid = (Grid) interval.getRoot().getFellow("overviewGrid");
+                grid.setModel(grid.getListModel());
+            } //If we are in the instance page
+            else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
+                InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");
+                controller.afterCompose();
+            }
+            interval.getFellow("backupWindow").detach();
         }
         
     }
@@ -217,8 +232,11 @@ public class BackupController extends Window {
                     InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");
                     controller.afterCompose();
                 }
+                interval.getFellow("backupWindow").detach();
             }
-            interval.getFellow("backupWindow").detach();
+            else
+                showError(DODConstants.ERROR_DISPATCHING_JOB);
+            
         }
     }
 

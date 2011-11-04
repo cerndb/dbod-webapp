@@ -54,6 +54,8 @@ public class DODConstants {
     public static final String JOB_SHUTDOWN = "SHUTDOWN";
     public static final String JOB_UPLOAD = "UPLOAD_CONFIG";
     public static final String JOB_BACKUP = "BACKUP";
+    public static final String JOB_DISABLE_BACKUPS = "DISABLE_AUTOMATIC_BACKUPS";
+    public static final String JOB_ENABLE_BACKUPS = "ENABLE_AUTOMATIC_BACKUPS";
     public static final String JOB_RESTORE = "RESTORE";
     public static final String JOB_MONITOR = "MONITOR";
     public static final String JOB_DESTROY = "DESTROY";
