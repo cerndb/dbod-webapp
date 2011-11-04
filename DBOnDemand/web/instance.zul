@@ -180,20 +180,20 @@
                             <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
                         </div>
                     </caption>
-                    <hbox align="bottom">
-                        <!-- Requester -->
-                        <hbox align="bottom" width="500px">
-                            <label value="${c:l('requester')}: " style="font-weight:bold"/>
-                            <label id="jobRequester" value="-"/>
-                        </hbox>
+                    <hbox align="bottom" height="22px">
                         <!-- State -->
                         <hbox align="bottom" width="500px">
                             <label value="${c:l('state')}: " style="font-weight:bold"/>
                             <label id="jobStateLabel" value="-"/>
                             <image id="jobStateImage"/>
                         </hbox>
+                        <!-- Requester -->
+                        <hbox align="bottom" width="500px">
+                            <label value="${c:l('requester')}: " style="font-weight:bold"/>
+                            <label id="jobRequester" value="-"/>
+                        </hbox>
                     </hbox>
-                    <hbox>
+                    <hbox align="bottom" height="22px">
                         <!-- Creation date -->
                         <hbox width="500px">
                             <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
@@ -206,7 +206,7 @@
                         </hbox>
                     </hbox>
                     <!-- Log -->
-                    <vbox  width="1000px">
+                    <vbox  width="1000px" style="margin-top:8px">
                         <label value="${c:l('log')}:" style="font-weight:bold"/>
                         <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true"/>
                     </vbox>
