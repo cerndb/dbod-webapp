@@ -21,7 +21,14 @@ IS
 	name VARCHAR2(512); -- job name
 	action VARCHAR(1024); -- action to be taken, in this case is a call to insert_backup_job
 	job_count INTEGER; -- number of jobs with the same name running (1 or 0)
+        now DATE;
 BEGIN
+       -- Insert job as finished in the jobs table
+       SELECT sysdate
+		INTO now
+		FROM dual;
+       INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
+		VALUES (username, db_name, 'ENABLE_AUTOMATIC_BACKUPS', type, now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups enabled every ' || interval_hours || ' hours!');
 	-- Initialise name and action
 	name := db_name || '_BACKUP';
 	action := 'BEGIN
@@ -55,15 +62,29 @@ BEGIN
 	   	repeat_interval      => 'FREQ=HOURLY;INTERVAL=' || interval_hours,
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup job for DB On Demand');
+       
+       
+EXCEPTION
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
 END;
 /
 
 -- Deletes a scheduled job in the database
-CREATE OR REPLACE PROCEDURE delete_scheduled_backup (db_name IN VARCHAR2)
+CREATE OR REPLACE PROCEDURE delete_scheduled_backup (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
 IS
 	name VARCHAR2(512); -- job name
 	job_count INTEGER; -- number of jobs with the same name running (1 or 0)
+        now DATE;
 BEGIN
+        -- Insert a row in the jobs table
+        SELECT sysdate
+                INTO now
+                FROM dual;
+        INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
+                VALUES (username, db_name, 'DISABLE_AUTOMATIC_BACKUPS', type, now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups disabled!');
+
 	-- Initialise name
 	name := db_name || '_BACKUP';
 
@@ -83,5 +104,10 @@ BEGIN
 			job_name   =>  name,
 			force      =>  TRUE);
     	END IF;
+
+EXCEPTION
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
 END;
 /
