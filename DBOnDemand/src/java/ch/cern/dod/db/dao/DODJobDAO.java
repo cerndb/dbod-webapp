@@ -23,7 +23,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Clob;
-import java.sql.Savepoint;
 import java.util.Calendar;
 
 /**
@@ -268,7 +267,7 @@ public class DODJobDAO {
                     for (int i=0; i<params.size(); i++) {
                         DODCommandParam commandParam = params.get(i);
                         //Assign values to variables
-                        insertParamsStatement.setString(1, commandParam.getDbName());
+                        insertParamsStatement.setString(1, commandParam.getUsername());
                         insertParamsStatement.setString(2, commandParam.getDbName());
                         insertParamsStatement.setString(3, commandParam.getCommandName());
                         insertParamsStatement.setString(4, commandParam.getType());
