@@ -21,9 +21,10 @@ public class DODConstants {
     public static final String ADFS_GROUP = "ADFS_GROUP";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     public static final String DATE_TIME_FORMAT = "dd/MM/yyyy H:mm:ss";
+    public static final String DATE_TIME_FORMAT_PITR = "yyyy-MM-dd_HH:mm:ss";
     public static final String TIME_FORMAT = "H:mm:ss";
     public static final String INSTANCE = "instance";
-    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/test/conf/upl/plot_metric.php?tgtt=M";
+    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M";
     public static final String MONITORING_INSTANCE = "tgt";
     public static final String MONITORING_METRIC = "metric";
     public static final String HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/user_help_html/";
@@ -63,12 +64,13 @@ public class DODConstants {
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";
     public static final String PREFIX_INSTANCE_NAME = "dod_";
-    public static final String PARAM_SNAPSHOT_FILE = "SNAPSHOT_FILE";
+    public static final String PARAM_SNAPSHOT = "SNAPSHOT";
     public static final String PARAM_CONFIG_FILE = "CONFIG_FILE";
     public static final String CONFIG_FILE_MY_CNF = "MY_CNF";
     public static final String PARAM_CONFIG_PATH = "CONFIG_PATH";
     public static final String CONFIG_PATH_MY_CNF = "/etc/my.cnf";
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
+    public static final String PARAM_PITR_TIME = "TIMESTAMP";
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";
     public static final String CATEGORY_PERSONAL = "PERSONAL";
     public static final String CATEGORY_TEST = "TEST";
