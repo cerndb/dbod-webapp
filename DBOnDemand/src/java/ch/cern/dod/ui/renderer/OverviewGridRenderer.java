@@ -7,6 +7,7 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ui.controller.ConfigController;
 import ch.cern.dod.ui.controller.DestroyController;
 import ch.cern.dod.util.DODConstants;
+import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,7 +52,13 @@ public class OverviewGridRenderer implements RowRenderer {
      * Constructor for this renderer. Only for users, not admins.
      */
     public OverviewGridRenderer() {
-        this.jobHelper = new JobHelper(false);
+        //Get username and adminMode from headers
+        Execution execution = Executions.getCurrent();
+        String username = execution.getHeader(DODConstants.ADFS_LOGIN);
+        String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
+        Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
+        
+        this.jobHelper = new JobHelper(adminMode.booleanValue());
     }
     
     /**
