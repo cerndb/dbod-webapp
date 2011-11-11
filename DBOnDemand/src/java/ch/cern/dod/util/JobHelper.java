@@ -10,6 +10,8 @@ import ch.cern.dod.exception.ConfigFileSizeException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -280,10 +282,12 @@ public class JobHelper {
      * @param instance instance to restore the backup from.
      * @param username requester of this job.
      * @param snapshot snapshot to restore.
+     * @param pitrTime offset to restore.
      * @return true if the creation of this job was successful, false otherwise.
      */
     public boolean doRestore(DODInstance instance, String username, DODSnapshot snapshot) {
         Date now = new Date();
+        DateFormat formatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT_PITR);
         //Create job
         DODJob job = new DODJob();
         job.setUsername(instance.getUsername());
@@ -314,9 +318,18 @@ public class JobHelper {
         snapshotFile.setCommandName(DODConstants.JOB_RESTORE);
         snapshotFile.setType(instance.getDbType());
         snapshotFile.setCreationDate(now);
-        snapshotFile.setName(DODConstants.PARAM_SNAPSHOT_FILE);
+        snapshotFile.setName(DODConstants.PARAM_SNAPSHOT);
         snapshotFile.setValue(snapshot.getFileLocator());
         params.add(snapshotFile);
+        DODCommandParam pitrParam = new DODCommandParam();
+        pitrParam.setUsername(instance.getUsername());
+        pitrParam.setDbName(instance.getDbName());
+        pitrParam.setCommandName(DODConstants.JOB_RESTORE);
+        pitrParam.setType(instance.getDbType());
+        pitrParam.setCreationDate(now);
+        pitrParam.setName(DODConstants.PARAM_PITR_TIME);
+        pitrParam.setValue(formatter.format(snapshot.getCreationDate()));
+        params.add(pitrParam);
         //Insert job
         int result = jobDAO.insert(job, params);
         //If everything went OK update instance object
@@ -331,18 +344,21 @@ public class JobHelper {
 
     /**
      * Destroy an instance.
-     * @param instance instance to restore the backup from.
+     * @param instance instance to destroy.
      * @param username requester of this job.
      * @return true if the creation of this job was successful, false otherwise.
      */
     public boolean doDestroy(DODInstance instance, String username) {
         Date now = new Date();
+        int result = 0;
         //Insert job
-        int result = instanceDAO.delete(instance);
+        if (adminMode)
+            result = instanceDAO.delete(instance, username, 1);
+        else
+            result = instanceDAO.delete(instance, username, 0);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setStatus(false);
-            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "DESTROY JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
