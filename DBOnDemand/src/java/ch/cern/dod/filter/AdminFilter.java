@@ -27,7 +27,7 @@ public class AdminFilter implements Filter{
     public void init(FilterConfig fc){}
 
     /**
-     * Destroy mehod
+     * Destroy method
      */
     public void destroy() {}
 
