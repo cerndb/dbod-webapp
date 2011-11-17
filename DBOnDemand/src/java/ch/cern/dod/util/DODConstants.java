@@ -117,6 +117,9 @@ public class DODConstants {
     public static final String LABEL_DISABLE_AUTOMATIC_BACKUP = "disableAutomaticBackups";
     public static final String LABEL_DESTROY_TITLE = "destroyTitle";
     public static final String LABEL_DESTROY_MESSAGE = "destroyMessage";
+    public static final String LABEL_SNAPSHOTS_FOR_DAY = "snapshotsForDay";
+    public static final String LABEL_SNAPSHOTS_FOR_DAY_EMPTY = "snapshotsForDayEmpty";
+    public static final String LABEL_SELECT_TIME = "selectTime";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -152,6 +155,13 @@ public class DODConstants {
     public static final String ERROR_UPDATING_INSTANCE = "errorUpdatingInstance";
     public static final String ERROR_COLLECTIVE_ACTION = "errorCollectiveAction";
     public static final String ERROR_DISABLING_AUTO_BACKUPS = "errorDisablingAutoBackups";
+    public static final String ERROR_NO_SNAPSHOT = "errorNoSnapshot";
+    public static final String ERROR_SNAPSHOT_PAST = "errorSnapshotPast";
+    public static final String ERROR_USERNAME_EMPTY = "errorUsernameEmpty";
+    public static final String ERROR_USERNAME_LENGTH = "errorUsernameLength";
+    public static final String ERROR_USERNAME_CHARS = "errorUsernameChars";
+    public static final String ERROR_USERNAME_WS = "errorUsernameWS";
+    public static final String ERROR_USERNAME_NOT_FOUND = "errorUsernameNotFound";
 
     //Images
     public static final String IMG_AWAITING_APPROVAL = "/img/awaiting.png";
