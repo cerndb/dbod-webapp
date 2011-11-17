@@ -2,8 +2,13 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.util.AuthenticationHelper;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
+import ch.cern.dod.ws.authentication.AuthenticationLocator;
+import ch.cern.dod.ws.authentication.AuthenticationSoap;
+import ch.cern.dod.ws.authentication.AuthenticationSoapStub;
+import ch.cern.dod.ws.authentication.UserInfo;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -13,7 +18,6 @@ import javax.servlet.ServletContext;
 import javax.xml.rpc.ServiceException;
 import org.apache.axis.AxisFault;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
@@ -33,15 +37,16 @@ public class NewInstanceController extends Window implements AfterCompose {
     /**
      * User creating the instance.
      */
-    private String username;
-    /**
-     * User creating the instance.
-     */
     private String fullName;
     /**
      * CCID of the user creating the instance.
      */
-    private long userCCID;
+    private int userCCID;
+    
+    /**
+     * Helper to manage e-groups.
+     */
+    AuthenticationHelper authenticationHelper;
 
     /**
      * Helper to manage e-groups.
@@ -58,26 +63,16 @@ public class NewInstanceController extends Window implements AfterCompose {
      * It instantiates objects and interface components.
      */
     public void afterCompose() {
-        //Get authenticated user and CCID
-        Execution execution = Executions.getCurrent();
-        username = execution.getHeader(DODConstants.ADFS_LOGIN);
-        fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
-        String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
-        if (userCCIDText != null && !userCCIDText.isEmpty())
-            userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
-        else
-            userCCID = new Long(0);
-
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
         String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
         eGroupHelper = new EGroupHelper(wsUser, wsPswd);
+        authenticationHelper = new AuthenticationHelper(wsUser, wsPswd);
 
         //Create DAO
         instanceDAO = new DODInstanceDAO();
 
         //Ininitialize components
-        ((Textbox) getFellow("username")).setValue(username);
         ((Textbox) getFellow("username")).setMaxlength(DODConstants.MAX_USERNAME_LENGTH);
         ((Textbox) getFellow("dbName")).setMaxlength(DODConstants.MAX_DB_NAME_LENGTH);
         ((Textbox) getFellow("eGroup")).setMaxlength(DODConstants.MAX_E_GROUP_LENGTH);
@@ -103,7 +98,7 @@ public class NewInstanceController extends Window implements AfterCompose {
      */
     public void createInstanceAndCheckEGroup () {
         //Check for errors in form
-        if (isDbNameValid() & isEGroupValid() & isCategoryValid() & isExpiryDateValid() & isDbTypeValid()
+        if (isUsernameValid() & isDbNameValid() & isEGroupValid() & isCategoryValid() & isExpiryDateValid() & isDbTypeValid()
                 & isDbSizeValid() & isNOConnectionsValid() & isProjectValid() & isDescriptionValid()) {
             //If there is an egroup
             if(((Textbox) getFellow("eGroup")).getValue() != null && !((Textbox) getFellow("eGroup")).getValue().isEmpty()) {
@@ -147,7 +142,7 @@ public class NewInstanceController extends Window implements AfterCompose {
      */
     public void createInstance(boolean eGroupExists) {
         //Check for errors in form
-        if (isDbNameValid() & isEGroupValid() & isCategoryValid() & isExpiryDateValid() & isDbTypeValid()
+        if (isUsernameValid() & isDbNameValid() & isEGroupValid() & isCategoryValid() & isExpiryDateValid() & isDbTypeValid()
                 & isDbSizeValid() & isNOConnectionsValid() & isProjectValid() & isDescriptionValid()) {
             try {
                 boolean eGroupCreated = false;
@@ -161,7 +156,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 if (eGroupExists || eGroupCreated) {
                     //Create instace object
                     DODInstance instance = new DODInstance();
-                    instance.setUsername(username);
+                    instance.setUsername(((Textbox) getFellow("username")).getValue());
                     instance.setDbName(((Textbox) getFellow("dbName")).getValue());
                     instance.setEGroup(((Textbox) getFellow("eGroup")).getValue());
                     instance.setCategory(((String)((Combobox) getFellow("category")).getSelectedItem().getValue()));
@@ -206,6 +201,53 @@ public class NewInstanceController extends Window implements AfterCompose {
                 Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP " + ((Textbox) getFellow("eGroup")).getValue(), ex);
             }
         }  
+    }
+    
+    /**
+     * Validates username
+     * @return true if username is valid, false otherwise
+     */
+    private boolean isUsernameValid() {
+        Textbox username = (Textbox) getFellow("username");
+        //If there are no previous errors
+        if (username.getErrorMessage() == null || username.getErrorMessage().isEmpty()) {
+            //Check if user has entered a value
+            if (username.getValue().isEmpty()) {
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_EMPTY));
+                return false;
+            }
+            //Check dbName length
+            if (username.getValue().length() > DODConstants.MAX_USERNAME_LENGTH) {
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_LENGTH));
+                return false;
+            }
+            //ASCII digits and non-digits
+            if (!Pattern.matches("[a-zA-Z]*", username.getValue())) {
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_CHARS));
+                return false;
+            }
+            //Check if the user exists
+            try {              
+                UserInfo info = authenticationHelper.getUserInfo(username.getValue());
+                if (info != null && info.getCcid() > 0) {
+                    userCCID = info.getCcid();
+                    fullName = info.getFirstname() + " " + info.getLastname();
+                }
+                else {
+                    username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_NOT_FOUND));
+                    return false;
+                }
+            } catch (RemoteException ex) {
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_WS));
+                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OBTAINING INFO FOR USER " + username.getValue(), ex);
+            } catch (ServiceException ex) {  
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_WS));
+                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OBTAINING INFO FOR USER " + username.getValue(), ex);
+            }
+        }
+        else
+            return false;
+        return true;
     }
 
     /**
