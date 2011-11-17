@@ -285,7 +285,7 @@ public class JobHelper {
      * @param pitrTime offset to restore.
      * @return true if the creation of this job was successful, false otherwise.
      */
-    public boolean doRestore(DODInstance instance, String username, DODSnapshot snapshot) {
+    public boolean doRestore(DODInstance instance, String username, DODSnapshot snapshot, Date pitrTime) {
         Date now = new Date();
         DateFormat formatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT_PITR);
         //Create job
@@ -328,7 +328,7 @@ public class JobHelper {
         pitrParam.setType(instance.getDbType());
         pitrParam.setCreationDate(now);
         pitrParam.setName(DODConstants.PARAM_PITR_TIME);
-        pitrParam.setValue(formatter.format(snapshot.getCreationDate()));
+        pitrParam.setValue(formatter.format(pitrTime));
         params.add(pitrParam);
         //Insert job
         int result = jobDAO.insert(job, params);
