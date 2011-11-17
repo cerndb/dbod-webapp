@@ -11,6 +11,8 @@
         <![CDATA[
             import ch.cern.dod.ui.controller.AdminController;
             import ch.cern.dod.ui.controller.TopBarController;
+            import ch.cern.dod.ui.controller.NewInstanceController;
+            import ch.cern.dod.util.DODConstants;
         ]]>
     </zscript>
 
@@ -18,7 +20,7 @@
     <topBar/>
 
     <!-- Main container for the databases overview (calls init method when created)-->
-    <vbox use="AdminController" id="controller" style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+    <vbox use="AdminController" id="controller" style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
         <!-- Error window -->
         <error/>
         <!-- Timer to update the instances every minute -->
@@ -68,7 +70,152 @@
                 <div if="${controller.instancesSize == 0}" style="padding-right:500px">
                     <label value="${c:l('emptyInstancesListAdmin')}"/>
                 </div>
+                <!--Button to create new instance  -->
+                <hbox height="24px" align="bottom">
+                    <label sclass="title" value="${c:l('newInstance')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.doModal();"/>
+                    <toolbarbutton tooltiptext="${c:l('newInstance')}" sclass="button" image="/img/newDB.png" onClick="newInstance.doModal();"/>
+                </hbox>
             </vbox>
         </groupbox>
     </vbox>
+    
+    <!-- Popup to create a new request -->
+    <window id="newInstance" use="NewInstanceController" title="${c:l('newInstance')}" border="normal" mode="overlapped" visible="false" position="center" width="365px" closable="false">
+        <grid style="border:none">
+            <columns>
+                <column width="120px" />
+                <column width="220px"/>
+            </columns>
+            <rows>
+                <!-- Username -->
+                <row style="border:none;">
+                    <label value="${c:l('username')}"/>
+                    <textbox id="username" width="197px" />
+                </row>
+                <!-- DB name -->
+                <row style="border:none;">
+                    <label value="${c:l('dbName')}"/>
+                    <textbox id="dbName" width="200px"/>
+                </row>
+                <!-- e-groups -->
+                <row style="border:none;">
+                    <label value="${c:l('eGroup')}" />
+                    <textbox id="eGroup" width="200px"/>
+                </row>
+                <!-- Category -->
+                <row style="border:none;">
+                    <label value="${c:l('category')}"/>
+                    <combobox id="category" width="200px" mold="rounded" readonly="true">
+                        <comboitem label="${c:l('categoryOFFICIAL')}" />
+                        <comboitem label="${c:l('categoryPERSONAL')}" />
+                        <comboitem label="${c:l('categoryTEST')}" />
+                    </combobox>
+                </row>
+                <!-- Project -->
+                <row style="border:none;">
+                    <label value="${c:l('project')}" />
+                    <textbox id="project" width="200px"/>
+                </row>
+                <!-- Expiry date -->
+                <row style="border:none;">
+                    <label value="${c:l('expiryDate')}"/>
+                    <datebox id="expiryDate" width="200px" />
+                </row>
+                <!-- DB type -->
+                <row style="border:none;">
+                    <label value="${c:l('dbType')}"/>
+                    <combobox id="dbType" width="200px" mold="rounded" readonly="true">
+                        <!-- <comboitem label="${c:l('dbTypeORACLE')}" /> -->
+                        <comboitem label="${c:l('dbTypeMYSQL')}" />
+                    </combobox>
+                </row>
+                <!-- DB size -->
+                <row style="border:none;">
+                    <label value="${c:l('dbSize')} (GB)"/>
+                    <vbox>
+                        <slider id="dbSizeSlider" mold="scale" width="200px" onScroll="dbSize.setText(String.valueOf(dbSizeSlider.getCurpos()) );"/>
+                        <textbox id="dbSize" width="200px">
+                            <attribute name="onChange">
+                                <![CDATA[
+                                    int size;
+                                    try {
+                                        size = Integer.valueOf(dbSize.getText()).intValue();
+                                        if (size > 0 && size <= DODConstants.MAX_DB_SIZE)
+                                            dbSizeSlider.setCurpos(size);
+                                        else
+                                            dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
+                                    } catch(java.lang.NumberFormatException ex) {
+                                        dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                    }
+                                ]]>
+                            </attribute>
+                        </textbox>
+                    </vbox>
+                </row>
+                <!-- Number of connections -->
+                <row style="border:none;">
+                    <label value="${c:l('noConnections')}"/>
+                    <vbox>
+                        <slider id="noConnectionsSlider" mold="scale" width="200px">
+                            <attribute name="onScroll">
+                                <![CDATA[
+                                    noConnections.setText(String.valueOf(noConnectionsSlider.getCurpos()));
+                                ]]>
+                            </attribute>
+                        </slider>
+                        <textbox id="noConnections" width="200px" >
+                            <attribute name="onChange">
+                                <![CDATA[
+                                    int conn;
+                                    try {
+                                        conn = Integer.valueOf(noConnections.getText()).intValue();
+                                        if (conn > 0 && conn <= DODConstants.MAX_NO_CONNECTIONS)
+                                            noConnectionsSlider.setCurpos(conn);
+                                        else
+                                            noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
+                                    } catch(java.lang.NumberFormatException ex) {
+                                        dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                    }
+                                ]]>
+                            </attribute>
+                        </textbox>
+                    </vbox>
+                </row>
+                <!-- Description -->
+                <row style="border:none;">
+                    <label value="${c:l('description')}"/>
+                    <textbox id="description" multiline="true" width="200px" height="100px" style="resize:vertical;"/>
+                </row>
+            </rows>
+        </grid>
+        <!-- Buttons -->
+        <div width="100%">
+            <hbox height="24px" align="bottom" style="float:left">
+                <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="newInstance.setVisible(false);"/>
+                <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.setVisible(false);"/>
+            </hbox>
+            <hbox height="24px" align="bottom" style="float:right">
+                <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.createInstanceAndCheckEGroup();"/>
+                <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="newInstance.createInstanceAndCheckEGroup();"/>
+            </hbox>
+        </div>
+
+        <!-- Confirm window to create e-group -->
+        <window id="eGroupConfirm" title="${c:l('eGroupConfirmTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
+            <hbox width="100%" align="top">
+                <image src="/img/warning.png" style="margin-right:10px"/>
+                <label value="${c:l('eGroupConfirm')}" />
+            </hbox>
+            <div width="100%">
+                <hbox height="24px" align="bottom" style="float:left">
+                    <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="eGroupConfirm.setVisible(false);"/>
+                    <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
+                </hbox>
+                <hbox height="24px" align="bottom" style="float:right">
+                    <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);newInstance.createInstance(false);"/>
+                    <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);newInstance.createInstance(false);"/>
+                </hbox>
+            </div>
+        </window>
+    </window>
 </zk>
