@@ -14,7 +14,8 @@ import org.zkoss.zul.Treeitem;
 /**
  * Controller for help page.
  * @author Daniel Gomez Blanco
- * @version 26/09/2011
+ * @version 16/11/2011
+ * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class HelpController extends Hbox implements AfterCompose{
 
