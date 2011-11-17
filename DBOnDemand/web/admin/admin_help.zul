@@ -17,30 +17,21 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
         <!-- Main container for the help page (calls init method when created)-->
-        <hbox use="AdminHelpController" id="controller" align="top">
+        <hbox align="top">
             <!-- Error window -->
             <error/>
 
-            <!-- Groupbox for the file tree -->
+            <!-- Groupbox for the  tree -->
             <groupbox mold="3d">
                 <caption label=" ">
                     <div height="24px">
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
                     </div>
                 </caption>
-                <tree id="helpTree" width="300px"/>
-            </groupbox>
-
-            <!-- Groupbox for the content -->
-            <groupbox width="800px" mold="3d">
-                <caption label=" ">
-                    <div height="24px">
-                        <label id="title" sclass="title" style="float:left;"/>
-                    </div>
-                </caption>
-                <html id="content" width="100%" />
+                <iframe id="tree" width="250px" height="700px" src="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandAdmin?template=viewplain"/>
+                <iframe id="content" name="dodhelpcontent" width="900px" height="700px" src="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandInstallation?template=viewplain"/>
             </groupbox>
         </hbox>
     </vbox>
