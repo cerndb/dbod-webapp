@@ -3,16 +3,18 @@ package ch.cern.dod.ui.renderer;
 import ch.cern.dod.util.DODConstants;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.zkoss.util.media.AMedia;
-import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Html;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
@@ -21,7 +23,8 @@ import org.zkoss.zul.Window;
 /**
  * Implements a renderer for tree items.
  * @author Daniel Gomez Blanco
- * @version 26/09/2011
+ * @version 16/11/2011
+ * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class FileTreeItemRenderer implements TreeitemRenderer{
 
@@ -33,18 +36,32 @@ public class FileTreeItemRenderer implements TreeitemRenderer{
     public void render(final Treeitem item, Object data) {
         if (data != null) {
             final File file = (File) data;
-            final String label = file.getName().substring(file.getName().indexOf("-")+1).replaceAll("_", " ").replaceAll(".html", "");
+            final String label = file.getName().substring(file.getName().indexOf("-")+1).replaceAll("_", " ").replaceAll(".zul", "");
             item.setLabel(label);
+            item.setId(file.getAbsolutePath());
             item.addEventListener(Events.ON_CLICK, new EventListener() {
                 public void onEvent(Event event) {
                     try {
+                        //If it is a file and not a directory
                         if (file != null && !file.isDirectory()) {
-                            ((Label) item.getFellow("title")).setValue(label);
-                            Media media = new AMedia(file, "text/html", "UTF-8");
-                            Html content = (Html) item.getFellow("content");
-                            content.setContent(media.getStringData());
                             item.setSelected(true);
+                            ((Label) item.getFellow("title")).setValue(label);
+                            Div content = (Div) item.getFellow("content");
+                            //If there is something loaded detach it
+                            if (content.getFellowIfAny("helpContainer") != null)
+                                content.getFellow("helpContainer").detach();
+                            FileReader reader = new FileReader(file);
+                            Div container = new Div();
+                            container.setId("helpContainer");
+                            content.appendChild(container);
+                            try {
+                                Component helpPage = Executions.createComponentsDirectly(reader, null, container, null);
+                            } catch (IOException ex) {
+                                Logger.getLogger(FileTreeItemRenderer.class.getName()).log(Level.SEVERE, "ERROR OBTAINING HELP FILE", ex);
+                            }
+                            
                         }
+                        //If it is a directory open it or close it
                         else {
                             item.setSelected(false);
                             if (item.isOpen())

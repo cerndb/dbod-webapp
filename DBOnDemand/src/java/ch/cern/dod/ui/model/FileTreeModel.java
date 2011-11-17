@@ -8,7 +8,8 @@ import org.zkoss.zul.AbstractTreeModel;
 /**
  * Tree model for a file tree.
  * @author Daniel Gomez Blanco.
- * @version 26/09/2011
+ * @version 16/11/2011
+ * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class FileTreeModel extends AbstractTreeModel {
 
