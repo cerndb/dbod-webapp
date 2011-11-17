@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author Daniel Gomez Blanc
  */
-public class DODSnapshot {
+public class DODSnapshot implements Comparable {
     /**
      * Snapshot creation date
      */
@@ -30,5 +30,10 @@ public class DODSnapshot {
 
     public void setFileLocator(String fileLocator) {
         this.fileLocator = fileLocator;
+    }
+
+    public int compareTo(Object object) {
+        DODSnapshot snapshot = (DODSnapshot) object;
+        return creationDate.compareTo(snapshot.getCreationDate());
     }
 }
