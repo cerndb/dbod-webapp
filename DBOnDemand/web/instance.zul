@@ -18,7 +18,7 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
         <!-- Main container for the databases overview (calls init method when created)-->
         <hbox use="InstanceController" id="controller" align="top">
             <!-- Error window -->
@@ -213,19 +213,15 @@
                 </groupbox>
             </groupbox>
              <!-- Confirm window to create e-group -->
-            <window id="eGroupConfirm" title="${c:l('eGroupConfirmTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
+            <window id="eGroupConfirm" title="${c:l('eGroupDoesNotExistTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
                 <hbox width="100%" align="top">
                     <image src="/img/warning.png" style="margin-right:10px"/>
-                    <label value="${c:l('eGroupConfirm')}" />
+                    <label value="${c:l('eGroupDoesNotExist')}" />
                 </hbox>
                 <div width="100%">
-                    <hbox height="24px" align="bottom" style="float:left">
-                        <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="eGroupConfirm.setVisible(false);"/>
-                        <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
-                    </hbox>
                     <hbox height="24px" align="bottom" style="float:right">
-                        <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);controller.editEGroup(false);"/>
-                        <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);controller.editEGroup(false);"/>
+                        <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
+                        <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);"/>
                     </hbox>
                 </div>
             </window>
