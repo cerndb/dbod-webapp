@@ -8,6 +8,8 @@ import ch.cern.dod.util.JobHelper;
 import ch.cern.dod.util.SnapshotHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,12 +21,11 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
@@ -49,11 +50,11 @@ public class RestoreController extends Window {
      */
     private SnapshotCalendar snapshotCalendar;
     /**
-     * Combo to select a snapshot to restore
+     * Timebox to select time to restore
      */
-    private Combobox snapshotsCombo;
+    private Timebox time;
     /**
-     * User athenticated in the system at the moment.
+     * User authenticated in the system at the moment.
      */
     private String username;
     /**
@@ -68,8 +69,26 @@ public class RestoreController extends Window {
      * List of snapshots for the current instance.
      */
     private List<DODSnapshot> snapshots;
-
     
+    /**
+     * Box to list calendar and snapshots for a specific day.
+     */
+    private Hbox snapshotsBox;
+    
+    /**
+     * Box to list snapshots for a specific day.
+     */
+    private Vbox snapshotsList;
+    
+    /**
+     * Min date for PITR
+     */
+    private Date minDate;
+    
+    /**
+     * Max date for PITR
+     */
+    private Date maxDate;
 
     /**
      * Creates this window, obtains the snapshots from the database and creates child components.
@@ -96,6 +115,7 @@ public class RestoreController extends Window {
         //Get snapshots
         SnapshotHelper snapshotHelper = new SnapshotHelper(wsUser, wsPswd);
         snapshots = snapshotHelper.getSnapshots(instance);
+        Collections.sort(snapshots);
 
         //Basic window properties
         this.setId("restoreWindow");
@@ -104,7 +124,7 @@ public class RestoreController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("250px");
+        this.setWidth("430px");
 
         //Main box, used to apply padding
         Vbox mainBox = new Vbox();
@@ -112,26 +132,40 @@ public class RestoreController extends Window {
         this.appendChild(mainBox);
 
         //Calendar label
-        Label calendarLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_SNAPSHOT_DATE) + ":");
+        Label calendarLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_SNAPSHOT_DATE));
         calendarLabel.setStyle("font-weight:bold");
         mainBox.appendChild(calendarLabel);
 
+        //Box for snapshots
+        snapshotsBox = new Hbox();
+        
+        //Box for calendar an time
+        Vbox calendarTime = new Vbox();
         //Create calendar and append it
         snapshotCalendar = new SnapshotCalendar();
         snapshotCalendar.setSnapshots(snapshots);
         snapshotCalendar.addEventListener(Events.ON_CHANGE, new EventListener() {
-            public void onEvent(Event event) throws Exception {
+            public void onEvent(Event event) {
                 loadSnapshotsForDay(snapshotCalendar.getValue());
             }
         });
-        mainBox.appendChild(snapshotCalendar);
+        calendarTime.appendChild(snapshotCalendar);
+        
+        //Time to restore
+        Hbox timeBox = new Hbox();
+        timeBox.setAlign("bottom");
+        Label timeLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_TIME));
+        timeLabel.setStyle("font-weight:bold");
+        timeBox.appendChild(timeLabel);
+        time = new Timebox();
+        timeBox.appendChild(time);
+        calendarTime.appendChild(timeBox);
+        snapshotsBox.appendChild(calendarTime);
 
-        //Snapshots
-        snapshotsCombo = new Combobox();
-        snapshotsCombo.setMold("rounded");
-        snapshotsCombo.setReadonly(true);
+        //Load snapshots for today
         loadSnapshotsForDay(new Date());
-        mainBox.appendChild(snapshotsCombo);
+        
+        mainBox.appendChild(snapshotsBox);
 
         //Div for accept and cancel buttons
         Div buttonsDiv = new Div();
@@ -198,24 +232,44 @@ public class RestoreController extends Window {
      */
     private void doAccept() {
         //If there is a snapshot selected
-        if (snapshotsCombo.getSelectedItem().getValue() != null) {
-            //Create new job and update instance status
-            if (jobHelper.doRestore(instance, username, (DODSnapshot) snapshotsCombo.getSelectedItem().getValue())) {
-                //If we are in the overview page
-                if (snapshotsCombo.getRoot().getFellowIfAny("overviewGrid") != null) {
-                    Grid grid = (Grid) snapshotsCombo.getRoot().getFellow("overviewGrid");
-                    grid.setModel(grid.getListModel());
-                } //If we are in the instance page
-                else if (snapshotsCombo.getRoot().getFellowIfAny("controller") != null && snapshotsCombo.getRoot().getFellow("controller") instanceof InstanceController) {
-                    InstanceController controller = (InstanceController) snapshotsCombo.getRoot().getFellow("controller");
-                    controller.afterCompose();
+        if (time.getValue() != null) {
+            Calendar day = Calendar.getInstance();
+            day.setTime(snapshotCalendar.getValue());
+            Calendar hour = Calendar.getInstance();
+            hour.setTime(time.getValue());
+            Calendar dayHour = Calendar.getInstance();
+            dayHour.set(day.get(Calendar.YEAR), day.get(Calendar.MONTH), day.get(Calendar.DAY_OF_MONTH),
+                        hour.get(Calendar.HOUR_OF_DAY), hour.get(Calendar.MINUTE), hour.get(Calendar.SECOND));
+            Date dateToRestore = dayHour.getTime();
+            System.out.println(dateFormatter.format(dateToRestore) + " " + timeFormatter.format(dateToRestore));
+            if (dateToRestore.compareTo(new Date()) < 0) {
+                DODSnapshot snapshotToRestore = getSnapshotToRestore(dateToRestore);
+                if (snapshotToRestore != null) {
+                    //Create new job and update instance status
+                    if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
+                        //If we are in the overview page
+                        if (time.getRoot().getFellowIfAny("overviewGrid") != null) {
+                            Grid grid = (Grid) time.getRoot().getFellow("overviewGrid");
+                            grid.setModel(grid.getListModel());
+                        } //If we are in the instance page
+                        else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
+                            InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");
+                            controller.afterCompose();
+                        }
+                    } else {
+                        showError(DODConstants.ERROR_DISPATCHING_JOB);
+                    }
+                    time.getFellow("restoreWindow").detach();
                 }
-            } else {
-                showError(DODConstants.ERROR_DISPATCHING_JOB);
+                else {
+                    time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_SNAPSHOT)); 
+                }
             }
-            snapshotsCombo.getFellow("restoreWindow").detach();
+            else {
+               time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SNAPSHOT_PAST)); 
+            }
         } else {
-            snapshotsCombo.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SELECT_SNAPSHOT));
+            time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SELECT_SNAPSHOT));
         }
     }
 
@@ -223,7 +277,7 @@ public class RestoreController extends Window {
      * Detachs the windows from the page.
      */
     private void doCancel() {
-        snapshotsCombo.getFellow("restoreWindow").detach();
+        time.getFellow("restoreWindow").detach();
     }
 
     /**
@@ -232,28 +286,54 @@ public class RestoreController extends Window {
      */
     private void loadSnapshotsForDay(Date date) {
         //Remove previous items
-        snapshotsCombo.getItems().removeAll(snapshotsCombo.getItems());
+        if (snapshotsList != null)
+            snapshotsList.detach();
+        snapshotsList = new Vbox();
+        snapshotsList.setStyle("margin-left:10px");
 
-        //Insert items in combobox
-        Comboitem selectOne = new Comboitem();
-        selectOne.setValue(null);
-        selectOne.setLabel(Labels.getLabel(DODConstants.LABEL_SELECT_ONE));
-        snapshotsCombo.appendChild(selectOne);
+        //Insert label in vbox
+        Label title = new Label(Labels.getLabel(DODConstants.LABEL_SNAPSHOTS_FOR_DAY));
+        snapshotsList.appendChild(title);
         if (snapshots != null && snapshots.size() > 0) {
             for (int i = 0; i < snapshots.size(); i++) {
                 DODSnapshot snapshot = snapshots.get(i);
                 if (dateFormatter.format(snapshot.getCreationDate()).equals(dateFormatter.format(date))) {
-                    Comboitem item = new Comboitem();
-                    item.setValue(snapshot);
-                    String label = timeFormatter.format(snapshot.getCreationDate());
-                    item.setLabel(label);
-                    snapshotsCombo.appendChild(item);
+                    Label label = new Label(timeFormatter.format(snapshot.getCreationDate()));
+                    label.setStyle("margin-left:12px;font-style:italic");
+                    snapshotsList.appendChild(label);
                 }
             }
         }
-        
-        //Select first element
-        snapshotsCombo.setSelectedIndex(0);
+        if (snapshotsList.getChildren().size() == 1) {
+            Label noSnapshots = new Label(Labels.getLabel(DODConstants.LABEL_SNAPSHOTS_FOR_DAY_EMPTY));
+            noSnapshots.setStyle("font-style:italic");
+            snapshotsList.appendChild(noSnapshots);
+        }
+        snapshotsBox.appendChild(snapshotsList);
+    }
+    
+    /**
+     * Returns the closest snapshot to the given date.
+     * @param dateToRestore date to restore.
+     * @return closest snapshot to the given date, or null if there is no snapshot taken.
+     */
+    private DODSnapshot getSnapshotToRestore (Date dateToRestore) {
+        DODSnapshot toret = null;
+        if (snapshots != null && snapshots.size() > 0) {
+            for (int i = 0; i < snapshots.size(); i++) {
+                DODSnapshot snapshot = snapshots.get(i);
+                //If there is a previous snapshot
+                if (snapshot.getCreationDate().compareTo(dateToRestore) <= 0) {
+                    toret = snapshot;
+                }
+                //If the snapshot is in the future there will be no more snapshots (array is ordered)
+                else
+                {
+                    break;
+                }
+            }
+        }
+        return toret;
     }
 
     /**
