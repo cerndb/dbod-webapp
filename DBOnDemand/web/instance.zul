@@ -18,7 +18,7 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
+    <vbox style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
         <!-- Main container for the databases overview (calls init method when created)-->
         <hbox use="InstanceController" id="controller" align="top">
             <!-- Error window -->

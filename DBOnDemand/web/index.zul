@@ -18,7 +18,7 @@
     <topBar/>
 
     <!-- Main container for the databases overview (calls init method when created)-->
-    <vbox use="OverviewController" id="controller" style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
+    <vbox use="OverviewController" id="controller" style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
         <!-- Error window -->
         <error/>
         <!-- Timer to update the instances every minute -->

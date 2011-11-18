@@ -17,7 +17,7 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="center">
+    <vbox style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
         <!-- Main container for the help page (calls init method when created)-->
         <hbox align="top">
             <!-- Error window -->
@@ -31,7 +31,7 @@
                     </div>
                 </caption>
                 <iframe id="tree" width="250px" height="700px" src="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandAdmin?template=viewplain"/>
-                <iframe id="content" name="dodhelpcontent" width="900px" height="700px" src="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandInstallation?template=viewplain"/>
+                <iframe id="content" name="dodhelpcontent" width="900px" height="700px" src="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandDocumentation?template=viewplain"/>
             </groupbox>
         </hbox>
     </vbox>

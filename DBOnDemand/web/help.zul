@@ -18,7 +18,7 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;margin-left:30px" align="left">
+    <vbox style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
         <!-- Main container for the help page (calls init method when created)-->
         <hbox align="top">
             <!-- Error window -->
