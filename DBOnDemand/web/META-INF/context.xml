@@ -2,7 +2,7 @@
 <Context antiJARLocking="true" path="/DBOnDemand">
     <Resource name="jdbc/dbondemand" auth="Container"
               type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
-              url="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oradev11.cern.ch)(PORT=10121))(ENABLE=BROKEN)(CONNECT_DATA= (SID=DEVDB11)))"
+              url="jdbc:oracle:thin:@( DESCRIPTION= (ADDRESS= (PROTOCOL=TCP) (HOST=itcore2-v.cern.ch) (PORT=1574)) (ADDRESS= (PROTOCOL=TCP) (HOST=itcore1-v.cern.ch) (PORT=1574)) (FAILOVER=on) (LOAD_BALANCE=off) (ENABLE=BROKEN) (CONNECT_DATA= (SERVER=DEDICATED) (SERVICE_NAME=ITCORE_S.cern.ch) (FAILOVER_MODE= (TYPE=SELECT) (METHOD=BASIC))))"
               username="dbondemand" 
 	      password="Sup3rN0va11" 
               maxActive="50" 
