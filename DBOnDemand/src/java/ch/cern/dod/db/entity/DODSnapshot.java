@@ -3,8 +3,9 @@ package ch.cern.dod.db.entity;
 import java.util.Date;
 
 /**
- *
- * @author Daniel Gomez Blanc
+ * Represents a snapshot with its creation date and the file name. 
+ * @author Daniel Gomez Blanco
+ * @version 24/11/2011
  */
 public class DODSnapshot implements Comparable {
     /**
