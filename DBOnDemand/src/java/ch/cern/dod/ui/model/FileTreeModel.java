@@ -8,7 +8,7 @@ import org.zkoss.zul.AbstractTreeModel;
 /**
  * Tree model for a file tree.
  * @author Daniel Gomez Blanco.
- * @version 16/11/2011
+ * @version 22/11/2011
  * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class FileTreeModel extends AbstractTreeModel {
@@ -66,6 +66,10 @@ public class FileTreeModel extends AbstractTreeModel {
         }
     }
 
+    /**
+     * Sorts the files in the to show them in alphabetical order.
+     * @param files files to be sorted.
+     */
     private void sortFiles(File[] files) {
         Arrays.sort(files, new Comparator() {
             public int compare(Object o1, Object o2) {

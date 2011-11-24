@@ -12,7 +12,7 @@ import org.zkoss.util.media.AMedia;
 /**
  * Helper to manage snapshots using web services.
  * @author Daniel Gomez Blanco
- * @version 14/10/2011
+ * @version 22/11/2011
  */
 public class ConfigFileHelper {
 
@@ -40,8 +40,6 @@ public class ConfigFileHelper {
      * @param instance instance to get the snapshots of.
      * @param file path of the file to get.
      * @return configuration file.
-     * @throws ServiceException if there is an error executing the web service.
-     * @throws RemoteException if there is an error connection to the server.
      */
     public AMedia getFile(DODInstance instance, String filePath) {
         AMedia file = null;

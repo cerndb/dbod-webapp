@@ -23,7 +23,7 @@ import org.zkoss.zul.Window;
 /**
  * Implements a renderer for tree items.
  * @author Daniel Gomez Blanco
- * @version 16/11/2011
+ * @version 22/11/2011
  * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class FileTreeItemRenderer implements TreeitemRenderer{
@@ -80,6 +80,7 @@ public class FileTreeItemRenderer implements TreeitemRenderer{
     
     /**
      * Displays an error window for the error code provided.
+     * @param item tree item on which the error occured.
      * @param errorCode error code for the message to be displayed.
      */
     private void showError(Treeitem item, String errorCode) {

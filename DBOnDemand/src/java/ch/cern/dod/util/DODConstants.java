@@ -3,7 +3,7 @@ package ch.cern.dod.util;
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
- * @version 23/07/2011
+ * @version 22/11/2011
  */
 public class DODConstants {
     

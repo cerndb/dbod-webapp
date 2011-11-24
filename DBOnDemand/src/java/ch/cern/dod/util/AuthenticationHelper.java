@@ -32,6 +32,13 @@ public class AuthenticationHelper {
         this.wsPassword = password;
     }
 
+    /**
+     * 
+     * @param username user to obtain the inforamtion from.
+     * @return information from user passed as parameter.
+     * @throws ServiceException if an exception occurs while locating the webservice.
+     * @throws RemoteException if an exception occurs while calling the webservice.
+     */
     public UserInfo getUserInfo(String username) throws ServiceException, RemoteException {
         AuthenticationLocator locator = new AuthenticationLocator();
         AuthenticationSoapStub service = (AuthenticationSoapStub) locator.getAuthenticationSoap();
