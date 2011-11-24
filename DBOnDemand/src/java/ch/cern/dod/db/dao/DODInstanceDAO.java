@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 /**
  * DAO for DODInstance entity.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
+ * @version 23/11/2011
  */
 public class DODInstanceDAO {
 
@@ -312,8 +312,8 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Delete an instance from the database. It does not delete it physically, but logically,
-     * setting the status field to 0.
+     * Deletes an instance from the database. It does not delete it physically, but logically,
+     * setting the status field to 0. It also creates a job to log the user that deleted the isntance.
      * @param instance instance to be deleted.
      * @return 1 if the operation was successful, 0 otherwise.
      */
@@ -405,7 +405,7 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Updates an instance (egroup, expiry date, project, description)
+     * Updates an instance with new values for e-group, expiry date, project or description.
      * @param instance instance to be updated.
      * @return 1 if the operation was successful, 0 otherwise.
      */
