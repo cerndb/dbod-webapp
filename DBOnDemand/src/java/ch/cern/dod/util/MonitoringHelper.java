@@ -54,9 +54,7 @@ public class MonitoringHelper {
      * @throws IOException if there is an error processing the response.
      */
     public RenderedImage getMetric (DODInstance instance, String metric) throws IOException {
-//        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName() + "&"
-//                            + DODConstants.MONITORING_METRIC + "=" + metric);
-        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + "provasql" + "&"
+        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName() + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
         RenderedImage image = ImageIO.read(plotUrl);
         return image;
