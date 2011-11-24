@@ -14,7 +14,7 @@ import org.zkoss.zul.Treeitem;
 /**
  * Controller for help page.
  * @author Daniel Gomez Blanco
- * @version 16/11/2011
+ * @version 22/11/2011
  * @deprecated Help is retrieved from CERN's TWiki now
  */
 public class HelpController extends Hbox implements AfterCompose{
@@ -37,6 +37,11 @@ public class HelpController extends Hbox implements AfterCompose{
         }
     }
 
+    /**
+     * Recursive function to expand all items until it finds a leaf node.
+     * @param item root item to be expanded.
+     * @return true if the item is a leaf node, false otherwise.
+     */
     private boolean expandItem (Treeitem item) {
         item.setOpen(true);
         if (item.isContainer()) {

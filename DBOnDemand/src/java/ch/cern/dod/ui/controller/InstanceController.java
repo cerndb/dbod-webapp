@@ -239,7 +239,10 @@ public class InstanceController extends Hbox implements AfterCompose {
         }
     }
 
-     private void loadButtons() {
+    /**
+     * Loads the buttons (enabled or disabled depending on the instance state).
+     */
+    private void loadButtons() {
         //Startup button
         Toolbarbutton startupBtn = (Toolbarbutton) getFellow("startup");
         //Only enable button if the instance is stopped

@@ -5,9 +5,6 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.AuthenticationHelper;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
-import ch.cern.dod.ws.authentication.AuthenticationLocator;
-import ch.cern.dod.ws.authentication.AuthenticationSoap;
-import ch.cern.dod.ws.authentication.AuthenticationSoapStub;
 import ch.cern.dod.ws.authentication.UserInfo;
 import java.rmi.RemoteException;
 import java.util.Date;
@@ -31,7 +28,7 @@ import org.zkoss.zul.Window;
 /**
  * Controller for the window that creates a new instance in DBOnDemand
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
+ * @version 23/11/2011
  */
 public class NewInstanceController extends Window implements AfterCompose {
     /**

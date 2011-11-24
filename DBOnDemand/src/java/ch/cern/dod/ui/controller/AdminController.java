@@ -26,7 +26,7 @@ import org.zkoss.zul.Window;
 /**
  * Controller for the admin overview of instances. It allows the admins to manage every instance.
  * @author Daniel Gomez Blanco
- * @version 14/10/2011
+ * @version 22/11/2011
  */
 public class AdminController extends Vbox implements BeforeCompose, AfterCompose{
     /**
@@ -208,7 +208,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays an error window for the error code provided.
-     * @param exception exception to be logged (can be null).
      * @param errorCode error code for the message to be displayed.
      */
     private void showError(String errorCode) {
