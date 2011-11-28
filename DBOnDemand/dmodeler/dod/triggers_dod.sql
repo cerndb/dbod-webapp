@@ -19,3 +19,24 @@ BEGIN
 END;
 /
 
+-- Trigger to update username on dod_jobs on cascade when updating dod_instances.
+CREATE OR REPLACE TRIGGER dod_instances_update_username
+AFTER UPDATE OF username ON dod_instances
+FOR EACH ROW
+BEGIN
+    update dod_jobs
+        SET username = :NEW.username
+        WHERE username = :OLD.username;
+END;
+/
+
+-- Trigger to update username on dod_command_params on cascade when updating dod_jobs.
+CREATE OR REPLACE TRIGGER dod_jobs_update_username
+AFTER UPDATE OF username ON dod_jobs
+FOR EACH ROW
+BEGIN
+    update dod_command_params
+        SET username = :NEW.username
+        WHERE username = :OLD.username;
+END;
+/
