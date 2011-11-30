@@ -3,11 +3,13 @@ package ch.cern.dod.filter;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.HTTPHelper;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +50,11 @@ public class AdminFilter implements Filter{
             else
                 HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_NOT_AUTHORIZED);
         }
-        catch (Exception ex) {
+        catch (IOException ex) {
+            Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN ADMIN FILTER", ex);
+            HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
+        }
+        catch (ServletException ex) {
             Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN ADMIN FILTER", ex);
             HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
         }

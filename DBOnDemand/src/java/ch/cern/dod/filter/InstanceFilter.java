@@ -4,11 +4,13 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.HTTPHelper;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -71,8 +73,12 @@ public class InstanceFilter implements Filter {
                 HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_INSTANCE_NOT_FOUND);
             }
         }
-        catch (Exception ex) {
-            Logger.getLogger(InstanceFilter.class.getName()).log(Level.SEVERE, "ERROR IN INSTANCE FILTER", ex);
+        catch (IOException ex) {
+            Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN INSTANCE FILTER", ex);
+            HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
+        }
+        catch (ServletException ex) {
+            Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN INSTANCE FILTER", ex);
             HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
         }
     }
