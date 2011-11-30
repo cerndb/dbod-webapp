@@ -7,9 +7,6 @@ mysqld :
         - 10
         - 1000
     default-storage-engine : INNODB
-    innodb_buffer_pool_size : 
-        - 100M
-        - 1536M
     innodb_read_io_threads : 4
     innodb_write_io_threads : 4
     innodb_io_capacity : 200
