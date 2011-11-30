@@ -57,7 +57,13 @@ sub MYSQL_parser
             $buf->{$keyword} = "";
         }
     }
+        
+    # Neccesary if only one section is defined in the file
+    if (defined $buf && defined $section){
+        $hash{$section} = $buf;
+    }
     return \%hash;
+
 }
 
 sub MYSQL_writeFile{
@@ -105,73 +111,75 @@ sub MYSQL_enforce{
         $res->{$section} = $buf;
     }
    
-
+    # At this poing parsed version is OK.
 
     # Enforces pre-defined parameters. Parameters marked for deletion
     # are added with negative value for their posterior deletion
     
-    foreach my $section_name (keys %template){
+    foreach my $section_name (keys %{$res}){
         my $section_ref = $template{$section_name};
         my %section = %{$section_ref};
-        my $new_paramsref = $new_config->{$section_name};
-        my %new_params = ();
-        if (defined($new_paramsref)){
-            %new_params = %{$new_paramsref}; 
-        }
+        my $new_paramsref = $res->{$section_name};
+        my %new_params = %{$new_paramsref}; 
         my %buf = ();
-        foreach my $param_name (keys %section){
-            my $param_value = $section{$param_name};
-            # Param type checks;
-            if (defined ($param_value)){
-                # If the parameter is defined, is a array or an scalar
-                if (ref($param_value)){
-                    # The parameter has a range of definition
-                    my ($min, $max) = @{$param_value};
-                    my $default = $max;
-                    my $pval  = $new_params{$param_name} ;
-                    if ($pval){
-                        $pval = $pval . "regexp_token";
-                        $pval =~ s/\D//g;
-                        $min =~ s/\D//g;
-                        $max =~ s/\D//g;
-                        if (defined($new_params{$param_name}) 
-                                and( $pval >= $min) 
-                                and ($pval <= $max)){
-                            $logger->debug(" Enforcing r_value [$section_name] : ($param_name, $min, $max, $pval)");
-                            $buf{$param_name} = $new_params{$param_name};
+       
+        foreach my $param_name (keys %new_params){
+            if (exists $section{$param_name}){
+                my $param_value = $section{$param_name};
+                # Param type checks;
+                if (defined ($param_value)){
+                    # If the parameter is defined, is a array or an scalar
+                    if (ref($param_value)){
+                        # The parameter has a range of definition
+                        my ($min, $max) = @{$param_value};
+                        my $default = $max;
+                        my $pval  = $new_params{$param_name} ;
+                        if ($pval){
+                            $pval = $pval . "regexp_token";
+                            $pval =~ s/\D//g;
+                            $min =~ s/\D//g;
+                            $max =~ s/\D//g;
+                            if (defined($new_params{$param_name}) 
+                                    and( $pval >= $min) 
+                                    and ($pval <= $max)){
+                                $logger->debug(" Enforcing r_value [$section_name] : ($param_name, $min, $max, $pval)");
+                                $buf{$param_name} = $new_params{$param_name};
+                            }
+                            else{
+                                $logger->debug(" Enforcing r_value [$section_name] : ($param_name, $min, $max, default) ");
+                                $buf{$param_name} = $default;
+                            }
+                        }
+                    }
+                    else{
+                        # The parameter is an scalar
+                        my $pval = $param_value;
+                        my $nval = $pval;
+                        $nval =~ s/\D//g;
+                        $logger->debug(" Escalar pval, nval : $pval, $nval ");
+                        if (($nval ne "") and ($pval < 0)) {
+                            # Clean parameters marked for deletion
+                           $logger->debug(" Deleting e_value [$section_name]: $param_name ");
+                           delete $buf{$param_name};
                         }
                         else{
-                            $logger->debug(" Enforcing r_value [$section_name] : ($param_name, $min, $max, default) ");
-                            $buf{$param_name} = $default;
+                            $logger->debug(" Enforcing e_value [$section_name] : $param_name ");
+                            $buf{$param_name} = $param_value; 
                         }
                     }
                 }
                 else{
-                    # The parameter is an scalar
-                    my $pval = $param_value;
-                    my $nval = $pval;
-                    $nval =~ s/\D//g;
-                    $logger->debug(" Escalar pval, nval : $pval, $nval ");
-                    if (($nval ne "") and ($pval < 0)) {
-                        # Clean parameters marked for deletion
-                       $logger->debug(" Deleting e_value [$section_name]: $param_name ");
-                       delete $buf{$param_name};
-                    }
-                    else{
-                        $logger->debug(" Enforcing e_value [$section_name] : $param_name ");
-                        $buf{$param_name} = $param_value; 
-                    }
+                    # The parameter is set just by name mention
+                    $logger->debug(" Enforcing m_value [$section_name] : $param_name ");
+                    $buf{$param_name} = ''; # Empty param
                 }
             }
             else{
-                # The parameter is set just by name mention
-                $logger->debug(" Enforcing m_value [$section_name] : $param_name ");
-                $buf{$param_name} = ''; # Empty param
+                $buf{$param_name} = $new_params{$param_name};
             }
         }
         $res->{$section_name} = \%buf;
     }
-
 
     return $res;
 }
