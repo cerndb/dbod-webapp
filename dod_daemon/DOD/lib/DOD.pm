@@ -236,6 +236,7 @@ sub getHostFromEntity{
     $logger->debug( "Fetching host corresponding to entity $entity" );
     my $cmd = "ssh oracle\@dbsrvd242 netservicestab.sh sc_entity=$entity host";
     my $res = `$cmd`;
+    chomp $res;
     $logger->debug( "Hostname: <$res>" );
     return $res;
     }
