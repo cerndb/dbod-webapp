@@ -504,8 +504,11 @@ sub prepareCommand {
         $logger->debug( "Disconnecting from DB" );
         my $nparams = scalar(@{$params});
         my $expected_nparams = 0;
+        my $optional_nparams = 0;
         $expected_nparams++ while ($cmd =~ m/:/g);
-        
+        $optional_nparams++ while ($cmd =~ m/#/g);
+        $logger->debug("Expected: $expected_nparams, Optional: $optional_nparams");
+
         if ($expected_nparams == 0){
             if ($#_ == 0){
                 $logger->debug("Disconnecting from database");
@@ -534,28 +537,45 @@ sub prepareCommand {
                     system("rm -fr $filename");
                     }
                 else{
-                    $cmd =~ s/:$param->{'NAME'}/$param->{'VALUE'}/;
+                    $cmd =~ s/:$param->{'NAME'}=/$param->{'VALUE'}/;
+                    $cmd =~ s/#$param->{'NAME'}=/$param->{'VALUE'}/;
                     }
                 }
-            my $buf;
-            $buf++ while ($cmd =~ m/:/g);
-            if ($#_ == 0){
-                $logger->debug("Disconnecting from database");
-                $dbh->disconnect();
-                }
+            my $buf = 0;
+            $buf++ while ($cmd =~ m/:(.*)+=/g);
             if ($buf) {
                 $logger->error( "Some of the command parameters could not be parsed ");
+                }
+            $buf = 0;
+            $buf++ while ($cmd =~ m/#(.*)+=/g);
+            if ($buf>0) {
+                $logger->debug( "Some of the Optional command parameters could not be parsed" );
+                $logger->debug( "Buf: $buf, cmd: $cmd" );
+                my @items = split( /-/, $cmd);
+                my @result;
+                for my $item (@items){
+                    if ($item !~ m/#(.*)+=/){
+                        $logger->debug("Item: $item");
+                        push(@result, $item);
+                    }
+                }
+                $cmd = join('-', @result);
+                $logger->debug( "Num. optional params: $buf, \ncmd: $cmd" );
                 }
         }
         else {
             $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained." );
-            return undef;
+            $cmd = undef;
         }
         1;
     } or do {
         $logger->error( "Unable to prepare command" );
-        return undef;
+        $cmd = undef;
     };
+    if ($#_ == 0){
+        $logger->debug("Disconnecting from database");
+        $dbh->disconnect();
+        }
     return $cmd;
 }
 
