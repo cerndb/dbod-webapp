@@ -153,6 +153,7 @@ public class DestroyController extends Window {
         } else {
             showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
+        this.detach();
     }
 
     /**
