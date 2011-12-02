@@ -16,16 +16,10 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <div align="center" style="width:100%;padding-top:30px">
+    <div align="center" style="width:100%;padding-top:30px" xmlns:h="http://www.w3.org/1999/xhtml">
         <hbox>
             <label value="${c:l('notAuthorizedMessage')}"/>
-            <label value="${c:l('homePage')}" style="color:blue;cursor:pointer;text-decoration:underline">
-                <attribute name="onClick">
-                    <![CDATA[
-                        Executions.sendRedirect("index.zul");
-                    ]]>
-                </attribute>
-            </label>
+            <h:a href="index.zul">${c:l('homePage')}</h:a>
         </hbox>
     </div>
 </zk>
