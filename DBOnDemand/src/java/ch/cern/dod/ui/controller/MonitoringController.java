@@ -22,6 +22,7 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Html;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
@@ -129,13 +130,8 @@ public class MonitoringController extends Window {
         if (!lemonURL.isEmpty()) {
             Hbox lemonBox = new Hbox();
             Label lemonMessage = new Label(Labels.getLabel(DODConstants.LABEL_LEMON_MESSAGE));
-            Label lemonLink = new Label(Labels.getLabel(DODConstants.LABEL_LEMON_LINK));
-            lemonLink.setStyle("cursor:pointer;color:blue;text-decoration:underline;");
-            lemonLink.addEventListener(Events.ON_CLICK, new EventListener() {
-                    public void onEvent(Event event) {
-                        Executions.getCurrent().sendRedirect(lemonURL, "_blank");
-                }
-            });
+            Html lemonLink = new Html();
+            lemonLink.setContent("<a target=\"_blank\" href=\""+ lemonURL +"\">" + Labels.getLabel(DODConstants.LABEL_LEMON_LINK) + "</a>");
             lemonBox.appendChild(lemonMessage);
             lemonBox.appendChild(lemonLink);
             mainBox.appendChild(lemonBox);
