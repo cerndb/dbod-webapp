@@ -93,7 +93,8 @@ public class DODConstants {
     public static final String LABEL_CREATED_ON = "createdOn";
     public static final String LABEL_SELECT_ONE = "selectOne";
     public static final String LABEL_RESTORE_TITLE = "restoreTitle";
-    public static final String LABEL_SELECT_SNAPSHOT_DATE = "selectSnapshotDate";
+    public static final String LABEL_AVAILABLE_SNAPSHOTS = "availableSnapshots";
+    public static final String LABEL_SELECT_SNAPSHOT = "selectSnapshot";
     public static final String LABEL_CANCEL = "cancel";
     public static final String LABEL_ACCEPT = "accept";
     public static final String LABEL_SELECT_METRIC = "selectMetric";
@@ -119,7 +120,8 @@ public class DODConstants {
     public static final String LABEL_DESTROY_MESSAGE = "destroyMessage";
     public static final String LABEL_SNAPSHOTS_FOR_DAY = "snapshotsForDay";
     public static final String LABEL_SNAPSHOTS_FOR_DAY_EMPTY = "snapshotsForDayEmpty";
-    public static final String LABEL_SELECT_TIME = "selectTime";
+    public static final String LABEL_RESTORE_CONFIRM_TITLE = "restoreConfirmTitle";
+    public static final String LABEL_RESTORE_CONFIRM_MESSAGE = "restoreConfirmMessage";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -162,6 +164,7 @@ public class DODConstants {
     public static final String ERROR_USERNAME_CHARS = "errorUsernameChars";
     public static final String ERROR_USERNAME_WS = "errorUsernameWS";
     public static final String ERROR_USERNAME_NOT_FOUND = "errorUsernameNotFound";
+    public static final String ERROR_DISPLAYING_CONFIRM_WINDOW = "errorDisplayingConfirmWindow";
 
     //Images
     public static final String IMG_AWAITING_APPROVAL = "/img/awaiting.png";
