@@ -18,12 +18,16 @@ import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Hbox;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
@@ -53,6 +57,10 @@ public class RestoreController extends Window {
      * Timebox to select time to restore
      */
     private Timebox time;
+    /**
+     * Datebox to select day to restore
+     */
+    private Datebox day;
     /**
      * User authenticated in the system at the moment.
      */
@@ -124,7 +132,7 @@ public class RestoreController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("430px");
+        this.setWidth("440px");
 
         //Main box, used to apply padding
         Vbox mainBox = new Vbox();
@@ -132,15 +140,13 @@ public class RestoreController extends Window {
         this.appendChild(mainBox);
 
         //Calendar label
-        Label calendarLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_SNAPSHOT_DATE));
+        Label calendarLabel = new Label(Labels.getLabel(DODConstants.LABEL_AVAILABLE_SNAPSHOTS));
         calendarLabel.setStyle("font-weight:bold");
         mainBox.appendChild(calendarLabel);
 
         //Box for snapshots
         snapshotsBox = new Hbox();
         
-        //Box for calendar an time
-        Vbox calendarTime = new Vbox();
         //Create calendar and append it
         snapshotCalendar = new SnapshotCalendar();
         snapshotCalendar.setSnapshots(snapshots);
@@ -149,23 +155,27 @@ public class RestoreController extends Window {
                 loadSnapshotsForDay(snapshotCalendar.getValue());
             }
         });
-        calendarTime.appendChild(snapshotCalendar);
-        
-        //Time to restore
-        Hbox timeBox = new Hbox();
-        timeBox.setAlign("bottom");
-        Label timeLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_TIME));
-        timeLabel.setStyle("font-weight:bold");
-        timeBox.appendChild(timeLabel);
-        time = new Timebox();
-        timeBox.appendChild(time);
-        calendarTime.appendChild(timeBox);
-        snapshotsBox.appendChild(calendarTime);
+        snapshotsBox.appendChild(snapshotCalendar);
 
         //Load snapshots for today
         loadSnapshotsForDay(new Date());
         
         mainBox.appendChild(snapshotsBox);
+        
+        //Time to restore
+        Hbox timeBox = new Hbox();
+        timeBox.setAlign("bottom");
+        Label timeLabel = new Label(Labels.getLabel(DODConstants.LABEL_SELECT_SNAPSHOT));
+        timeLabel.setStyle("font-weight:bold");
+        timeBox.appendChild(timeLabel);
+        day = new Datebox();
+        day.setFormat(DODConstants.DATE_FORMAT);
+        day.setWidth("90px");
+        day.setStyle("margin-left:30px");
+        timeBox.appendChild(day);
+        time = new Timebox();
+        timeBox.appendChild(time);
+        mainBox.appendChild(timeBox);
 
         //Div for accept and cancel buttons
         Div buttonsDiv = new Div();
@@ -232,34 +242,30 @@ public class RestoreController extends Window {
      */
     private void doAccept() {
         //If there is a snapshot selected
-        if (time.getValue() != null) {
-            Calendar day = Calendar.getInstance();
-            day.setTime(snapshotCalendar.getValue());
-            Calendar hour = Calendar.getInstance();
-            hour.setTime(time.getValue());
-            Calendar dayHour = Calendar.getInstance();
-            dayHour.set(day.get(Calendar.YEAR), day.get(Calendar.MONTH), day.get(Calendar.DAY_OF_MONTH),
-                        hour.get(Calendar.HOUR_OF_DAY), hour.get(Calendar.MINUTE), hour.get(Calendar.SECOND));
-            Date dateToRestore = dayHour.getTime();
-            System.out.println(dateFormatter.format(dateToRestore) + " " + timeFormatter.format(dateToRestore));
+        if (day.getValue() != null && time.getValue() != null) {
+            Calendar dayPart = Calendar.getInstance();
+            dayPart.setTime(day.getValue());
+            Calendar timePart = Calendar.getInstance();
+            timePart.setTime(time.getValue());
+            Calendar dayTime = Calendar.getInstance();
+            dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
+                        timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
+            Date dateToRestore = dayTime.getTime();
+            //If it is a date in the past
             if (dateToRestore.compareTo(new Date()) < 0) {
                 DODSnapshot snapshotToRestore = getSnapshotToRestore(dateToRestore);
                 if (snapshotToRestore != null) {
-                    //Create new job and update instance status
-                    if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
-                        //If we are in the overview page
-                        if (time.getRoot().getFellowIfAny("overviewGrid") != null) {
-                            Grid grid = (Grid) time.getRoot().getFellow("overviewGrid");
-                            grid.setModel(grid.getListModel());
-                        } //If we are in the instance page
-                        else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
-                            InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");
-                            controller.afterCompose();
+                    try {
+                        RestoreConfirmWindow confirmWindow = new RestoreConfirmWindow(snapshotToRestore, dateToRestore);
+                        //Only show window if it is not already being diplayed
+                        if (this.getFellowIfAny(confirmWindow.getId()) == null) {
+                            confirmWindow.setParent(this);
+                            confirmWindow.doModal();
                         }
-                    } else {
-                        showError(DODConstants.ERROR_DISPATCHING_JOB);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING RESTORE CONFIRM WINDOW", ex);
+                        showError(DODConstants.ERROR_DISPLAYING_CONFIRM_WINDOW);
                     }
-                    time.getFellow("restoreWindow").detach();
                 }
                 else {
                     time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_SNAPSHOT)); 
@@ -296,10 +302,17 @@ public class RestoreController extends Window {
         snapshotsList.appendChild(title);
         if (snapshots != null && snapshots.size() > 0) {
             for (int i = 0; i < snapshots.size(); i++) {
-                DODSnapshot snapshot = snapshots.get(i);
+                final DODSnapshot snapshot = snapshots.get(i);
                 if (dateFormatter.format(snapshot.getCreationDate()).equals(dateFormatter.format(date))) {
                     Label label = new Label(timeFormatter.format(snapshot.getCreationDate()));
-                    label.setStyle("margin-left:12px;font-style:italic");
+                    label.setStyle("margin-left:12px;hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;color:blue;cursor:pointer;text-decoration:underline");
+                    label.addEventListener(Events.ON_CLICK, new EventListener() {
+                        public void onEvent(Event event) throws Exception {
+                            //Load instance on day and time
+                            day.setValue(snapshot.getCreationDate());
+                            time.setValue(snapshot.getCreationDate());
+                        }
+                    });
                     snapshotsList.appendChild(label);
                 }
             }
@@ -350,6 +363,146 @@ public class RestoreController extends Window {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
+        }
+    }
+    
+    /**
+     * Confirm window
+     * @author Daniel Gomez Blanco
+     * @version 02/12/2011
+     */
+    private class RestoreConfirmWindow extends Window {
+        
+        /**
+         * Snaphsot to restore.
+         */
+        private DODSnapshot snapshotToRestore;
+        
+        /**
+         * Day to restore
+         */
+        private Date dateToRestore;
+
+        /**
+         * Constructor for this window.
+         * @throws InterruptedException if the window cannot be created.
+         */
+        public RestoreConfirmWindow(DODSnapshot snap, Date date) throws InterruptedException {
+            //Call super constructor
+            super();
+            
+            //Instantiate variables
+            snapshotToRestore = snap;
+            dateToRestore = date;
+
+            //Basic window properties
+            this.setId("restoreConfirmWindow");
+            this.setTitle(Labels.getLabel(DODConstants.LABEL_RESTORE_CONFIRM_TITLE));
+            this.setBorder("normal");
+            this.setMode(Window.OVERLAPPED);
+            this.setPosition("center");
+            this.setClosable(false);
+            this.setWidth("350px");
+
+            //Main box used to apply pading
+            Vbox mainBox = new Vbox();
+            mainBox.setStyle("padding-top:5px;padding-left:5px;padding-right:5px");
+            this.appendChild(mainBox);
+
+            //Box for message
+            Hbox messageBox = new Hbox();
+            messageBox.appendChild(new Image(DODConstants.IMG_WARNING));
+            //Main message
+            Label message = new Label(Labels.getLabel(DODConstants.LABEL_RESTORE_CONFIRM_MESSAGE));
+            messageBox.appendChild(message);
+            mainBox.appendChild(messageBox);
+
+            //Div for accept and cancel buttons
+            Div buttonsDiv = new Div();
+            buttonsDiv.setWidth("100%");
+
+            //Cancel button
+            Hbox cancelBox = new Hbox();
+            cancelBox.setHeight("24px");
+            cancelBox.setAlign("bottom");
+            cancelBox.setStyle("float:left;");
+            Toolbarbutton cancelButton = new Toolbarbutton();
+            cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
+            cancelButton.setSclass(DODConstants.STYLE_BUTTON);
+            cancelButton.setImage(DODConstants.IMG_CANCEL);
+            cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doCancel();
+                }
+            });
+            cancelBox.appendChild(cancelButton);
+            Label cancelLabel = new Label(Labels.getLabel(DODConstants.LABEL_CANCEL));
+            cancelLabel.setSclass(DODConstants.STYLE_TITLE);
+            cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
+            cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doCancel();
+                }
+            });
+            cancelBox.appendChild(cancelLabel);
+            buttonsDiv.appendChild(cancelBox);
+
+            //Accept button
+            Hbox acceptBox = new Hbox();
+            acceptBox.setHeight("24px");
+            acceptBox.setAlign("bottom");
+            acceptBox.setStyle("float:right;");
+            Label acceptLabel = new Label(Labels.getLabel(DODConstants.LABEL_ACCEPT));
+            acceptLabel.setSclass(DODConstants.STYLE_TITLE);
+            acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
+            acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doAccept();
+                }
+            });
+            acceptBox.appendChild(acceptLabel);
+            Toolbarbutton acceptButton = new Toolbarbutton();
+            acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
+            acceptButton.setSclass(DODConstants.STYLE_BUTTON);
+            acceptButton.setImage(DODConstants.IMG_ACCEPT);
+            acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doAccept();
+                }
+            });
+            acceptBox.appendChild(acceptButton);
+            buttonsDiv.appendChild(acceptBox);
+            this.appendChild(buttonsDiv);
+        }
+
+
+        /**
+         * Method executed when user accepts the form. A job is created and the window is detached.
+         */
+        private void doAccept() {
+            //Create new job and update instance status
+            if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
+                //If we are in the overview page
+                if (time.getRoot().getFellowIfAny("overviewGrid") != null) {
+                    Grid grid = (Grid) time.getRoot().getFellow("overviewGrid");
+                    grid.setModel(grid.getListModel());
+                } //If we are in the instance page
+                else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
+                    InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");
+                    controller.afterCompose();
+                }
+            } else {
+                showError(DODConstants.ERROR_DISPATCHING_JOB);
+            }
+            this.detach();
+            RestoreController.this.detach();
+        }
+
+        /**
+         * Method executed when the user cancels the form. The window is detached from the page.
+         */
+        private void doCancel() {
+            this.detach();
         }
     }
 }
