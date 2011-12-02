@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/DBOnDemand">
+<Context privileged="true">
     <Resource name="jdbc/dbondemand" auth="Container"
               type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
               url="jdbc:oracle:thin:@( DESCRIPTION= (ADDRESS= (PROTOCOL=TCP) (HOST=itcore2-v.cern.ch) (PORT=1574)) (ADDRESS= (PROTOCOL=TCP) (HOST=itcore1-v.cern.ch) (PORT=1574)) (FAILOVER=on) (LOAD_BALANCE=off) (ENABLE=BROKEN) (CONNECT_DATA= (SERVER=DEDICATED) (SERVICE_NAME=ITCORE_S.cern.ch) (FAILOVER_MODE= (TYPE=SELECT) (METHOD=BASIC))))"
