@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context privileged="true">
-    <Resource name="jdbc/dbondemand" auth="Container"
-              type="javax.sql.DataSource" driverClassName="oracle.jdbc.driver.OracleDriver"
-              url="jdbc:oracle:thin:@( DESCRIPTION= (ADDRESS= (PROTOCOL=TCP) (HOST=itcore2-v.cern.ch) (PORT=1574)) (ADDRESS= (PROTOCOL=TCP) (HOST=itcore1-v.cern.ch) (PORT=1574)) (FAILOVER=on) (LOAD_BALANCE=off) (ENABLE=BROKEN) (CONNECT_DATA= (SERVER=DEDICATED) (SERVICE_NAME=ITCORE_S.cern.ch) (FAILOVER_MODE= (TYPE=SELECT) (METHOD=BASIC))))"
-              username="dbondemand" 
-	      password="Sup3rN0va11" 
-              maxActive="50" 
-              minIdle="1" 
-              maxIdle="10" 
-              maxWait="20000" 
-              testOnBorrow="true" 
-	      validationQuery="select sysdate from dual"
-    />
-    <Parameter name="wsUser" value="dodws" override="false"/>
-    <Parameter name="wsPswd" value="Sup3rN0va11" override="false"/>
+<Context path="" privileged="true">
+  <Resource auth="Container" driverClassName="oracle.jdbc.driver.OracleDriver" maxActive="50" maxIdle="10" maxWait="20000" minIdle="1" name="jdbc/dbondemand" password="Sup3rN0va11" testOnBorrow="true" type="javax.sql.DataSource" url="jdbc:oracle:thin:@( DESCRIPTION= (ADDRESS= (PROTOCOL=TCP) (HOST=itcore2-v.cern.ch) (PORT=1574)) (ADDRESS= (PROTOCOL=TCP) (HOST=itcore1-v.cern.ch) (PORT=1574)) (FAILOVER=on) (LOAD_BALANCE=off) (ENABLE=BROKEN) (CONNECT_DATA= (SERVER=DEDICATED) (SERVICE_NAME=ITCORE_S.cern.ch) (FAILOVER_MODE= (TYPE=SELECT) (METHOD=BASIC))))" username="dbondemand" validationQuery="select sysdate from dual"/>
+  <Parameter name="wsUser" override="false" value="dodws"/>
+  <Parameter name="wsPswd" override="false" value="Sup3rN0va11"/>
 </Context>
