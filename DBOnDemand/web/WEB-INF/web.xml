@@ -8,6 +8,10 @@
     </description>
     <display-name>DBOnDemand</display-name>
 
+    <!-- Release loggers when context destroyed-->
+    <listener>
+        <listener-class>ch.cern.dod.listener.ContextManager</listener-class>
+    </listener>
     <!-- //// -->
     <!-- ZK -->
     <listener>
@@ -242,4 +246,6 @@
         <filter-name>InstanceFilter</filter-name>
         <url-pattern>/instance.zul</url-pattern>
     </filter-mapping>
+    
+    
 </web-app>
