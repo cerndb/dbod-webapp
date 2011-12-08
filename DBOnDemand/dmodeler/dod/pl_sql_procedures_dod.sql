@@ -111,3 +111,25 @@ EXCEPTION
          ROLLBACK;
 END;
 /
+
+-- Approves an instance creation by changing the state of the isntance
+CREATE OR REPLACE PROCEDURE approve_instance (user IN VARCHAR2, instance IN VARCHAR2)
+IS
+BEGIN
+        -- Update instance status
+        UPDATE dod_instances
+            SET state = 'RUNNING'
+            WHERE username = user AND db_name = instance;
+END;
+/
+
+-- Updates the username to change the owner of an instance
+CREATE OR REPLACE PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
+IS
+BEGIN
+        -- Update instance usernae
+        UPDATE dod_instances
+            SET username = new_user
+            WHERE username = old_user AND db_name = instance;
+END;
+/
