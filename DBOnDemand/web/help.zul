@@ -25,7 +25,7 @@
             <error/>
 
             <!-- Groupbox for the  tree -->
-            <groupbox mold="3d">
+            <groupbox mold="3d" closable="false">
                 <caption label=" ">
                     <div height="24px">
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
