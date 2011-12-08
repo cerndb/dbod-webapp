@@ -10,7 +10,7 @@ BEGIN
 	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
 		VALUES (username_param, db_name_param, 'BACKUP', type_param, now, requester_param, admin_action_param, 'PENDING');
 	INSERT INTO dbondemand.dod_command_params (username, db_name, command_name, type, creation_date, name, value)
-		VALUES (username_param, db_name_param, 'BACKUP', type_param, now, 'INSTANCE_NAME', 'DOD_' || db_name_param);
+		VALUES (username_param, db_name_param, 'BACKUP', type_param, now, 'INSTANCE_NAME', 'dod_' || db_name_param);
 END;
 /
 
