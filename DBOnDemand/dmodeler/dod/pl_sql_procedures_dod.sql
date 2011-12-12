@@ -126,10 +126,80 @@ END;
 -- Updates the username to change the owner of an instance
 CREATE OR REPLACE PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
 IS
+    job_count INTEGER;
+    name VARCHAR2 (512);
+    action VARCHAR2 (1024);
+    interval VARCHAR2 (64);
+    start_date DATE;
 BEGIN
-        -- Update instance usernae
-        UPDATE dod_instances
-            SET username = new_user
-            WHERE username = old_user AND db_name = instance;
+    -- Update instance usernae
+    UPDATE dod_instances
+        SET username = new_user
+        WHERE username = old_user AND db_name = instance;
+
+    -- Drop and create new automatic backups in case there were any
+    -- Initialise name
+    name := instance || '_BACKUP';
+
+    -- Query for any job with the same name running at the moment
+    SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO job_count, action, start_date, interval
+            FROM user_scheduler_jobs
+            WHERE job_name = name
+            GROUP BY job_action, start_date, repeat_interval;
+            
+    -- If there is a job
+    IF job_count > 0
+    THEN
+            -- Quote name for object
+            name := '"' || instance || '_BACKUP"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  name,
+                    force      =>  TRUE);
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(action, '''' || old_user || '''', '''' || new_user || ''''),
+                    start_date           => start_date,
+                    repeat_interval      => interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup job for DB On Demand');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE destroy_instance (user IN VARCHAR2, instance IN VARCHAR2)
+IS
+    job_count INTEGER;
+    name VARCHAR2 (512);
+BEGIN
+    -- Update instance status
+    UPDATE dod_instances
+        SET status = '0'
+        WHERE username = user AND db_name = instance;
+
+    -- Initialise name
+    name := instance || '_BACKUP';
+
+    -- Query for any scheduled job with the same name running at the moment
+    SELECT COUNT(*)
+            INTO job_count
+            FROM user_scheduler_jobs
+            WHERE job_name = name;
+
+    -- Quote name to create object
+    name := '"' || instance || '_BACKUP"';
+
+    -- If there is previous job, drop it
+    IF job_count > 0
+    THEN
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  name,
+                    force      =>  TRUE);
+    END IF;
 END;
 /
