@@ -56,8 +56,8 @@
                     </grid>
                 </vbox>
                 <!--Show a message in case there no instances  -->
-                <div if="${controller.instancesSize == 0}" style="padding-right:400px">
-                    <label value="${c:l('emptyInstancesList')}"/>
+                <div if="${controller.instancesSize == 0}" style="padding-right:400px" xmlns:h="http://www.w3.org/1999/xhtml">
+                    <label value="${c:l('emptyInstancesList')}" style="margin-right:2px"/> <h:a href="https://account.cern.ch/account/Services/Myservices.aspx">${c:l('emptyInstancesListLink')}</h:a>
                 </div>
             </vbox>
         </groupbox>
