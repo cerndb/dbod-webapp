@@ -351,14 +351,14 @@ public class JobHelper {
      * @param username requester of this job.
      * @return true if the creation of this job was successful, false otherwise.
      */
-    public boolean doDestroy(DODInstance instance, String username) {
+    public boolean doDestroy(DODInstance instance) {
         Date now = new Date();
         int result = 0;
         //Insert job
         if (adminMode)
-            result = instanceDAO.delete(instance, username, 1);
+            result = instanceDAO.delete(instance);
         else
-            result = instanceDAO.delete(instance, username, 0);
+            result = instanceDAO.delete(instance);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setStatus(false);

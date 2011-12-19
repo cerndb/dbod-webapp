@@ -361,7 +361,7 @@ public class OverviewGridRenderer implements RowRenderer {
             public void onEvent(Event event) {
                 //Show destroy window
                 try {
-                    DestroyController destroyController = new DestroyController(instance, username, jobHelper);
+                    DestroyController destroyController = new DestroyController(instance, jobHelper);
                     //Only show window if it is not already being diplayed
                     if (row.getRoot().getFellowIfAny(destroyController.getId()) == null) {
                         destroyController.setParent(row.getRoot());

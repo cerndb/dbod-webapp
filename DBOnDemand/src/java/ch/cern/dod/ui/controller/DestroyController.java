@@ -36,24 +36,18 @@ public class DestroyController extends Window {
     private JobHelper jobHelper;
 
     /**
-     * User authenticated in the system at the moment.
-     */
-    private String username;
-
-    /**
      * Constructor for this window.
      * @param inst instance to be managed.
      * @param user username for the authenticated user.
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
-    public DestroyController(DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {
+    public DestroyController(DODInstance inst, JobHelper jobHelper) throws InterruptedException {
         //Call super constructor
         super();
 
         //Initialize instance and create job helper
         this.instance = inst;
-        this.username = user;
         this.jobHelper = jobHelper;
 
         //Basic window properties
@@ -142,7 +136,7 @@ public class DestroyController extends Window {
      */
     private void doAccept() {
         ///Create new job and update instance status
-        if (jobHelper.doDestroy(instance, username)) {
+        if (jobHelper.doDestroy(instance)) {
             //If user is admin we go back to admin page
             if (jobHelper.isAdminMode()) {
                 Executions.sendRedirect(DODConstants.PAGE_ADMIN);

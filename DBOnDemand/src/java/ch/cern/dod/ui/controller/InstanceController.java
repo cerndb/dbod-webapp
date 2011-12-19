@@ -539,7 +539,7 @@ public class InstanceController extends Hbox implements AfterCompose {
      */
     public void doDestroy() {
         try {
-            DestroyController destroyController = new DestroyController(instance, username, jobHelper);
+            DestroyController destroyController = new DestroyController(instance, jobHelper);
             //Only show window if it is not already being diplayed
             if (this.getRoot().getFellowIfAny(destroyController.getId()) == null) {
                 destroyController.setParent(this.getRoot());

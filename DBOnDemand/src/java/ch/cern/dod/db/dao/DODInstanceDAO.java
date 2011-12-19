@@ -2,6 +2,7 @@ package ch.cern.dod.db.dao;
 
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -313,87 +314,32 @@ public class DODInstanceDAO {
 
     /**
      * Deletes an instance from the database. It does not delete it physically, but logically,
-     * setting the status field to 0. It also creates a job to log the user that deleted the isntance.
+     * setting the status field to 0.
      * @param instance instance to be deleted.
      * @return 1 if the operation was successful, 0 otherwise.
      */
-    public int delete(DODInstance instance, String requester, int admin) {
+    public int delete(DODInstance instance) {
         Connection connection = null;
-        PreparedStatement deleteStatement = null;
-        PreparedStatement insertJobStatement = null;
+        CallableStatement destroyStatement = null;
         int deleteResult = 0;
-        int insertJobResult = 0;
         try {
             //Get connection
             connection = getConnection();
-            //Set autocommit to false to execute multiple queries and rollback in case something goes wrong
-            connection.setAutoCommit(false);
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "UPDATE dod_instances SET status = '0' WHERE username = ? AND db_name = ?";
-            deleteStatement = connection.prepareStatement(query);
-            //Assign values to variables
-            deleteStatement.setString(1, instance.getUsername());
-            deleteStatement.setString(2, instance.getDbName());
-            //Execute query
-            deleteResult = deleteStatement.executeUpdate();
-            
-            //If the operation was OK log it as a job
-            if (deleteResult != PreparedStatement.EXECUTE_FAILED) {
-                //Prepare query for the prepared statement (to avoid SQL injection)
-                String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state, log)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                insertJobStatement = connection.prepareStatement(insertQuery);
-                //Assign values to variables
-                insertJobStatement.setString(1, instance.getUsername());
-                insertJobStatement.setString(2, instance.getDbName());
-                insertJobStatement.setString(3, DODConstants.JOB_DESTROY);
-                insertJobStatement.setString(4, instance.getDbType());
-                java.util.Date now = new java.util.Date();
-                insertJobStatement.setTimestamp(5, new java.sql.Timestamp(now.getTime()));
-                insertJobStatement.setString(6, requester);
-                insertJobStatement.setInt(7, admin);
-                insertJobStatement.setString(8, DODConstants.JOB_STATE_FINISHED_OK);
-                insertJobStatement.setString(9, "Instance successfully removed!");
-                
-                //Execute query
-                insertJobResult = insertJobStatement.executeUpdate();
-                
-                //Log the result of operation is successful
-                if (insertJobResult != PreparedStatement.EXECUTE_FAILED) {
-                    Logger.getLogger(DODJobDAO.class.getName()).log(Level.INFO, "INSTANCE {0} SUCCESSFULLY REMOVED BY USER {1}!", new Object[]{instance.getDbName(), requester});
-                
-                    //Commit queries
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                    return 0;
-                }
-            }
-                
+            //Create call destroy_instance(username IN VARCHAR2, db_name IN VARCHAR2)
+            String destroyCall = "{ call destroy_instance(?, ?) }";
+            destroyStatement = connection.prepareCall(destroyCall);
+            //Set values
+            destroyStatement.setString(1, instance.getUsername());
+            destroyStatement.setString(2, instance.getDbName());
 
+            deleteResult = destroyStatement.executeUpdate();
         } catch (NamingException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } catch (SQLException ex) {
-            try {
-                //Rollback updates
-                connection.rollback();
-            }
-            catch (SQLException ex1) {
-                Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE DELETION FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex1);
-            }
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
-                deleteStatement.close();
-            } catch (Exception e) {
-            }
-            try {
-                insertJobStatement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.setAutoCommit(true);
+                destroyStatement.close();
             } catch (Exception e) {
             }
             try {
