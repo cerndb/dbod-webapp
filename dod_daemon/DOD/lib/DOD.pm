@@ -159,7 +159,7 @@ sub worker_body {
                 $entity = $_->{'VALUE'};
                 }
             }
-        my $cmd =  "ssh oracle\@dbsrvd242.cern.ch syscontrol -i $entity $cmd_line";
+        my $cmd =  "/etc/init.d/syscontrol -i $entity $cmd_line";
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
         $retcode = resultCode($log);
@@ -225,7 +225,7 @@ sub states{
 sub testInstance{
     my $entity = shift;
     $logger->debug( "Fetching state of entity $entity" );
-    my $cmd = "ssh oracle\@dbsrvd242 syscontrol -i $entity MYSQL_ping -debug";
+    my $cmd = "/etc/init.d/syscontrol -i $entity MYSQL_ping -debug";
     my $res = `$cmd`;
     $logger->debug( $res );
     return $res;
@@ -234,7 +234,7 @@ sub testInstance{
 sub getHostFromEntity{
     my $entity = shift;
     $logger->debug( "Fetching host corresponding to entity $entity" );
-    my $cmd = "ssh oracle\@dbsrvd242 netservicestab.sh sc_entity=$entity host";
+    my $cmd = "/ORA/dbs01/syscontrol/bin/netservicestab.sh sc_entity=$entity host";
     my $res = `$cmd`;
     chomp $res;
     $logger->debug( "Hostname: <$res>" );
