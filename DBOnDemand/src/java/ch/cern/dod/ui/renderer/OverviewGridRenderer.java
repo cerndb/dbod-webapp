@@ -146,7 +146,7 @@ public class OverviewGridRenderer implements RowRenderer {
 
         //Render project (if any)
         if (instance.getProject() != null && !instance.getProject().isEmpty()) {
-            row.appendChild(getFormattedLabel(instance.getProject(), 10));
+            row.appendChild(getFormattedLabel(instance.getProject(), 6));
         } else {
             row.appendChild(new Label("-"));
         }
