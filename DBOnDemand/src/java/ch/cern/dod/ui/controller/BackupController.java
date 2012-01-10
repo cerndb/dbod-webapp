@@ -37,6 +37,10 @@ public class BackupController extends Window {
      */
     private JobHelper jobHelper;
     /**
+     * DAO for jobs.
+     */
+    private DODJobDAO jobDAO;
+    /**
      * Checkbox to indicate if snapshots should be taken automatically every x hours.
      */
     private Checkbox automatic;
@@ -45,9 +49,25 @@ public class BackupController extends Window {
      */
     private Spinner interval;
     /**
+     * Checkbox to indicate if backups to tape should be enabled.
+     */
+    private Checkbox backupToTape;
+    /**
      * User authenticated in the system at the moment.
      */
     private String username;
+    /**
+     * Indicates if scheduled backups were enabled before clicking accept.
+     */
+    private boolean prevBackupEnabled;
+    /**
+     * Indicates the interval for scheduled backups before clicking accept.
+     */
+    private int prevInterval;
+    /**
+     * Indicates if backups to tape were enabled before clicking accept.
+     */
+    private boolean prevBackupToTapeEnabled;
 
     /**
      * Constructor for this window.
@@ -64,6 +84,7 @@ public class BackupController extends Window {
         this.instance = inst;
         this.username = user;
         this.jobHelper = jobHelper;
+        this.jobDAO = new DODJobDAO();
 
         //Basic window properties
         this.setId("backupWindow");
@@ -83,6 +104,8 @@ public class BackupController extends Window {
         Label message = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_MESSAGE));
         mainBox.appendChild(message);
 
+        //Initialise scheduled backup configuration
+        initScheduledBackup();
         //Box containing the checkbox for automatic backups and the interval
         Hbox autoBox =  new Hbox();
         autoBox.setStyle("margin-left:20px");
@@ -90,34 +113,46 @@ public class BackupController extends Window {
         //Create checkbox for automatic backups
         automatic = new Checkbox();
         automatic.setLabel(Labels.getLabel(DODConstants.LABEL_AUTOMATIC_BACKUP));
+        automatic.setChecked(prevBackupEnabled);
         autoBox.appendChild(automatic);
         //Create spinner for the interval
         interval = new Spinner();
-        interval.setValue(DODConstants.DEFAULT_INTERVAL_HOURS);
+        if (prevBackupEnabled)
+            interval.setValue(prevInterval);
+        else
+            interval.setValue(DODConstants.DEFAULT_INTERVAL_HOURS);
         interval.setWidth("50px");
         interval.setConstraint("min " + DODConstants.MIN_INTERVAL_HOURS);
         autoBox.appendChild(interval);
         autoBox.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_HOURS)));
         mainBox.appendChild(autoBox);
         
+        //Create checkbox for backups to tape
+        initBackupToTape();
+        backupToTape = new Checkbox();
+        backupToTape.setStyle("margin-left:20px");
+        backupToTape.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE));
+        backupToTape.setChecked(prevBackupToTapeEnabled);
+        mainBox.appendChild(backupToTape);
+        
         //Box containing the button to disable automatic backups
-        Hbox disableBox =  new Hbox();
-        disableBox.setStyle("margin-bottom:10px;margin-left:20px");
-        disableBox.setHeight("24px");
-        disableBox.setAlign("bottom");
-        Toolbarbutton disableButton = new Toolbarbutton();
-        disableButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_DISABLE_AUTOMATIC_BACKUP));
-        disableButton.setSclass(DODConstants.STYLE_BUTTON);
-        disableButton.setImage(DODConstants.IMG_CANCEL);
-        disableButton.addEventListener(Events.ON_CLICK, new EventListener() {
+        Hbox backupNowBox =  new Hbox();
+        backupNowBox.setStyle("margin-bottom:10px;margin-left:20px");
+        backupNowBox.setHeight("24px");
+        backupNowBox.setAlign("bottom");
+        Toolbarbutton backupNowButton = new Toolbarbutton();
+        backupNowButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
+        backupNowButton.setSclass(DODConstants.STYLE_BUTTON);
+        backupNowButton.setImage(DODConstants.IMG_BACKUP);
+        backupNowButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
-                doDisable();
+                doBackupNow();
             }
         });
-        disableBox.appendChild(disableButton);
-        Label disableLabel = new Label(Labels.getLabel(DODConstants.LABEL_DISABLE_AUTOMATIC_BACKUP));
-        disableBox.appendChild(disableLabel);
-        mainBox.appendChild(disableBox);
+        backupNowBox.appendChild(backupNowButton);
+        Label backupNowLabel = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
+        backupNowBox.appendChild(backupNowLabel);
+        mainBox.appendChild(backupNowBox);
 
         //Div for accept and cancel buttons
         Div buttonsDiv = new Div();
@@ -178,17 +213,30 @@ public class BackupController extends Window {
     }
     
     /**
+     * Instatiates the fields for the current scheduled backup configuration.
+     */
+    private void initScheduledBackup () {
+        prevInterval = jobDAO.getBackupInterval(instance);
+        if (prevInterval > 0)
+            prevBackupEnabled = true;
+        else
+            prevBackupEnabled = false;
+    }
+    
+    /**
+     * Instatiates the fields for the current backup to tape configuration.
+     */
+    private void initBackupToTape () {
+        prevBackupToTapeEnabled = false;
+    }
+    
+    /**
      * Disables the automatic backups created in a previous job.
      */
-    public void doDisable() {
-        DODJobDAO jobDAO = new DODJobDAO();
-        int result = 0;
-        if (jobHelper.isAdminMode())
-             result = jobDAO.deleteScheduledBackup(instance, username, 1);
-        else
-            result = jobDAO.deleteScheduledBackup(instance, username, 0);
-        if (result <= 0) {
-            showError(DODConstants.ERROR_DISABLING_AUTO_BACKUPS);
+    private void doBackupNow() {
+        boolean result = jobHelper.doBackup(instance, username, 0);
+        if (!result) {
+            showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
         else {
             //If we are in the overview page
@@ -212,14 +260,33 @@ public class BackupController extends Window {
         boolean result = false;
         //If there are no previous error messages on the interval component
         if (interval.getErrorMessage() == null || interval.getErrorMessage().isEmpty()) {
-            //If automatic updates are checked create job
-            if (automatic.isChecked()) {
-                if (interval.getValue() != null && interval.getValue() > 0)
-                    result = jobHelper.doBackup(instance, username, interval.getValue());
+            //If backup to tape has changed
+            boolean backupToTapeResult = false;
+            if (backupToTape.isChecked() != prevBackupToTapeEnabled) {
+                backupToTapeResult = true;
             }
-            //If automatic updates are not checked set interval to 0
             else {
-                result = jobHelper.doBackup(instance, username, 0);
+                backupToTapeResult = true;
+            }
+            //If the operation was succesful continue with automatic backups
+            if (backupToTapeResult) {
+                //If scheduled backups changed
+                if (automatic.isChecked() != prevBackupEnabled || (automatic.isChecked() && interval.getValue() != prevInterval)) {
+                    //If automatic updates are checked
+                    if (automatic.isChecked()) {
+                        //If the interval has changed (if they just enable it, it will always change because the previous value was 0)
+                        if ((interval.getValue() != prevInterval) && interval.getValue() != null && interval.getValue() > 0)
+                            result = jobHelper.doBackup(instance, username, interval.getValue());
+                    }
+                    //If automatic updates are not checked disable them
+                    else {
+                        if (jobHelper.isAdminMode())
+                            result = jobDAO.deleteScheduledBackup(instance, username, 1);
+                        else
+                            result = jobDAO.deleteScheduledBackup(instance, username, 0);
+                    }
+
+                }
             }
             //If the operation was successful update instance status
             if (result) {
@@ -236,7 +303,6 @@ public class BackupController extends Window {
             }
             else
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
-            
         }
     }
 

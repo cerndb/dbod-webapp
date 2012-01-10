@@ -103,6 +103,8 @@ public class DODConstants {
     public static final String LABEL_HOURS = "hours";
     public static final String LABEL_BACKUP_TITLE = "backupTitle";
     public static final String LABEL_BACKUP_MESSAGE = "backupMessage";
+    public static final String LABEL_BACKUP_TO_TAPE = "backupToTape";
+    public static final String LABEL_BACKUP_NOW = "backupNow";
     public static final String LABEL_INTRODUCTION = "introduction";
     public static final String LABEL_NO_JOBS = "noJobs";
     public static final String LABEL_NO_SNAPSHOTS = "noSnapshots";
@@ -115,7 +117,6 @@ public class DODConstants {
     public static final String LABEL_LEMON_MESSAGE= "lemonMessage";
     public static final String LABEL_LEMON_LINK = "lemonLink";
     public static final String LABEL_CLOSE = "close";
-    public static final String LABEL_DISABLE_AUTOMATIC_BACKUP = "disableAutomaticBackups";
     public static final String LABEL_DESTROY_TITLE = "destroyTitle";
     public static final String LABEL_DESTROY_MESSAGE = "destroyMessage";
     public static final String LABEL_SNAPSHOTS_FOR_DAY = "snapshotsForDay";

@@ -513,9 +513,9 @@ public class DODJobDAO {
     /**
      * Deletes a scheduled backup.
      * @param instance instance to delete the scheduled backup from.
-     * @return 1 if the operation was successful, 0 otherwise.
+     * @return true if the operation was successful, false otherwise.
      */
-    public int deleteScheduledBackup(DODInstance instance, String username, int admin) {
+    public boolean deleteScheduledBackup(DODInstance instance, String username, int admin) {
         Connection connection = null;
         CallableStatement deleteScheduleStatement = null;
         int deleteScheduleResult = 0;
@@ -553,6 +553,55 @@ public class DODJobDAO {
                 connection.close();
             } catch (Exception e) {}
         }
-        return deleteScheduleResult;
+        if (deleteScheduleResult > 0)
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Obtains the hours interval for the scheduled backups of a given instance.
+     * @param instance DOD instance to get the interval of.
+     * @return interval, in hours, for the scheduled backups. 0 in case scheduled backups are not enabled.
+     */
+    public int getBackupInterval(DODInstance instance) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        int interval = 0;
+        try {
+            //Get connection
+            connection = getConnection();
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            String query = "SELECT repeat_interval"
+                            + " FROM user_scheduler_jobs"
+                            + " WHERE job_name = ?";
+            statement = connection.prepareStatement(query);
+            //Assign values to variables
+            statement.setString(1, instance.getDbName() + "_BACKUP");
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            if (result.next()) {
+                String intervalStr = result.getString(1);
+                interval = Integer.parseInt(intervalStr.substring(intervalStr.indexOf("INTERVAL=") + 9));
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {}
+            try {
+                statement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return interval;
     }
 }
