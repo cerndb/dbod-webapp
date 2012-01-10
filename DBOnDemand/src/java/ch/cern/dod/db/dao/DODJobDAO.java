@@ -65,7 +65,7 @@ public class DODJobDAO {
             connection = getConnection();
             //Prepare query for the prepared statement (to avoid SQL injection)
             String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, requester, state, admin_action, result"
-                            + " FROM dod_jobs WHERE username = ? AND db_name = ? ORDER BY creation_date DESC";
+                            + " FROM dod_jobs WHERE username = ? AND db_name = ? ORDER BY creation_date DESC, completion_date DESC";
             statement = connection.prepareStatement(query);
             //Assign values to variables
             statement.setString(1, instance.getUsername());
