@@ -287,9 +287,12 @@ public class BackupController extends Window {
                     }
 
                 }
+                else {
+                    result = true;
+                }
             }
             //If the operation was successful update instance status
-            if (result) {
+            if (backupToTapeResult && result) {
                 //If we are in the overview page
                 if (interval.getRoot().getFellowIfAny("overviewGrid") != null) {
                     Grid grid = (Grid) interval.getRoot().getFellow("overviewGrid");
