@@ -22,7 +22,7 @@
         <echo message="Deploying ${deploy.ant.archive} to ${Context(path)}"/>
         <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask"
                  classpath="${tomcat.home}/lib/catalina-ant.jar"/>
-        <deploy url="${tomcat.url}/manager" username="${tomcat.username}"
+        <deploy url="${tomcat.url}/manager/text" username="${tomcat.username}"
                 password="${tomcat.password}" path="${Context(path)}"
                 war="${deploy.ant.archive}"/>
         <property name="deploy.ant.client.url" value="${tomcat.url}${Context(path)}"/>
@@ -31,7 +31,7 @@
         <echo message="Undeploying ${Context(path)}"/>
         <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask"
                 classpath="${tomcat.home}/lib/catalina-ant.jar"/>
-        <undeploy url="${tomcat.url}/manager" username="${tomcat.username}" 
+        <undeploy url="${tomcat.url}/manager/text" username="${tomcat.username}" 
                   password="${tomcat.password}" path="${Context(path)}"/>
     </target>
 </project>
