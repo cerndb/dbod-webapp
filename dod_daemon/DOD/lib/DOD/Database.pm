@@ -524,11 +524,12 @@ sub prepareCommand {
                     my ($pname, $type) = split( /=/, $param->{'NAME'} );
                     $logger->debug("pname: $pname, type: $type");
                     my $clob = $param->{'VALUE'};
-                    $logger->debug("clob : clob");
+                    $logger->debug("clob :\n$clob");
                     my $parser = DOD::ConfigParser::get( $type );
                     $logger->debug("parser: $parser");
                     my $filename = $parser->($clob); 
                     $cmd =~ s/:$param->{'NAME'}/$filename/;
+                    $logger->debug( "cmd: $cmd" );
                     # Distribute required files 
                     my $entity = DOD::entityName($job);
                     $logger->debug( "Copying files to $entity" );
