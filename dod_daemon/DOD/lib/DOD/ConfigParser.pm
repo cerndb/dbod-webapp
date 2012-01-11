@@ -186,8 +186,11 @@ sub MYSQL_enforce{
 
 sub MYSQL_process {
     my $clob = shift;
+    $logger->debug( "clob:\n$clob" );
     my $parsed = MYSQL_parser( $clob );
+    $logger->debug( "parsed: $parsed" );
     my $enforced = MYSQL_enforce( $parsed, 'MY_CNF' );
+    $logger->debug( "enforced: $enforced" );
     my $filename = MYSQL_writeFile( $enforced );
     return $filename;
 }

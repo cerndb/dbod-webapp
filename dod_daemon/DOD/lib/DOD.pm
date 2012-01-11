@@ -244,7 +244,7 @@ sub getHostFromEntity{
 sub copyToEntity{
     my ($item, $entity) = @_;
     my $host = getHostFromEntity($entity);
-    system("scp", "-r",  $item, "oracle\@$host:/tmp");
+    system("scp", "-r",  $item, "sysctl\@$host:/tmp");
     return $?;
 }
 

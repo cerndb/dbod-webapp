@@ -538,7 +538,6 @@ sub prepareCommand {
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
         my $params = getJobParams($job, $dbh);
-        $logger->debug( "Disconnecting from DB" );
         my $nparams = scalar(@{$params});
         my $expected_nparams = 0;
         my $optional_nparams = 0;
@@ -561,7 +560,6 @@ sub prepareCommand {
                     my ($pname, $type) = split( /=/, $param->{'NAME'} );
                     $logger->debug("pname: $pname, type: $type");
                     my $clob = $param->{'VALUE'};
-                    $logger->debug("clob :\n$clob");
                     my $parser = DOD::ConfigParser::get( $type );
                     $logger->debug("parser: $parser");
                     my $filename = $parser->($clob); 
