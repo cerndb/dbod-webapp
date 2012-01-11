@@ -75,6 +75,43 @@ else {
 
 } # BEGIN BLOCK
 
+sub getInstanceList{
+    my $dbh;
+    if ($#_ == 0){
+        $dbh = shift;
+    }
+    else{
+        $dbh = getDBH();
+    }
+    my @result;
+    eval {
+        my $sql = "select username, db_name, db_type, state from dod_instances";
+        $logger->debug( $sql );
+        my $sth = $dbh->prepare( $sql );
+        $logger->debug("Executing statement");
+        $sth->execute();
+        $logger->debug( "[Instances]" );
+        while ( my $ref = $sth->fetchrow_hashref() ){
+            push @result, $ref;
+            foreach my $key ( keys(%{$ref}) ) {
+                my %h = %{$ref};
+                $logger->debug( $key, "->", $h{$key} );
+                }
+            }
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if ($#_ == -1){
+            $logger->debug( "Disconnecting from database" );
+            $dbh->disconnect();
+        }
+        1;
+    } or do{
+        $logger->error( "Unable to connect to database !!!" );
+        return ();
+    };
+    return @result;
+}   
+
 sub getJobList{
     my $dbh;
     if ($#_ == 0){
