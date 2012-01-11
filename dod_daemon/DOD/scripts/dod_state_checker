@@ -1,0 +1,126 @@
+#!/usr/bin/perl -w
+
+use strict;
+use DOD;
+use DOD::Database;
+
+# Initializes Logging Settings
+
+our ($logger); 
+
+BEGIN{
+$logger = Log::Log4perl::get_logger("state_checker");
+$logger->debug("Logger created");
+}
+
+sub usage(){
+    print "USAGE:\n\tcommand\n";
+    exit -1;
+}
+
+sub worker(){
+    my $instance = shift;
+    my $db_name = $instance->{'DB_NAME'};
+    my $instance_name = "dod_$db_name";
+    $logger->debug( "Checking $instance_name" );
+    my $output = DOD::testInstance($instance_name);
+    my $retcode = DOD::resultCode($output);
+    my $instance_state;
+    if ($retcode) {
+        $instance_state = "STOPPED";
+    }
+    else{
+        $instance_state = "RUNNING";
+    }
+    if (($instance_state ne 'JOB_PENDING') && 
+        ($instance_state ne $instance->{'STATE'})){
+        $logger->debug( "Updating $instance_name STATE to $instance_state");
+        DOD::Database::updateInstanceState($instance, $instance_state);
+    }
+    else{
+        $logger->debug( "Instance state is correct for $instance_name" );
+    }
+}
+
+sub Main{
+
+    usage() if (@ARGV != 0);
+    
+    my @instances = DOD::Database::getInstanceList();
+
+    my @tasks;
+
+    foreach my $instance (@instances){
+        $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
+        if ($#tasks < 20){
+            my $worker_pid = fork();
+            if ($worker_pid){
+                # Parent Process
+                $logger->debug( "Adding worker ($worker_pid) to pool" );
+                my $task = {};
+                $task->{'pid'} = $worker_pid;
+                $task->{'instance'} = $instance;
+                push(@tasks, $task);
+            }
+            else{
+                # Child Process
+                &worker($instance);
+                exit 0;
+            }
+        }
+        else {
+            $logger->debug( "Waiting for $#tasks tasks  completion" );
+            foreach my $task (@tasks) {
+                my $tmp = waitpid($task->{'pid'}, 0);
+                $logger->debug( "Done with worker : $tmp" );
+            }
+            $logger->debug( "Removing finished workers from pool" );
+            @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
+        }
+    }
+
+}
+
+&Main();
+exit 0;
+
+END{}
+
+=head1 NAME
+
+dod_state_checker - State checker for DOD instances
+
+=cut
+
+=head1 USE
+
+=over
+
+=item * 
+
+dod_state_checker
+
+=back
+
+=cut
+
+=head1 COMMENTS
+
+This is the script in charge of checking maintaining an updated
+state for the DB instances in the DBOD application database.
+
+Configuration and additional support files (i.e. templates for DBMS configuration files)
+can be found at: <PATH_TO_PERL_SHARE>/DOD/. Expected files are:
+
+- dod.conf : General configuration file. YAML format
+
+- dod_daemon_logger.conf : Logger configuration file
+
+=head1 AUTHOR
+
+Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+
+IT-DB-DBB
+
+
+=cut
