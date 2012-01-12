@@ -227,7 +227,7 @@ sub testInstance{
     $logger->debug( "Fetching state of entity $entity" );
     my $cmd = "/etc/init.d/syscontrol -i $entity MYSQL_ping -debug";
     my $res = `$cmd`;
-    $logger->debug( $res );
+    $logger->debug( "\n$res" );
     return $res;
     }
 

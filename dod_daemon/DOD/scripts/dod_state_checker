@@ -36,9 +36,12 @@ sub worker(){
         ($instance_state ne $instance->{'STATE'})){
         $logger->debug( "Updating $instance_name STATE to $instance_state");
         DOD::Database::updateInstanceState($instance, $instance_state);
+        $logger->debug( "$instance_name state update successfully");
+        exit 0;
     }
     else{
         $logger->debug( "Instance state is correct for $instance_name" );
+        exit 0;
     }
 }
 
@@ -65,10 +68,12 @@ sub Main{
             else{
                 # Child Process
                 &worker($instance);
-                exit 0;
             }
         }
         else {
+            # In case of a high number of instances, we have to wait for
+            # some workers finalization before submiting more tasks
+
             $logger->debug( "Waiting for $#tasks tasks  completion" );
             foreach my $task (@tasks) {
                 my $tmp = waitpid($task->{'pid'}, 0);
@@ -79,6 +84,16 @@ sub Main{
         }
     }
 
+    # Wait for remaining running processes
+    while ($#tasks > 0){
+        $logger->debug( "Waiting for $#tasks tasks  completion" );
+        foreach my $task (@tasks) {
+            my $tmp = waitpid($task->{'pid'}, 0);
+            $logger->debug( "Done with worker : $tmp" );
+        }
+        $logger->debug( "Removing finished workers from pool" );
+        @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
+    }
 }
 
 &Main();
