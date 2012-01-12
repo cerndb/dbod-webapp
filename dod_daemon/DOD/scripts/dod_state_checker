@@ -50,42 +50,60 @@ sub Main{
     usage() if (@ARGV != 0);
     
     my @instances = DOD::Database::getInstanceList();
-
     my @tasks;
+    while ($#instances >= 0){
 
-    foreach my $instance (@instances){
-        $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
-        if ($#tasks < 20){
-            my $worker_pid = fork();
-            if ($worker_pid){
-                # Parent Process
-                $logger->debug( "Adding worker ($worker_pid) to pool" );
-                my $task = {};
-                $task->{'pid'} = $worker_pid;
-                $task->{'instance'} = $instance;
-                push(@tasks, $task);
+        my @checked; # Stores already checked instances
+
+        foreach my $instance (@instances){
+            $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
+            if ($#tasks < 16){
+
+                # If there existe free execution 'slots' we run a new worker
+                
+                my $worker_pid = fork();
+                if ($worker_pid){
+                    # Parent Process
+                    $logger->debug( "Adding worker ($worker_pid) to pool" );
+                    my $task = {};
+                    $task->{'pid'} = $worker_pid;
+                    $task->{'instance'} = $instance;
+                    push(@tasks, $task);
+                    push(@checked, $instance);
+                }
+                else{
+                    # Child Process
+                    &worker($instance);
+                }
             }
-            else{
-                # Child Process
-                &worker($instance);
+            else {
+
+                # In case of a high number of instances, we have to wait for
+                # some of the workers to end before submiting more tasks
+
+                $logger->debug( "Waiting for $#tasks tasks  completion" );
+                foreach my $task (@tasks) {
+                    my $tmp = waitpid($task->{'pid'}, 0);
+                    $logger->debug( "Done with worker : $tmp" );
+                }
+                $logger->debug( "Removing finished workers from pool" );
+                @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
             }
         }
-        else {
-            # In case of a high number of instances, we have to wait for
-            # some workers finalization before submiting more tasks
 
-            $logger->debug( "Waiting for $#tasks tasks  completion" );
-            foreach my $task (@tasks) {
-                my $tmp = waitpid($task->{'pid'}, 0);
-                $logger->debug( "Done with worker : $tmp" );
-            }
-            $logger->debug( "Removing finished workers from pool" );
-            @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
+        # Removes already checked instances from @instances
+
+        foreach my $inst (@checked){
+            $logger->debug( "Remaining Instances: $#instances ");
+            $logger->debug( "Removing $inst from \@instances. ");
+            @instances = grep($_ ne $inst, @instances);
+            $logger->debug( "Remaining Instances after removal: $#instances ");
         }
     }
 
-    # Wait for remaining running processes
-    while ($#tasks > 0){
+    # Wait for remaining running processes, if any
+
+    while ($#tasks >= 0){
         $logger->debug( "Waiting for $#tasks tasks  completion" );
         foreach my $task (@tasks) {
             my $tmp = waitpid($task->{'pid'}, 0);
