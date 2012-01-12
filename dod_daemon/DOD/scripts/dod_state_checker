@@ -32,8 +32,8 @@ sub worker(){
     else{
         $instance_state = "RUNNING";
     }
-    if (($instance_state ne 'JOB_PENDING') && 
-        ($instance_state ne $instance->{'STATE'})){
+    if (($instance->{'STATE'} ne 'JOB_PENDING') && 
+        ($instance->{'STATE'} ne $instance_state)) {
         $logger->debug( "Updating $instance_name STATE to $instance_state");
         DOD::Database::updateInstanceState($instance, $instance_state);
         $logger->debug( "$instance_name state update successfully");
