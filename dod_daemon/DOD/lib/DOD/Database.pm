@@ -70,7 +70,7 @@ if (defined $password){
     $dbh->disconnect();
     }
 else {
-    $logger->error_die("Check DB connection parameters. Couldn't start a connection" );
+    $logger->error_die("Check DB connection parameters. Couldn't start a connection\n $!" );
 }
 
 } # BEGIN BLOCK
@@ -106,7 +106,7 @@ sub getInstanceList{
         }
         1;
     } or do{
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return ();
     };
     return @result;
@@ -152,7 +152,7 @@ sub getJobList{
         }
         1;
     } or do{
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return ();
     };
     return @result;
@@ -191,7 +191,7 @@ sub getTimedOutJobs{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return (); # Returns an empty array in an attempt to fail smoothly
     };
     return @result;
@@ -207,7 +207,7 @@ sub updateInstanceState{
         ($job, $state, $dbh) = @_;
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     eval {
@@ -229,7 +229,7 @@ sub updateInstanceState{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database" );
+        $logger->error( "Unable to connect to database\n $!" );
         return undef;
     };
 }
@@ -244,7 +244,7 @@ sub updateJobState{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     eval {
@@ -269,7 +269,7 @@ sub updateJobState{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!");
+        $logger->error( "Unable to connect to database !!!\n $!");
         return undef;
     };
 }
@@ -284,7 +284,7 @@ sub updateJobCompletionDate{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     eval {
@@ -308,7 +308,7 @@ sub updateJobCompletionDate{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return undef;
     };
 }
@@ -323,7 +323,7 @@ sub updateJobLog{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     eval {
@@ -348,7 +348,7 @@ sub updateJobLog{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return undef;
     };
 }
@@ -363,7 +363,7 @@ sub finishJob{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     eval{
@@ -381,7 +381,7 @@ sub finishJob{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!");
+        $logger->error( "Unable to connect to database !!!\n $!");
         return undef;
     };
 }
@@ -396,7 +396,7 @@ sub getJobParams{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     my $res;
@@ -430,7 +430,7 @@ sub getJobParams{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database" );
+        $logger->error( "Unable to connect to database\n $!" );
         return undef;
     };
     return $res; 
@@ -446,7 +446,7 @@ sub getExecString{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     my $ref;
@@ -469,7 +469,7 @@ sub getExecString{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         return undef;
     };
     return $ref->{'EXEC'}; 
@@ -486,7 +486,7 @@ sub getConfigFile{
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     my $result;
@@ -528,7 +528,7 @@ sub prepareCommand {
         $dbh = getDBH();
     }
     else{
-        $logger->error( "Wrong number of parameters" );
+        $logger->error( "Wrong number of parameters\n $!" );
         return undef;
     }
     my $cmd;
@@ -580,7 +580,7 @@ sub prepareCommand {
             my $buf = 0;
             $buf++ while ($cmd =~ m/:(.*)+=/g);
             if ($buf) {
-                $logger->error( "Some of the command parameters could not be parsed ");
+                $logger->error( "Some of the command parameters could not be parsed\n $!" );
                 }
             $buf = 0;
             $buf++ while ($cmd =~ m/#(.*)+=/g);
@@ -600,12 +600,12 @@ sub prepareCommand {
                 }
         }
         else {
-            $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained." );
+            $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained.\n $!" );
             $cmd = undef;
         }
         1;
     } or do {
-        $logger->error( "Unable to prepare command" );
+        $logger->error( "Unable to prepare command\n $!" );
         $cmd = undef;
     };
     if ($#_ == 0){
@@ -623,7 +623,7 @@ sub getDBH{
         $logger->debug( "Setting date format: $DATEFORMAT" );
         $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" );
     } or do {
-        $logger->error( "Unable to connect to database !!!" );
+        $logger->error( "Unable to connect to database !!!\n $!" );
         $dbh = undef;
     };
     return $dbh;

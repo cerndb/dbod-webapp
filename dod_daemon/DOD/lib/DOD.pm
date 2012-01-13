@@ -111,7 +111,7 @@ sub jobDispatcher {
                         $logger->debug( "Process ($pid) succesfully killed");
                     }
                     else{
-                        $logger->error( "Process ($pid) could not be killed");
+                        $logger->error( "Process ($pid) could not be killed\n $!");
                     }
                 }
             }
@@ -145,7 +145,7 @@ sub worker_body {
     my $logger = Log::Log4perl::get_logger( "DOD.worker" );
     my $dbh = DOD::Database::getDBH();
     do {
-            $logger->error( " Unable to connect to database !!!" );
+            $logger->error( "Unable to connect to database !!! \n $!" );
             die( "Unable to connect to database !!!" );
     } unless (defined($dbh));
     my $cmd_line = DOD::Database::prepareCommand($job, $dbh);
@@ -169,7 +169,7 @@ sub worker_body {
         DOD::Database::updateInstanceState( $job, $instance_state, $dbh );
     }
     else{
-        $logger->error( "An error ocurred preparing command execution" );
+        $logger->error( "An error ocurred preparing command execution \n $!" );
         my ($job_state, $instance_state) = states($job, 1);
         $logger->debug( "Finishing Job. Resulting instance state: $instance_state");
         DOD::Database::finishJob( $job, $job_state, $log, $dbh );

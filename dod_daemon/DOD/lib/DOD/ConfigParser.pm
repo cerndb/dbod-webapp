@@ -74,7 +74,7 @@ sub MYSQL_writeFile{
     my ($fh, $filename) = File::Temp::tempfile( DIR => $tempdir );
     $logger->debug( "Created temporary file $filename" );
     chmod(0644, $filename); # Remote user doing the readng will be sysctl
-    open(FP, ">$filename") or $logger->error_die( "Error opening file" );
+    open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
     while ( my($section, $valueref) = each( %{$hashref} ) ){
         print FP "[$section]\n";
         my %values = %{$valueref};
