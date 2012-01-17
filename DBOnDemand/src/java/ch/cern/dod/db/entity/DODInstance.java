@@ -194,7 +194,8 @@ public class DODInstance implements Comparable, Cloneable{
         clone.setDbType(new String(dbType));
         if (description != null)
             clone.setDescription(new String(description));
-        clone.setEGroup(new String(eGroup));
+        if (eGroup != null)
+            clone.setEGroup(new String(eGroup));
         if (expiryDate != null)
             clone.setExpiryDate((Date) expiryDate.clone());
         clone.setNoConnections(noConnections);
