@@ -9,15 +9,17 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
+import org.zkoss.json.JSONArray;
 
 /**
  * Helper to obtain monitoring data.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class MonitoringHelper {
 
@@ -52,11 +54,37 @@ public class MonitoringHelper {
      * @param metric metric to obtain.
      * @return image with the specified metric.
      * @throws IOException if there is an error processing the response.
+     * @deprecated Metrics are obtained as raw data and rendered with Google Visualization API
      */
     public RenderedImage getMetric (DODInstance instance, String metric) throws IOException {
         URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName() + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
         RenderedImage image = ImageIO.read(plotUrl);
         return image;
+    }
+    
+    /**
+     * Gets the values for the selected metric in a JSON array.
+     * @param instance instance to obtain the metric for.
+     * @param metric metric to obtain.
+     * @return JSON array.
+     * @throws IOException if there is an error processing the response.
+     */
+    public String getJSONMetric (DODInstance instance, String metric) throws IOException {
+        ArrayList<String[]> values = new ArrayList<String[]>();
+        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName() + "&"
+                            + DODConstants.MONITORING_METRIC + "=" + metric);
+        URLConnection plotConnection = plotUrl.openConnection();
+        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                plotConnection.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            StringTokenizer tokens = new StringTokenizer(inputLine, ",");
+            values.add(new String[]{tokens.nextToken(), tokens.nextToken()});
+        }
+        in.close();
+
+        return JSONArray.toJSONString(values);
     }
 }
