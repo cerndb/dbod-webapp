@@ -6,6 +6,7 @@ import ch.cern.dod.ui.controller.RestoreController;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ui.controller.ConfigController;
 import ch.cern.dod.ui.controller.DestroyController;
+import ch.cern.dod.ui.controller.UpgradeController;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.JobHelper;
@@ -323,6 +324,34 @@ public class OverviewGridRenderer implements RowRenderer {
         } else {
             restoreBtn.setSclass(DODConstants.STYLE_BUTTON);
         }
+        
+        //Upgrade button
+        final Toolbarbutton upgradeBtn = new Toolbarbutton();
+        upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
+        upgradeBtn.setImage(DODConstants.IMG_UPGRADE);
+        upgradeBtn.setParent(box);
+        upgradeBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            public void onEvent(Event event) {
+                //Show destroy window
+                try {
+                    UpgradeController upgradeController = new UpgradeController(instance, jobHelper);
+                    //Only show window if it is not already being diplayed
+                    if (row.getRoot().getFellowIfAny(upgradeController.getId()) == null) {
+                        upgradeController.setParent(row.getRoot());
+                        upgradeController.doModal();
+                    }
+                } catch (InterruptedException ex) {
+                    showError(row, ex, DODConstants.ERROR_DISPATCHING_JOB);
+                }
+            }
+        });
+        //Only enable button if the instance is stopped or running
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+            upgradeBtn.setDisabled(true);
+            upgradeBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+        } else {
+            upgradeBtn.setSclass(DODConstants.STYLE_BUTTON);
+        }
 
         //Access monitoring button
         final Toolbarbutton monitorBtn = new Toolbarbutton();
@@ -350,34 +379,6 @@ public class OverviewGridRenderer implements RowRenderer {
             monitorBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
             monitorBtn.setSclass(DODConstants.STYLE_BUTTON);
-        }
-
-        //Destroy button
-        final Toolbarbutton destroyBtn = new Toolbarbutton();
-        destroyBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_DESTROY));
-        destroyBtn.setImage(DODConstants.IMG_DESTROY);
-        destroyBtn.setParent(box);
-        destroyBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                //Show destroy window
-                try {
-                    DestroyController destroyController = new DestroyController(instance, jobHelper);
-                    //Only show window if it is not already being diplayed
-                    if (row.getRoot().getFellowIfAny(destroyController.getId()) == null) {
-                        destroyController.setParent(row.getRoot());
-                        destroyController.doModal();
-                    }
-                } catch (InterruptedException ex) {
-                    showError(row, ex, DODConstants.ERROR_DISPATCHING_JOB);
-                }
-            }
-        });
-        //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
-            destroyBtn.setDisabled(true);
-            destroyBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
-        } else {
-            destroyBtn.setSclass(DODConstants.STYLE_BUTTON);
         }
 
         //Add box to row
