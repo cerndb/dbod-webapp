@@ -208,6 +208,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox username = (Textbox) getFellow("username");
         //If there are no previous errors
         if (username.getErrorMessage() == null || username.getErrorMessage().isEmpty()) {
+            //Trim and lowercase
+            username.setValue(username.getValue().trim().toLowerCase());
             //Check if user has entered a value
             if (username.getValue().isEmpty()) {
                 username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_EMPTY));
@@ -255,6 +257,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox dbName = (Textbox) getFellow("dbName");
         //If there are no previous errors
         if (dbName.getErrorMessage() == null || dbName.getErrorMessage().isEmpty()) {
+            //Trim and lowercase
+            dbName.setValue(dbName.getValue().trim().toLowerCase());
             //Check if user has entered a value
             if (dbName.getValue().isEmpty()) {
                 dbName.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_NAME_EMPTY));
@@ -285,6 +289,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         //If there are no previous errors
         if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
             if (eGroup.getText().length() > 0) {
+                //Trim and lowercase
+                eGroup.setValue(eGroup.getValue().trim().toLowerCase());
                 //Check eGroup length
                 if (eGroup.getText().length() > DODConstants.MAX_E_GROUP_LENGTH) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_LENGTH));
@@ -394,6 +400,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox dbSize = (Textbox) getFellow("dbSize");
         //If there are no previous errors
         if (dbSize.getErrorMessage() == null || dbSize.getErrorMessage().isEmpty()) {
+            //Trim
+            dbSize.setValue(dbSize.getValue().trim());
             //Check if user has entered a value
             if (dbSize.getValue().isEmpty()) {
                 dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_EMPTY));
@@ -423,6 +431,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox noConnections = (Textbox) getFellow("noConnections");
         //If there are no previous errors
         if (noConnections.getErrorMessage() == null || noConnections.getErrorMessage().isEmpty()) {
+            //Trim
+            noConnections.setValue(noConnections.getValue().trim());
             //Check only if user has entered a value
             if (!noConnections.getValue().isEmpty()) {
                 try {
@@ -450,6 +460,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox project = (Textbox) getFellow("project");
         //If there are no previous errors
         if (project.getErrorMessage() == null || project.getErrorMessage().isEmpty()) {
+            //Trim
+            project.setValue(project.getValue().trim());
             //Check description length
             if (project.getValue().length() > DODConstants.MAX_PROJECT_LENGTH) {
                 project.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PROJECT_LENGTH));
@@ -469,6 +481,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox description = (Textbox) getFellow("description");
         //If there are no previous errors
         if (description.getErrorMessage() == null || description.getErrorMessage().isEmpty()) {
+            //Trim
+            description.setValue(description.getValue().trim());
             //Check description length
             if (description.getValue().length() > DODConstants.MAX_DESCRIPTION_LENGTH) {
                 description.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DESCRIPTION_LENGTH));
