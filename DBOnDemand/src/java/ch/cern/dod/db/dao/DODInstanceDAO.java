@@ -126,7 +126,7 @@ public class DODInstanceDAO {
                 tokenizer = new StringTokenizer(egroups, ";");
                 int tokens = tokenizer.countTokens();
                 if (tokens > 0) {
-                    query.append("OR ( e_group <> '' AND e_group IN (");
+                    query.append("OR ( e_group IS NOT NULL AND e_group IN (");
                     for (int i=0; i<tokens-1; i++) {
                         query.append("?, ");
                     }
@@ -146,7 +146,7 @@ public class DODInstanceDAO {
                 statement.setString(i, tokenizer.nextToken());
                 i++;
             }
-            
+           
             //Execute query
             result = statement.executeQuery();
 
