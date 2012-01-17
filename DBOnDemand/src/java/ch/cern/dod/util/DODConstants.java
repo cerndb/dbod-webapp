@@ -24,7 +24,7 @@ public class DODConstants {
     public static final String DATE_TIME_FORMAT_PITR = "yyyy-MM-dd_HH:mm:ss";
     public static final String TIME_FORMAT = "H:mm:ss";
     public static final String INSTANCE = "instance";
-    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M";
+    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M&days=30&raw=1";
     public static final String MONITORING_INSTANCE = "tgt";
     public static final String MONITORING_METRIC = "metric";
     public static final String HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/user_help_html/";
@@ -58,6 +58,7 @@ public class DODConstants {
     public static final String JOB_DISABLE_BACKUPS = "DISABLE_AUTOMATIC_BACKUPS";
     public static final String JOB_ENABLE_BACKUPS = "ENABLE_AUTOMATIC_BACKUPS";
     public static final String JOB_RESTORE = "RESTORE";
+    public static final String JOB_UPGRADE = "UPGRADE";
     public static final String JOB_MONITOR = "MONITOR";
     public static final String JOB_DESTROY = "DESTROY";
     public static final String DB_TYPE_ORACLE = "ORACLE";
@@ -102,8 +103,10 @@ public class DODConstants {
     public static final String LABEL_AUTOMATIC_BACKUP = "automaticBackup";
     public static final String LABEL_HOURS = "hours";
     public static final String LABEL_BACKUP_TITLE = "backupTitle";
-    public static final String LABEL_BACKUP_MESSAGE = "backupMessage";
+    public static final String LABEL_BACKUP_CONFIG = "backupConfiguration";
     public static final String LABEL_BACKUP_TO_TAPE = "backupToTape";
+    public static final String LABEL_BACKUP_TO_TAPE_WARNING = "backupToTapeWarning";
+    public static final String LABEL_BACKUP_NOW_TITLE = "backupNowTitle";
     public static final String LABEL_BACKUP_NOW = "backupNow";
     public static final String LABEL_INTRODUCTION = "introduction";
     public static final String LABEL_NO_JOBS = "noJobs";
@@ -123,6 +126,9 @@ public class DODConstants {
     public static final String LABEL_SNAPSHOTS_FOR_DAY_EMPTY = "snapshotsForDayEmpty";
     public static final String LABEL_RESTORE_CONFIRM_TITLE = "restoreConfirmTitle";
     public static final String LABEL_RESTORE_CONFIRM_MESSAGE = "restoreConfirmMessage";
+    public static final String LABEL_UPGRADE_TITLE = "upgradeTitle";
+    public static final String LABEL_UPGRADE_MESSAGE = "upgradeMessage";
+    public static final String LABEL_APPLY_CHANGES = "applyChanges";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -166,6 +172,9 @@ public class DODConstants {
     public static final String ERROR_USERNAME_WS = "errorUsernameWS";
     public static final String ERROR_USERNAME_NOT_FOUND = "errorUsernameNotFound";
     public static final String ERROR_DISPLAYING_CONFIRM_WINDOW = "errorDisplayingConfirmWindow";
+    public static final String ERROR_BACKUP_TO_TAPE_DATE = "errorBackupToTapeDate";
+    public static final String ERROR_BACKUP_TO_TAPE_DAY_EMPTY = "errorBackupToTapeDayEmpty";
+    public static final String ERROR_BACKUP_TO_TAPE_TIME_EMPTY = "errorBackupToTapeTimeEmpty";
 
     //Images
     public static final String IMG_AWAITING_APPROVAL = "/img/awaiting.png";
@@ -179,6 +188,7 @@ public class DODConstants {
     public static final String IMG_DOWNLOAD = "/img/download.png";
     public static final String IMG_BACKUP = "/img/backup.png";
     public static final String IMG_RESTORE = "/img/restore.png";
+    public static final String IMG_UPGRADE = "/img/upgrade.png";
     public static final String IMG_MONITOR = "/img/monitor.png";
     public static final String IMG_DESTROY = "/img/destroy.png";
     public static final String IMG_CANCEL = "/img/cancel.png";
