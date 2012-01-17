@@ -47,10 +47,6 @@ public class InstanceController extends Hbox implements AfterCompose {
      */
     String username;
     /**
-     * e-groups for the authenticated user.
-     */
-    String eGroups;
-    /**
      * Instance being managed at the moment.
      */
     DODInstance instance;
@@ -92,11 +88,6 @@ public class InstanceController extends Hbox implements AfterCompose {
      * CCID of the user creating the instance.
      */
     private long userCCID;
-    
-    /**
-     * Indicates if the user is viewing this instance in admin mode or not.
-     */
-    private Boolean adminMode;
 
     /**
      * Method executed after composing the page. It loads instance info, buttons and jobs.
@@ -106,7 +97,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         Execution execution = Executions.getCurrent();
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
         String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
-        adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
+        Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
 
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
@@ -297,6 +288,17 @@ public class InstanceController extends Hbox implements AfterCompose {
             restoreBtn.setDisabled(false);
             restoreBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
         }
+        
+        //Upgrade a database button
+        final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
+        //Only enable button if the instance is stopped or running
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+            upgradeBtn.setDisabled(true);
+            upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+        } else {
+            upgradeBtn.setDisabled(false);
+            upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+        }
 
         //Access monitoring button
         final Toolbarbutton monitorBtn = (Toolbarbutton) getFellow("monitor");
@@ -307,18 +309,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         } else {
             monitorBtn.setDisabled(false);
             monitorBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
-        }
-
-        //Destroy a database button
-        final Toolbarbutton destroyBtn = (Toolbarbutton) getFellow("destroy");
-        //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
-            destroyBtn.setDisabled(true);
-            destroyBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
-        } else {
-            destroyBtn.setDisabled(false);
-            destroyBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
-        }
+        }      
     }
 
      /**
@@ -536,6 +527,7 @@ public class InstanceController extends Hbox implements AfterCompose {
 
     /**
      * Creates a job to destroy this instance.
+     * @deprecated Instances are destroyed through FIM.
      */
     public void doDestroy() {
         try {
@@ -544,6 +536,22 @@ public class InstanceController extends Hbox implements AfterCompose {
             if (this.getRoot().getFellowIfAny(destroyController.getId()) == null) {
                 destroyController.setParent(this.getRoot());
                 destroyController.doModal();
+            }
+        } catch (InterruptedException ex) {
+            showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
+        }
+    }
+    
+    /**
+     * Creates a job to upgrade this instance.
+     */
+    public void doUpgrade() {
+        try {
+            UpgradeController upgradeController = new UpgradeController(instance, jobHelper);
+            //Only show window if it is not already being diplayed
+            if (this.getRoot().getFellowIfAny(upgradeController.getId()) == null) {
+                upgradeController.setParent(this.getRoot());
+                upgradeController.doModal();
             }
         } catch (InterruptedException ex) {
             showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
@@ -571,7 +579,7 @@ public class InstanceController extends Hbox implements AfterCompose {
                     ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_SEARCH));
                     return;
                 }
-                //If the egroup does not exist show confimation window and return
+                //If the egroup does not exist show confimation window and return (the creation of e-groups is not allowed when editing)
                 if (!eGroupExists) {
                     try {
                         ((Window) getFellow("eGroupConfirm")).doModal();
@@ -593,7 +601,7 @@ public class InstanceController extends Hbox implements AfterCompose {
     }
 
     /**
-     * Edits the egroup of this instance.
+     * Edits the egroup of this instance (now always called when egroup exists, the creation of e-groups is not allowed when editing).
      * @param eGroupExists indicates if an egroup has to be created or not.
      */
     public void editEGroup(boolean eGroupExists) {
@@ -614,7 +622,10 @@ public class InstanceController extends Hbox implements AfterCompose {
                     clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
                     if (dao.update(instance, clone) > 0) {
                         instance = clone;
-                        ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
+                        if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
+                            ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
+                        else
+                            ((Label) getFellow("eGroup")).setValue("-");
                         ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
                         ((Hbox) getFellow("eGroupBox")).setVisible(true);
                     }
@@ -647,7 +658,10 @@ public class InstanceController extends Hbox implements AfterCompose {
             clone.setProject(((Textbox) getFellow("projectEdit")).getValue());
             if (dao.update(instance, clone) > 0) {
                 instance = clone;
-                ((Label) getFellow("project")).setValue(instance.getProject());
+                if (instance.getProject() != null && !instance.getProject().isEmpty())
+                    ((Label) getFellow("project")).setValue(instance.getProject());
+                else
+                    ((Label) getFellow("project")).setValue("-");
                 ((Hbox) getFellow("projectEditBox")).setVisible(false);
                 ((Hbox) getFellow("projectBox")).setVisible(true);
             }
@@ -667,7 +681,10 @@ public class InstanceController extends Hbox implements AfterCompose {
             clone.setExpiryDate(((Datebox) getFellow("expiryDateEdit")).getValue());
             if (dao.update(instance, clone) > 0) {
                 instance = clone;
-                ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
+                if (instance.getExpiryDate() != null)
+                    ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
+                else
+                    ((Label) getFellow("expiryDate")).setValue("-");
                 ((Hbox) getFellow("expiryDateEditBox")).setVisible(false);
                 ((Hbox) getFellow("expiryDateBox")).setVisible(true);
             }
@@ -687,7 +704,10 @@ public class InstanceController extends Hbox implements AfterCompose {
             clone.setDescription(((Textbox) getFellow("descriptionEdit")).getValue());
             if (dao.update(instance, clone) > 0) {
                 instance = clone;
-                ((Label) getFellow("description")).setValue(instance.getDescription());
+                if (instance.getDescription() != null && !instance.getDescription().isEmpty())
+                    ((Label) getFellow("description")).setValue(instance.getDescription());
+                else
+                    ((Label) getFellow("description")).setValue("-");
                 ((Hbox) getFellow("descriptionEditBox")).setVisible(false);
                 ((Hbox) getFellow("descriptionBox")).setVisible(true);
             }
@@ -706,6 +726,8 @@ public class InstanceController extends Hbox implements AfterCompose {
         //If there are no previous errors
         if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
             if (eGroup.getText().length() > 0) {
+                //Trim and lowercase
+                eGroup.setValue(eGroup.getValue().trim().toLowerCase());
                 //Check eGroup length
                 if (eGroup.getText().length() > DODConstants.MAX_E_GROUP_LENGTH) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_LENGTH));
@@ -764,6 +786,8 @@ public class InstanceController extends Hbox implements AfterCompose {
         Textbox project = (Textbox) getFellow("projectEdit");
         //If there are no previous errors
         if (project.getErrorMessage() == null || project.getErrorMessage().isEmpty()) {
+            //Trim
+            project.setValue(project.getValue().trim());
             //Check description length
             if (project.getValue().length() > DODConstants.MAX_PROJECT_LENGTH) {
                 project.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PROJECT_LENGTH));
@@ -783,6 +807,8 @@ public class InstanceController extends Hbox implements AfterCompose {
         Textbox description = (Textbox) getFellow("descriptionEdit");
         //If there are no previous errors
         if (description.getErrorMessage() == null || description.getErrorMessage().isEmpty()) {
+            //Trim
+            description.setValue(description.getValue().trim());
             //Check description length
             if (description.getValue().length() > DODConstants.MAX_DESCRIPTION_LENGTH) {
                 description.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DESCRIPTION_LENGTH));
