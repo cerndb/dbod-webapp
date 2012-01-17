@@ -4,6 +4,8 @@ import ch.cern.dod.db.dao.DODJobDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -11,12 +13,16 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Caption;
 import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Spinner;
+import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
@@ -53,6 +59,18 @@ public class BackupController extends Window {
      */
     private Checkbox backupToTape;
     /**
+     * Timebox to select backup to tape start
+     */
+    private Timebox time;
+    /**
+     * Datebox to select backup to tape start
+     */
+    private Datebox day;
+    /**
+     * Date for backups to tapes to start (combination of day and time from form)
+     */
+    private Date backupToTapeStartDate;
+    /**
      * User authenticated in the system at the moment.
      */
     private String username;
@@ -68,6 +86,11 @@ public class BackupController extends Window {
      * Indicates if backups to tape were enabled before clicking accept.
      */
     private boolean prevBackupToTapeEnabled;
+    /**
+     * Indicates the start date for backups to tape.
+     */
+    private Date prevBackupToTapeDate;
+    
 
     /**
      * Constructor for this window.
@@ -93,22 +116,52 @@ public class BackupController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("350px");
+        this.setWidth("510px");
 
         //Main box used to apply pading
         Vbox mainBox = new Vbox();
         mainBox.setStyle("padding-top:5px;padding-left:5px;padding-right:5px");
         this.appendChild(mainBox);
-
-        //Main message
-        Label message = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_MESSAGE));
-        mainBox.appendChild(message);
+        
+        //Groupbox containing backup now
+        Groupbox backupNow = new Groupbox();
+        backupNow.setClosable(false);
+        Caption titleBackupNow = new Caption();
+        titleBackupNow.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW_TITLE));
+        backupNow.appendChild(titleBackupNow);
+        //Box containing the button to create backup now
+        Hbox backupNowBox =  new Hbox();
+        backupNowBox.setStyle("margin-bottom:10px;");
+        backupNowBox.setHeight("24px");
+        backupNowBox.setAlign("bottom");
+        Toolbarbutton backupNowButton = new Toolbarbutton();
+        backupNowButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
+        backupNowButton.setSclass(DODConstants.STYLE_BUTTON);
+        backupNowButton.setImage(DODConstants.IMG_BACKUP);
+        backupNowButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            public void onEvent(Event event) {
+                doBackupNow();
+            }
+        });
+        backupNowBox.appendChild(backupNowButton);
+        Label backupNowLabel = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
+        backupNowBox.appendChild(backupNowLabel);
+        backupNow.appendChild(backupNowBox);
+        mainBox.appendChild(backupNow);
+        
+        //Groupbox containing backup configuration
+        Groupbox backupConfig = new Groupbox();
+        backupConfig.setStyle("margin-top:10px");
+        backupConfig.setClosable(false);
+        Caption titleConfig = new Caption();
+        titleConfig.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_CONFIG));
+        backupConfig.appendChild(titleConfig);
+        Vbox configContent = new Vbox();
 
         //Initialise scheduled backup configuration
         initScheduledBackup();
         //Box containing the checkbox for automatic backups and the interval
         Hbox autoBox =  new Hbox();
-        autoBox.setStyle("margin-left:20px");
         autoBox.setAlign("bottom");
         //Create checkbox for automatic backups
         automatic = new Checkbox();
@@ -125,91 +178,105 @@ public class BackupController extends Window {
         interval.setConstraint("min " + DODConstants.MIN_INTERVAL_HOURS);
         autoBox.appendChild(interval);
         autoBox.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_HOURS)));
-        mainBox.appendChild(autoBox);
+        configContent.appendChild(autoBox);
         
+        
+        //Box containing the checkbox for automatic backups and the interval
+        Hbox tapeBox =  new Hbox();
+        tapeBox.setAlign("bottom");
         //Create checkbox for backups to tape
         initBackupToTape();
         backupToTape = new Checkbox();
-        backupToTape.setStyle("margin-left:20px");
         backupToTape.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE));
         backupToTape.setChecked(prevBackupToTapeEnabled);
-        mainBox.appendChild(backupToTape);
+        tapeBox.appendChild(backupToTape);
+        //Create date and time choosers
+        day = new Datebox();
+        day.setFormat(DODConstants.DATE_FORMAT);
+        day.setWidth("90px");
+        tapeBox.appendChild(day);
+        time = new Timebox();
+        tapeBox.appendChild(time);        
+        configContent.appendChild(tapeBox);
+        if (prevBackupToTapeEnabled) {
+            day.setValue(prevBackupToTapeDate);
+            time.setValue(prevBackupToTapeDate);
+        }
+        else {
+            Date now = new Date();
+            day.setValue(now);
+            time.setValue(now);
+        }
         
-        //Box containing the button to disable automatic backups
-        Hbox backupNowBox =  new Hbox();
-        backupNowBox.setStyle("margin-bottom:10px;margin-left:20px");
-        backupNowBox.setHeight("24px");
-        backupNowBox.setAlign("bottom");
-        Toolbarbutton backupNowButton = new Toolbarbutton();
-        backupNowButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
-        backupNowButton.setSclass(DODConstants.STYLE_BUTTON);
-        backupNowButton.setImage(DODConstants.IMG_BACKUP);
-        backupNowButton.addEventListener(Events.ON_CLICK, new EventListener() {
+        //Create warning for backups to tape
+        if (!prevBackupEnabled) {
+            Label backupToTapeWarning = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE_WARNING));
+            backupToTapeWarning.setStyle("margin-left:20px;color:red;font-size:xx-small");
+            configContent.appendChild(backupToTapeWarning);
+        }
+        
+        //Apply changes button
+        Div applyChangesDiv = new Div();
+        applyChangesDiv.setWidth("100%");
+        Hbox applyChangesBox = new Hbox();
+        applyChangesBox.setHeight("24px");
+        applyChangesBox.setAlign("bottom");
+        applyChangesBox.setStyle("float:right;");
+        Label applyChangesLabel = new Label(Labels.getLabel(DODConstants.LABEL_APPLY_CHANGES));
+        applyChangesLabel.setSclass(DODConstants.STYLE_TITLE);
+        applyChangesLabel.setStyle("font-size:10pt !important;cursor:pointer;");
+        applyChangesLabel.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
-                doBackupNow();
+                doApplyChanges();
             }
         });
-        backupNowBox.appendChild(backupNowButton);
-        Label backupNowLabel = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
-        backupNowBox.appendChild(backupNowLabel);
-        mainBox.appendChild(backupNowBox);
+        applyChangesBox.appendChild(applyChangesLabel);
+        Toolbarbutton applyChangesButton = new Toolbarbutton();
+        applyChangesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_APPLY_CHANGES));
+        applyChangesButton.setSclass(DODConstants.STYLE_BUTTON);
+        applyChangesButton.setImage(DODConstants.IMG_ACCEPT);
+        applyChangesButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            public void onEvent(Event event) {
+                doApplyChanges();
+            }
+        });
+        applyChangesBox.appendChild(applyChangesButton);
+        applyChangesDiv.appendChild(applyChangesBox);
+        configContent.appendChild(applyChangesDiv);
+        
+        //Append groupbox to mainbox
+        backupConfig.appendChild(configContent);
+        mainBox.appendChild(backupConfig);
 
         //Div for accept and cancel buttons
-        Div buttonsDiv = new Div();
-        buttonsDiv.setWidth("100%");
-
+        Div closeDiv = new Div();
+        closeDiv.setWidth("100%");
         //Cancel button
-        Hbox cancelBox = new Hbox();
-        cancelBox.setHeight("24px");
-        cancelBox.setAlign("bottom");
-        cancelBox.setStyle("float:left;");
-        Toolbarbutton cancelButton = new Toolbarbutton();
-        cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
-        cancelButton.setSclass(DODConstants.STYLE_BUTTON);
-        cancelButton.setImage(DODConstants.IMG_CANCEL);
-        cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+        Hbox closeBox = new Hbox();
+        closeBox.setHeight("24px");
+        closeBox.setAlign("bottom");
+        closeBox.setStyle("float:left;");
+        Toolbarbutton closeButton = new Toolbarbutton();
+        closeButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CLOSE));
+        closeButton.setSclass(DODConstants.STYLE_BUTTON);
+        closeButton.setImage(DODConstants.IMG_CANCEL);
+        closeButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
-                doCancel();
+                doClose();
             }
         });
-        cancelBox.appendChild(cancelButton);
-        Label cancelLabel = new Label(Labels.getLabel(DODConstants.LABEL_CANCEL));
-        cancelLabel.setSclass(DODConstants.STYLE_TITLE);
-        cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
-        cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+        closeBox.appendChild(closeButton);
+        Label closeLabel = new Label(Labels.getLabel(DODConstants.LABEL_CLOSE));
+        closeLabel.setSclass(DODConstants.STYLE_TITLE);
+        closeLabel.setStyle("font-size:10pt !important;cursor:pointer;");
+        closeLabel.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
-                doCancel();
+                doClose();
             }
         });
-        cancelBox.appendChild(cancelLabel);
-        buttonsDiv.appendChild(cancelBox);
-
-        //Accept button
-        Hbox acceptBox = new Hbox();
-        acceptBox.setHeight("24px");
-        acceptBox.setAlign("bottom");
-        acceptBox.setStyle("float:right;");
-        Label acceptLabel = new Label(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptLabel.setSclass(DODConstants.STYLE_TITLE);
-        acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
-        acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                doAccept();
-            }
-        });
-        acceptBox.appendChild(acceptLabel);
-        Toolbarbutton acceptButton = new Toolbarbutton();
-        acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptButton.setSclass(DODConstants.STYLE_BUTTON);
-        acceptButton.setImage(DODConstants.IMG_ACCEPT);
-        acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                doAccept();
-            }
-        });
-        acceptBox.appendChild(acceptButton);
-        buttonsDiv.appendChild(acceptBox);
-        this.appendChild(buttonsDiv);
+        closeBox.appendChild(closeLabel);
+        closeDiv.appendChild(closeBox);
+        mainBox.appendChild(closeDiv);
     }
     
     /**
@@ -227,7 +294,11 @@ public class BackupController extends Window {
      * Instatiates the fields for the current backup to tape configuration.
      */
     private void initBackupToTape () {
-        prevBackupToTapeEnabled = false;
+        prevBackupToTapeDate = jobDAO.getBackupToTapeStartDate(instance);
+        if (prevBackupToTapeDate != null)
+            prevBackupToTapeEnabled = true;
+        else
+            prevBackupToTapeEnabled = false;
     }
     
     /**
@@ -254,16 +325,29 @@ public class BackupController extends Window {
     }
 
     /**
-     * Method executed when user accepts the form. A job is created and the window is detached.
+     * Method executed when user applies changes. A job is created and the window is detached.
      */
-    private void doAccept() {
+    private void doApplyChanges() {
         boolean result = false;
         //If there are no previous error messages on the interval component
-        if (interval.getErrorMessage() == null || interval.getErrorMessage().isEmpty()) {
-            //If backup to tape has changed
+        if (isConfigValid()) {
+            //If backup to tape has changed or the date has changed
             boolean backupToTapeResult = false;
-            if (backupToTape.isChecked() != prevBackupToTapeEnabled) {
-                backupToTapeResult = true;
+            if (backupToTape.isChecked() != prevBackupToTapeEnabled || (backupToTape.isChecked() && !backupToTapeStartDate.equals(prevBackupToTapeDate))) {
+                //If automatic backups to tape are checked
+                if (backupToTape.isChecked()) {
+                    if (jobHelper.isAdminMode())
+                        backupToTapeResult = jobDAO.createScheduledBackupToTape(instance, username, backupToTapeStartDate, 1);
+                    else
+                        backupToTapeResult = jobDAO.createScheduledBackupToTape(instance, username, backupToTapeStartDate, 0); 
+                }
+                //If automatic backups to tape are not checked disable them
+                else {
+                    if (jobHelper.isAdminMode())
+                        backupToTapeResult = jobDAO.deleteScheduledBackupToTape(instance, username, 1);
+                    else
+                        backupToTapeResult = jobDAO.deleteScheduledBackupToTape(instance, username, 0);
+                }
             }
             else {
                 backupToTapeResult = true;
@@ -272,20 +356,19 @@ public class BackupController extends Window {
             if (backupToTapeResult) {
                 //If scheduled backups changed
                 if (automatic.isChecked() != prevBackupEnabled || (automatic.isChecked() && interval.getValue() != prevInterval)) {
-                    //If automatic updates are checked
+                    //If automatic backups are checked
                     if (automatic.isChecked()) {
                         //If the interval has changed (if they just enable it, it will always change because the previous value was 0)
                         if ((interval.getValue() != prevInterval) && interval.getValue() != null && interval.getValue() > 0)
                             result = jobHelper.doBackup(instance, username, interval.getValue());
                     }
-                    //If automatic updates are not checked disable them
+                    //If automatic backups are not checked disable them
                     else {
                         if (jobHelper.isAdminMode())
                             result = jobDAO.deleteScheduledBackup(instance, username, 1);
                         else
                             result = jobDAO.deleteScheduledBackup(instance, username, 0);
                     }
-
                 }
                 else {
                     result = true;
@@ -308,11 +391,53 @@ public class BackupController extends Window {
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
     }
+    
+    /**
+     * Checks that the configuration parameters are valid
+     * @return 
+     */
+    public boolean isConfigValid() {
+        boolean intervalValid = true;
+        boolean dateValid = true;
+        //Check interval (restriction on component)
+        if (automatic.isChecked() && (interval.getErrorMessage() != null && !interval.getErrorMessage().isEmpty())) {
+            intervalValid = false;
+        }
+        //Check start date for backups to tape
+        if (backupToTape.isChecked()) {
+            if (day.getValue() != null) {
+                if (time.getValue() != null) {
+                    Calendar dayPart = Calendar.getInstance();
+                    dayPart.setTime(day.getValue());
+                    Calendar timePart = Calendar.getInstance();
+                    timePart.setTime(time.getValue());
+                    Calendar dayTime = Calendar.getInstance();
+                    dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
+                                timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
+                    backupToTapeStartDate = dayTime.getTime();
+                    if (backupToTapeStartDate.compareTo(new Date()) <= 0) {
+                        time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DATE));
+                        dateValid = false;
+                    }
+                }
+                else {
+                    time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_TIME_EMPTY));
+                    dateValid = false;
+                }
+            }
+            else
+            {
+                day.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DAY_EMPTY));
+                dateValid = false;
+            }
+        }
+        return intervalValid && dateValid;
+    }
 
     /**
      * Method executed when the user cancels the form. The window is detached from the page.
      */
-    private void doCancel() {
+    private void doClose() {
         automatic.getFellow("backupWindow").detach();
     }
 
