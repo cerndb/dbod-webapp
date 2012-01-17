@@ -604,4 +604,158 @@ public class DODJobDAO {
         }
         return interval;
     }
+    
+    /**
+     * Creates scheduled backups to tape.
+     * @param instance instance to enable backups to tape for.
+     * @param username username requesting this job.
+     * @param startDate date to start backups to tape.
+     * @param admin 1 if user is admin, 0 otherwise.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean createScheduledBackupToTape(DODInstance instance, String username, java.util.Date startDate, int admin) {
+        Connection connection = null;
+        CallableStatement createScheduleStatement = null;
+        int createScheduleResult = 0;
+        try {
+            //Get connection
+            connection = getConnection();
+            
+            //Create call create_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
+            //                                      start_date_param IN DATE)
+            String createScheduleCall = "{ call create_backup_to_tape(?, ?, ?, ?, ?, ?) }";
+            createScheduleStatement = connection.prepareCall(createScheduleCall);
+            //Set values
+            createScheduleStatement.setString(1, instance.getUsername());
+            createScheduleStatement.setString(2, instance.getDbName());
+            createScheduleStatement.setString(3, instance.getDbType());
+            createScheduleStatement.setString(4, username);
+            createScheduleStatement.setInt(5, admin);
+            createScheduleStatement.setTimestamp(6, new java.sql.Timestamp(startDate.getTime()));
+
+            createScheduleResult = createScheduleStatement.executeUpdate();
+        }
+        catch (NamingException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        }
+        catch (SQLException ex) {
+            try {
+                //Rollback updates
+                connection.rollback();
+            }
+            catch (SQLException ex1) {
+                Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex1);
+            }
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        }
+
+        finally {
+            try {
+                createScheduleStatement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        if (createScheduleResult > 0) {
+             Logger.getLogger(DODJobDAO.class.getName()).log(Level.INFO, "ENABLE AUTOMATIC BACKUPS TO TAPE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+            return true;
+        }
+        else
+            return false;
+    }
+    
+    /**
+     * Deletes a scheduled backup to tape.
+     * @param instance instance to delete the scheduled backup from.
+     * @return true if the operation was successful, false otherwise.
+     */
+    public boolean deleteScheduledBackupToTape(DODInstance instance, String username, int admin) {
+        Connection connection = null;
+        CallableStatement deleteScheduleStatement = null;
+        int deleteScheduleResult = 0;
+        try {
+            //Get connection
+            connection = getConnection();
+            
+            //Create call delete_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
+            String deleteScheduleCall = "{ call delete_backup_to_tape(?, ?, ?, ?, ?) }";
+            deleteScheduleStatement = connection.prepareCall(deleteScheduleCall);
+            //Set values
+            deleteScheduleStatement.setString(1, instance.getUsername());
+            deleteScheduleStatement.setString(2, instance.getDbName());
+            deleteScheduleStatement.setString(3, instance.getDbType());
+            deleteScheduleStatement.setString(4, username);
+            deleteScheduleStatement.setInt(5, admin);
+
+            deleteScheduleResult = deleteScheduleStatement.executeUpdate();
+            
+            if (deleteScheduleResult != CallableStatement.EXECUTE_FAILED)
+                 Logger.getLogger(DODJobDAO.class.getName()).log(Level.INFO, "DISABLE AUTOMATIC BACKUPS TO TAPE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+        }
+        catch (NamingException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        }
+
+        finally {
+            try {
+                deleteScheduleStatement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        if (deleteScheduleResult > 0)
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * Checks if backups to tape are enabled or disabled, and returns the start date.
+     * @param instance DOD instance to get the interval of.
+     * @return start date for backups to tape for the given instance, null otherwise.
+     */
+    public java.util.Date getBackupToTapeStartDate(DODInstance instance) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        java.util.Date date = null;
+        try {
+            //Get connection
+            connection = getConnection();
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            String query = "SELECT start_date"
+                            + " FROM user_scheduler_jobs"
+                            + " WHERE job_name = ?";
+            statement = connection.prepareStatement(query);
+            //Assign values to variables
+            statement.setString(1, instance.getDbName() + "_BACKUP_TO_TAPE");
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            if (result.next()) {
+                date = new java.util.Date(result.getTimestamp(1).getTime());
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {}
+            try {
+                statement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return date;
+    }
 }
