@@ -12,18 +12,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Html;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
@@ -32,7 +31,6 @@ import org.zkoss.zul.Window;
 /**
  * Controller for the monitoring window.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class MonitoringController extends Window {
 
@@ -48,10 +46,6 @@ public class MonitoringController extends Window {
      * Available metrics for this instance
      */
     private Combobox metrics;
-    /**
-     * Image containing the graph
-     */
-    private Image graph;
     /**
      * URL to access Lemon
      */
@@ -108,23 +102,26 @@ public class MonitoringController extends Window {
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     try {
-                        graph.setContent(helper.getMetric(instance, (String) metrics.getSelectedItem().getValue()));
+                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, (String) metrics.getSelectedItem().getValue()) + ");");
                     } catch (IOException ex) {
                         Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                         showError(DODConstants.ERROR_DISPATCHING_JOB);
                     }
-                }
-                else {
-                    graph.setSrc("");
                 }
             }
         });
         mainBox.appendChild(metrics);
 
         //Create graph
-        graph = new Image();
-        graph.setStyle("margin-top:10px");
-        mainBox.appendChild(graph);
+        Html graphDiv = new Html();
+        graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\"></div>");
+        mainBox.appendChild(graphDiv);
+        try {
+            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, (String) metrics.getItemAtIndex(0).getValue()) + ");");
+        } catch (IOException ex) {
+            Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
+            showError(DODConstants.ERROR_DISPATCHING_JOB);
+        }
 
         //Load link to Lemon
         if (!lemonURL.isEmpty()) {
@@ -182,10 +179,6 @@ public class MonitoringController extends Window {
             //Get available metrics
             List<DODMetric> metricsList = helper.getAvailableMetrics();
             //Insert items in combobox
-            Comboitem selectOne = new Comboitem();
-            selectOne.setValue(null);
-            selectOne.setLabel(Labels.getLabel(DODConstants.LABEL_SELECT_ONE));
-            metrics.appendChild(selectOne);
             for (int i = 0; i < metricsList.size(); i++) {
                 DODMetric metric = metricsList.get(i);
                 Comboitem item = new Comboitem();
