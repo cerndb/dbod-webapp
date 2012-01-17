@@ -20,9 +20,9 @@ import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 /**
- * Controller for the restore window. Creates the window and all its components.
+ * Controller for the destroy window. Creates the window and all its components.
  * @author Daniel Gomez Blanco
- * @version 24/10/2011
+ * @deprecated Instances are destroyed through FIM
  */
 public class DestroyController extends Window {
 
