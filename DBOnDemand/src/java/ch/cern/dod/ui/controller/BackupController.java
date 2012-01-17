@@ -209,7 +209,7 @@ public class BackupController extends Window {
         }
         
         //Create warning for backups to tape
-        if (!prevBackupEnabled) {
+        if (!prevBackupToTapeEnabled) {
             Label backupToTapeWarning = new Label(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE_WARNING));
             backupToTapeWarning.setStyle("margin-left:20px;color:red;font-size:xx-small");
             configContent.appendChild(backupToTapeWarning);
