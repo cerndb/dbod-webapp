@@ -25,6 +25,9 @@
         <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();" if="${controller.instancesSize > 0}"/>
         <!-- Script to mark the snapshot days in the calendar -->
         <script src="/scripts/markSnapshots.js"/>
+        <!-- Scripts for monitoring -->
+        <script src="http://www.google.com/jsapi"/>
+        <script src="/scripts/graph.js"/>
 
         <!-- Groupbox forthe instances overview -->
         <groupbox width="1200px" mold="3d" closable="false">
