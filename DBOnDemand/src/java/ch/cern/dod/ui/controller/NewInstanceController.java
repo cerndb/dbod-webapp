@@ -439,7 +439,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                     int noConn = Integer.valueOf(noConnections.getText()).intValue();
                     //Check dbName length
                     if (noConn <= 0 || noConn > DODConstants.MAX_NO_CONNECTIONS) {
-                        noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
+                        noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
                         return false;
                     }
                 } catch (NumberFormatException ex) {
