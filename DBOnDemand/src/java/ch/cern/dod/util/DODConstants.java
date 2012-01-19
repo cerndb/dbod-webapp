@@ -143,8 +143,8 @@ public class DODConstants {
     public static final String ERROR_EXPIRY_DATE_FUTURE = "errorExpiryDateFuture";
     public static final String ERROR_DB_TYPE_EMPTY = "errorDbTypeEmpty";
     public static final String ERROR_DB_TYPE_LIST = "errorDbTypeList";
-    public static final String ERROR_DB_SIZE_EMPTY = "errorDbTypeEmpty";
-    public static final String ERROR_DB_SIZE_RANGE = "errorDbTypeList";
+    public static final String ERROR_DB_SIZE_EMPTY = "errorDbSizeEmpty";
+    public static final String ERROR_DB_SIZE_RANGE = "errorDbSizeRange";
     public static final String ERROR_INSTANCE_CREATION = "errorInstanceCreation";
     public static final String ERROR_INTEGER_FORMAT = "errorIntegerFormat";
     public static final String ERROR_NO_CONNECTIONS_RANGE = "errorNoConnectionsRange";
