@@ -4,7 +4,7 @@ package ch.cern.dod.db.entity;
  * Represents an upgrade to be added to the system.
  * @author Daniel Gomez Blanco
  */
-public class DODUpgrade {
+public class DODUpgrade implements Comparable{
     /**
      * Database type (Oracle, MySQL, etc)
      */
