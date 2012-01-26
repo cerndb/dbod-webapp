@@ -67,6 +67,8 @@ BEGIN
        
        
 EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
@@ -108,6 +110,8 @@ BEGIN
     	END IF;
 
 EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
@@ -209,6 +213,12 @@ BEGIN
                     enabled              =>  TRUE,
                     comments             => 'Scheduled backup job for DB On Demand');
     END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
 END;
 /
 
@@ -263,6 +273,12 @@ BEGIN
                     job_name   =>  tape_name,
                     force      =>  TRUE);
     END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
 END;
 /
 
@@ -276,7 +292,7 @@ BEGIN
 		INTO now
 		FROM dual;
 	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
-		VALUES (username_param, db_name_param, 'BACKUP_TO_TAPE', type_param, now, requester_param, 1, 'PENDING');
+		VALUES (username_param, db_name_param, 'BACKUP_TO_TAPE', type_param, now, requester_param, 2, 'PENDING');
 	INSERT INTO dbondemand.dod_command_params (username, db_name, command_name, type, creation_date, name, value)
 		VALUES (username_param, db_name_param, 'BACKUP_TO_TAPE', type_param, now, 'INSTANCE_NAME', 'dod_' || db_name_param);
         UPDATE dbondemand.dod_instances
@@ -299,7 +315,7 @@ BEGIN
 		INTO now
 		FROM dual;
        INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
-		VALUES (username, db_name, 'ENABLE_BACKUPS_TO_TAPE', type, now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape enabled starting on ' || TO_CHAR(start_date_param,'DD/MM/YYYY HH24:MM:SS') || '!');
+		VALUES (username, db_name, 'ENABLE_BACKUPS_TO_TAPE', type, now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape enabled starting on ' || TO_CHAR(start_date_param,'DD/MM/YYYY HH24:MI:SS') || '!');
 	-- Initialise name and action
 	name := db_name || '_BACKUP_TO_TAPE';
 	action := 'BEGIN
@@ -333,8 +349,9 @@ BEGIN
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup to tape job for DB On Demand');
        
-       
 EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
@@ -376,6 +393,8 @@ BEGIN
     	END IF;
 
 EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
