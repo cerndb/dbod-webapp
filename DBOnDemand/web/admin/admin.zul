@@ -28,19 +28,20 @@
         <!-- Script to mark the snapshot days in the calendar -->
         <script src="/scripts/markSnapshots.js"/>
         <!-- Scripts for monitoring -->
-        <script src="http://www.google.com/jsapi"/>
+        <script src="https://www.google.com/jsapi"/>
         <script src="/scripts/graph.js"/>
 
-        <!-- Groupbox forthe instances overview -->
+        <!-- Groupbox for the instances overview -->
         <groupbox width="1200px" mold="3d" closable="false">
             <caption label=" ">
                 <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
                 <hbox height="24px" style="float:right" align="bottom" if="${controller.instancesSize > 0}">
-                    <hbox style="margin-right:400px" align="bottom">
+                    <hbox style="margin-right:380px" align="bottom">
                         <label sclass="title" value="${c:l('collectiveActions')}" style="font-size:10pt !important"/>
                         <toolbarbutton id="startupAllBtn" tooltiptext="${c:l('collectiveStartup')}" sclass="button" image="/img/startup.png" onClick="controller.startupAll();" disabled="true"/>
                         <toolbarbutton id="shutdownAllBtn" tooltiptext="${c:l('collectiveShutdown')}" sclass="button" image="/img/shutdown.png" onClick="controller.shutdownAll();" disabled="true"/>
                         <toolbarbutton id="backupAllBtn" tooltiptext="${c:l('collectiveBackup')}" sclass="button" image="/img/backup.png" onClick="controller.backupAll();" disabled="true"/>
+                        <toolbarbutton id="upgradeAllBtn" tooltiptext="${c:l('collectiveUpgrade')}" sclass="button" image="/img/upgrade.png" onClick="controller.upgradeAll();" disabled="true"/>
                     </hbox>
                     <label sclass="title" value="${c:l('refreshInstances')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInstances();"/>
                     <toolbarbutton tooltiptext="${c:l('refreshInstances')}" sclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
@@ -77,6 +78,36 @@
                 <hbox height="24px" align="bottom">
                     <label sclass="title" value="${c:l('newInstance')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.doModal();"/>
                     <toolbarbutton tooltiptext="${c:l('newInstance')}" sclass="button" image="/img/newDB.png" onClick="newInstance.doModal();"/>
+                </hbox>
+            </vbox>
+        </groupbox>
+        
+         <!-- Groupbox for the upgrades -->
+        <groupbox width="1200px" mold="3d" closable="false" style="margin-top:20px">
+            <caption label=" ">
+                <label value="${c:l('availableUpgrades')}" sclass="title" style="float:left;"/>
+            </caption>
+            <vbox width="100%" align="right">
+                <vbox width="100%" align="left">
+                    <!-- Upgrades grid (only shown when there are upgrades) -->
+                    <grid id="upgradesGrid" mold="paging" pageSize="10" if="${controller.upgradesSize > 0}">
+                        <columns>
+                            <column label="${c:l('dbType')}" sort="auto(dbName)" width="250px"/>
+                            <column label="${c:l('category')}" sort="auto(category)" width="250px"/>
+                            <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" width="322px"/>
+                            <column label="${c:l('versionTo')}" sort="auto(versionTo)" width="322px"/>
+                            <column label="" width="40px"/>
+                        </columns>
+                    </grid>
+                </vbox>
+                <!--Show a message in case there no upgrades  -->
+                <div if="${controller.upgradesSize == 0}" style="padding-right:500px">
+                    <label value="${c:l('emptyUpgradesList')}"/>
+                </div>
+                <!--Button to add new upgrade  -->
+                <hbox height="24px" align="bottom">
+                    <label sclass="title" value="${c:l('addUpgradeTitle')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.openAddUpgrade();"/>
+                    <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" sclass="button" image="/img/add_upgrade.png" onClick="controller.openAddUpgrade();"/>
                 </hbox>
             </vbox>
         </groupbox>
