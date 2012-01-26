@@ -62,6 +62,16 @@ public class DODInstance implements Comparable, Cloneable{
      * Database description (max. 1024)
      */
     private String description;
+    
+    /**
+     * Version of the database (max. 128)
+     */
+    private String version;
+    
+    /**
+     * Upgrade available for the database (calculated field)
+     */
+    private String upgradeTo;
 
     /**
      * Logical status (active or inactive)
@@ -161,6 +171,23 @@ public class DODInstance implements Comparable, Cloneable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+    
+
+    public String getUpgradeTo() {
+        return upgradeTo;
+    }
+
+    public void setUpgradeTo(String upgradeTo) {
+        this.upgradeTo = upgradeTo;
     }
 
     public boolean getStatus() {
