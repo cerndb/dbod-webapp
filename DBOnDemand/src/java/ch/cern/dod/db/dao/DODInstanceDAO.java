@@ -1,6 +1,7 @@
 package ch.cern.dod.db.dao;
 
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -39,9 +40,10 @@ public class DODInstanceDAO {
 
     /**
      * Selects all the instances in the database.
+     * @param upgrades upgrades available.
      * @return List of all the instances in the database.
      */
-    public List<DODInstance> selectAll() {
+    public List<DODInstance> selectAll(List<DODUpgrade> upgrades) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -52,9 +54,9 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, state, status"
-                            + " FROM dod_instances WHERE status = '1'");
-            query.append("ORDER BY db_name");
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status"
+                            + " FROM dod_instances WHERE status = '1'"
+                            + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
 
             //Execute query
@@ -75,9 +77,19 @@ public class DODInstanceDAO {
                 instance.setNoConnections(result.getInt(9));
                 instance.setProject(result.getString(10));
                 instance.setDescription(result.getString(11));
-                instance.setState(result.getString(12));
-                instance.setStatus(result.getBoolean(13));
-                instances.add(instance);
+                instance.setVersion(result.getString(12));
+                instance.setState(result.getString(13));
+                instance.setStatus(result.getBoolean(14));
+                //Check if instance needs upgrade
+                if (upgrades != null) {
+                    for (int i=0; i < upgrades.size(); i++) {
+                        DODUpgrade upgrade = upgrades.get(i);
+                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
+                                && upgrade.getVersionFrom().equals(instance.getVersion()))
+                            instance.setUpgradeTo(upgrade.getVersionTo());
+                    }
+                }
+               instances.add(instance);
             }
         } catch (NamingException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
@@ -104,9 +116,10 @@ public class DODInstanceDAO {
      * Select the instances belonging to a username or to any of their e-groups.
      * @param username username to obtain instances.
      * @param egroups e-groups that the user belongs to.
+     * @param upgrades upgrades available.
      * @return List of instances belonging to a username or to any of their e-groups.
      */
-    public List<DODInstance> selectByUserNameAndEGroups(String username, String egroups) {
+    public List<DODInstance> selectByUserNameAndEGroups(String username, String egroups, List<DODUpgrade> upgrades) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -117,7 +130,7 @@ public class DODInstanceDAO {
             
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, state, status"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status"
                             + " FROM dod_instances WHERE status = '1' ");
             //Append egroups (if any)
             StringTokenizer tokenizer = new StringTokenizer("");
@@ -165,8 +178,18 @@ public class DODInstanceDAO {
                 instance.setNoConnections(result.getInt(9));
                 instance.setProject(result.getString(10));
                 instance.setDescription(result.getString(11));
-                instance.setState(result.getString(12));
-                instance.setStatus(result.getBoolean(13));
+                instance.setVersion(result.getString(12));
+                instance.setState(result.getString(13));
+                instance.setStatus(result.getBoolean(14));
+                //Check if instance needs upgrade
+                if (upgrades != null) {
+                    for (int j=0; j < upgrades.size(); j++) {
+                        DODUpgrade upgrade = upgrades.get(j);
+                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
+                                && upgrade.getVersionFrom().equals(instance.getVersion()))
+                            instance.setUpgradeTo(upgrade.getVersionTo());
+                    }
+                }
                 instances.add(instance);
             }
         } catch (NamingException ex) {
@@ -194,9 +217,10 @@ public class DODInstanceDAO {
      * Select a specific instance by the primary key.
      * @param username Username creator of the instance.
      * @param dbName DB name of the instance.
+     * @param upgrades upgrades available.
      * @return DOD instance for the username and DB name specified.
      */
-    public DODInstance selectById(String username, String dbName) {
+    public DODInstance selectById(String username, String dbName, List<DODUpgrade> upgrades) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -207,7 +231,7 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, state, status"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status"
                             + " FROM dod_instances WHERE username = ? AND db_name = ?");
             statement = connection.prepareStatement(query.toString());
 
@@ -233,8 +257,18 @@ public class DODInstanceDAO {
                 instance.setNoConnections(result.getInt(9));
                 instance.setProject(result.getString(10));
                 instance.setDescription(result.getString(11));
-                instance.setState(result.getString(12));
-                instance.setStatus(result.getBoolean(13));
+                instance.setVersion(result.getString(12));
+                instance.setState(result.getString(13));
+                instance.setStatus(result.getBoolean(14));
+                //Check if instance needs upgrade
+                if (upgrades != null) {
+                    for (int i=0; i < upgrades.size(); i++) {
+                        DODUpgrade upgrade = upgrades.get(i);
+                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
+                                && upgrade.getVersionFrom().equals(instance.getVersion()))
+                            instance.setUpgradeTo(upgrade.getVersionTo());
+                    }
+                }
             }
         } catch (NamingException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR USERNAME " + username ,ex);
@@ -317,6 +351,7 @@ public class DODInstanceDAO {
      * setting the status field to 0.
      * @param instance instance to be deleted.
      * @return 1 if the operation was successful, 0 otherwise.
+     * @deprecated instances are destroyed via FIM now
      */
     public int delete(DODInstance instance) {
         Connection connection = null;
@@ -352,7 +387,8 @@ public class DODInstanceDAO {
 
     /**
      * Updates an instance with new values for e-group, expiry date, project or description.
-     * @param instance instance to be updated.
+     * @param oldInstance instance to be updated.
+     * @param newInstance instance with the new values.
      * @return 1 if the operation was successful, 0 otherwise.
      */
     public int update(DODInstance oldInstance, DODInstance newInstance) {
