@@ -93,7 +93,7 @@ CREATE TABLE dod_upgrades
      db_type VARCHAR2 (32)  NOT NULL , 
      category VARCHAR2 (32)  NOT NULL , 
      version_from VARCHAR2 (128) NOT NULL , 
-     version_to VARCHAR2 (128) 
+     version_to VARCHAR2 (128) NOT NULL 
     ) 
 ;
 
