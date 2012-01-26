@@ -39,6 +39,7 @@ public class DODConstants {
     public static final int MAX_E_GROUP_LENGTH = 256;
     public static final int MAX_PROJECT_LENGTH = 128;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
+    public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
 
@@ -75,6 +76,8 @@ public class DODConstants {
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";
     public static final String CATEGORY_PERSONAL = "PERSONAL";
     public static final String CATEGORY_TEST = "TEST";
+    public static final String PARAM_VERSION_FROM = "VERSION_FROM";
+    public static final String PARAM_VERSION_TO = "VERSION_TO";
 
     //Pages
     public static final String PAGE_INSTANCE = "/instance.zul";
@@ -127,8 +130,14 @@ public class DODConstants {
     public static final String LABEL_RESTORE_CONFIRM_TITLE = "restoreConfirmTitle";
     public static final String LABEL_RESTORE_CONFIRM_MESSAGE = "restoreConfirmMessage";
     public static final String LABEL_UPGRADE_TITLE = "upgradeTitle";
-    public static final String LABEL_UPGRADE_MESSAGE = "upgradeMessage";
+    public static final String LABEL_UPGRADE_MESSAGE_FROM = "upgradeMessageFrom";
+    public static final String LABEL_UPGRADE_MESSAGE_TO = "upgradeMessageTo";
     public static final String LABEL_APPLY_CHANGES = "applyChanges";
+    public static final String LABEL_ADD_UPGRADE_TITLE = "addUpgradeTitle";
+    public static final String LABEL_ADD_UPGRADE_MESSAGE = "addUpgradeMessage";
+    public static final String LABEL_VERSION_FROM = "versionFrom";
+    public static final String LABEL_VERSION_TO = "versionTo";
+    public static final String LABEL_DELETE_UPGRADE = "deleteUpgrade";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -175,6 +184,11 @@ public class DODConstants {
     public static final String ERROR_BACKUP_TO_TAPE_DATE = "errorBackupToTapeDate";
     public static final String ERROR_BACKUP_TO_TAPE_DAY_EMPTY = "errorBackupToTapeDayEmpty";
     public static final String ERROR_BACKUP_TO_TAPE_TIME_EMPTY = "errorBackupToTapeTimeEmpty";
+    public static final String ERROR_ADDING_UPGRADE = "errorAddingUpgrade";
+    public static final String ERROR_DELETING_UPGRADE = "errorDeletingUpgrade";
+    public static final String ERROR_VERSION_EMPTY = "errorVersionEmpty";
+    public static final String ERROR_VERSION_LENGTH = "errorVersionLength";
+    public static final String ERROR_OPENING_ADD_UPGRADE = "errorOpeningAddUpgrade";
 
     //Images
     public static final String IMG_AWAITING_APPROVAL = "/img/awaiting.png";

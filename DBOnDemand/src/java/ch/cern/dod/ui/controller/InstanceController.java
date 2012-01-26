@@ -2,8 +2,10 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.dao.DODJobDAO;
+import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODJob;
+import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.JobHelper;
@@ -41,11 +43,26 @@ import org.zkoss.zul.Window;
  * @version 23/09/2011
  */
 public class InstanceController extends Hbox implements AfterCompose {
-
+    /**
+     * Upgrade DAO
+     */
+    private DODUpgradeDAO upgradeDAO;
+    /**
+     * Instance DAO
+     */
+    private DODInstanceDAO instanceDAO;
+    /**
+     * DAO to load jobs
+     */
+    DODJobDAO jobDAO;
     /**
      * Username for the authenticated user.
      */
     String username;
+    /**
+     * List of upgrades.
+     */
+    private List<DODUpgrade> upgrades;
     /**
      * Instance being managed at the moment.
      */
@@ -66,15 +83,6 @@ public class InstanceController extends Hbox implements AfterCompose {
      * Date formatter for times.
      */
     DateFormat dateTimeFormatter;
-    /**
-     * DAO to update instance
-     */
-    DODInstanceDAO dao;
-    /**
-     * DAO to load jobs
-     */
-    DODJobDAO jobDao;
-
     /**
      * Helper to manage e-groups
      */
@@ -114,8 +122,9 @@ public class InstanceController extends Hbox implements AfterCompose {
         jobHelper = new JobHelper(adminMode.booleanValue());
         dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
         dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);
-        dao = new DODInstanceDAO();
-        jobDao = new DODJobDAO();
+        upgradeDAO = new DODUpgradeDAO();
+        instanceDAO = new DODInstanceDAO();
+        jobDAO = new DODJobDAO();
         eGroupHelper = new EGroupHelper(wsUser, wsPswd);
 
         //Configure input fields
@@ -125,9 +134,10 @@ public class InstanceController extends Hbox implements AfterCompose {
         ((Textbox) getFellow("projectEdit")).setMaxlength(DODConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(DODConstants.MAX_DESCRIPTION_LENGTH);
 
+        //Select upgrades
+        upgrades = upgradeDAO.selectAll();
         //Query the database for the most recent version of this instance
-        DODInstanceDAO instanceDAO = new DODInstanceDAO();
-        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName());
+        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
         if (instance != null) {
             //Load information for this instance
             loadInstanceInfo();
@@ -142,9 +152,10 @@ public class InstanceController extends Hbox implements AfterCompose {
      * Refreshes the info for this instance.
      */
     public void refreshInfo () {
+        //Select upgrades
+        upgrades = upgradeDAO.selectAll();
         //Query the database for the most recent version of this instance
-        DODInstanceDAO instanceDAO = new DODInstanceDAO();
-        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName());
+        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
         if (instance != null) {
             //Load information for this instance
             loadInstanceInfo();
@@ -291,8 +302,9 @@ public class InstanceController extends Hbox implements AfterCompose {
         
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
-        //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        //Only enable button if the instance is stopped or running (and there is an upgrade available)
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)
+                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -317,7 +329,7 @@ public class InstanceController extends Hbox implements AfterCompose {
       */
     private void loadJobs() {
         //Get jobs from database
-        jobs = jobDao.selectByInstance(instance);
+        jobs = jobDAO.selectByInstance(instance);
 
         //Get selected job (if any)
         Combobox jobSelector = (Combobox) getFellow("jobSelector");
@@ -413,7 +425,7 @@ public class InstanceController extends Hbox implements AfterCompose {
 
             //Load log
             DODJobDAO jobDAO = new DODJobDAO();
-            ((Textbox) getFellow("log")).setText(jobDAO.selectLogByJob(job));
+            ((Textbox) getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
 
             //Update groupbox properties
             Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
@@ -547,7 +559,7 @@ public class InstanceController extends Hbox implements AfterCompose {
      */
     public void doUpgrade() {
         try {
-            UpgradeController upgradeController = new UpgradeController(instance, jobHelper);
+            UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
             if (this.getRoot().getFellowIfAny(upgradeController.getId()) == null) {
                 upgradeController.setParent(this.getRoot());
@@ -620,7 +632,7 @@ public class InstanceController extends Hbox implements AfterCompose {
                     //Clone the instance and override eGroup
                     DODInstance clone = instance.clone();
                     clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
-                    if (dao.update(instance, clone) > 0) {
+                    if (instanceDAO.update(instance, clone) > 0) {
                         instance = clone;
                         if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
                             ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
@@ -656,7 +668,7 @@ public class InstanceController extends Hbox implements AfterCompose {
             //Clone the instance and override project
             DODInstance clone = instance.clone();
             clone.setProject(((Textbox) getFellow("projectEdit")).getValue());
-            if (dao.update(instance, clone) > 0) {
+            if (instanceDAO.update(instance, clone) > 0) {
                 instance = clone;
                 if (instance.getProject() != null && !instance.getProject().isEmpty())
                     ((Label) getFellow("project")).setValue(instance.getProject());
@@ -679,7 +691,7 @@ public class InstanceController extends Hbox implements AfterCompose {
             //Clone the instance and override expiry date
             DODInstance clone = instance.clone();
             clone.setExpiryDate(((Datebox) getFellow("expiryDateEdit")).getValue());
-            if (dao.update(instance, clone) > 0) {
+            if (instanceDAO.update(instance, clone) > 0) {
                 instance = clone;
                 if (instance.getExpiryDate() != null)
                     ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
@@ -702,7 +714,7 @@ public class InstanceController extends Hbox implements AfterCompose {
             //Clone the instance and override description
             DODInstance clone = instance.clone();
             clone.setDescription(((Textbox) getFellow("descriptionEdit")).getValue());
-            if (dao.update(instance, clone) > 0) {
+            if (instanceDAO.update(instance, clone) > 0) {
                 instance = clone;
                 if (instance.getDescription() != null && !instance.getDescription().isEmpty())
                     ((Label) getFellow("description")).setValue(instance.getDescription());

@@ -5,7 +5,6 @@ import ch.cern.dod.ui.controller.MonitoringController;
 import ch.cern.dod.ui.controller.RestoreController;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ui.controller.ConfigController;
-import ch.cern.dod.ui.controller.DestroyController;
 import ch.cern.dod.ui.controller.UpgradeController;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
@@ -109,11 +108,13 @@ public class OverviewGridRenderer implements RowRenderer {
                         ((Toolbarbutton)row.getGrid().getFellow("startupAllBtn")).setDisabled(true);
                         ((Toolbarbutton)row.getGrid().getFellow("shutdownAllBtn")).setDisabled(true);
                         ((Toolbarbutton)row.getGrid().getFellow("backupAllBtn")).setDisabled(true);
+                        ((Toolbarbutton)row.getGrid().getFellow("upgradeAllBtn")).setDisabled(true);
                     }
                     else {
                         ((Toolbarbutton)row.getGrid().getFellow("startupAllBtn")).setDisabled(false);
                         ((Toolbarbutton)row.getGrid().getFellow("shutdownAllBtn")).setDisabled(false);
                         ((Toolbarbutton)row.getGrid().getFellow("backupAllBtn")).setDisabled(false);
+                        ((Toolbarbutton)row.getGrid().getFellow("upgradeAllBtn")).setDisabled(false);
                     }
                 }
             });
@@ -334,7 +335,7 @@ public class OverviewGridRenderer implements RowRenderer {
             public void onEvent(Event event) {
                 //Show destroy window
                 try {
-                    UpgradeController upgradeController = new UpgradeController(instance, jobHelper);
+                    UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
                     //Only show window if it is not already being diplayed
                     if (row.getRoot().getFellowIfAny(upgradeController.getId()) == null) {
                         upgradeController.setParent(row.getRoot());
@@ -345,8 +346,9 @@ public class OverviewGridRenderer implements RowRenderer {
                 }
             }
         });
-        //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        //Only enable button if the instance is stopped or running (and there is an upgrade available)
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)
+                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {

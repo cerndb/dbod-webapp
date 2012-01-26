@@ -6,7 +6,6 @@ import ch.cern.dod.util.JobHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -34,6 +33,10 @@ public class UpgradeController extends Window {
      * Helper to execute jobs.
      */
     private JobHelper jobHelper;
+    /**
+     * User authenticated in the system at the moment.
+     */
+    private String username;
 
     /**
      * Constructor for this window.
@@ -42,13 +45,14 @@ public class UpgradeController extends Window {
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
-    public UpgradeController (DODInstance inst, JobHelper jobHelper) throws InterruptedException {
+    public UpgradeController (DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {
         //Call super constructor
         super();
 
         //Initialize instance and create job helper
         this.instance = inst;
         this.jobHelper = jobHelper;
+        this.username = user;
 
         //Basic window properties
         this.setId("upgradeWindow");
@@ -66,9 +70,11 @@ public class UpgradeController extends Window {
 
         //Box for message
         Hbox messageBox = new Hbox();
+        messageBox.setAlign("center");
         messageBox.appendChild(new Image(DODConstants.IMG_WARNING));
         //Main message
-        Label message = new Label(Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE));
+        Label message = new Label(Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
+                                    + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?");
         messageBox.appendChild(message);
         mainBox.appendChild(messageBox);
 
@@ -136,14 +142,19 @@ public class UpgradeController extends Window {
      */
     private void doAccept() {
         ///Create new job and update instance status
-        //If we are in the overview page
-        if (this.getRoot().getFellowIfAny("overviewGrid") != null) {
-            Grid grid = (Grid) this.getRoot().getFellow("overviewGrid");
-            grid.setModel(grid.getListModel());
-        } //If we are in the instance page
-        else if (this.getRoot().getFellowIfAny("controller") != null && this.getRoot().getFellow("controller") instanceof InstanceController) {
-            InstanceController controller = (InstanceController) this.getRoot().getFellow("controller");
-            controller.afterCompose();
+        if (jobHelper.doUpgrade(instance, username)) {
+            //If we are in the overview page
+            if (this.getRoot().getFellowIfAny("overviewGrid") != null) {
+                Grid grid = (Grid) this.getRoot().getFellow("overviewGrid");
+                grid.setModel(grid.getListModel());
+            } //If we are in the instance page
+            else if (this.getRoot().getFellowIfAny("controller") != null && this.getRoot().getFellow("controller") instanceof InstanceController) {
+                InstanceController controller = (InstanceController) this.getRoot().getFellow("controller");
+                controller.afterCompose();
+            }
+        }
+        else {
+            showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
         this.detach();
     }

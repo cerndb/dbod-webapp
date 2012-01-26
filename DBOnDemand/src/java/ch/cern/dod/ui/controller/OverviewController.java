@@ -1,7 +1,9 @@
 package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODInstanceDAO;
+import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.ui.model.InstanceListModel;
 import ch.cern.dod.ui.renderer.OverviewGridRenderer;
 import ch.cern.dod.util.DODConstants;
@@ -20,6 +22,14 @@ import org.zkoss.zul.Vbox;
  */
 public class OverviewController extends Vbox implements BeforeCompose, AfterCompose{
     /**
+     * Upgrade DAO
+     */
+    private DODUpgradeDAO upgradeDAO;
+    /**
+     * Instance DAO
+     */
+    private DODInstanceDAO instanceDAO;
+    /**
      * List of instances. In this case, all the instances in the database.
      */
     private List<DODInstance> instances;
@@ -27,6 +37,10 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Number of instances, defining a public method to show the grid or not.
      */
     private int instancesSize;
+    /**
+     * List of upgrades.
+     */
+    private List<DODUpgrade> upgrades;
     /**
      * User authenticated in the system.
      */
@@ -46,8 +60,13 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
         eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
         
+        //Get upgrades
+        upgradeDAO =  new DODUpgradeDAO();
+        upgrades = upgradeDAO.selectAll();
+        
         //Get instances
-        instances = new DODInstanceDAO().selectByUserNameAndEGroups(username, eGroups);
+        instanceDAO = new DODInstanceDAO();
+        instances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
         if (instances != null)
             instancesSize = instances.size();
         else
@@ -72,8 +91,10 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Refreshes the list of instances.
      */
     public void refreshInstances(){
+        //Get upgrades
+        upgrades = upgradeDAO.selectAll();
         //Get instances
-        instances = new DODInstanceDAO().selectByUserNameAndEGroups(username, eGroups);
+        instances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
         if (instances != null)
             instancesSize = instances.size();
         else
