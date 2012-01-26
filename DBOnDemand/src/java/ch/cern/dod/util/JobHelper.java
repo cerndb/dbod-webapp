@@ -350,6 +350,7 @@ public class JobHelper {
      * @param instance instance to destroy.
      * @param username requester of this job.
      * @return true if the creation of this job was successful, false otherwise.
+     * @deprecated instances are destroyed via FIM now
      */
     public boolean doDestroy(DODInstance instance) {
         Date now = new Date();
@@ -362,6 +363,70 @@ public class JobHelper {
         //If everything went OK update instance object
         if (result > 0) {
             instance.setStatus(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Upgrades a database to a newer version.
+     * @param instance instance to upgrade.
+     * @param username requester of this job.
+     * @return true if the creation of this job was successful, false otherwise.
+     */
+    public boolean doUpgrade (DODInstance instance, String username) {
+        Date now = new Date();
+        //Create job
+        DODJob job = new DODJob();
+        job.setUsername(instance.getUsername());
+        job.setDbName(instance.getDbName());
+        job.setCommandName(DODConstants.JOB_UPGRADE);
+        job.setType(instance.getDbType());
+        job.setCreationDate(now);
+        job.setRequester(username);
+        if (adminMode)
+            job.setAdminAction(1);
+        else
+            job.setAdminAction(0);
+        job.setState(DODConstants.JOB_STATE_PENDING);
+
+        //Create params
+        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        DODCommandParam instanceName = new DODCommandParam();
+        instanceName.setUsername(instance.getUsername());
+        instanceName.setDbName(instance.getDbName());
+        instanceName.setCommandName(DODConstants.JOB_UPGRADE);
+        instanceName.setType(instance.getDbType());
+        instanceName.setCreationDate(now);
+        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
+        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+        params.add(instanceName);
+        DODCommandParam versionFrom = new DODCommandParam();
+        versionFrom.setUsername(instance.getUsername());
+        versionFrom.setDbName(instance.getDbName());
+        versionFrom.setCommandName(DODConstants.JOB_UPGRADE);
+        versionFrom.setType(instance.getDbType());
+        versionFrom.setCreationDate(now);
+        versionFrom.setName(DODConstants.PARAM_VERSION_FROM);
+        versionFrom.setValue(instance.getVersion());
+        params.add(versionFrom);
+        DODCommandParam versionTo = new DODCommandParam();
+        versionTo.setUsername(instance.getUsername());
+        versionTo.setDbName(instance.getDbName());
+        versionTo.setCommandName(DODConstants.JOB_UPGRADE);
+        versionTo.setType(instance.getDbType());
+        versionTo.setCreationDate(now);
+        versionTo.setName(DODConstants.PARAM_VERSION_TO);
+        versionTo.setValue(instance.getUpgradeTo());
+        params.add(versionTo);
+
+        //Execute
+        int result = jobDAO.insert(job, params);
+        //If everything went OK update instance object
+        if (result > 0) {
+            instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "UPGRADE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
