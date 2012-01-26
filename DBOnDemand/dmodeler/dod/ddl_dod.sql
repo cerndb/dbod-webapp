@@ -50,6 +50,7 @@ CREATE TABLE dod_instances
      no_connections INTEGER , 
      project VARCHAR2 (128) , 
      description VARCHAR2 (1024) , 
+     version VARCHAR2 (128) , 
      state VARCHAR2 (32) , 
      status CHAR (1) 
     ) 
@@ -84,6 +85,22 @@ CREATE TABLE dod_jobs
 
 ALTER TABLE dod_jobs 
     ADD CONSTRAINT pk_dod_jobs PRIMARY KEY ( username, db_name, command_name, type, creation_date ) ;
+
+
+
+CREATE TABLE dod_upgrades 
+    ( 
+     db_type VARCHAR2 (32)  NOT NULL , 
+     category VARCHAR2 (32)  NOT NULL , 
+     version_from VARCHAR2 (128) NOT NULL , 
+     version_to VARCHAR2 (128) 
+    ) 
+;
+
+
+ALTER TABLE dod_upgrades 
+    ADD CONSTRAINT pk_dod_upgrades PRIMARY KEY ( db_type, category, version_from ) ;
+
 
 
 
