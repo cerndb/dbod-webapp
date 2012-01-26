@@ -26,7 +26,7 @@
         <!-- Script to mark the snapshot days in the calendar -->
         <script src="/scripts/markSnapshots.js"/>
         <!-- Scripts for monitoring -->
-        <script src="http://www.google.com/jsapi"/>
+        <script src="https://www.google.com/jsapi"/>
         <script src="/scripts/graph.js"/>
 
         <!-- Groupbox forthe instances overview -->
