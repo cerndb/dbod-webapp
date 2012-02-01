@@ -140,13 +140,17 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         
-        //Set the new upgrades
-        Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
+        if (upgradesSize > 0) {
+            //Set the new upgrades
+            Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
+            ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
+        }
         
         //Set the new instances
-        Grid overviewGrid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
+        if (instancesSize > 0) {
+            Grid overviewGrid = (Grid) getFellow("overviewGrid");
+            ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
+        }
     }
 
     /**
