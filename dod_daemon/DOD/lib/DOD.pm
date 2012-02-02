@@ -231,16 +231,6 @@ sub testInstance{
     return $res;
     }
 
-sub getMysqlVersion{
-    my $entity = shift;
-    $logger->debug( "Fetching state of entity $entity" );
-    my $cmd = "/etc/init.d/syscontrol -i $entity MYSQL_get_status -entity $entity -variable version";
-    my $output = `$cmd`;
-    my @buf = split(/-/, $output);
-    $logger->debug( "\n$buf[0]" );
-    return $buf[0];
-    }
-
 sub getHostFromEntity{
     my $entity = shift;
     $logger->debug( "Fetching host corresponding to entity $entity" );
