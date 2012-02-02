@@ -234,6 +234,45 @@ sub updateInstanceState{
     };
 }
 
+sub updateInstance{
+    my ($job, $col_name, $col_value, $dbh);
+    if ($#_ == 2){
+        ($job, $col_name, $col_value) = @_;
+        $dbh = getDBH();
+    }
+    elsif($#_ == 3){
+        ($job, $col_name, $col_value, $dbh) = @_;
+    }
+    else{
+        $logger->error( "Wrong number of parameters\n $!" );
+        return undef;
+    }
+    eval {
+        my $sql = "update DOD_INSTANCES set ? = ?
+        where username = ? and db_name = ?";
+        $logger->debug( "Preparing statement: \n\t$sql" );
+        my $sth = $dbh->prepare( $sql );
+        $logger->debug( "Binding parameters");
+        $sth->bind_param(1, $col_name);
+        $sth->bind_param(2, $col_value);
+        $sth->bind_param(3, $job->{'USERNAME'});
+        $sth->bind_param(4, $job->{'DB_NAME'});
+        $logger->debug("Executing statement");
+        $sth->execute();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if ($#_ == 2){
+            $logger->debug( "Disconnecting from database" );
+            $dbh->disconnect();
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database\n $!" );
+        return undef;
+    };
+}
+
+
 sub updateJobState{
     my ($job, $state, $dbh);
     if($#_ == 2){
