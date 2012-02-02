@@ -197,43 +197,6 @@ sub getTimedOutJobs{
     return @result;
 }   
 
-sub updateInstanceState{
-    my ($job, $state, $dbh);
-    if ($#_ == 1){
-        ($job, $state) = @_;
-        $dbh = getDBH();
-    }
-    elsif($#_ == 2){
-        ($job, $state, $dbh) = @_;
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
-    eval {
-        my $sql = "update DOD_INSTANCES set state = ?
-        where username = ? and db_name = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
-        my $sth = $dbh->prepare( $sql );
-        $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $state);
-        $sth->bind_param(2, $job->{'USERNAME'});
-        $sth->bind_param(3, $job->{'DB_NAME'});
-        $logger->debug("Executing statement");
-        $sth->execute();
-        $logger->debug( "Finishing statement" );
-        $sth->finish();
-        if ($#_ == 1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
-        1;
-    } or do {
-        $logger->error( "Unable to connect to database\n $!" );
-        return undef;
-    };
-}
-
 sub updateInstance{
     my ($job, $col_name, $col_value, $dbh);
     if ($#_ == 2){
@@ -272,125 +235,6 @@ sub updateInstance{
     };
 }
 
-
-sub updateJobState{
-    my ($job, $state, $dbh);
-    if($#_ == 2){
-        ($job, $state, $dbh) = @_;
-    }
-    elsif ($#_ == 1){
-        ($job, $state) = @_;
-        $dbh = getDBH();
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
-    eval {
-        my $sql = "update DOD_JOBS set state = ?
-        where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
-        my $sth = $dbh->prepare( $sql );
-        $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $state);
-        $sth->bind_param(2, $job->{'USERNAME'});
-        $sth->bind_param(3, $job->{'DB_NAME'});
-        $sth->bind_param(4, $job->{'COMMAND_NAME'});
-        $sth->bind_param(5, $job->{'TYPE'});
-        $sth->bind_param(6, $job->{'CREATION_DATE'});
-        $logger->debug("Executing statement");
-        $sth->execute();
-        $logger->debug( "Finishing statement" );
-        $sth->finish();
-        if ($#_ == 1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
-        1;
-    } or do {
-        $logger->error( "Unable to connect to database !!!\n $!");
-        return undef;
-    };
-}
-
-sub updateJobCompletionDate{
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        $job = shift;
-        $dbh = getDBH();
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
-    eval {
-        my $sql = "update DOD_JOBS set COMPLETION_DATE = sysdate
-        where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
-        my $sth = $dbh->prepare( $sql );
-        $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $job->{'USERNAME'});
-        $sth->bind_param(2, $job->{'DB_NAME'});
-        $sth->bind_param(3, $job->{'COMMAND_NAME'});
-        $sth->bind_param(4, $job->{'TYPE'});
-        $sth->bind_param(5, $job->{'CREATION_DATE'});
-        $logger->debug("Executing statement");
-        $sth->execute();
-        $logger->debug( "Finishing statement" );
-        $sth->finish();
-        if ($#_ == 0){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
-        1;
-    } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
-        return undef;
-    };
-}
-
-sub updateJobLog{
-    my ($job, $log, $dbh);
-    if ($#_ == 2){
-        ($job, $log, $dbh) = @_;
-    }
-    elsif ($#_ == 1){
-        ($job, $log) = @_;
-        $dbh = getDBH();
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
-    eval {
-        my $sql = "update DOD_JOBS set LOG = ?
-        where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
-        my $sth = $dbh->prepare( $sql );
-        $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $log);
-        $sth->bind_param(2, $job->{'USERNAME'});
-        $sth->bind_param(3, $job->{'DB_NAME'});
-        $sth->bind_param(4, $job->{'COMMAND_NAME'});
-        $sth->bind_param(5, $job->{'TYPE'});
-        $sth->bind_param(6, $job->{'CREATION_DATE'});
-        $logger->debug("Executing statement");
-        $sth->execute();
-        $logger->debug( "Finishing statement" );
-        $sth->finish();
-        if ($#_ == 1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
-        1;
-    } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
-        return undef;
-    };
-}
 
 sub updateJob{
     my ($job, $col_name, $col_value, $dbh);
@@ -434,12 +278,12 @@ sub updateJob{
 }
 
 sub finishJob{
-    my ($job, $state, $log, $dbh);
+    my ($job, $resultCode, $log, $dbh);
     if ($#_ == 3){
-        ($job, $state, $log, $dbh) = @_;
+        ($job, $resultCode, $log, $dbh) = @_;
     }
     elsif($#_ == 2){
-        ($job, $state, $log) = @_;
+        ($job, $resultCode, $log) = @_;
         $dbh = getDBH();
     }
     else{
@@ -447,14 +291,15 @@ sub finishJob{
         return undef;
     }
     eval{
+        my ($job_state, $instance_state) = states($job, $resultCode);
         $logger->debug( "Updating job Completion Date" );
-        updateJobCompletionDate($job, $dbh);
+        updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
         $logger->debug( "Updating job LOG" );
-        updateJobLog($job, $log, $dbh);
-        $logger->debug( "Updating job LOG" );
-        updateJobState($job, $state, $dbh);
+        updateJob($job, 'LOG', $log, $dbh);
+        $logger->debug( "Updating job STATE" );
+        updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
-        updateInstanceState($job, 'RUNNING', $dbh);
+        updateInstance($job, 'STATE', $instance_state, $dbh); 
         if ($#_ == 2){
             $logger->debug( "Disconnectingnnecting from database" );
             $dbh->disconnect();

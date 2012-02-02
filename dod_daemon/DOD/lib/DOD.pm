@@ -75,7 +75,7 @@ sub jobDispatcher {
                         $task->{'job'} = $job;
                         push(@tasks, $task);
                         # Updates job status to RUNNING
-                        DOD::Database::updateJobState($job, "RUNNING"); # forking destroys $dbh ??
+                        DOD::Database::updateJob($job, 'STATE', 'RUNNING'); # forking destroys $dbh ??
                     }
                     else{
                         &worker_body($job);
@@ -102,7 +102,7 @@ sub jobDispatcher {
             foreach my $job (@timedoutjobs){
                 my ($job_state, $instance_state) = states($job, 1);
                 DOD::Database::finishJob( $job, $job_state, "TIMED OUT" );
-                DOD::Database::updateInstanceState( $job, $instance_state );
+                DOD::Database::updateInstance( $job, 'STATE', $instance_state );
                 my $task = $job->{'task'};
                 if (ref $task) {
                     my $pid = $task->{'pid'};
@@ -163,17 +163,13 @@ sub worker_body {
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
         $retcode = resultCode($log);
-        my ($job_state, $instance_state) = states($job, $retcode);
-        $logger->debug( "Finishing Job. Resulting instance state: $instance_state");
-        DOD::Database::finishJob( $job, $job_state, $log, $dbh );
-        DOD::Database::updateInstanceState( $job, $instance_state, $dbh );
+        $logger->debug( "Finishing Job. Return code: $retcode");
+        DOD::Database::finishJob( $job, $retcode, $log, $dbh );
     }
     else{
         $logger->error( "An error ocurred preparing command execution \n $!" );
-        my ($job_state, $instance_state) = states($job, 1);
-        $logger->debug( "Finishing Job. Resulting instance state: $instance_state");
-        DOD::Database::finishJob( $job, $job_state, $!, $dbh );
-            DOD::Database::updateInstanceState( $job, $instance_state, $dbh );
+        $logger->debug( "Finishing Job.");
+        DOD::Database::finishJob( $job, 1, $!, $dbh );
     }
     $logger->debug( "Exiting worker process" );
     $dbh->disconnect();
