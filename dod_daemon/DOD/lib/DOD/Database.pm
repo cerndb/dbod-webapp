@@ -291,7 +291,7 @@ sub finishJob{
         return undef;
     }
     eval{
-        my ($job_state, $instance_state) = states($job, $resultCode);
+        my ($job_state, $instance_state) = DOD::states($job, $resultCode);
         $logger->debug( "Updating job Completion Date" );
         updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
         $logger->debug( "Updating job LOG" );
@@ -300,8 +300,13 @@ sub finishJob{
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
         updateInstance($job, 'STATE', $instance_state, $dbh); 
+        my $cb = DOD::callback($job);
+        if (defined $cb){
+            $logger->debug( "Executing callback" );
+            &{$cb}($job, $dbh);
+        }
         if ($#_ == 2){
-            $logger->debug( "Disconnectingnnecting from database" );
+            $logger->debug( "Disconnecting from database" );
             $dbh->disconnect();
         }
         1;

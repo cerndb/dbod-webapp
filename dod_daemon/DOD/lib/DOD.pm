@@ -16,7 +16,7 @@ use DOD::Database;
 use POSIX ":sys_wait_h";
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %stateTable);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -39,6 +39,11 @@ foreach my $key ( keys(%{$config}) ) {
     }
 
 } # BEGIN BLOCK
+
+my %callback_table = (
+    'UPGRADE' => { 'MYSQL' => 'DOD::MySQL::upgrade_callback' , 'ORACLE' => undef }
+);
+
 
 sub jobDispatcher {
     # This is neccesary because daemonizing closes all file descriptors
@@ -208,6 +213,21 @@ sub states{
     return ($job_state, $instance_state);
 }
 
+sub callback{
+    # Returns callback method for command/type pair, if defined
+
+    my $job = shift;
+    my $type = $job->{'DB_TYPE'};
+    my $command = $job->{'COMMAND_NAME'};
+    my $res;
+    eval{
+        $res = $callback_table{$command}->{$type};
+        1;
+    } or do {
+        $res = undef; 
+    };
+    return $res;
+}
 
 sub testInstance{
     my $entity = shift;
