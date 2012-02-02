@@ -38,15 +38,6 @@ foreach my $key ( keys(%{$config}) ) {
     $logger->debug( "\t$key -> $h{$key}" );
     }
 
-%stateTable = (
-    STARTUP => { 0 => ["FINISHED_OK", "RUNNING"], 1 => ["FINISHED_FAIL", "STOPPED"] },
-    SHUTDOWN => { 0 => ["FINISHED_OK", "STOPPED"], 1 => ["FINISHED_FAIL", "RUNNING"] },
-    UPLOAD_CONFIG => { 0 => ["FINISHED_OK", ""], 1 => ["FINISHED_FAIL", ""] },
-    BACKUP => { 0 => ["FINISHED_OK", ""], 1 => ["FINISHED_FAIL", "RUNNING"] },
-    DESTROY => { 0 => ["FINISHED_OK", "DESTROYED"], 1 => ["FINISHED_FAIL", ""] },
-    RESTORE => { 0 => ["FINISHED_OK", ""], 1 => ["FINISHED_FAIL", ""] }
-);
-
 } # BEGIN BLOCK
 
 sub jobDispatcher {
