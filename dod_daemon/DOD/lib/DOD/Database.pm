@@ -392,6 +392,47 @@ sub updateJobLog{
     };
 }
 
+sub updateJob{
+    my ($job, $col_name, $col_value, $dbh);
+    if ($#_ == 2){
+        ($job, $col_name, $col_value) = @_;
+        $dbh = getDBH();
+    }
+    elsif ($#_ == 3){
+        ($job, $col_name, $col_value, $dbh) = @_;
+    }
+    else{
+        $logger->error( "Wrong number of parameters\n $!" );
+        return undef;
+    }
+    eval {
+        my $sql = "update DOD_JOBS set ? = ?
+        where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
+        $logger->debug( "Preparing statement: \n\t$sql" );
+        my $sth = $dbh->prepare( $sql );
+        $logger->debug( "Binding parameters");
+        $sth->bind_param(1, $col_name);
+        $sth->bind_param(2, $col_value);
+        $sth->bind_param(3, $job->{'USERNAME'});
+        $sth->bind_param(4, $job->{'DB_NAME'});
+        $sth->bind_param(5, $job->{'COMMAND_NAME'});
+        $sth->bind_param(6, $job->{'TYPE'});
+        $sth->bind_param(7, $job->{'CREATION_DATE'});
+        $logger->debug("Executing statement");
+        $sth->execute();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if ($#_ == 1){
+            $logger->debug( "Disconnecting from database" );
+            $dbh->disconnect();
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    };
+}
+
 sub finishJob{
     my ($job, $state, $log, $dbh);
     if ($#_ == 3){
