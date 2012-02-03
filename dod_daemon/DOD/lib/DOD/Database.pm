@@ -291,7 +291,11 @@ sub finishJob{
         return undef;
     }
     eval{
-        my ($job_state, $instance_state) = DOD::states($job, $resultCode);
+        my $state_checker = DOD::get_state_checker($job);
+        if (!defined $state_checker){
+            $logger->error( "Not state checker defined for this DB type" );
+        }
+        my ($job_state, $instance_state) = &{$state_checker}($job, $resultCode);
         $logger->debug( "Updating job Completion Date" );
         updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
         $logger->debug( "Updating job LOG" );
@@ -300,7 +304,7 @@ sub finishJob{
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
         updateInstance($job, 'STATE', $instance_state, $dbh); 
-        my $cb = DOD::callback($job);
+        my $cb = DOD::get_callback($job);
         if (defined $cb){
             $logger->debug( "Executing callback" );
             &{$cb}($job, $dbh);
@@ -311,7 +315,7 @@ sub finishJob{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!");
+        $logger->error( "An error occured trying to finish the job.\n $!");
         return undef;
     };
 }

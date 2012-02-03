@@ -14,6 +14,7 @@ use POSIX qw(strftime);
 
 use DOD::Database;
 use DOD::MySQL;
+use DOD::All;
 
 use POSIX ":sys_wait_h";
 
@@ -202,7 +203,7 @@ sub get_state_checker{
     my $type = $job->{'DB_TYPE'};
     my $res;
     eval{
-        $res = $state_checker_table{$command}->{$type};
+        $res = $state_checker_table{$type};
         1;
     } or do {
         $res = undef; 

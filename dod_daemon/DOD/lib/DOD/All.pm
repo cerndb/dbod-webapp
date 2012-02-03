@@ -79,3 +79,5 @@ sub result_code{
         return 1;
     }
 }
+
+1;

@@ -15,7 +15,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $l
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(test_instance get_variable, get_version);
+@EXPORT      = qw(test_instance get_variable get_version state_checker upgrade_callback);
 @EXPORT_OK   = qw();
 %EXPORT_TAGS = ( );
 
@@ -61,7 +61,7 @@ sub get_version{
     return $buf[0];
     }
 
-sub states{
+sub state_checker{
     my ($job, $code) = @_;
     my ($job_state, $instance_state);
     if ($code){
@@ -92,8 +92,8 @@ sub upgrade_callback{
         $job = shift;
         $dbh = DOD::Database::getDBH();
     }
+    my $entity = All::get_entity($job);
     eval{
-        my $entity = All:get_entity($job);
         my $version = get_version($entity);
         $logger->debug( "Updating $entity version to $version");
         DOD::Database::updateInstance('VERSION', $version);
@@ -103,3 +103,5 @@ sub upgrade_callback{
         return undef;
     };
 }
+
+1;
