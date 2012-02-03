@@ -13,6 +13,8 @@ use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
 use DOD::Database;
+use DOD::MySQL;
+
 use POSIX ":sys_wait_h";
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
@@ -40,8 +42,13 @@ foreach my $key ( keys(%{$config}) ) {
 
 } # BEGIN BLOCK
 
-my %callback_table = (
+my %command_callback_table = (
     'UPGRADE' => { 'MYSQL' => 'DOD::MySQL::upgrade_callback' , 'ORACLE' => undef }
+);
+
+my %state_checker_table = (
+    'MYSQL' => 'DOD::MySQL::state_checker',
+    'ORACLE' => undef
 );
 
 
@@ -158,7 +165,7 @@ sub worker_body {
         my $cmd =  "/etc/init.d/syscontrol -i $entity $cmd_line";
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
-        $retcode = resultCode($log);
+        $retcode = All::result_code($log);
         $logger->debug( "Finishing Job. Return code: $retcode");
         DOD::Database::finishJob( $job, $retcode, $log, $dbh );
     }
@@ -171,49 +178,8 @@ sub worker_body {
     $dbh->disconnect();
 }
 
-sub resultCode{
-    my $log = shift;
-    my @lines = split(/\n/, $log);
-    my $code = undef;
-    foreach (@lines){
-        if ($_ =~ /\[(\d)\]/){
-            $code = $1;
-            print $_,"\n";
-            print $code,"\n";
-        }
-    }
-    if (defined $code){
-        return int($code);
-    }
-    else{
-        # If the command doesn't return any result code, we take it as bad
-        return 1;
-    }
-}
 
-sub states{
-    my ($job, $code) = @_;
-    my ($job_state, $instance_state);
-    if ($code){
-        $job_state = "FINISHED_FAIL";
-    }
-    else{
-        $job_state = "FINISHED_OK";
-    }
-    my $entity = entityName($job);
-    my $output = testInstance($entity);
-    my $retcode = resultCode($output);
-    if ($retcode) {
-        $instance_state = "STOPPED";
-    }
-    else{
-        $instance_state = "RUNNING";
-    }
-    $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
-    return ($job_state, $instance_state);
-}
-
-sub callback{
+sub get_callback{
     # Returns callback method for command/type pair, if defined
 
     my $job = shift;
@@ -221,7 +187,7 @@ sub callback{
     my $command = $job->{'COMMAND_NAME'};
     my $res;
     eval{
-        $res = $callback_table{$command}->{$type};
+        $res = $command_callback_table{$command}->{$type};
         1;
     } or do {
         $res = undef; 
@@ -229,14 +195,20 @@ sub callback{
     return $res;
 }
 
-sub testInstance{
-    my $entity = shift;
-    $logger->debug( "Fetching state of entity $entity" );
-    my $cmd = "/etc/init.d/syscontrol -i $entity MYSQL_ping -debug";
-    my $res = `$cmd`;
-    $logger->debug( "\n$res" );
+sub get_state_checker{
+    # Returns  method for command/type pair, if defined
+
+    my $job = shift;
+    my $type = $job->{'DB_TYPE'};
+    my $res;
+    eval{
+        $res = $state_checker_table{$command}->{$type};
+        1;
+    } or do {
+        $res = undef; 
+    };
     return $res;
-    }
+}
 
 # End of Module
 END{

@@ -58,3 +58,24 @@ sub copy_to_entity{
     system("scp", "-r",  $item, "sysctl\@$host:/tmp");
     return $?;
 }
+
+
+sub result_code{
+    my $log = shift;
+    my @lines = split(/\n/, $log);
+    my $code = undef;
+    foreach (@lines){
+        if ($_ =~ /\[(\d)\]/){
+            $code = $1;
+            print $_,"\n";
+            print $code,"\n";
+        }
+    }
+    if (defined $code){
+        return int($code);
+    }
+    else{
+        # If the command doesn't return any result code, we take it as bad
+        return 1;
+    }
+}

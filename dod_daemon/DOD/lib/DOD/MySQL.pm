@@ -61,6 +61,27 @@ sub get_version{
     return $buf[0];
     }
 
+sub states{
+    my ($job, $code) = @_;
+    my ($job_state, $instance_state);
+    if ($code){
+        $job_state = "FINISHED_FAIL";
+    }
+    else{
+        $job_state = "FINISHED_OK";
+    }
+    my $entity = All::get_entity($job);
+    my $output = test_instance($entity);
+    my $retcode = All::result_code($output);
+    if ($retcode) {
+        $instance_state = "STOPPED";
+    }
+    else{
+        $instance_state = "RUNNING";
+    }
+    $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
+    return ($job_state, $instance_state);
+}
 
 sub upgrade_callback{
     my ($job, $dbh);
