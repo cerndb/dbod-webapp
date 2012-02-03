@@ -102,6 +102,32 @@ ALTER TABLE dod_upgrades
     ADD CONSTRAINT pk_dod_upgrades PRIMARY KEY ( db_type, category, version_from ) ;
 
 
+CREATE TABLE dod_fim_objects 
+    ( 
+     id VARCHAR2 (36)  NOT NULL , 
+     username VARCHAR2 (32)  NOT NULL , 
+     db_name VARCHAR2 (128) NOT NULL 
+    ) 
+;
+
+
+ALTER TABLE dod_fim_objects 
+    ADD CONSTRAINT pk_dod_fim_objects PRIMARY KEY ( id ) ;
+
+
+ALTER TABLE dod_fim_objects 
+    ADD CONSTRAINT dod_fim_instances FOREIGN KEY 
+    ( 
+     username,
+     db_name
+    ) 
+    REFERENCES dod_instances 
+    ( 
+     username,
+     db_name
+    ) 
+    ON DELETE CASCADE 
+;
 
 
 ALTER TABLE dod_jobs 

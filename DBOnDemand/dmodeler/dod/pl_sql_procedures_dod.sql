@@ -118,170 +118,6 @@ EXCEPTION
 END;
 /
 
--- Approves an instance creation by changing the state of the isntance
-CREATE OR REPLACE PROCEDURE approve_instance (user IN VARCHAR2, instance IN VARCHAR2)
-IS
-BEGIN
-        -- Update instance status
-        UPDATE dod_instances
-            SET state = 'RUNNING'
-            WHERE username = user AND db_name = instance;
-END;
-/
-
--- Updates the username to change the owner of an instance
-CREATE OR REPLACE PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
-IS
-    backup_count INTEGER;
-    backup_name VARCHAR2 (512);
-    backup_action VARCHAR2 (1024);
-    backup_interval VARCHAR2 (64);
-    backup_start_date DATE;
-    tape_count INTEGER;
-    tape_name VARCHAR2 (512);
-    tape_action VARCHAR2 (1024);
-    tape_interval VARCHAR2 (64);
-    tape_start_date DATE;
-BEGIN
-    -- Update instance username
-    UPDATE dod_instances
-        SET username = new_user
-        WHERE username = old_user AND db_name = instance;
-
-    -- Drop and create new automatic backups in case there were any
-    -- Initialise name
-    backup_name := instance || '_BACKUP';
-
-    -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO backup_count, backup_action, backup_start_date, backup_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = backup_name
-            GROUP BY job_action, start_date, repeat_interval;
-            
-    -- If there is a scheduled backup
-    IF backup_count > 0
-    THEN
-            -- Quote name for object
-            backup_name := '"' || instance || '_BACKUP"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  backup_name,
-                    force      =>  TRUE);
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => backup_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(backup_action, '''' || old_user || '''', '''' || new_user || ''''),
-                    start_date           => backup_start_date,
-                    repeat_interval      => backup_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
-    END IF;
-
-    -- Drop and create new backups to tape in case there were any
-    -- Initialise name
-    tape_name := instance || '_BACKUP_TO_TAPE';
-
-    -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO tape_count, tape_action, tape_start_date, tape_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = tape_name
-            GROUP BY job_action, start_date, repeat_interval;
-            
-    -- If there is a scheduled backups to tape
-    IF tape_count > 0
-    THEN
-            -- Quote name for object
-            tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  tape_name,
-                    force      =>  TRUE);
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => tape_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(tape_action, '''' || old_user || '''', '''' || new_user || ''''),
-                    start_date           => tape_start_date,
-                    repeat_interval      => tape_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
-    END IF;
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
-END;
-/
-
-CREATE OR REPLACE PROCEDURE destroy_instance (user IN VARCHAR2, instance IN VARCHAR2)
-IS
-    backup_count INTEGER;
-    backup_name VARCHAR2 (512);
-    tape_count INTEGER;
-    tape_name VARCHAR2 (512);
-BEGIN
-    -- Update instance status
-    UPDATE dod_instances
-        SET status = '0'
-        WHERE username = user AND db_name = instance;
-
-    -- Initialise backup name
-    backup_name := instance || '_BACKUP';
-
-    -- Query for any scheduled backups with the same name running at the moment
-    SELECT COUNT(*)
-            INTO backup_count
-            FROM user_scheduler_jobs
-            WHERE job_name = backup_name;
-
-    -- Quote backup name to create object
-    backup_name := '"' || instance || '_BACKUP"';
-
-    -- If there is a scheduled backup, drop it
-    IF backup_count > 0
-    THEN
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  backup_name,
-                    force      =>  TRUE);
-    END IF;
-
-    -- Initialise tape name
-    tape_name := instance || '_BACKUP_TO_TAPE';
-
-    -- Query for any scheduled backups to tape with the same name running at the moment
-    SELECT COUNT(*)
-            INTO tape_count
-            FROM user_scheduler_jobs
-            WHERE job_name = tape_name;
-
-    -- Quote tape name to create object
-    tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
-
-    -- If there is a scheduled backup to tape, drop it
-    IF tape_count > 0
-    THEN
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  tape_name,
-                    force      =>  TRUE);
-    END IF;
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
-END;
-/
-
 -- Inserts a backup to tape job in the database
 CREATE OR REPLACE PROCEDURE insert_backup_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
                                                         type_param IN VARCHAR2, requester_param IN VARCHAR2)
@@ -398,5 +234,215 @@ EXCEPTION
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
+END;
+/
+
+-- Approves an instance creation by changing the state of the isntance
+CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2)
+IS
+    user VARCHAR2 (32);
+BEGIN
+        -- Select user from instances table
+        SELECT username
+            INTO user
+            FROM dod_instances
+            WHERE db_name = db_name_param;
+
+        -- Insert FIM object row
+        INSERT INTO dod_fim_objects (id, username, db_name)
+		VALUES (id_param, user, db_name_param);
+
+        -- Update instance status
+        UPDATE dod_instances
+            SET state = 'RUNNING'
+            WHERE db_name = db_name_param;
+        
+END;
+/
+
+-- Destroys an instance by deleting the FIM object and setting the status of the instance to 0
+CREATE OR REPLACE PROCEDURE destroy_instance (id_param IN VARCHAR2)
+IS
+    backup_count INTEGER;
+    backup_name VARCHAR2 (512);
+    tape_count INTEGER;
+    tape_name VARCHAR2 (512);
+    user VARCHAR2 (32);
+    instance VARCHAR2(128);
+BEGIN
+    -- Get username and instance from FIM objects table
+    SELECT username, db_name
+            INTO user, instance
+            FROM dod_fim_objects
+            WHERE id = id_param;
+
+    -- Initialise backup name
+    backup_name := instance || '_BACKUP';
+
+    -- Query for any scheduled backups with the same name running at the moment
+    SELECT COUNT(*)
+            INTO backup_count
+            FROM user_scheduler_jobs
+            WHERE job_name = backup_name;
+
+    -- Quote backup name to create object
+    backup_name := '"' || instance || '_BACKUP"';
+
+    -- If there is a scheduled backup, drop it
+    IF backup_count > 0
+    THEN
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  backup_name,
+                    force      =>  TRUE);
+    END IF;
+
+    -- Initialise tape name
+    tape_name := instance || '_BACKUP_TO_TAPE';
+
+    -- Query for any scheduled backups to tape with the same name running at the moment
+    SELECT COUNT(*)
+            INTO tape_count
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_name;
+
+    -- Quote tape name to create object
+    tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
+
+    -- If there is a scheduled backup to tape, drop it
+    IF tape_count > 0
+    THEN
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_name,
+                    force      =>  TRUE);
+    END IF;
+
+    -- Update instance status
+    UPDATE dod_instances
+        SET status = '0'
+        WHERE username = user AND db_name = instance;
+
+    -- Delete the row in FIM objects table
+    DELETE FROM dod_fim_objects
+        WHERE id = id_param;
+
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
+END;
+/
+
+-- Updates the username to change the owner of an instance
+CREATE OR REPLACE PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
+IS
+    backup_count INTEGER;
+    backup_name VARCHAR2 (512);
+    backup_action VARCHAR2 (1024);
+    backup_interval VARCHAR2 (64);
+    backup_start_date DATE;
+    tape_count INTEGER;
+    tape_name VARCHAR2 (512);
+    tape_action VARCHAR2 (1024);
+    tape_interval VARCHAR2 (64);
+    tape_start_date DATE;
+BEGIN
+    -- Update instance username
+    UPDATE dod_instances
+        SET username = new_user
+        WHERE username = old_user AND db_name = instance;
+
+    -- Drop and create new automatic backups in case there were any
+    -- Initialise name
+    backup_name := instance || '_BACKUP';
+
+    -- Query for any schedule backups with the same name running at the moment
+    SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO backup_count, backup_action, backup_start_date, backup_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = backup_name
+            GROUP BY job_action, start_date, repeat_interval;
+            
+    -- If there is a scheduled backup
+    IF backup_count > 0
+    THEN
+            -- Quote name for object
+            backup_name := '"' || instance || '_BACKUP"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  backup_name,
+                    force      =>  TRUE);
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => backup_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(backup_action, '''' || old_user || '''', '''' || new_user || ''''),
+                    start_date           => backup_start_date,
+                    repeat_interval      => backup_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup job for DB On Demand');
+    END IF;
+
+    -- Drop and create new backups to tape in case there were any
+    -- Initialise name
+    tape_name := instance || '_BACKUP_TO_TAPE';
+
+    -- Query for any schedule backups with the same name running at the moment
+    SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO tape_count, tape_action, tape_start_date, tape_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_name
+            GROUP BY job_action, start_date, repeat_interval;
+            
+    -- If there is a scheduled backups to tape
+    IF tape_count > 0
+    THEN
+            -- Quote name for object
+            tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_name,
+                    force      =>  TRUE);
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => tape_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(tape_action, '''' || old_user || '''', '''' || new_user || ''''),
+                    start_date           => tape_start_date,
+                    repeat_interval      => tape_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup job for DB On Demand');
+    END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
+END;
+/
+
+-- Checks for changes in ownership, comparing FIM table to own table (to be used with dbms_scheduler)
+CREATE OR REPLACE PROCEDURE check_ownership ()
+IS
+    CURSOR instances IS
+        SELECT id
+        FROM dod_fim_objects;
+    user VARCHAR2 (32);
+BEGIN
+    FOR instance IN instances
+    LOOP
+        SELECT owner INTO user
+            FROM fim_objects
+            WHERE id = instance.id;
+        IF user <> instance.username THEN
+            change_owner (instance.db_name, instance.username, user);
+        END IF;
+    END LOOP;
 END;
 /
