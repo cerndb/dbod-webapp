@@ -238,28 +238,6 @@ sub testInstance{
     return $res;
     }
 
-sub getHostFromEntity{
-    my $entity = shift;
-    $logger->debug( "Fetching host corresponding to entity $entity" );
-    my $cmd = "/ORA/dbs01/syscontrol/bin/netservicestab.sh sc_entity=$entity host";
-    my $res = `$cmd`;
-    chomp $res;
-    $logger->debug( "Hostname: <$res>" );
-    return $res;
-    }
-
-sub copyToEntity{
-    my ($item, $entity) = @_;
-    my $host = getHostFromEntity($entity);
-    system("scp", "-r",  $item, "sysctl\@$host:/tmp");
-    return $?;
-}
-
-sub entityName {
-    my $job = shift;
-    return join('_', 'dod', $job->{'DB_NAME'});
-}
-
 # End of Module
 END{
 
