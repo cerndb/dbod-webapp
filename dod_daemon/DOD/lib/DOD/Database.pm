@@ -211,15 +211,14 @@ sub updateInstance{
         return undef;
     }
     eval {
-        my $sql = "update DOD_INSTANCES set ? = ?
+        my $sql = "update DOD_INSTANCES set $col_name = ?
         where username = ? and db_name = ?";
         $logger->debug( "Preparing statement: \n\t$sql" );
         my $sth = $dbh->prepare( $sql );
         $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $col_name);
-        $sth->bind_param(2, $col_value);
-        $sth->bind_param(3, $job->{'USERNAME'});
-        $sth->bind_param(4, $job->{'DB_NAME'});
+        $sth->bind_param(1, $col_value);
+        $sth->bind_param(2, $job->{'USERNAME'});
+        $sth->bind_param(3, $job->{'DB_NAME'});
         $logger->debug("Executing statement");
         $sth->execute();
         $logger->debug( "Finishing statement" );
@@ -250,18 +249,32 @@ sub updateJob{
         return undef;
     }
     eval {
-        my $sql = "update DOD_JOBS set ? = ?
-        where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
-        my $sth = $dbh->prepare( $sql );
-        $logger->debug( "Binding parameters");
-        $sth->bind_param(1, $col_name);
-        $sth->bind_param(2, $col_value);
-        $sth->bind_param(3, $job->{'USERNAME'});
-        $sth->bind_param(4, $job->{'DB_NAME'});
-        $sth->bind_param(5, $job->{'COMMAND_NAME'});
-        $sth->bind_param(6, $job->{'TYPE'});
-        $sth->bind_param(7, $job->{'CREATION_DATE'});
+        my $sth;
+        if ($col_name eq 'COMPLETION_DATE'){
+            my $sql = "update DOD_JOBS set $col_name = sysdate
+            where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
+            $logger->debug( "Preparing statement: \n\t$sql" );
+            $sth = $dbh->prepare( $sql );
+            $logger->debug( "Binding parameters");
+            $sth->bind_param(1, $job->{'USERNAME'});
+            $sth->bind_param(2, $job->{'DB_NAME'});
+            $sth->bind_param(3, $job->{'COMMAND_NAME'});
+            $sth->bind_param(4, $job->{'TYPE'});
+            $sth->bind_param(5, $job->{'CREATION_DATE'});
+        }
+        else{
+            my $sql = "update DOD_JOBS set $col_name = ?
+            where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
+            $logger->debug( "Preparing statement: \n\t$sql" );
+            $sth = $dbh->prepare( $sql );
+            $logger->debug( "Binding parameters");
+            $sth->bind_param(1, $col_value);
+            $sth->bind_param(2, $job->{'USERNAME'});
+            $sth->bind_param(3, $job->{'DB_NAME'});
+            $sth->bind_param(4, $job->{'COMMAND_NAME'});
+            $sth->bind_param(5, $job->{'TYPE'});
+            $sth->bind_param(6, $job->{'CREATION_DATE'});
+        }
         $logger->debug("Executing statement");
         $sth->execute();
         $logger->debug( "Finishing statement" );
@@ -295,7 +308,7 @@ sub finishJob{
         if (!defined $state_checker){
             $logger->error( "Not state checker defined for this DB type" );
         }
-        my ($job_state, $instance_state) = &{$state_checker}($job, $resultCode);
+        my ($job_state, $instance_state) = $state_checker->($job, $resultCode);
         $logger->debug( "Updating job Completion Date" );
         updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
         $logger->debug( "Updating job LOG" );
@@ -304,10 +317,10 @@ sub finishJob{
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
         updateInstance($job, 'STATE', $instance_state, $dbh); 
-        my $cb = DOD::get_callback($job);
-        if (defined $cb){
+        my $callback = DOD::get_callback($job);
+        if (defined $callback){
             $logger->debug( "Executing callback" );
-            &{$cb}($job, $dbh);
+            $callback->($job, $dbh);
         }
         if ($#_ == 2){
             $logger->debug( "Disconnecting from database" );

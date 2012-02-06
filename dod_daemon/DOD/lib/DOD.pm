@@ -166,7 +166,7 @@ sub worker_body {
         my $cmd =  "/etc/init.d/syscontrol -i $entity $cmd_line";
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
-        $retcode = All::result_code($log);
+        $retcode = DOD::All::result_code($log);
         $logger->debug( "Finishing Job. Return code: $retcode");
         DOD::Database::finishJob( $job, $retcode, $log, $dbh );
     }
@@ -184,7 +184,7 @@ sub get_callback{
     # Returns callback method for command/type pair, if defined
 
     my $job = shift;
-    my $type = $job->{'DB_TYPE'};
+    my $type = $job->{'TYPE'};
     my $command = $job->{'COMMAND_NAME'};
     my $res;
     eval{
@@ -200,7 +200,7 @@ sub get_state_checker{
     # Returns  method for command/type pair, if defined
 
     my $job = shift;
-    my $type = $job->{'DB_TYPE'};
+    my $type = $job->{'TYPE'};
     my $res;
     eval{
         $res = $state_checker_table{$type};
