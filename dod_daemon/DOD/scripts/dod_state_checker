@@ -26,6 +26,7 @@ sub worker(){
     my $state_checker = DOD::get_state_checker($instance);
     if (!defined $state_checker){
         $logger->error( "Not state checker defined for this DB type" );
+        exit -1;
     }
     my ($buf, $instance_state) = $state_checker->($instance, 0);
     

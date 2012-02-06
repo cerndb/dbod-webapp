@@ -189,9 +189,11 @@ sub get_callback{
     my $res;
     eval{
         $res = $command_callback_table{$command}->{$type};
+        $logger->debug( "Returning $command callback: $res" );
         1;
     } or do {
         $res = undef; 
+        $logger->debug( "Returning $command callback: $res" );
     };
     return $res;
 }
@@ -204,9 +206,11 @@ sub get_state_checker{
     my $res;
     eval{
         $res = $state_checker_table{$type};
+        $logger->debug( "Returning $type state checker:  $res" );
         1;
     } or do {
         $res = undef; 
+        $logger->debug( "Returning $type state checker: $res" );
     };
     return $res;
 }

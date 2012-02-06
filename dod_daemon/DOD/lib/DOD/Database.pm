@@ -85,7 +85,7 @@ sub getInstanceList{
     }
     my @result;
     eval {
-        my $sql = "select username, db_name, db_type, state from dod_instances";
+        my $sql = "select username, db_name, db_type as type, state from dod_instances";
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
