@@ -10,11 +10,11 @@ BEGIN
     FROM dod_instances
     WHERE username = :NEW.username
         AND db_name = :NEW.db_name
-        AND (state = 'JOB_PENDING' OR state = 'AWAITING_APPROVAL');
+        AND (state = 'JOB_PENDING' OR state = 'AWAITING_APPROVAL' OR state = 'MAINTENANCE');
 
     IF pending > 0 AND :NEW.admin_action = 0
     THEN
-        raise_application_error(-20000,'INSTANCE PENDING JOB OR AWAITING APPROVAL');
+        raise_application_error(-20000,'INSTANCE PENDING JOB, AWAITING APPROVAL OR UNDER MAINTENANCE');
     END IF;
 END;
 /
