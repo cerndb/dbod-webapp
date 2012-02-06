@@ -97,7 +97,7 @@ sub upgrade_callback{
     eval{
         my $version = get_version($entity);
         $logger->debug( "Updating $entity version to $version");
-        DOD::Database::updateInstance('VERSION', $version);
+        DOD::Database::updateInstance($job, 'VERSION', $version);
         1;
     } or do {
         $logger->error( "A problem occured when trying to update $entity version");

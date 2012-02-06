@@ -104,7 +104,11 @@ sub jobDispatcher {
             $logger->debug( "Checking for timed out jobs" );
             my @timedoutjobs = DOD::Database::getTimedOutJobs();
             foreach my $job (@timedoutjobs){
-                my ($job_state, $instance_state) = states($job, 1);
+                my $state_checker = get_state_checker($job);
+                if (! defined($state_checker)){
+                    $logger->error( "Not state checker defined for this DB type" );
+                }
+                my ($job_state, $instance_state) = $state_checker->($job, 1);
                 DOD::Database::finishJob( $job, $job_state, "TIMED OUT" );
                 DOD::Database::updateInstance( $job, 'STATE', $instance_state );
                 my $task = $job->{'task'};
@@ -186,15 +190,14 @@ sub get_callback{
     my $job = shift;
     my $type = $job->{'TYPE'};
     my $command = $job->{'COMMAND_NAME'};
-    my $res;
-    eval{
-        $res = $command_callback_table{$command}->{$type};
+    my $res = undef;
+    $res = $command_callback_table{$command}->{$type};
+    if (defined $res){
         $logger->debug( "Returning $command callback: $res" );
-        1;
-    } or do {
-        $res = undef; 
-        $logger->debug( "Returning $command callback: $res" );
-    };
+    }
+    else{
+        $logger->debug( "Returning $command callback: <undef>" );
+    }
     return $res;
 }
 
@@ -203,15 +206,14 @@ sub get_state_checker{
 
     my $job = shift;
     my $type = $job->{'TYPE'};
-    my $res;
-    eval{
-        $res = $state_checker_table{$type};
+    my $res = undef;
+    $res = $state_checker_table{$type};
+    if (defined $res){
         $logger->debug( "Returning $type state checker:  $res" );
-        1;
-    } or do {
-        $res = undef; 
-        $logger->debug( "Returning $type state checker: $res" );
-    };
+    }
+    else{
+        $logger->debug( "Returning $type state checker: <undef>" );
+    }
     return $res;
 }
 
