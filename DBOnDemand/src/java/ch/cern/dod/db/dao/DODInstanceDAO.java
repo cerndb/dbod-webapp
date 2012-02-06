@@ -400,7 +400,7 @@ public class DODInstanceDAO {
             connection = getConnection();
             
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ? WHERE username = ? AND db_name = ?";
+            String query = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ? WHERE username = ? AND db_name = ?";
             statement = connection.prepareStatement(query);
             //Assign values to variables
             statement.setString(1, newInstance.getEGroup());
@@ -410,8 +410,12 @@ public class DODInstanceDAO {
                 statement.setDate(2, null);
             statement.setString(3, newInstance.getProject());
             statement.setString(4, newInstance.getDescription());
-            statement.setString(5, oldInstance.getUsername());
-            statement.setString(6, oldInstance.getDbName());
+            statement.setString(5, newInstance.getCategory());
+            statement.setInt(6, newInstance.getNoConnections());
+            statement.setInt(7, newInstance.getDbSize());
+            statement.setString(8, newInstance.getState());
+            statement.setString(9, oldInstance.getUsername());
+            statement.setString(10, oldInstance.getDbName());
             //Execute query
             result = statement.executeUpdate();
 

@@ -26,6 +26,7 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Datebox;
@@ -42,7 +43,7 @@ import org.zkoss.zul.Window;
  * @author Daniel Gomez Blanco
  * @version 23/09/2011
  */
-public class InstanceController extends Hbox implements AfterCompose {
+public class InstanceController extends Hbox implements AfterCompose, BeforeCompose {
     /**
      * Upgrade DAO
      */
@@ -96,17 +97,22 @@ public class InstanceController extends Hbox implements AfterCompose {
      * CCID of the user creating the instance.
      */
     private long userCCID;
-
     /**
-     * Method executed after composing the page. It loads instance info, buttons and jobs.
+     * Indicates if the user is admin
      */
-    public void afterCompose() {
+    private boolean admin;
+    
+    /**
+     * Method executed before composing the page. It instantiates the necessary attributes.
+     */
+    public void beforeCompose() {
         //Get username and adminMode from headers
         Execution execution = Executions.getCurrent();
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
         String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
-
+        admin = adminMode.booleanValue();
+        
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
         String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
@@ -116,17 +122,27 @@ public class InstanceController extends Hbox implements AfterCompose {
             userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
         else
             userCCID = new Long(0);
-
+        
         //Get instance and amdmin mode from session attributes
         instance = (DODInstance) Sessions.getCurrent().getAttribute(DODConstants.INSTANCE);
-        jobHelper = new JobHelper(adminMode.booleanValue());
+        jobHelper = new JobHelper(admin);
         dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
         dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);
         upgradeDAO = new DODUpgradeDAO();
         instanceDAO = new DODInstanceDAO();
         jobDAO = new DODJobDAO();
         eGroupHelper = new EGroupHelper(wsUser, wsPswd);
+        
+        //Select upgrades
+        upgrades = upgradeDAO.selectAll();
+        //Query the database for the most recent version of this instance
+        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
+    }
 
+    /**
+     * Method executed after composing the page. It loads instance info, buttons and jobs.
+     */
+    public void afterCompose() {
         //Configure input fields
         ((Textbox) getFellow("eGroupEdit")).setMaxlength(DODConstants.MAX_E_GROUP_LENGTH);
         ((Datebox) getFellow("expiryDateEdit")).setFormat(DODConstants.DATE_FORMAT);
@@ -134,10 +150,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         ((Textbox) getFellow("projectEdit")).setMaxlength(DODConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(DODConstants.MAX_DESCRIPTION_LENGTH);
 
-        //Select upgrades
-        upgrades = upgradeDAO.selectAll();
-        //Query the database for the most recent version of this instance
-        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
+        //Load instance info if necessary
         if (instance != null) {
             //Load information for this instance
             loadInstanceInfo();
@@ -146,6 +159,14 @@ public class InstanceController extends Hbox implements AfterCompose {
             //Load jobs
             loadJobs();
         }
+    }
+    
+    /**
+     * Getter for the admin attribute.
+     * @return true if the user is an admin, false otherwise.
+     */
+    public boolean isAdmin() {
+        return admin;
     }
 
     /**
@@ -238,6 +259,20 @@ public class InstanceController extends Hbox implements AfterCompose {
             stateImage.setSrc(DODConstants.IMG_RUNNING);
         } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             stateImage.setSrc(DODConstants.IMG_STOPPED);
+        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
+            stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
+        }
+        
+        //Maintenance button
+        if (admin) {
+            if (instance != null && instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)){
+                ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:none");
+                ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:block");
+            }
+            else{
+                ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:block");
+                ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:none");
+            }
         }
     }
 
@@ -270,7 +305,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         //config files button
         final Toolbarbutton configBtn = (Toolbarbutton) getFellow("config");
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             configBtn.setDisabled(true);
             configBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -281,7 +316,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         //Dispatch a backup button
         final Toolbarbutton backupBtn = (Toolbarbutton) getFellow("backup");
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             backupBtn.setDisabled(true);
             backupBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -292,7 +327,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         //Dispatch a restore button
         final Toolbarbutton restoreBtn = (Toolbarbutton) getFellow("restore");
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             restoreBtn.setDisabled(true);
             restoreBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -303,7 +338,7 @@ public class InstanceController extends Hbox implements AfterCompose {
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
         //Only enable button if the instance is stopped or running (and there is an upgrade available)
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)
+        if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
@@ -569,6 +604,29 @@ public class InstanceController extends Hbox implements AfterCompose {
             showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
         }
     }
+    
+    /**
+     * Sets the state of the machine to under maintenance.
+     */
+    public void setMaintenance(boolean maintenance) {
+        //Clone the instance and override project
+        DODInstance clone = instance.clone();
+        if (maintenance) {
+            clone.setState(DODConstants.INSTANCE_STATE_MAINTENANCE);
+        }
+        else {
+            clone.setState(DODConstants.INSTANCE_STATE_RUNNING);
+        }
+        if (instanceDAO.update(instance, clone) > 0) {
+            instance = clone;
+            loadInstanceInfo();
+            loadButtons();
+            loadJobs();
+        }
+        else {
+            showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+        }
+    } 
 
     /**
      * Checks if an e-group exists, and if it does continues with the editing.

@@ -48,6 +48,7 @@ public class DODConstants {
     public static final String INSTANCE_STATE_JOB_PENDING = "JOB_PENDING";
     public static final String INSTANCE_STATE_RUNNING = "RUNNING";
     public static final String INSTANCE_STATE_STOPPED = "STOPPED";
+    public static final String INSTANCE_STATE_MAINTENANCE = "MAINTENANCE";
     public static final String JOB_STATE_PENDING = "PENDING";
     public static final String JOB_STATE_RUNNING = "RUNNING";
     public static final String JOB_STATE_FINISHED_OK = "FINISHED_OK";
@@ -191,6 +192,7 @@ public class DODConstants {
     public static final String ERROR_OPENING_ADD_UPGRADE = "errorOpeningAddUpgrade";
 
     //Images
+    public static final String IMG_MAINTENANCE = "/img/maintenance.png";
     public static final String IMG_AWAITING_APPROVAL = "/img/awaiting.png";
     public static final String IMG_PENDING = "/img/pending.png";
     public static final String IMG_RUNNING = "/img/running.png";

@@ -192,6 +192,9 @@ public class OverviewGridRenderer implements RowRenderer {
         } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
             state.setSrc(DODConstants.IMG_STOPPED);
+        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
+            state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
+            state.setSrc(DODConstants.IMG_MAINTENANCE);
         }
         row.appendChild(state);
 
@@ -263,7 +266,7 @@ public class OverviewGridRenderer implements RowRenderer {
         });
 
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             configButton.setDisabled(true);
             configButton.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
@@ -291,7 +294,7 @@ public class OverviewGridRenderer implements RowRenderer {
         });
 
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             backupBtn.setDisabled(true);
             backupBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
@@ -319,7 +322,7 @@ public class OverviewGridRenderer implements RowRenderer {
         });
 
         //Only enable button if the instance is stopped or running
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             restoreBtn.setDisabled(true);
             restoreBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
@@ -347,7 +350,7 @@ public class OverviewGridRenderer implements RowRenderer {
             }
         });
         //Only enable button if the instance is stopped or running (and there is an upgrade available)
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)
+        if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
