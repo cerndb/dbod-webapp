@@ -228,7 +228,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //DB type and size
         ((Label) getFellow("dbType")).setValue(Labels.getLabel(DODConstants.LABEL_DB_TYPE + instance.getDbType()));
         ((Label) getFellow("dbSize")).setValue(instance.getDbSize() + " GB");
-
+            
         //DB connections (if any)
         if (instance.getNoConnections() > 0) {
             ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
@@ -263,8 +263,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
         }
         
-        //Maintenance button
+        //If the user is an admin
         if (admin) {
+            //Maintenance button
             if (instance != null && instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)){
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:none");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:block");
@@ -273,6 +274,19 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:block");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:none");
             }
+            //Values for edit boxes
+            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(DODConstants.CATEGORY_OFFICIAL);
+            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(DODConstants.CATEGORY_PERSONAL);
+            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(2).setValue(DODConstants.CATEGORY_TEST);
+            if (DODConstants.CATEGORY_OFFICIAL.equals(instance.getCategory()))
+                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(0);
+            else if (DODConstants.CATEGORY_PERSONAL.equals(instance.getCategory()))
+                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
+            else if (DODConstants.CATEGORY_TEST.equals(instance.getCategory()))
+                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(2);
+            ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));
+            if (instance.getNoConnections() > 0)
+                ((Textbox) getFellow("noConnectionsEdit")).setValue(String.valueOf(instance.getNoConnections()));
         }
     }
 
@@ -786,6 +800,72 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
         }
     }
+    
+    /**
+     * Edits the dbSize of this instance.
+     */
+    public void editDbSize() {
+        if (isDbSizeValid()) {
+            //Clone the instance and override dbSize
+            DODInstance clone = instance.clone();
+            clone.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSizeEdit")).getValue()));
+            if (instanceDAO.update(instance, clone) > 0) {
+                instance = clone;
+                ((Label) getFellow("dbSize")).setValue(String.valueOf(instance.getDbSize()) + " GB");
+                ((Hbox) getFellow("dbSizeEditBox")).setVisible(false);
+                ((Hbox) getFellow("dbSizeBox")).setVisible(true);
+            }
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+            }
+        }
+    }
+    
+    /**
+     * Edits the noConnections of this instance.
+     */
+    public void editNoConnections() {
+        if (isNoConnectionsValid()) {
+            //Clone the instance and override noConnections
+            DODInstance clone = instance.clone();
+            if (!((Textbox) getFellow("noConnectionsEdit")).getValue().isEmpty())
+                clone.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnectionsEdit")).getValue()));
+            else
+                clone.setNoConnections(0);
+            if (instanceDAO.update(instance, clone) > 0) {
+                instance = clone;
+                if (instance.getNoConnections() > 0)
+                    ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
+                else
+                    ((Label) getFellow("noConnections")).setValue("-");
+                ((Hbox) getFellow("noConnectionsEditBox")).setVisible(false);
+                ((Hbox) getFellow("noConnectionsBox")).setVisible(true);
+            }
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+            }
+        }
+    }
+    
+    /**
+     * Edits the category of this instance.
+     */
+    public void editCategory() {
+        if (isCategoryValid()) {
+            //Clone the instance and override dbSize
+            DODInstance clone = instance.clone();
+            clone.setCategory((String)((Combobox) getFellow("categoryEdit")).getSelectedItem().getValue());
+            if (instanceDAO.update(instance, clone) > 0) {
+                instance = clone;
+                ((Label) getFellow("category")).setValue(Labels.getLabel(DODConstants.LABEL_CATEGORY + instance.getCategory()));
+                ((Hbox) getFellow("categoryEditBox")).setVisible(false);
+                ((Hbox) getFellow("categoryBox")).setVisible(true);
+            }
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+            }
+        }
+    }
 
     /**
      * Validates e-Group name
@@ -883,6 +963,92 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             if (description.getValue().length() > DODConstants.MAX_DESCRIPTION_LENGTH) {
                 description.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DESCRIPTION_LENGTH));
                 return false;
+            }
+        }
+        else
+            return false;
+        return true;
+    }
+    
+    /**
+     * Validates category
+     * @return true if category is valid, false otherwise
+     */
+    private boolean isCategoryValid() {
+        Combobox category = (Combobox) getFellow("categoryEdit");
+        //If there are no previous errors
+        if (category.getErrorMessage() == null || category.getErrorMessage().isEmpty()) {
+            //Check if user has selected a value
+            if (category.getSelectedItem() == null) {
+                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_EMPTY));
+                return false;
+            }
+            //Check dbtype Oracle or MySQL
+            if (!category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_OFFICIAL)
+                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_PERSONAL)
+                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_TEST)) {
+                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_LIST));
+                return false;
+            }
+        }
+        else
+            return false;
+        return true;
+    }
+    
+    /**
+     * Validates DB size
+     * @return true if DB size is valid, false otherwise
+     */
+    private boolean isDbSizeValid() {
+        Textbox dbSize = (Textbox) getFellow("dbSizeEdit");
+        //If there are no previous errors
+        if (dbSize.getErrorMessage() == null || dbSize.getErrorMessage().isEmpty()) {
+            //Trim
+            dbSize.setValue(dbSize.getValue().trim());
+            //Check if user has entered a value
+            if (dbSize.getValue().isEmpty()) {
+                dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_EMPTY));
+                return false;
+            }
+            try {
+                Integer size = Integer.valueOf(dbSize.getText());
+                //Check dbName length
+                if (size <= 0 || size > DODConstants.MAX_DB_SIZE) {
+                    dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
+                    return false;
+                }
+            } catch (NumberFormatException ex) {
+                dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+            }
+        }
+        else
+            return false;
+        return true;
+    }
+
+    /**
+     * Validates NO Connections
+     * @return true if NO Connections is valid, false otherwise
+     */
+    private boolean isNoConnectionsValid() {
+        Textbox noConnections = (Textbox) getFellow("noConnectionsEdit");
+        //If there are no previous errors
+        if (noConnections.getErrorMessage() == null || noConnections.getErrorMessage().isEmpty()) {
+            //Trim
+            noConnections.setValue(noConnections.getValue().trim());
+            //Check only if user has entered a value
+            if (!noConnections.getValue().isEmpty()) {
+                try {
+                    int noConn = Integer.valueOf(noConnections.getText()).intValue();
+                    //Check dbName length
+                    if (noConn <= 0 || noConn > DODConstants.MAX_NO_CONNECTIONS) {
+                        noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
+                        return false;
+                    }
+                } catch (NumberFormatException ex) {
+                    noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                }
             }
         }
         else

@@ -130,7 +130,18 @@
                     <!-- Category -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('category')}: " style="font-weight:bold"/>
-                        <label id="category"/>
+                        <hbox id="categoryBox" align="bottom">
+                            <label id="category"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="categoryBox.setVisible(false);categoryEditBox.setVisible(true);" if="${controller.admin}"/>
+                        </hbox>
+                        <hbox id="categoryEditBox" visible="false" align="bottom" if="${controller.admin}">
+                            <combobox id="categoryEdit" width="200px" mold="rounded" readonly="true">
+                                <comboitem label="${c:l('categoryOFFICIAL')}" />
+                                <comboitem label="${c:l('categoryPERSONAL')}" />
+                                <comboitem label="${c:l('categoryTEST')}" />
+                            </combobox>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editCategory();"/>
+                        </hbox>
                     </hbox>
                     <!-- Project -->
                     <hbox width="500px" align="bottom">
@@ -149,12 +160,26 @@
                     <!-- Number of connections -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
-                        <label id="noConnections"/>
+                        <hbox id="noConnectionsBox" align="bottom">
+                            <label id="noConnections"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="noConnectionsBox.setVisible(false);noConnectionsEditBox.setVisible(true);" if="${controller.admin}"/>
+                        </hbox>
+                        <hbox id="noConnectionsEditBox" visible="false" align="bottom" if="${controller.admin}">
+                            <textbox id="noConnectionsEdit" width="224px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editNoConnections();"/>
+                        </hbox>
                     </hbox>
                     <!-- DB size -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
-                        <label id="dbSize"/>
+                        <hbox id="dbSizeBox" align="bottom">
+                            <label id="dbSize"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" sclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
+                        </hbox>
+                        <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
+                            <textbox id="dbSizeEdit" width="224px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
+                        </hbox>
                     </hbox>
                 </hbox>
                 <hbox align="bottom">
