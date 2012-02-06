@@ -10,6 +10,7 @@ use Log::Log4perl;
 use File::Temp;
 
 use DOD::Database;
+use DOD::All;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,);
 
@@ -70,9 +71,9 @@ sub state_checker{
     else{
         $job_state = "FINISHED_OK";
     }
-    my $entity = All::get_entity($job);
+    my $entity = DOD::All::get_entity($job);
     my $output = test_instance($entity);
-    my $retcode = All::result_code($output);
+    my $retcode = DOD::All::result_code($output);
     if ($retcode) {
         $instance_state = "STOPPED";
     }
@@ -92,7 +93,7 @@ sub upgrade_callback{
         $job = shift;
         $dbh = DOD::Database::getDBH();
     }
-    my $entity = All::get_entity($job);
+    my $entity = DOD::All::get_entity($job);
     eval{
         my $version = get_version($entity);
         $logger->debug( "Updating $entity version to $version");

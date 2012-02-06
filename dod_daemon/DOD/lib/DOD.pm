@@ -44,11 +44,11 @@ foreach my $key ( keys(%{$config}) ) {
 } # BEGIN BLOCK
 
 my %command_callback_table = (
-    'UPGRADE' => { 'MYSQL' => 'DOD::MySQL::upgrade_callback' , 'ORACLE' => undef }
+    'UPGRADE' => { 'MYSQL' => \&DOD::MySQL::upgrade_callback , 'ORACLE' => undef }
 );
 
 my %state_checker_table = (
-    'MYSQL' => 'DOD::MySQL::state_checker',
+    'MYSQL' => \&DOD::MySQL::state_checker,
     'ORACLE' => undef
 );
 

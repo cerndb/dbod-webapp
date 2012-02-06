@@ -27,7 +27,7 @@ sub worker(){
     if (!defined $state_checker){
         $logger->error( "Not state checker defined for this DB type" );
     }
-    my ($buf, $instance_state) = &{$state_checker}($instance, 0);
+    my ($buf, $instance_state) = $state_checker->($instance, 0);
     
     if ((($instance->{'STATE'} eq 'RUNNING') || ($instance->{'STATE'} eq 'STOPPED')) &&
         ($instance->{'STATE'} ne $instance_state)) {
@@ -37,7 +37,8 @@ sub worker(){
         exit 0;
     }
     else{
-        $logger->debug( "Instance state is correct for $instance_name" );
+        $instance_state = $instance->{'STATE'};
+        $logger->debug( "State untouched for $instance_name: $instance_state" );
         exit 0;
     }
 }
