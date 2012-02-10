@@ -238,30 +238,39 @@ END;
 /
 
 -- Approves an instance creation by changing the state of the isntance
-CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2)
+CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2, result OUT INTEGER)
 IS
     user VARCHAR2 (32);
 BEGIN
-        -- Select user from instances table
-        SELECT username
-            INTO user
-            FROM dod_instances
-            WHERE db_name = db_name_param;
+    result := 1;
+    -- Select user from instances table
+    SELECT username
+        INTO user
+        FROM dod_instances
+        WHERE db_name = db_name_param;
 
-        -- Insert FIM object row
-        INSERT INTO dod_fim_objects (id, username, db_name)
-		VALUES (id_param, user, db_name_param);
+    -- Insert FIM object row
+    INSERT INTO dod_fim_objects (id, username, db_name)
+            VALUES (id_param, user, db_name_param);
 
-        -- Update instance status
-        UPDATE dod_instances
-            SET state = 'RUNNING'
-            WHERE db_name = db_name_param;
-        
+    -- Update instance status
+    UPDATE dod_instances
+        SET state = 'RUNNING'
+        WHERE db_name = db_name_param;
+    
+    -- Return 0 for success
+    result := 0;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         RETURN;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
 END;
 /
 
 -- Destroys an instance by deleting the FIM object and setting the status of the instance to 0
-CREATE OR REPLACE PROCEDURE destroy_instance (id_param IN VARCHAR2)
+CREATE OR REPLACE PROCEDURE destroy_instance (id_param IN VARCHAR2, result OUT INTEGER)
 IS
     backup_count INTEGER;
     backup_name VARCHAR2 (512);
@@ -270,6 +279,7 @@ IS
     user VARCHAR2 (32);
     instance VARCHAR2(128);
 BEGIN
+    result := 1;
     -- Get username and instance from FIM objects table
     SELECT username, db_name
             INTO user, instance
@@ -325,9 +335,14 @@ BEGIN
     DELETE FROM dod_fim_objects
         WHERE id = id_param;
 
+    -- Return 0 for success
+    result := 0;
+
 EXCEPTION
        WHEN NO_DATA_FOUND THEN
-         NULL;
+         IF USER IS NULL THEN
+            RETURN;
+         END IF;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
@@ -444,5 +459,17 @@ BEGIN
             change_owner (instance.db_name, instance.username, user);
         END IF;
     END LOOP;
+END;
+/
+
+-- Add job to dbms_scheduler
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB (
+    job_name             => 'DBOD_OWNERSHIP_CHECK',
+    job_type             => 'PLSQL_BLOCK',
+    job_action           => 'BEGIN check_ownership(); END;',
+    repeat_interval      => 'FREQ=MINUTELY;INTERVAL=10',
+    enabled              =>  TRUE,
+    comments             => 'Scheduled backup job for DB On Demand');
 END;
 /
