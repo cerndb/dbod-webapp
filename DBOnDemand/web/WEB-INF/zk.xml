@@ -5,6 +5,8 @@
     </system-config>
     <!-- Session config -->
     <session-config>
+        <device-type>ajax</device-type>
+        <automatic-timeout/>
         <session-timeout>600</session-timeout>
         <timer-keep-alive>false</timer-keep-alive>
         <max-desktops-per-session>15</max-desktops-per-session>
