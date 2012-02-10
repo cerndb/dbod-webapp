@@ -24,9 +24,6 @@ CREATE OR REPLACE TRIGGER dod_instances_update_username
 AFTER UPDATE OF username ON dod_instances
 FOR EACH ROW
 BEGIN
-    UPDATE dod_fim_objects
-        SET username = :NEW.username
-        WHERE username = :OLD.username AND db_name = :OLD.db_name;
     UPDATE dod_jobs
         SET username = :NEW.username
         WHERE username = :OLD.username AND db_name = :OLD.db_name; 
