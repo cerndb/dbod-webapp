@@ -240,18 +240,12 @@ END;
 -- Approves an instance creation by changing the state of the isntance
 CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2, result OUT INTEGER)
 IS
-    user VARCHAR2 (32);
 BEGIN
     result := 1;
-    -- Select user from instances table
-    SELECT username
-        INTO user
-        FROM dod_instances
-        WHERE db_name = db_name_param;
 
     -- Insert FIM object row
-    INSERT INTO dod_fim_objects (id, username, db_name)
-            VALUES (id_param, user, db_name_param);
+    INSERT INTO fim_ora_ma.dod_fim_objects (id, db_name)
+            VALUES (id_param, db_name_param);
 
     -- Update instance status
     UPDATE dod_instances
@@ -276,14 +270,13 @@ IS
     backup_name VARCHAR2 (512);
     tape_count INTEGER;
     tape_name VARCHAR2 (512);
-    user VARCHAR2 (32);
     instance VARCHAR2(128);
 BEGIN
     result := 1;
-    -- Get username and instance from FIM objects table
-    SELECT username, db_name
-            INTO user, instance
-            FROM dod_fim_objects
+    -- Get instance from FIM objects table
+    SELECT db_name
+            INTO instance
+            FROM fim_ora_ma.dod_fim_objects
             WHERE id = id_param;
 
     -- Initialise backup name
@@ -295,12 +288,12 @@ BEGIN
             FROM user_scheduler_jobs
             WHERE job_name = backup_name;
 
-    -- Quote backup name to create object
-    backup_name := '"' || instance || '_BACKUP"';
-
     -- If there is a scheduled backup, drop it
     IF backup_count > 0
     THEN
+            -- Quote backup name to create object
+            backup_name := '"' || instance || '_BACKUP"';
+
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  backup_name,
                     force      =>  TRUE);
@@ -315,12 +308,12 @@ BEGIN
             FROM user_scheduler_jobs
             WHERE job_name = tape_name;
 
-    -- Quote tape name to create object
-    tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
-
     -- If there is a scheduled backup to tape, drop it
     IF tape_count > 0
     THEN
+            -- Quote tape name to create object
+            tape_name := '"' || instance || '_BACKUP_TO_TAPE"';
+
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  tape_name,
                     force      =>  TRUE);
@@ -329,10 +322,10 @@ BEGIN
     -- Update instance status
     UPDATE dod_instances
         SET status = '0'
-        WHERE username = user AND db_name = instance;
+        WHERE db_name = instance;
 
     -- Delete the row in FIM objects table
-    DELETE FROM dod_fim_objects
+    DELETE FROM fim_ora_ma.dod_fim_objects
         WHERE id = id_param;
 
     -- Return 0 for success
@@ -443,18 +436,20 @@ END;
 /
 
 -- Checks for changes in ownership, comparing FIM table to own table (to be used with dbms_scheduler)
-CREATE OR REPLACE PROCEDURE check_ownership ()
+CREATE OR REPLACE PROCEDURE check_ownership
 IS
     CURSOR instances IS
-        SELECT id
-        FROM dod_fim_objects;
+        SELECT username, db_name
+        FROM dod_instances;
     user VARCHAR2 (32);
 BEGIN
     FOR instance IN instances
     LOOP
-        SELECT owner INTO user
-            FROM fim_objects
-            WHERE id = instance.id;
+        SELECT owner_login INTO user
+            FROM fim_ora_ma.db_on_demand
+            WHERE internal_id = ( SELECT id
+                                    FROM fim_ora_ma.dod_fim_objects objects
+                                    WHERE objects.db_name = instance.db_name );
         IF user <> instance.username THEN
             change_owner (instance.db_name, instance.username, user);
         END IF;
