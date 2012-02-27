@@ -82,6 +82,10 @@ sub getInstanceList{
     }
     else{
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return ();
+        }
     }
     my @result;
     eval {
@@ -119,6 +123,10 @@ sub getJobList{
     }
     else{
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return ();
+        }
     }
     my @result;
     eval {
@@ -165,6 +173,10 @@ sub getTimedOutJobs{
     }
     else{
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return ();
+        }
     }
     my @result;
     eval {
@@ -202,6 +214,10 @@ sub updateInstance{
     if ($#_ == 2){
         ($job, $col_name, $col_value) = @_;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     elsif($#_ == 3){
         ($job, $col_name, $col_value, $dbh) = @_;
@@ -240,6 +256,10 @@ sub updateJob{
     if ($#_ == 2){
         ($job, $col_name, $col_value) = @_;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     elsif ($#_ == 3){
         ($job, $col_name, $col_value, $dbh) = @_;
@@ -298,6 +318,10 @@ sub finishJob{
     elsif($#_ == 2){
         ($job, $resultCode, $log) = @_;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     else{
         $logger->error( "Wrong number of parameters\n $!" );
@@ -341,6 +365,10 @@ sub getJobParams{
     elsif($#_ == 0){
         $job = shift;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     else{
         $logger->error( "Wrong number of parameters\n $!" );
@@ -391,6 +419,10 @@ sub getExecString{
     elsif($#_ == 0){
         $job = shift;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     else{
         $logger->error( "Wrong number of parameters\n $!" );
@@ -431,6 +463,10 @@ sub getConfigFile{
         $job = shift; 
         $file_type = shift;
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     else{
         $logger->error( "Wrong number of parameters\n $!" );
@@ -473,6 +509,10 @@ sub prepareCommand {
     elsif($#_ == 0){
         $job = shift; 
         $dbh = getDBH();
+        unless(defined($dbh)){
+            $logger->error( "Unable to get DB handler" );
+            return undef;
+        }
     }
     else{
         $logger->error( "Wrong number of parameters\n $!" );
@@ -566,11 +606,12 @@ sub getDBH{
     $logger->debug( "Obtaining DB connection handle" );
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1 });
+        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1 }) 
+            or $logger->error("Unable to get DB handler.\nInterpreter($@)\nlibc($!)\nOS($^E)\n");
         $logger->debug( "Setting date format: $DATEFORMAT" );
-        $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" );
+        $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" ) unless (!defined($dbh));
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error("Unable to get DB handler.\nInterpreter($@)\nlibc($!)\nOS($^E)\n");
         $dbh = undef;
     };
     return $dbh;
