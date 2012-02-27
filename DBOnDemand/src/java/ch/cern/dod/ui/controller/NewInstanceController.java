@@ -209,7 +209,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //If there are no previous errors
         if (username.getErrorMessage() == null || username.getErrorMessage().isEmpty()) {
             //Trim and lowercase
-            username.setValue(username.getValue().trim().toLowerCase());
+            username.setValue(username.getValue().trim());
             //Check if user has entered a value
             if (username.getValue().isEmpty()) {
                 username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_EMPTY));
@@ -258,7 +258,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //If there are no previous errors
         if (dbName.getErrorMessage() == null || dbName.getErrorMessage().isEmpty()) {
             //Trim and lowercase
-            dbName.setValue(dbName.getValue().trim().toLowerCase());
+            dbName.setValue(dbName.getValue().trim());
             //Check if user has entered a value
             if (dbName.getValue().isEmpty()) {
                 dbName.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_NAME_EMPTY));
@@ -290,7 +290,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
             if (eGroup.getText().length() > 0) {
                 //Trim and lowercase
-                eGroup.setValue(eGroup.getValue().trim().toLowerCase());
+                eGroup.setValue(eGroup.getValue().trim());
                 //Check eGroup length
                 if (eGroup.getText().length() > DODConstants.MAX_E_GROUP_LENGTH) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_LENGTH));
