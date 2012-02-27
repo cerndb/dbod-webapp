@@ -35,7 +35,7 @@ public class DODConstants {
     public static final int MAX_DB_SIZE = 1000;
     public static final int MAX_NO_CONNECTIONS = 1000;
     public static final int MAX_USERNAME_LENGTH = 32;
-    public static final int MAX_DB_NAME_LENGTH = 128;
+    public static final int MAX_DB_NAME_LENGTH = 8;
     public static final int MAX_E_GROUP_LENGTH = 256;
     public static final int MAX_PROJECT_LENGTH = 128;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;

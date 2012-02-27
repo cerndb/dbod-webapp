@@ -221,7 +221,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 return false;
             }
             //ASCII digits and non-digits
-            if (!Pattern.matches("[a-zA-Z]*", username.getValue())) {
+            if (!Pattern.matches("[a-z]*", username.getValue())) {
                 username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_CHARS));
                 return false;
             }
@@ -270,7 +270,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 return false;
             }
             //ASCII digits and non-digits
-            if (!Pattern.matches("[\\da-zA-Z\\.\\-_]*", dbName.getValue())) {
+            if (!Pattern.matches("[a-z][\\da-z_]*", dbName.getValue())) {
                 dbName.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_NAME_CHARS));
                 return false;
             }
@@ -302,7 +302,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                     return false;
                 }
                 //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
-                if (!Pattern.matches("[\\da-zA-Z\\.\\-_]*", eGroup.getValue())) {
+                if (!Pattern.matches("[\\da-z\\.\\-_]*", eGroup.getValue())) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CHARS));
                     return false;
                 }
