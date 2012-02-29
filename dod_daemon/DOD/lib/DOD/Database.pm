@@ -606,15 +606,27 @@ sub getDBH{
     $logger->debug( "Obtaining DB connection handle" );
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1 }) 
-            or $logger->error("Unable to get DB handler.\nInterpreter($@)\nlibc($!)\nOS($^E)\n");
+        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dod_daemon', ora_verbose => 6 });
+        if (1){ # call to $dbh->ora_can_taf() causes error
+            $logger->debug( "Enabling Oracle TAF");
+            $dbh->{ora_taf} = 1;
+            $dbh->{ora_taf_function} = 'oracle_taf_event';
+            $dbh->{ora_taf_sleep} = 5;
+        }
         $logger->debug( "Setting date format: $DATEFORMAT" );
-        $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" ) unless (!defined($dbh));
+        $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" );
     } or do {
-        $logger->error("Unable to get DB handler.\nInterpreter($@)\nlibc($!)\nOS($^E)\n");
+        $logger->error("Unable to obtain DB handler.\n Interpreter($@)\n libc($!)\n OS($^E)\n");
         $dbh = undef;
     };
     return $dbh;
+}
+
+sub oracle_taf_event{
+    my ($event, $type) = @_;
+    $logger->error("TAF event");
+    $logger->error(" TAF event: $event\n TAF type: $type");
+    return;
 }
 
 
