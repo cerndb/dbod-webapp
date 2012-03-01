@@ -603,7 +603,6 @@ sub prepareCommand {
 }
 
 sub getDBH{
-    $logger->debug( "Obtaining DB connection handle" );
     my $dbh;
     eval {
         $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dod_daemon', ora_verbose => 6 });

@@ -13,108 +13,78 @@ $logger = Log::Log4perl::get_logger("state_checker");
 $logger->debug("Logger created");
 }
 
-sub usage(){
+sub usage() {
     print "USAGE:\n\tcommand\n";
     exit -1;
 }
 
-sub worker(){
-    my $instance = shift;
+sub worker {
+    my ($instance, $dbh) = @_;
     my $db_name = $instance->{'DB_NAME'};
     my $instance_name = "dod_$db_name";
     $logger->debug( "Checking $instance_name" );
     my $state_checker = DOD::get_state_checker($instance);
     if (!defined $state_checker){
         $logger->error( "Not state checker defined for this DB type" );
-        exit -1;
+        return 1;
     }
     my ($buf, $instance_state) = $state_checker->($instance, 0);
     
     if ((($instance->{'STATE'} eq 'RUNNING') || ($instance->{'STATE'} eq 'STOPPED')) &&
         ($instance->{'STATE'} ne $instance_state)) {
         $logger->debug( "Updating $instance_name STATE to $instance_state");
-        DOD::Database::updateInstance($instance, 'STATE', $instance_state);
+        DOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
         $logger->debug( "$instance_name state update successfully");
-        exit 0;
     }
     else{
         $instance_state = $instance->{'STATE'};
         $logger->debug( "State untouched for $instance_name: $instance_state" );
-        exit 0;
     }
+    return 0;
 }
 
 sub Main{
 
     usage() if (@ARGV != 0);
-    
-    my @instances = DOD::Database::getInstanceList();
-    my @tasks;
-    while ($#instances >= 0){
 
-        my @checked; # Stores already checked instances
+    my $lock_file = '/tmp/dod.lock';
 
-        foreach my $instance (@instances){
-            $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
-            if ($#tasks < 16){
+    unless (-e $lock_file){
 
-                # If there existe free execution 'slots' we run a new worker
-                
-                my $worker_pid = fork();
-                if ($worker_pid){
-                    # Parent Process
-                    $logger->debug( "Adding worker ($worker_pid) to pool" );
-                    my $task = {};
-                    $task->{'pid'} = $worker_pid;
-                    $task->{'instance'} = $instance;
-                    push(@tasks, $task);
-                    push(@checked, $instance);
-                }
-                else{
-                    # Child Process
-                    &worker($instance);
-                }
+        $logger->debug("Creating lock file");
+        open(LOCKF, ">$lock_file");
+        close(LOCKF);
+
+        $logger->debug("Opening DB connection");
+        my $dbh = DOD::Database::getDBH();
+        my $rc;
+
+        if (defined($dbh)){
+            my @instances = DOD::Database::getInstanceList($dbh);
+            foreach my $instance (@instances){
+                $logger->debug( "Checking state for instance: $instance" );
+                worker($instance, $dbh);
             }
-            else {
-
-                # In case of a high number of instances, we have to wait for
-                # some of the workers to end before submiting more tasks
-
-                $logger->debug( "Waiting for $#tasks tasks  completion" );
-                foreach my $task (@tasks) {
-                    my $tmp = waitpid($task->{'pid'}, 0);
-                    $logger->debug( "Done with worker : $tmp" );
-                }
-                $logger->debug( "Removing finished workers from pool" );
-                @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
-            }
+            $logger->debug("Closing DB connection");
+            $rc = 0;
+        }
+        else{
+            $logger->error("Unable to get DB connection");
+            $rc = -1;
         }
 
-        # Removes already checked instances from @instances
+        $logger->debug("Deleting lock file");
+        unlink($lock_file);
 
-        foreach my $inst (@checked){
-            $logger->debug( "Remaining Instances: $#instances ");
-            $logger->debug( "Removing $inst from \@instances. ");
-            @instances = grep($_ ne $inst, @instances);
-            $logger->debug( "Remaining Instances after removal: $#instances ");
-        }
+        exit $rc;
+    }
+    else{
+        $logger->debug("Another instance of dod_state_checker is running.\n Skipping execution");
     }
 
-    # Wait for remaining running processes, if any
-
-    while ($#tasks >= 0){
-        $logger->debug( "Waiting for $#tasks tasks  completion" );
-        foreach my $task (@tasks) {
-            my $tmp = waitpid($task->{'pid'}, 0);
-            $logger->debug( "Done with worker : $tmp" );
-        }
-        $logger->debug( "Removing finished workers from pool" );
-        @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
-    }
 }
 
 &Main();
-exit 0;
 
 END{}
 
