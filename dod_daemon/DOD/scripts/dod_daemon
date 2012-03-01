@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+package dod_daemon;
+
 use strict;
 use Getopt::Long;
 use Proc::Daemon;

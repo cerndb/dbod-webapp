@@ -63,15 +63,6 @@ $DATEFORMAT = $config->{'DB_DATE_FORMAT'};
 my @buf = split( /_/, $DBTAG );
 $user = pop( @buf );
 $password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
-if (defined $password){
-    $logger->debug( "Testing database connection for $user:$DSN:XXXXXXXX" );
-    my $dbh = DBI->connect( $DSN, $user, $password) ;
-    $logger->debug( "Disconnecting" );
-    $dbh->disconnect();
-    }
-else {
-    $logger->error_die("Check DB connection parameters. Couldn't start a connection\n $!" );
-}
 
 } # BEGIN BLOCK
 

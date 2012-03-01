@@ -1,16 +1,21 @@
 #!/usr/bin/perl -w
 
+package dod_state_checker;
+
 use strict;
 use DOD;
 use DOD::Database;
 
 # Initializes Logging Settings
 
-our ($logger); 
+our ($logger, $lock_file); 
 
 BEGIN{
-$logger = Log::Log4perl::get_logger("state_checker");
+$logger = Log::Log4perl::get_logger("dod_state_checker");
 $logger->debug("Logger created");
+
+$lock_file = $DOD::config->{'SC_LOCK_FILE'};
+
 }
 
 sub usage() {
@@ -46,8 +51,6 @@ sub worker {
 sub Main{
 
     usage() if (@ARGV != 0);
-
-    my $lock_file = '/tmp/dod.lock';
 
     unless (-e $lock_file){
 
