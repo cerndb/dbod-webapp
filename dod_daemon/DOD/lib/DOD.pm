@@ -22,7 +22,7 @@ use threads;
 use threads::shared;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table, $db_lock, $dbh);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table, $db_lock );
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -63,9 +63,11 @@ sub jobDispatcher {
     Log::Log4perl::init_and_watch( "$config_dir/$config->{'LOGGER_CONFIG'}", 60 );
     my $logger = Log::Log4perl::get_logger( "DOD.jobDispatcher" );
     $logger->debug("Creating new DB connection");
-    $dbh = DOD::Database::getDBH();
-    my @tasks;
+    my $dbh = DOD::Database::getDBH();
+    
     my @job_list;
+    my @workers;
+
     while (1){
 
         $logger->debug("Checking status of connection");
@@ -76,6 +78,7 @@ sub jobDispatcher {
             $dbh = DOD::Database::getDBH();
         }
 
+        # Executing jobs
         $logger->debug( "Fetching job list" );
         { # Fetch $db_lock
             lock($db_lock); 
@@ -83,73 +86,17 @@ sub jobDispatcher {
         } # Release $db_lock
         my $pendingjobs = $#job_list + 1;
         $logger->debug( "Pending jobs: $pendingjobs" );
-        if ($pendingjobs > 0){
-            foreach my $job (@job_list){
-                $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
-                if ($#tasks < 20){
-                    my $worker_pid = fork();
-                    if ($worker_pid){
-                        $logger->debug( "Adding worker ($worker_pid) to pool" );
-                        my $task = {};
-                        $job->{'STATE'} = 'DISPATCHED';
-                        $job->{'task'} = $task; 
-                        $task->{'pid'} = $worker_pid;
-                        $task->{'job'} = $job;
-                        push(@tasks, $task);
-                        # Updates job status to RUNNING
-                        { # Fetch $db_lock
-                            lock($db_lock);
-                            DOD::Database::updateJob($job, 'STATE', 'RUNNING', $dbh); 
-                        } # Release $db_lock
-                    }
-                    else{
-                        worker($job);
-                        # Exit moved outside of worker_body to allow safe cleaing of DB objects
-                    }
-                }
-                else {
-                    $logger->debug( "Waiting for $#tasks tasks  completion" );
-                    foreach my $task (@tasks) {
-                        my $tmp = waitpid($task->{'pid'}, 0);
-                        $logger->debug( "Done with worker : $tmp" );
-                    }
-                    $logger->debug( "Removing finished workers from pool" );
-                    @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
-                }
-            }
-        }
-        else{
-            # Cleaning stranded jobs 
-            $logger->debug( "No pending jobs" );
-            $logger->debug( "Checking for timed out jobs" );
-            my @timedoutjobs;
-            { # Fetch $db_lock;
+
+        foreach my $job (@job_list){
+            my $tid = threads->create(\&worker, $job, undef);
+            $logger->debug( "Adding thread ($tid) to list" );
+            push(@workers, $tid);
+            $job->{'STATE'} = 'DISPATCHED';
+            # Updates job status to RUNNING
+            { # Fetch $db_lock
                 lock($db_lock);
-                @timedoutjobs = DOD::Database::getTimedOutJobs($dbh);
+                DOD::Database::updateJob($job, 'STATE', 'RUNNING', $dbh); 
             } # Release $db_lock
-            foreach my $job (@timedoutjobs){
-                my $state_checker = get_state_checker($job);
-                if (! defined($state_checker)){
-                    $logger->error( "Not state checker defined for this DB type" );
-                }
-                my ($job_state, $instance_state) = $state_checker->($job, 1);
-                { # Fetch $db_lock;
-                    lock($db_lock);
-                    DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh);
-                    DOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh);
-                } # Release $db_lock
-                my $task = $job->{'task'};
-                if (ref $task) {
-                    my $pid = $task->{'pid'};
-                    $logger->debug( "Killing stranded process ($pid)"); 
-                    if (kill($SIG{KILL}, $pid) == 1){
-                        $logger->debug( "Process ($pid) succesfully killed");
-                    }
-                    else{
-                        $logger->error( "Process ($pid) could not be killed\n $!");
-                    }
-                }
-            }
         }
 
         # Remove dispatched jobs from joblist
@@ -157,32 +104,63 @@ sub jobDispatcher {
         @job_list = grep( ( $_->{'STATE'} =~ 'PENDING' ), @job_list);
         $logger->debug( sprintf("Pending jobs after cleaning Dispatched jobs #JOBS = %d", $#job_list + 1) );
         
-        # Reaping
-        my $ntasks = $#tasks +1;
-        $logger->debug( "Waiting for $ntasks tasks  completion" );
-        foreach my $task (@tasks) {
-            my $tmp = waitpid($task->{'pid'}, WNOHANG);
-            if ($tmp) {
-                $logger->debug( "Done with worker : $tmp" );
+        # Cleaning workers pool
+        
+        my $running_threads = threads->list();
+        my @finished_threads;
+        for my $worker (@workers){
+            unless (grep( $_ == $worker->tid(), $running_threads) ){
+                $worker->join();    
+                push(@finished_threads, $worker);
             }
         }
-        
-        $logger->debug( "Removing finished workers from pool" );
-        @tasks = grep(waitpid($_->{'pid'}, WNOHANG)>=0, @tasks);
 
+        my %temp = ();
+        @temp{@workers} = ();
+        foreach (@finished_threads) {
+                delete $temp{$_};
+        }
+        @workers = sort keys %temp;
+
+        # Detecting old jobs in queue
+        my @timedoutjobs;
+        { # Fetch $db_lock;
+            lock($db_lock);
+            @timedoutjobs = DOD::Database::getTimedOutJobs($dbh);
+        } # Release $db_lock
+        foreach my $job (@timedoutjobs){
+            my $state_checker = get_state_checker($job);
+            if (! defined($state_checker)){
+                $logger->error( "Not state checker defined for this DB type" );
+            }
+            my ($job_state, $instance_state) = $state_checker->($job, 1);
+            { # Fetch $db_lock;
+                lock($db_lock);
+                DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh);
+                DOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh);
+            } # Release $db_lock
+        }
+        
         # Iteration timer
         sleep 5;
     }
 }
 
 sub worker {
-    my $job = shift;
+    my ($job, $pdbh) = @_;
     my $logger = Log::Log4perl::get_logger( "DOD.worker" );
     
-    # Cloning parent process DB handler
-    my $worker_dbh = $dbh->clone();
-    $dbh->{InactiveDestroy} = 1;
-    undef $dbh;
+    my $worker_dbh;
+    if (defined($pdbh)){
+        # Cloning parent process DB handler
+        $worker_dbh = $pdbh->clone();
+        $pdbh->{InactiveDestroy} = 1;
+        undef $pdbh;
+    }
+    else{
+        # Obtaining a new DB connector
+        $worker_dbh = DOD::Database::getDBH(); 
+    }
   
     my $cmd_line;
     { #Acquire $db_lock
@@ -223,7 +201,7 @@ sub worker {
     }
     $logger->debug( "Exiting worker process" );
 
-    exit 0;
+    threads->exit(0);
 }
 
 
