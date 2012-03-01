@@ -69,7 +69,7 @@ $password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
 sub getInstanceList{
     my $dbh;
     if ($#_ == 0){
-        $dbh = shift;
+        ($dbh) = @_;
     }
     else{
         $dbh = getDBH();
@@ -354,7 +354,7 @@ sub getJobParams{
         ($job, $dbh) = @_;
     }
     elsif($#_ == 0){
-        $job = shift;
+        ($job) = @_;
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
@@ -408,7 +408,7 @@ sub getExecString{
         ($job, $dbh) = @_;
     }
     elsif($#_ == 0){
-        $job = shift;
+        ($job) = @_;
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
@@ -451,8 +451,7 @@ sub getConfigFile{
         ($job, $file_type, $dbh) = @_;
     }
     elsif($#_ == 1){
-        $job = shift; 
-        $file_type = shift;
+        ($job, $file_type) = @_;
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
@@ -498,7 +497,7 @@ sub prepareCommand {
         ($job, $dbh) = @_;
     }
     elsif($#_ == 0){
-        $job = shift; 
+        ($job) = @_; 
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
