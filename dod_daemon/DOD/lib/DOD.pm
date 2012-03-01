@@ -18,8 +18,11 @@ use DOD::All;
 
 use POSIX ":sys_wait_h";
 
+use threads;
+use threads::shared;
+
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table, $db_lock, $dbh);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -41,6 +44,8 @@ foreach my $key ( keys(%{$config}) ) {
     $logger->debug( "\t$key -> $h{$key}" );
     }
 
+share($db_lock);
+
 } # BEGIN BLOCK
 
 my %command_callback_table = (
@@ -57,12 +62,25 @@ sub jobDispatcher {
     # This is neccesary because daemonizing closes all file descriptors
     Log::Log4perl::init_and_watch( "$config_dir/$config->{'LOGGER_CONFIG'}", 60 );
     my $logger = Log::Log4perl::get_logger( "DOD.jobDispatcher" );
-    # my $dbh = DOD::Database::getDBH();
+    $logger->debug("Creating new DB connection");
+    $dbh = DOD::Database::getDBH();
     my @tasks;
     my @job_list;
     while (1){
+
+        $logger->debug("Checking status of connection");
+        unless(defined($dbh->ping)){
+            $logger->error("The connecion to the DB was lost");
+            $dbh = undef;
+            $logger->debug("Creating new DB connection");
+            $dbh = DOD::Database::getDBH();
+        }
+
         $logger->debug( "Fetching job list" );
-        push(@job_list, DOD::Database::getJobList());
+        { # Fetch $db_lock
+            lock($db_lock); 
+            push(@job_list, DOD::Database::getJobList($dbh));
+        } # Release $db_lock
         my $pendingjobs = $#job_list + 1;
         $logger->debug( "Pending jobs: $pendingjobs" );
         if ($pendingjobs > 0){
@@ -79,12 +97,14 @@ sub jobDispatcher {
                         $task->{'job'} = $job;
                         push(@tasks, $task);
                         # Updates job status to RUNNING
-                        DOD::Database::updateJob($job, 'STATE', 'RUNNING'); # forking destroys $dbh ??
+                        { # Fetch $db_lock
+                            lock($db_lock);
+                            DOD::Database::updateJob($job, 'STATE', 'RUNNING', $dbh); 
+                        } # Release $db_lock
                     }
                     else{
-                        &worker_body($job);
+                        worker($job);
                         # Exit moved outside of worker_body to allow safe cleaing of DB objects
-                        exit 0;
                     }
                 }
                 else {
@@ -102,15 +122,22 @@ sub jobDispatcher {
             # Cleaning stranded jobs 
             $logger->debug( "No pending jobs" );
             $logger->debug( "Checking for timed out jobs" );
-            my @timedoutjobs = DOD::Database::getTimedOutJobs();
+            my @timedoutjobs;
+            { # Fetch $db_lock;
+                lock($db_lock);
+                @timedoutjobs = DOD::Database::getTimedOutJobs($dbh);
+            } # Release $db_lock
             foreach my $job (@timedoutjobs){
                 my $state_checker = get_state_checker($job);
                 if (! defined($state_checker)){
                     $logger->error( "Not state checker defined for this DB type" );
                 }
                 my ($job_state, $instance_state) = $state_checker->($job, 1);
-                DOD::Database::finishJob( $job, $job_state, "TIMED OUT" );
-                DOD::Database::updateInstance( $job, 'STATE', $instance_state );
+                { # Fetch $db_lock;
+                    lock($db_lock);
+                    DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh);
+                    DOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh);
+                } # Release $db_lock
                 my $task = $job->{'task'};
                 if (ref $task) {
                     my $pid = $task->{'pid'};
@@ -148,19 +175,28 @@ sub jobDispatcher {
     }
 }
 
-sub worker_body {
+sub worker {
     my $job = shift;
     my $logger = Log::Log4perl::get_logger( "DOD.worker" );
-    my $dbh = DOD::Database::getDBH();
-    do {
-        $logger->error( "Unable to connect to database !!! \n $!" );
-        die( "Unable to connect to database !!!" );
-    } unless (defined($dbh));
-    my $cmd_line = DOD::Database::prepareCommand($job, $dbh);
+    
+    # Cloning parent process DB handler
+    my $worker_dbh = $dbh->clone();
+    $dbh->{InactiveDestroy} = 1;
+    undef $dbh;
+  
+    my $cmd_line;
+    { #Acquire $db_lock
+        lock($db_lock);
+        $cmd_line = DOD::Database::prepareCommand($job, $worker_dbh);
+    } # Release $db_lock
     my $log;
     my $retcode;
     if (defined $cmd_line){
-        my $buf = DOD::Database::getJobParams($job, $dbh);
+        my $buf;
+        { #Acquire $db_lock
+            lock($db_lock);
+            $buf = DOD::Database::getJobParams($job, $worker_dbh);
+        } # Release $db_lock
         my $entity;
         foreach (@{$buf}){
             if ($_->{'NAME'} =~ /INSTANCE_NAME/){
@@ -172,15 +208,22 @@ sub worker_body {
         $log = `$cmd`;
         $retcode = DOD::All::result_code($log);
         $logger->debug( "Finishing Job. Return code: $retcode");
-        DOD::Database::finishJob( $job, $retcode, $log, $dbh );
+        { #Acquire $db_lock
+            lock($db_lock);
+            DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh );
+        } # Release $db_lock
     }
     else{
         $logger->error( "An error ocurred preparing command execution \n $!" );
         $logger->debug( "Finishing Job.");
-        DOD::Database::finishJob( $job, 1, $!, $dbh );
+        { #Acquire $db_lock
+            lock($db_lock);
+            DOD::Database::finishJob( $job, 1, $!, $worker_dbh );
+        } # Release $db_lock
     }
     $logger->debug( "Exiting worker process" );
-    $dbh->disconnect();
+
+    exit 0;
 }
 
 
