@@ -10,13 +10,10 @@ use Log::Log4perl;
 
 use DBI;
 use DBD::Oracle qw(:ora_types);
-use POSIX qw(strftime);
 
 use DOD::Database;
 use DOD::MySQL;
 use DOD::All;
-
-use POSIX ":sys_wait_h";
 
 use threads;
 use threads::shared;
