@@ -542,10 +542,11 @@ sub prepareCommand {
                     my $filename = $parser->($clob); 
                     $cmd =~ s/:$param->{'NAME'}/$filename/;
                     $logger->debug( "cmd: $cmd" );
-                    # Distribute required files 
-                    my $entity = DOD::entityName($job);
+                    # Distribute required files
+                    $logger->debug("Fetching entity name");
+                    my $entity = DOD::All::get_entity($job);
                     $logger->debug( "Copying files to $entity" );
-                    DOD::copyToEntity( $filename, $entity );
+                    DOD::All::copy_to_entity( $filename, $entity );
                     $logger->debug( "Deleting temporal files");
                     system("rm -fr $filename");
                     }
