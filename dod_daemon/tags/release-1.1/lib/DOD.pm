@@ -91,9 +91,7 @@ sub jobDispatcher {
                         DOD::Database::updateJob($job, 'STATE', 'RUNNING', $dbh); # forking destroys $dbh ??
                     }
                     else{
-                        &worker_body($job);
-                        # Exit moved outside of worker_body to allow safe cleaing of DB objects
-                        exit 0;
+                        &worker_body($job, $dbh);
                     }
                 }
                 else {
@@ -158,18 +156,29 @@ sub jobDispatcher {
 }
 
 sub worker_body {
-    my $job = shift;
+    my ($job, $pdbh) = @_;
     my $logger = Log::Log4perl::get_logger( "DOD.worker" );
-    my $dbh = DOD::Database::getDBH();
-    do {
-        $logger->error( "Unable to connect to database !!! \n $!" );
-        die( "Unable to connect to database !!!" );
-    } unless (defined($dbh));
-    my $cmd_line = DOD::Database::prepareCommand($job, $dbh);
+
+    my $worker_dbh;
+    if (defined($pdbh)){
+        # Cloning parent process DB handler
+        $logger->debug("Cloning parent DB handler");
+        $worker_dbh = $pdbh->clone();
+        $logger->debug( "Setting date format: $DOD::Database::DATEFORMAT" );
+        $worker_dbh->do( "alter session set NLS_DATE_FORMAT='$DOD::Database::DATEFORMAT'" );
+        $pdbh->{InactiveDestroy} = 1;
+        undef $pdbh;
+    }
+    else{
+        # Obtaining a new DB connector
+        $worker_dbh = DOD::Database::getDBH();
+    }
+
+    my $cmd_line = DOD::Database::prepareCommand($job, $worker_dbh);
     my $log;
     my $retcode;
     if (defined $cmd_line){
-        my $buf = DOD::Database::getJobParams($job, $dbh);
+        my $buf = DOD::Database::getJobParams($job, $worker_dbh);
         my $entity;
         foreach (@{$buf}){
             if ($_->{'NAME'} =~ /INSTANCE_NAME/){
@@ -181,15 +190,16 @@ sub worker_body {
         $log = `$cmd`;
         $retcode = DOD::All::result_code($log);
         $logger->debug( "Finishing Job. Return code: $retcode");
-        DOD::Database::finishJob( $job, $retcode, $log, $dbh );
+        DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh );
     }
     else{
         $logger->error( "An error ocurred preparing command execution \n $!" );
         $logger->debug( "Finishing Job.");
-        DOD::Database::finishJob( $job, 1, $!, $dbh );
+        DOD::Database::finishJob( $job, 1, $!, $worker_dbh );
     }
     $logger->debug( "Exiting worker process" );
-    $dbh->disconnect();
+    $worker_dbh->disconnect();
+    exit 0;
 }
 
 
