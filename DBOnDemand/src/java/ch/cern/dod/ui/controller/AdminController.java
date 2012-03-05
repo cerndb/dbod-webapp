@@ -18,9 +18,12 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Foot;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
@@ -303,6 +306,26 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR OPENING ADD UPGRADE WINDOW", ex);
             showError(DODConstants.ERROR_OPENING_ADD_UPGRADE);
         }
+    }
+    
+    /**
+     * Displays all instances in the view
+     */
+    public void showAll() {
+        Grid grid = (Grid) getFellow("overviewGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("footer");
+        footer.detach();
+    }
+    
+    /**
+     * Displays all instances in the view
+     */
+    public void showAllUpgrades() {
+        Grid grid = (Grid) getFellow("upgradesGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("footerUpgrades");
+        footer.detach();
     }
     
     /**

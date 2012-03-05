@@ -68,6 +68,14 @@
                             <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
                             <column label="${c:l('actions')}" width="200px" />
                         </columns>
+                        <foot id="footer" if="${controller.instancesSize > 10}">
+                            <footer span="12">
+                                 <hbox height="24px" align="bottom">
+                                    <toolbarbutton tooltiptext="${c:l('showAll')}" sclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
+                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
+                                </hbox>
+                            </footer>
+                        </foot>
                     </grid>
                 </vbox>
                 <!--Show a message in case there no instances  -->
@@ -99,6 +107,14 @@
                             <column label="" width="40px"/>
                         </columns>
                     </grid>
+                    <foot id="footerUpgrades" if="${controller.upgradesSize > 10}">
+                        <footer span="5">
+                             <hbox height="24px" align="bottom">
+                                <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" sclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
+                                <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
+                            </hbox>
+                        </footer>
+                    </foot>
                 </vbox>
                 <!--Show a message in case there no upgrades  -->
                 <div if="${controller.upgradesSize == 0}" style="padding-right:500px">

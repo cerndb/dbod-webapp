@@ -12,6 +12,7 @@ import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
+import org.zkoss.zul.Foot;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Vbox;
 
@@ -111,5 +112,15 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      */
     public int getInstancesSize() {
         return instancesSize;
+    }
+    
+    /**
+     * Displays all instances in the view
+     */
+    public void showAll() {
+        Grid grid = (Grid) getFellow("overviewGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("footer");
+        footer.detach();
     }
 }
