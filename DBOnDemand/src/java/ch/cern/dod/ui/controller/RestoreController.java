@@ -186,7 +186,7 @@ public class RestoreController extends Window {
         cancelBox.setStyle("float:left;");
         Toolbarbutton cancelButton = new Toolbarbutton();
         cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
-        cancelButton.setSclass(DODConstants.STYLE_BUTTON);
+        cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
@@ -222,7 +222,7 @@ public class RestoreController extends Window {
         acceptBox.appendChild(acceptLabel);
         Toolbarbutton acceptButton = new Toolbarbutton();
         acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptButton.setSclass(DODConstants.STYLE_BUTTON);
+        acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_ACCEPT);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
 
@@ -426,7 +426,7 @@ public class RestoreController extends Window {
             cancelBox.setStyle("float:left;");
             Toolbarbutton cancelButton = new Toolbarbutton();
             cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
-            cancelButton.setSclass(DODConstants.STYLE_BUTTON);
+            cancelButton.setZclass(DODConstants.STYLE_BUTTON);
             cancelButton.setImage(DODConstants.IMG_CANCEL);
             cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
                 public void onEvent(Event event) {
@@ -461,7 +461,7 @@ public class RestoreController extends Window {
             acceptBox.appendChild(acceptLabel);
             Toolbarbutton acceptButton = new Toolbarbutton();
             acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-            acceptButton.setSclass(DODConstants.STYLE_BUTTON);
+            acceptButton.setZclass(DODConstants.STYLE_BUTTON);
             acceptButton.setImage(DODConstants.IMG_ACCEPT);
             acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
                 public void onEvent(Event event) {

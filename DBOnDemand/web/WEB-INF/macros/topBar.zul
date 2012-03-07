@@ -1,29 +1,29 @@
 <div use="TopBarController" id="topBarController" onCreate="topBarController.init();" width="100%" style="min-height:120px;min-width:1260px;">
-    <div style="width:100%" xmlns:h="http://www.w3.org/1999/xhtml">
-        <image src="/img/cernlogo.jpg" style="margin-top:10px;margin-left:10px"/>
-        <image src="/img/dblogo.png" style="margin-top:10px;margin-left:10px"/>
-        <html sclass="appTitle" >${c:l('appTitle')}</html>
-        <vbox height="80px" style="float:right;margin-left:20px" align="right">
-            <hbox  align="bottom">
-                <div sclass="titleLinks">
-                    <h:a href="http://www.cern.ch/">${c:l('cernHome')}</h:a> |
-                    <h:a href="http://cern.ch/it/">${c:l('itHome')}</h:a> |
-                    <h:a href="http://it-dep.web.cern.ch/it-dep/db/">${c:l('itDbHome')}</h:a> |
-                    <h:a href="https://phonebook.cern.ch">${c:l('phonebook')}</h:a>
-                </div>
-                <menubar>
-                    <menu id="accountMenu">
-                        <menupopup>
-                            <menuitem label="${c:l('signOut')}" image="/img/singOut.png" href="https://login.cern.ch/adfs/ls/?wa=wsignout1.0" />
-                        </menupopup>
-                    </menu>
-                </menubar>
-            </hbox>
-            <hbox style="margin-top:40px">
-               ${c:l('contactMessage')}
-               <h:a href="mailto:dbondemand-admin@cern.ch">${c:l('contactUs')}</h:a>
-            </hbox>
-        </vbox>
+    <div width="100%" xmlns:h="http://www.w3.org/1999/xhtml">
+            <vbox height="80px" align="end" style="float:right;margin-left:10px;">
+                <hbox  align="bottom">
+                    <div sclass="titleLinks">
+                        <h:a href="http://www.cern.ch/">${c:l('cernHome')}</h:a> |
+                        <h:a href="http://cern.ch/it/">${c:l('itHome')}</h:a> |
+                        <h:a href="http://it-dep.web.cern.ch/it-dep/db/">${c:l('itDbHome')}</h:a> |
+                        <h:a href="https://phonebook.cern.ch">${c:l('phonebook')}</h:a>
+                    </div>
+                    <menubar>
+                        <menu id="accountMenu">
+                            <menupopup>
+                                <menuitem label="${c:l('signOut')}" image="/img/singOut.png" href="https://login.cern.ch/adfs/ls/?wa=wsignout1.0" />
+                            </menupopup>
+                        </menu>
+                    </menubar>
+                </hbox>
+                <hbox style="margin-top:40px;margin-right:10px">
+                   ${c:l('contactMessage')}
+                   <h:a href="mailto:dbondemand-admin@cern.ch">${c:l('contactUs')}</h:a>
+                </hbox>
+            </vbox>
+            <image src="/img/cernlogo.jpg" style="margin-top:10px;margin-left:10px"/>
+            <image src="/img/dblogo.png" style="margin-top:10px;margin-left:10px"/>
+            <label sclass="appTitle" value="${c:l('appTitle')}" />  
     </div>
     <menubar sclass="toolbar" >
         <menuitem label="${c:l('home')}" sclass="title" href="/index.zul" />

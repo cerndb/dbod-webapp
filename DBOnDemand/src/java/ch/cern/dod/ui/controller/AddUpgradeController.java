@@ -71,7 +71,7 @@ public class AddUpgradeController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("365px");
+        this.setWidth("370px");
 
         //Main box used to apply pading
         Vbox mainBox = new Vbox();
@@ -190,7 +190,7 @@ public class AddUpgradeController extends Window {
         cancelBox.setStyle("float:left;");
         Toolbarbutton cancelButton = new Toolbarbutton();
         cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
-        cancelButton.setSclass(DODConstants.STYLE_BUTTON);
+        cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
@@ -225,7 +225,7 @@ public class AddUpgradeController extends Window {
         acceptBox.appendChild(acceptLabel);
         Toolbarbutton acceptButton = new Toolbarbutton();
         acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptButton.setSclass(DODConstants.STYLE_BUTTON);
+        acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_ACCEPT);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {

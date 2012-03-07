@@ -106,9 +106,9 @@ public class ConfigController extends Window {
         //Upload config file button
         Div uploadDiv = new Div();
         uploadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_UPLOAD));
-        uploadDiv.setSclass(DODConstants.STYLE_BUTTON);
         Toolbarbutton uploadBtn = new Toolbarbutton();
         uploadBtn.setImage(DODConstants.IMG_UPLOAD);
+        uploadBtn.setZclass(DODConstants.STYLE_BUTTON);
         uploadBtn.setParent(uploadDiv);
         uploadBtn.setUpload("true");
         uploadBtn.addEventListener(Events.ON_UPLOAD, new EventListener() {
@@ -150,8 +150,8 @@ public class ConfigController extends Window {
         //Download config file button
         Div downloadDiv = new Div();
         downloadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_DOWNLOAD));
-        downloadDiv.setSclass(DODConstants.STYLE_BUTTON);
         Toolbarbutton downloadBtn = new Toolbarbutton();
+        downloadBtn.setZclass(DODConstants.STYLE_BUTTON);
         downloadBtn.setImage(DODConstants.IMG_DOWNLOAD);
         downloadBtn.setParent(downloadDiv);
         downloadBtn.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -189,7 +189,7 @@ public class ConfigController extends Window {
         cancelBox.setStyle("float:left;");
         Toolbarbutton cancelButton = new Toolbarbutton();
         cancelButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CANCEL));
-        cancelButton.setSclass(DODConstants.STYLE_BUTTON);
+        cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {

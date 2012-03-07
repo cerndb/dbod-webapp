@@ -1,3 +1,4 @@
+<?page docType="HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;"?>
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
@@ -35,7 +36,7 @@
                 <label value="${c:l('overview')}" sclass="title" style="float:left;"></label>
                 <hbox height="24px" style="float:right" align="bottom" if="${controller.instancesSize > 0}">
                     <label sclass="title" value="${c:l('refreshInstances')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInstances();"/>
-                    <toolbarbutton tooltiptext="${c:l('refreshInstances')}" sclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
+                    <toolbarbutton tooltiptext="${c:l('refreshInstances')}" zclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
                 </hbox>
             </caption>
             <vbox width="100%" align="right">
@@ -53,13 +54,13 @@
                             <column label="${c:l('dbType')}" sort="auto(dbType)" width="65px"/>
                             <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="65px"/>
                             <column label="${c:l('noConn')}" sort="auto(noConnections)" width="65px"/>
-                            <column label="${c:l('state')}" sort="auto(state)" width="50px" align="center"/>
-                            <column label="${c:l('actions')}" width="200px" />
+                            <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
+                            <column label="${c:l('actions')}" width="210px" align="center"/>
                         </columns>
                         <foot id="footer" if="${controller.instancesSize > 10}">
                             <footer span="12">
                                  <hbox height="24px" align="bottom">
-                                    <toolbarbutton id="showAllBtn" tooltiptext="${c:l('showAll')}" sclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
+                                    <toolbarbutton id="showAllBtn" tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
                                     <label id="showAllLbl" value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
                                 </hbox>
                             </footer>

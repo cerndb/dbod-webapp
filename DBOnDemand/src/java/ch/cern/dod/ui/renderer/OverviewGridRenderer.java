@@ -218,9 +218,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only enable button if the instance is stopped
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             startupBtn.setDisabled(true);
-            startupBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            startupBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            startupBtn.setSclass(DODConstants.STYLE_BUTTON);
+            startupBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Shutdown button
@@ -240,9 +240,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only enable button if the instance is running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             shutdownBtn.setDisabled(true);
-            shutdownBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            shutdownBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            shutdownBtn.setSclass(DODConstants.STYLE_BUTTON);
+            shutdownBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Config files button
@@ -268,9 +268,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             configButton.setDisabled(true);
-            configButton.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            configButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            configButton.setSclass(DODConstants.STYLE_BUTTON);
+            configButton.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Dispatch a backup button
@@ -296,9 +296,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             backupBtn.setDisabled(true);
-            backupBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            backupBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            backupBtn.setSclass(DODConstants.STYLE_BUTTON);
+            backupBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Dispatch a restore button
@@ -324,9 +324,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             restoreBtn.setDisabled(true);
-            restoreBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            restoreBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            restoreBtn.setSclass(DODConstants.STYLE_BUTTON);
+            restoreBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
         
         //Upgrade button
@@ -353,9 +353,9 @@ public class OverviewGridRenderer implements RowRenderer {
         if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
-            upgradeBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            upgradeBtn.setSclass(DODConstants.STYLE_BUTTON);
+            upgradeBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Access monitoring button
@@ -381,9 +381,9 @@ public class OverviewGridRenderer implements RowRenderer {
         //Only disable button if the instance is awaiting approval
         if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
             monitorBtn.setDisabled(true);
-            monitorBtn.setSclass(DODConstants.STYLE_BUTTON_DISABLED);
+            monitorBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            monitorBtn.setSclass(DODConstants.STYLE_BUTTON);
+            monitorBtn.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Add box to row

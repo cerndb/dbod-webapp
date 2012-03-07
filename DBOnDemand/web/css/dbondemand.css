@@ -1,13 +1,3 @@
-.z-toolbarbutton-over,
-.z-toolbarbutton-over:hover,
-.z-toolbarbutton-body,
-.z-toolbarbutton-body:hover,
-.z-toolbarbutton-cnt,
-.z-toolbarbutton-cnt:hover{
-    border: 0px !important;
-    background-image: none !important;
-}
-
 .z-upload {
     margin-right: 200px;
 }
@@ -16,6 +6,18 @@
 .buttonDisabled {
    width: 20px !important;
    height: 20px !important;
+}
+
+.button {
+    cursor:pointer;
+}
+
+.buttonDisabled {
+    opacity: .5;
+    /*for IE8*/
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    /*for IE5-7*/
+    filter: alpha(opacity=50);
 }
 
 .button img,
@@ -27,13 +29,25 @@
 .button:hover img {
     width: 18px;
     height: 18px;
-    padding: 1px !important;
+    padding: 1px !important;   
 }
 
 .bigButton,
 .bigButtonDisabled {
    width: 52px !important;
    height: 52px !important;
+}
+
+.bigButton {
+    cursor:pointer;
+}
+
+.bigButtonDisabled {
+    opacity: .5;
+    /*for IE8*/
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    /*for IE5-7*/
+    filter: alpha(opacity=50);
 }
 
 .bigButton img,

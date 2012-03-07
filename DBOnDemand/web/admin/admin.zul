@@ -1,3 +1,5 @@
+<?page docType="html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;" ?>
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
@@ -38,13 +40,13 @@
                 <hbox height="24px" style="float:right" align="bottom" if="${controller.instancesSize > 0}">
                     <hbox style="margin-right:380px" align="bottom">
                         <label sclass="title" value="${c:l('collectiveActions')}" style="font-size:10pt !important"/>
-                        <toolbarbutton id="startupAllBtn" tooltiptext="${c:l('collectiveStartup')}" sclass="button" image="/img/startup.png" onClick="controller.startupAll();" disabled="true"/>
-                        <toolbarbutton id="shutdownAllBtn" tooltiptext="${c:l('collectiveShutdown')}" sclass="button" image="/img/shutdown.png" onClick="controller.shutdownAll();" disabled="true"/>
-                        <toolbarbutton id="backupAllBtn" tooltiptext="${c:l('collectiveBackup')}" sclass="button" image="/img/backup.png" onClick="controller.backupAll();" disabled="true"/>
-                        <toolbarbutton id="upgradeAllBtn" tooltiptext="${c:l('collectiveUpgrade')}" sclass="button" image="/img/upgrade.png" onClick="controller.upgradeAll();" disabled="true"/>
+                        <toolbarbutton id="startupAllBtn" tooltiptext="${c:l('collectiveStartup')}" zclass="buttonDisabled" image="/img/startup.png" onClick="controller.startupAll();" disabled="true"/>
+                        <toolbarbutton id="shutdownAllBtn" tooltiptext="${c:l('collectiveShutdown')}" zclass="buttonDisabled" image="/img/shutdown.png" onClick="controller.shutdownAll();" disabled="true"/>
+                        <toolbarbutton id="backupAllBtn" tooltiptext="${c:l('collectiveBackup')}" zclass="buttonDisabled" image="/img/backup.png" onClick="controller.backupAll();" disabled="true"/>
+                        <toolbarbutton id="upgradeAllBtn" tooltiptext="${c:l('collectiveUpgrade')}" zclass="buttonDisabled" image="/img/upgrade.png" onClick="controller.upgradeAll();" disabled="true"/>
                     </hbox>
                     <label sclass="title" value="${c:l('refreshInstances')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInstances();"/>
-                    <toolbarbutton tooltiptext="${c:l('refreshInstances')}" sclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
+                    <toolbarbutton tooltiptext="${c:l('refreshInstances')}" zclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
                 </hbox>
             </caption>
             <vbox width="100%" align="right">
@@ -63,15 +65,15 @@
                             <column label="${c:l('creationDate')}" sort="auto(creationDate)" width="90px"/>
                             <column label="${c:l('expiryDate')}" sort="auto(expiryDate)" width="80px"/>
                             <column label="${c:l('dbType')}" sort="auto(dbType)" width="65px"/>
-                            <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="65px"/>
+                            <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="60px"/>
                             <column label="${c:l('noConn')}" sort="auto(noConnections)" width="65px"/>
                             <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
-                            <column label="${c:l('actions')}" width="200px" />
+                            <column label="${c:l('actions')}" width="205px" align="center"/>
                         </columns>
                         <foot id="footer" if="${controller.instancesSize > 10}">
                             <footer span="12">
                                  <hbox height="24px" align="bottom">
-                                    <toolbarbutton tooltiptext="${c:l('showAll')}" sclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
+                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
                                     <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
                                 </hbox>
                             </footer>
@@ -85,7 +87,7 @@
                 <!--Button to create new instance  -->
                 <hbox height="24px" align="bottom">
                     <label sclass="title" value="${c:l('newInstance')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.doModal();"/>
-                    <toolbarbutton tooltiptext="${c:l('newInstance')}" sclass="button" image="/img/newDB.png" onClick="newInstance.doModal();"/>
+                    <toolbarbutton tooltiptext="${c:l('newInstance')}" zclass="button" image="/img/newDB.png" onClick="newInstance.doModal();"/>
                 </hbox>
             </vbox>
         </groupbox>
@@ -110,7 +112,7 @@
                     <foot id="footerUpgrades" if="${controller.upgradesSize > 10}">
                         <footer span="5">
                              <hbox height="24px" align="bottom">
-                                <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" sclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
+                                <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
                                 <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
                             </hbox>
                         </footer>
@@ -123,7 +125,7 @@
                 <!--Button to add new upgrade  -->
                 <hbox height="24px" align="bottom">
                     <label sclass="title" value="${c:l('addUpgradeTitle')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.openAddUpgrade();"/>
-                    <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" sclass="button" image="/img/add_upgrade.png" onClick="controller.openAddUpgrade();"/>
+                    <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" zclass="button" image="/img/add_upgrade.png" onClick="controller.openAddUpgrade();"/>
                 </hbox>
             </vbox>
         </groupbox>
@@ -241,12 +243,12 @@
         <!-- Buttons -->
         <div width="100%">
             <hbox height="24px" align="bottom" style="float:left">
-                <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="newInstance.setVisible(false);"/>
+                <toolbarbutton tooltiptext="${c:l('cancel')}" zclass="button" image="/img/cancel.png" onClick="newInstance.setVisible(false);"/>
                 <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.setVisible(false);"/>
             </hbox>
             <hbox height="24px" align="bottom" style="float:right">
                 <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="newInstance.createInstanceAndCheckEGroup();"/>
-                <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="newInstance.createInstanceAndCheckEGroup();"/>
+                <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="newInstance.createInstanceAndCheckEGroup();"/>
             </hbox>
         </div>
 
@@ -258,12 +260,12 @@
             </hbox>
             <div width="100%">
                 <hbox height="24px" align="bottom" style="float:left">
-                    <toolbarbutton tooltiptext="${c:l('cancel')}" sclass="button" image="/img/cancel.png" onClick="eGroupConfirm.setVisible(false);"/>
+                    <toolbarbutton tooltiptext="${c:l('cancel')}" zclass="button" image="/img/cancel.png" onClick="eGroupConfirm.setVisible(false);"/>
                     <label sclass="title" value="${c:l('cancel')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
                 </hbox>
                 <hbox height="24px" align="bottom" style="float:right">
                     <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);newInstance.createInstance(false);"/>
-                    <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);newInstance.createInstance(false);"/>
+                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);newInstance.createInstance(false);"/>
                 </hbox>
             </div>
         </window>

@@ -136,7 +136,7 @@ public class BackupController extends Window {
         backupNowBox.setAlign("bottom");
         Toolbarbutton backupNowButton = new Toolbarbutton();
         backupNowButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_NOW));
-        backupNowButton.setSclass(DODConstants.STYLE_BUTTON);
+        backupNowButton.setZclass(DODConstants.STYLE_BUTTON);
         backupNowButton.setImage(DODConstants.IMG_BACKUP);
         backupNowButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
@@ -233,7 +233,7 @@ public class BackupController extends Window {
         applyChangesBox.appendChild(applyChangesLabel);
         Toolbarbutton applyChangesButton = new Toolbarbutton();
         applyChangesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_APPLY_CHANGES));
-        applyChangesButton.setSclass(DODConstants.STYLE_BUTTON);
+        applyChangesButton.setZclass(DODConstants.STYLE_BUTTON);
         applyChangesButton.setImage(DODConstants.IMG_ACCEPT);
         applyChangesButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
@@ -258,7 +258,7 @@ public class BackupController extends Window {
         closeBox.setStyle("float:left;");
         Toolbarbutton closeButton = new Toolbarbutton();
         closeButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CLOSE));
-        closeButton.setSclass(DODConstants.STYLE_BUTTON);
+        closeButton.setZclass(DODConstants.STYLE_BUTTON);
         closeButton.setImage(DODConstants.IMG_CANCEL);
         closeButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {

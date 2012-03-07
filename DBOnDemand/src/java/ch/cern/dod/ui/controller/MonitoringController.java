@@ -151,7 +151,7 @@ public class MonitoringController extends Window {
         });
         Toolbarbutton acceptButton = new Toolbarbutton();
         acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CLOSE));
-        acceptButton.setSclass(DODConstants.STYLE_BUTTON);
+        acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_CANCEL);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {

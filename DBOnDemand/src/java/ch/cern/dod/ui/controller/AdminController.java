@@ -18,8 +18,6 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Checkbox;
@@ -189,6 +187,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
         }
         else {
             checked.removeAll(checked);
@@ -196,6 +198,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
         }
         
         //Re-render the list

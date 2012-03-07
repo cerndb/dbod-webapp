@@ -299,10 +299,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             startupBtn.setDisabled(true);
-            startupBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            startupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             startupBtn.setDisabled(false);
-            startupBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            startupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
 
         //Shutdown button
@@ -310,10 +310,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
             shutdownBtn.setDisabled(true);
-            shutdownBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            shutdownBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             shutdownBtn.setDisabled(false);
-            shutdownBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            shutdownBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
 
         //config files button
@@ -321,10 +321,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             configBtn.setDisabled(true);
-            configBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            configBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             configBtn.setDisabled(false);
-            configBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            configBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
 
         //Dispatch a backup button
@@ -332,10 +332,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             backupBtn.setDisabled(true);
-            backupBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            backupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             backupBtn.setDisabled(false);
-            backupBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            backupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
 
         //Dispatch a restore button
@@ -343,10 +343,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             restoreBtn.setDisabled(true);
-            restoreBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            restoreBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             restoreBtn.setDisabled(false);
-            restoreBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            restoreBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
         
         //Upgrade a database button
@@ -355,10 +355,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
-            upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             upgradeBtn.setDisabled(false);
-            upgradeBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
 
         //Access monitoring button
@@ -366,10 +366,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is not awaiting approval
         if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
             monitorBtn.setDisabled(true);
-            monitorBtn.setSclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
             monitorBtn.setDisabled(false);
-            monitorBtn.setSclass(DODConstants.STYLE_BIG_BUTTON);
+            monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }      
     }
 

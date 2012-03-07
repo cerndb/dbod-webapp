@@ -59,7 +59,7 @@ public class UpgradesGridRenderer implements RowRenderer {
         final Toolbarbutton deleteBtn = new Toolbarbutton();
         deleteBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_DELETE_UPGRADE));
         deleteBtn.setImage(DODConstants.IMG_DESTROY);
-        deleteBtn.setSclass(DODConstants.STYLE_BUTTON);
+        deleteBtn.setZclass(DODConstants.STYLE_BUTTON);
         deleteBtn.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
                 try {
