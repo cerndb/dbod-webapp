@@ -116,7 +116,7 @@ public class BackupController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("510px");
+        this.setWidth("520px");
 
         //Main box used to apply pading
         Vbox mainBox = new Vbox();

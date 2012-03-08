@@ -128,7 +128,7 @@ public class MonitoringController extends Window {
             Hbox lemonBox = new Hbox();
             Label lemonMessage = new Label(Labels.getLabel(DODConstants.LABEL_LEMON_MESSAGE));
             Html lemonLink = new Html();
-            lemonLink.setContent("<a target=\"_blank\" href=\""+ lemonURL +"\">" + Labels.getLabel(DODConstants.LABEL_LEMON_LINK) + "</a>");
+            lemonLink.setContent("<a target=\"_blank\" class=\"z-label\" href=\""+ lemonURL +"\">" + Labels.getLabel(DODConstants.LABEL_LEMON_LINK) + "</a>");
             lemonBox.appendChild(lemonMessage);
             lemonBox.appendChild(lemonLink);
             mainBox.appendChild(lemonBox);

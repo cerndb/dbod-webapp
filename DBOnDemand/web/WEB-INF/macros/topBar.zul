@@ -18,7 +18,7 @@
                 </hbox>
                 <hbox style="margin-top:40px;margin-right:10px">
                    ${c:l('contactMessage')}
-                   <h:a href="mailto:dbondemand-admin@cern.ch">${c:l('contactUs')}</h:a>
+                   <h:a href="mailto:dbondemand-admin@cern.ch" class="z-label">${c:l('contactUs')}</h:a>
                 </hbox>
             </vbox>
             <image src="/img/cernlogo.jpg" style="margin-top:10px;margin-left:10px"/>

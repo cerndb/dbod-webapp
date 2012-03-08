@@ -21,7 +21,7 @@
     <div align="center" style="width:100%;padding-top:30px" xmlns:h="http://www.w3.org/1999/xhtml">
         <hbox>
             <label value="${c:l('notAuthenticatedMessage')}"/>
-            <h:a href="index.zul">${c:l('homePage')}</h:a>
+            <h:a href="index.zul" class="z-label">${c:l('homePage')}</h:a>
         </hbox>
     </div>
 </zk>
