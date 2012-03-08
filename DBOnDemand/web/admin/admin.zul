@@ -108,15 +108,15 @@
                             <column label="${c:l('versionTo')}" sort="auto(versionTo)" width="322px"/>
                             <column label="" width="40px"/>
                         </columns>
+                        <foot id="footerUpgrades" if="${controller.upgradesSize > 10}">
+                            <footer span="5">
+                                 <hbox height="24px" align="bottom">
+                                    <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
+                                    <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
+                                </hbox>
+                            </footer>
+                        </foot>
                     </grid>
-                    <foot id="footerUpgrades" if="${controller.upgradesSize > 10}">
-                        <footer span="5">
-                             <hbox height="24px" align="bottom">
-                                <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
-                                <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
-                            </hbox>
-                        </footer>
-                    </foot>
                 </vbox>
                 <!--Show a message in case there no upgrades  -->
                 <div if="${controller.upgradesSize == 0}" style="padding-right:500px">
