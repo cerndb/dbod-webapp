@@ -240,20 +240,29 @@ END;
 -- Approves an instance creation by changing the state of the isntance
 CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2, result OUT INTEGER)
 IS
+    instance_count INTEGER;
 BEGIN
     result := 1;
 
-    -- Insert FIM object row
-    INSERT INTO fim_ora_ma.dod_fim_objects (id, db_name)
-            VALUES (id_param, db_name_param);
+    -- If instance is not in database do nothing and return error
+    SELECT COUNT(*)
+            INTO instance_count
+            FROM dod_instances
+            WHERE db_name = db_name_param;
+    IF instance_count > 0
+    THEN
+        -- Insert FIM object row
+        INSERT INTO fim_ora_ma.dod_fim_objects (id, db_name)
+                VALUES (id_param, db_name_param);
 
-    -- Update instance status
-    UPDATE dod_instances
-        SET state = 'RUNNING'
-        WHERE db_name = db_name_param;
-    
-    -- Return 0 for success
-    result := 0;
+        -- Update instance status
+        UPDATE dod_instances
+            SET state = 'RUNNING'
+            WHERE db_name = db_name_param;
+
+        -- Return 0 for success
+        result := 0;
+    END IF;
 EXCEPTION
        WHEN NO_DATA_FOUND THEN
          RETURN;
@@ -439,32 +448,38 @@ END;
 CREATE OR REPLACE PROCEDURE check_ownership
 IS
     CURSOR instances IS
-        SELECT username, db_name
-        FROM dod_instances;
+        SELECT owner_login, internal_id
+        FROM fim_ora_ma.db_on_demand;
     user VARCHAR2 (32);
+    name VARCHAR2 (128);
 BEGIN
     FOR instance IN instances
     LOOP
-        SELECT owner_login INTO user
-            FROM fim_ora_ma.db_on_demand
-            WHERE internal_id = ( SELECT id
+        SELECT username, db_name INTO user, name
+            FROM dbondemand.dod_instances
+            WHERE db_name = ( SELECT db_name
                                     FROM fim_ora_ma.dod_fim_objects objects
-                                    WHERE objects.db_name = instance.db_name );
-        IF user <> instance.username THEN
-            change_owner (instance.db_name, instance.username, user);
+                                    WHERE objects.id = instance.internal_id );
+        IF user <> instance.owner_login THEN
+            dbondemand.change_owner(name, user, instance.owner_login);
         END IF;
     END LOOP;
 END;
 /
 
--- Add job to dbms_scheduler
+
+-- Add check ownership job to dbms_scheduler
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
     job_name             => 'DBOD_OWNERSHIP_CHECK',
     job_type             => 'PLSQL_BLOCK',
-    job_action           => 'BEGIN check_ownership(); END;',
+    job_action           => 'BEGIN dbondemand.check_ownership; END;',
     repeat_interval      => 'FREQ=MINUTELY;INTERVAL=10',
     enabled              =>  TRUE,
     comments             => 'Scheduled backup job for DB On Demand');
 END;
 /
+
+-- Grant rights to fim_ora_ma to execute procedures
+GRANT EXECUTE ON dbondemand.approve_instance TO fim_ora_ma;
+GRANT EXECUTE ON dbondemand.destroy_instance TO fim_ora_ma;
