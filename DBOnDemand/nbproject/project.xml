@@ -7,10 +7,6 @@
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <web-module-libraries>
                 <library dirs="200">
-                    <file>${libs.ZK_5.0.7.1_CE.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
                     <file>${libs.OracleJDBC_11.2_Java6.classpath}</file>
                 </library>
                 <library dirs="200">
@@ -23,6 +19,14 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.commons-logging-1.0.4.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${libs.CommonsLoggingAxis1.4.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${libs.ZK_5.0.10_CE.classpath}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
