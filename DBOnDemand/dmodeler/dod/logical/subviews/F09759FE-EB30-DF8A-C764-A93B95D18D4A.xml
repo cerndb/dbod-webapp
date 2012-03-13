@@ -3,7 +3,7 @@
    <createdBy>rgaspar</createdBy>
    <createdTime>2011-08-24 18:45:42 UTC</createdTime>
    <changedBy>root</changedBy>
-   <changedTime>2011-10-13 08:42:25 UTC</changedTime>
+   <changedTime>2012-03-13 09:49:08 UTC</changedTime>
    <autoRoute>false</autoRoute>
    <boxInbox>true</boxInbox>
    <showLegend>false</showLegend>
@@ -18,6 +18,9 @@
       </OView>
       <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="6BD31477-31FB-EC7D-0DFE-BFC3D581868E" otype="Entity" vid="C5EFCC46-1C70-8245-AC1E-4ADF1361F66D">
          <bounds x="396" y="87" width="265" height="124"/>
+      </OView>
+      <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="7AF06A35-24E6-77B3-6A38-D918431A6B17" otype="Entity" vid="F48E30E8-D828-FE43-CC2F-E7F26BB3A7F5">
+         <bounds x="416" y="272" width="180" height="79"/>
       </OView>
       <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="84C76706-F93A-0181-576B-5DEE04B4E68E" otype="Entity" vid="3C4C1B3C-347C-4F3D-F426-A826378F56F8">
          <bounds x="122" y="53" width="209" height="68"/>

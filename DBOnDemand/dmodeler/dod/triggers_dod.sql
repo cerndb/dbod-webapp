@@ -40,3 +40,41 @@ BEGIN
         WHERE username = :OLD.username AND db_name = :OLD.db_name;
 END;
 /
+
+-- Trigger to monitor failed jobs.
+CREATE OR REPLACE TRIGGER dod_jobs_monitor_fail
+BEFORE UPDATE OF state ON dod_jobs
+FOR EACH ROW
+DECLARE
+    message VARCHAR2 (1024);
+BEGIN
+    IF :NEW.state = 'FINISHED_FAIL'
+    THEN
+        message := '<html>
+                        <body>
+                            The execution of the following job has failed:
+                            <ul>
+                                <li><b>Username</b>: ' || :NEW.username || '</li>
+                                <li><b>DB Name</b>: ' || :NEW.db_name || '</li>
+                                <li><b>Command name</b>: ' || :NEW.command_name || '</li>
+                                <li><b>Type</b>: ' || :NEW.type || '</li>
+                                <li><b>Creation date</b>: ' || TO_CHAR(:NEW.creation_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
+                                <li><b>Completion date</b>: ' || TO_CHAR(:NEW.completion_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
+                                <li><b>Requester</b>: ' || :NEW.requester || '</li>
+                                <li><b>Admin action</b>: ' || :NEW.admin_action || '</li>
+                                <li><b>Requester</b>: ' || :NEW.requester || '</li>
+                                <li><b>State</b>: ' || :NEW.state || '</li>
+                            </ul>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: FAILED job on ' || :NEW.db_name,
+            message => message,
+            mime_type => 'text/html');
+
+        :NEW.email_sent := sysdate;
+    END IF;
+END;
+/

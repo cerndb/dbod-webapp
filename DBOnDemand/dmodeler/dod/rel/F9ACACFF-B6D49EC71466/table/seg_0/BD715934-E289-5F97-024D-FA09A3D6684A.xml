@@ -1,0 +1,100 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="BD715934-E289-5F97-024D-FA09A3D6684A" directorySegmentName="seg_0" name="dod_command_definition">
+   <createdBy>root</createdBy>
+   <createdTime>2012-01-26 13:10:53 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2012-01-26 13:10:53 UTC</changedTime>
+   <generatorID>84C76706-F93A-0181-576B-5DEE04B4E68E</generatorID>
+   <ownerDesignName>dod</ownerDesignName>
+   <pkName>pk_dod_command_definition</pkName>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Column</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <columns>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="command_name" id="B1D873C0-14C3-4987-D54E-650C18E0CFB0">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-26 13:10:53 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-26 13:10:53 UTC</changedTime>
+         <generatorID>2ABCBCD9-3F1D-6608-B173-A25552D747FB</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>64</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="type" id="7927510D-AEA1-F4BD-1A3F-78CD6F67BF26">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-26 13:10:53 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-26 13:10:53 UTC</changedTime>
+         <generatorID>BC62009E-189B-6B3D-F387-E54A72108C7B</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>64</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+      <Column class="oracle.dbtools.crest.model.design.relational.Column" name="exec" id="9B3C03EC-E838-9D23-490E-2FBB5833921E">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-26 13:10:53 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-26 13:10:53 UTC</changedTime>
+         <comment>/ORA/dbs01/syscontrol/projects/mysql/backup/backup_wrapper.sh -nopingdb -exec mysql_snapshot.pl(PARAM1) -snap dbnasg405:drupal03 (PARAM2) level_EXEC_SNAP drupal2(PARAM3)&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;/etc/init.d/syscontrol -i dfm.dbsrva201 DFM_volume_upload -toemail nas-oracle-infra@cern.ch</comment>
+         <generatorID>2FDAAC1E-6A6C-DC8D-29D7-3954F2451756</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>2048</dataTypeSize>
+         <previousColumn>false</previousColumn>
+      </Column>
+   </columns>
+   <indexes>
+      <ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="AC0C4672-2C25-C7EA-B91A-C63FBEF07929" name="pk_dod_command_definition">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-26 13:10:53 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-26 13:10:53 UTC</changedTime>
+         <generatorID>1B307EF9-4D9D-8D0F-4030-AE860B3C726C</generatorID>
+         <ownerDesignName>dod</ownerDesignName>
+         <pk>true</pk>
+         <indexState>Primary Constraint</indexState>
+         <indexColumnUsage>
+            <colUsage columnID="B1D873C0-14C3-4987-D54E-650C18E0CFB0"/>
+            <colUsage columnID="7927510D-AEA1-F4BD-1A3F-78CD6F67BF26"/>
+         </indexColumnUsage>
+      </ind_PK_UK>
+   </indexes>
+</Table>

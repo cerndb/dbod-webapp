@@ -3,7 +3,7 @@
    <createdBy>rgaspar</createdBy>
    <createdTime>2011-08-24 18:48:38 UTC</createdTime>
    <changedBy>root</changedBy>
-   <changedTime>2011-10-13 08:35:59 UTC</changedTime>
+   <changedTime>2012-03-13 09:47:53 UTC</changedTime>
    <ownerDesignName>dod</ownerDesignName>
    <pkName>dod_instances PK</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -163,6 +163,17 @@
          <logicalDatatype>LOGDT024</logicalDatatype>
          <dataTypeSize>1024</dataTypeSize>
       </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="version" id="7D7E49D5-613C-066A-FAAA-DF49E0190D8F">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-19 10:40:23 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-25 10:44:31 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+      </Attribute>
       <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="state" id="3074074B-4719-EB2E-23A4-B09AB115A8B0">
          <createdBy>rgaspar</createdBy>
          <createdTime>2011-08-24 19:48:23 UTC</createdTime>
@@ -193,7 +204,7 @@
          <createdBy>rgaspar</createdBy>
          <createdTime>2011-08-24 19:06:53 UTC</createdTime>
          <changedBy>root</changedBy>
-         <changedTime>2011-09-20 07:26:21 UTC</changedTime>
+         <changedTime>2012-01-31 13:56:33 UTC</changedTime>
          <ownerDesignName>dod</ownerDesignName>
          <pk>true</pk>
          <usedAttributes>

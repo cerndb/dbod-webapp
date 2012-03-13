@@ -3,7 +3,7 @@
    <createdBy>rgaspar</createdBy>
    <createdTime>2011-08-24 19:42:25 UTC</createdTime>
    <changedBy>root</changedBy>
-   <changedTime>2011-10-03 09:00:10 UTC</changedTime>
+   <changedTime>2012-03-13 09:49:07 UTC</changedTime>
    <ownerDesignName>dod</ownerDesignName>
    <pkName>PK_dod_user_actions</pkName>
    <adequatelyNormalized>NO</adequatelyNormalized>
@@ -166,6 +166,16 @@
          <use>1</use>
          <logicalDatatype>LOGDT024</logicalDatatype>
          <dataTypeSize>2048</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="email_sent" id="D50C86B0-D20A-4C38-B53E-017E8D20A3B2">
+         <createdBy>root</createdBy>
+         <createdTime>2012-03-13 09:48:30 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-03-13 09:49:07 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <nullsAllowed>true</nullsAllowed>
+         <use>1</use>
+         <logicalDatatype>LOGDT007</logicalDatatype>
       </Attribute>
    </attributes>
    <identifiers>

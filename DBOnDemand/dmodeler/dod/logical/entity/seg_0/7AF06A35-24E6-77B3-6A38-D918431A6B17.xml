@@ -1,0 +1,109 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" id="7AF06A35-24E6-77B3-6A38-D918431A6B17" directorySegmentName="seg_0" name="dod_upgrades">
+   <createdBy>root</createdBy>
+   <createdTime>2012-01-25 09:19:29 UTC</createdTime>
+   <changedBy>root</changedBy>
+   <changedTime>2012-01-31 13:56:55 UTC</changedTime>
+   <ownerDesignName>dod</ownerDesignName>
+   <pkName>dod_upgrades PK</pkName>
+   <adequatelyNormalized>NO</adequatelyNormalized>
+   <expectedVolumes>0</expectedVolumes>
+   <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+   <growthPercent>0</growthPercent>
+   <growthType>Year</growthType>
+   <maxVolumes>9999999</maxVolumes>
+   <minVolumes>0</minVolumes>
+   <normalForm>Third</normalForm>
+   <fonts>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Title</foType>
+         <fontStyle>1</fontStyle>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Attribute</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Datatype</foType>
+         <colorRGB>-16744448</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>PK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>FK Element</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>UK Element</foType>
+         <colorRGB>-16776961</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Not Null</foType>
+         <colorRGB>-65536</colorRGB>
+      </FontObject>
+      <FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+         <foType>Key</foType>
+         <colorRGB>-16777216</colorRGB>
+      </FontObject>
+   </fonts>
+   <attributes>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="db_type" id="5ABFAE09-5B74-D3F8-DB8C-BC8103B4D810">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-25 09:21:15 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-25 10:39:56 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="category" id="DBFF2022-31B2-0EC5-FCCF-3D60223F230F">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-25 09:20:58 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-25 10:39:58 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>32</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="version_from" id="69779D23-0528-DDAA-310D-2F39AFD1A2D2">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-25 09:21:51 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-25 10:40:00 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+      </Attribute>
+      <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="version_to" id="8F0E53A6-A86C-463E-FAA8-A80CB162E3D4">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-25 09:22:08 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-26 13:15:58 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <use>1</use>
+         <logicalDatatype>LOGDT024</logicalDatatype>
+         <dataTypeSize>128</dataTypeSize>
+      </Attribute>
+   </attributes>
+   <identifiers>
+      <identifier class="oracle.dbtools.crest.model.design.logical.CandidateKey" id="0EDA9BE3-7A73-968B-5C3D-520291F0F23E" name="pk_dod_upgrades">
+         <createdBy>root</createdBy>
+         <createdTime>2012-01-25 10:39:56 UTC</createdTime>
+         <changedBy>root</changedBy>
+         <changedTime>2012-01-31 13:56:52 UTC</changedTime>
+         <ownerDesignName>dod</ownerDesignName>
+         <pk>true</pk>
+         <usedAttributes>
+            <attributeRef>5ABFAE09-5B74-D3F8-DB8C-BC8103B4D810</attributeRef>
+            <attributeRef>DBFF2022-31B2-0EC5-FCCF-3D60223F230F</attributeRef>
+            <attributeRef>69779D23-0528-DDAA-310D-2F39AFD1A2D2</attributeRef>
+         </usedAttributes>
+      </identifier>
+   </identifiers>
+</Entity>

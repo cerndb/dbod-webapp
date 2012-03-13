@@ -77,7 +77,8 @@ CREATE TABLE dod_jobs
      admin_action INTEGER  NOT NULL , 
      state VARCHAR2 (32)  NOT NULL , 
      log CLOB , 
-     result VARCHAR2 (2048) 
+     result VARCHAR2 (2048) ,
+     email_sent DATE 
     ) 
 ;
 

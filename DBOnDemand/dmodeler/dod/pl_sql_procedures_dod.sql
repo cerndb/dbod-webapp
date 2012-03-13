@@ -467,16 +467,114 @@ BEGIN
 END;
 /
 
+-- Monitor jobs
+CREATE OR REPLACE PROCEDURE monitor_jobs
+IS
+    -- Jobs that are pending for more than 30 seconds and no job is running on that instance
+    CURSOR pending_jobs IS
+        SELECT *
+        FROM dbondemand.dod_jobs a
+        WHERE a.state = 'PENDING'
+            AND 30 <= (((SELECT sysdate FROM dual) - a.creation_date) * 86400)
+            AND 0 = (SELECT COUNT(*)
+                        FROM dbondemand.dod_jobs b
+                        WHERE a.db_name = b.db_name
+                            AND b.state = 'RUNNING')
+            AND a.email_sent IS NULL
+        FOR UPDATE OF a.email_sent;
+    -- Jobs that are running for more than 6 hours
+    CURSOR running_jobs IS
+        SELECT *
+        FROM dbondemand.dod_jobs
+        WHERE state = 'RUNNING'
+            AND 6 <= (((SELECT sysdate FROM dual) - creation_date) * 24)
+            AND email_sent IS NULL
+        FOR UPDATE OF email_sent;
+    -- Message to send
+    message VARCHAR2 (1024);
+BEGIN
+    FOR pending_job IN pending_jobs
+    LOOP
+        message := '<html>
+                        <body>
+                            The following job has been pending for more than 30 seconds:
+                            <ul>
+                                <li><b>Username</b>: ' || pending_job.username || '</li>
+                                <li><b>DB Name</b>: ' || pending_job.db_name || '</li>
+                                <li><b>Command name</b>: ' || pending_job.command_name || '</li>
+                                <li><b>Type</b>: ' || pending_job.type || '</li>
+                                <li><b>Creation date</b>: ' || TO_CHAR(pending_job.creation_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
+                                <li><b>Requester</b>: ' || pending_job.requester || '</li>
+                                <li><b>Admin action</b>: ' || pending_job.admin_action || '</li>
+                                <li><b>Requester</b>: ' || pending_job.requester || '</li>
+                                <li><b>State</b>: ' || pending_job.state || '</li>
+                            </ul>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: PENDING job on ' || pending_job.db_name,
+            message => message,
+            mime_type => 'text/html');
 
--- Add check ownership job to dbms_scheduler
+        UPDATE dbondemand.dod_jobs
+            SET email_sent = (SELECT sysdate FROM dual)
+            WHERE CURRENT OF pending_jobs;
+        
+    END LOOP;
+
+    FOR running_job IN running_jobs
+    LOOP
+        message := '<html>
+                        <body>
+                            The following job has been running for more than 6 hours:
+                            <ul>
+                                <li><b>Username</b>: ' || running_job.username || '</li>
+                                <li><b>DB Name</b>: ' || running_job.db_name || '</li>
+                                <li><b>Command name</b>: ' || running_job.command_name || '</li>
+                                <li><b>Type</b>: ' || running_job.type || '</li>
+                                <li><b>Creation date</b>: ' || TO_CHAR(running_job.creation_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
+                                <li><b>Requester</b>: ' || running_job.requester || '</li>
+                                <li><b>Admin action</b>: ' || running_job.admin_action || '</li>
+                                <li><b>Requester</b>: ' || running_job.requester || '</li>
+                                <li><b>State</b>: ' || running_job.state || '</li>
+                            </ul>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: RUNNING job on ' || running_job.db_name,
+            message => message,
+            mime_type => 'text/html');
+
+        UPDATE dbondemand.dod_jobs
+            SET email_sent = (SELECT sysdate FROM dual)
+            WHERE CURRENT OF running_jobs;
+        
+    END LOOP;
+END;
+/
+
+
+-- Add check_ownership and monitor_jobs to dbms_scheduler
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
-    job_name             => 'DBOD_OWNERSHIP_CHECK',
-    job_type             => 'PLSQL_BLOCK',
-    job_action           => 'BEGIN dbondemand.check_ownership; END;',
-    repeat_interval      => 'FREQ=MINUTELY;INTERVAL=10',
-    enabled              =>  TRUE,
-    comments             => 'Scheduled backup job for DB On Demand');
+        job_name             => 'DBOD_OWNERSHIP_CHECK',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.check_ownership; END;',
+        repeat_interval      => 'FREQ=MINUTELY;INTERVAL=10',
+        enabled              =>  TRUE,
+        comments             => 'Scheduled job to check for ownership changes on instances');
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name             => 'DBOD_MONITOR_JOBS',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.monitor_jobs; END;',
+        repeat_interval      => 'FREQ=MINUTELY;INTERVAL=5',
+        enabled              =>  TRUE,
+        comments             => 'Scheduled job to check for timed out jobs');
 END;
 /
 
