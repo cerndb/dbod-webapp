@@ -12,8 +12,11 @@ import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Foot;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Vbox;
 
 /**
@@ -86,6 +89,29 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
             grid.setRowRenderer(new OverviewGridRenderer());
             grid.getPagingChild().setMold("os");
         }
+        
+        displayOrHideAreas();
+    }
+    
+    /**
+     * Displays or hides certain areas when refreshing instances and upgrades
+     */
+    private void displayOrHideAreas () {
+        if (instancesSize > 0) {
+            ((Grid) getFellow("overviewGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
+            if (instancesSize > 10 && ((Grid) getFellow("overviewGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("footer")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("footer")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Grid) getFellow("overviewGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
+            ((Foot) getFellow("footer")).setStyle("display:none");
+        }
     }
 
     /**
@@ -104,6 +130,8 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         //Set the new instances
         Grid grid = (Grid) getFellow("overviewGrid");
         ((InstanceListModel)grid.getModel()).setInstances(instances);
+        
+        displayOrHideAreas();
     }
 
     /**
@@ -121,6 +149,20 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         Grid grid = (Grid) getFellow("overviewGrid");
         grid.setMold("default");
         Foot footer = (Foot) getFellow("footer");
-        footer.detach();
+        footer.setStyle("display:none");
+    }
+    
+    /**
+     * Filters instances according to the content on the filter fields.
+     */
+    public void filterInstances () {
+        Grid grid = (Grid) getFellow("overviewGrid");
+        ((InstanceListModel)grid.getModel()).filter(((Textbox)getFellow("dbNameFilter")).getValue(),
+                                                    ((Textbox)getFellow("usernameFilter")).getValue(),
+                                                    ((Textbox)getFellow("eGroupFilter")).getValue(),
+                                                    (String)((Combobox)getFellow("categoryFilter")).getSelectedItem().getValue(),
+                                                    ((Textbox)getFellow("projectFilter")).getValue(),
+                                                    (String)((Combobox)getFellow("dbTypeFilter")).getSelectedItem().getValue(),
+                                                    (String)((Combobox)getFellow("actionFilter")).getSelectedItem().getValue());
     }
 }

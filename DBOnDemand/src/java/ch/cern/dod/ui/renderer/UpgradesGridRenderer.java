@@ -2,6 +2,7 @@ package ch.cern.dod.ui.renderer;
 
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODUpgrade;
+import ch.cern.dod.ui.controller.AdminController;
 import ch.cern.dod.util.DODConstants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,7 @@ public class UpgradesGridRenderer implements RowRenderer {
             public void onEvent(Event event) {
                 try {
                     if (upgradeDAO.delete(upgrade)) {
-                        Executions.sendRedirect(DODConstants.PAGE_ADMIN);
+                        ((AdminController)row.getGrid().getRoot().getFellow("controller")).refreshInstances();
                     }
                     else {
                         showError(row, null, DODConstants.ERROR_DELETING_UPGRADE);

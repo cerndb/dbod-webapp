@@ -21,9 +21,13 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Foot;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
@@ -113,6 +117,47 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
             upgradesGrid.getPagingChild().setMold("os");
         }
+        
+        displayOrHideAreas();
+    }
+    
+    /**
+     * Displays or hides certain areas when refreshing instances and upgrades
+     */
+    private void displayOrHideAreas () {
+        if (instancesSize > 0) {
+            ((Hbox) getFellow("collectiveBtns")).setStyle("display:block");
+            ((Grid) getFellow("overviewGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
+            if (instancesSize > 10 && ((Grid) getFellow("overviewGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("footer")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("footer")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Hbox) getFellow("collectiveBtns")).setStyle("display:none");
+            ((Grid) getFellow("overviewGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
+            ((Foot) getFellow("footer")).setStyle("display:none");
+        }
+        
+        if (upgradesSize > 0) {
+            ((Grid) getFellow("upgradesGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:none");
+            if (upgradesSize > 10 && ((Grid) getFellow("upgradesGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("footerUpgrades")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Grid) getFellow("upgradesGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:block");
+            ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
+        }
     }
 
     /**
@@ -152,6 +197,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             Grid overviewGrid = (Grid) getFellow("overviewGrid");
             ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
         }
+        
+        displayOrHideAreas();
     }
 
     /**
@@ -175,25 +222,34 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void checkAll() {
         Checkbox checkAll = (Checkbox)getFellow("checkAll");
+        Grid grid = (Grid) getFellow("overviewGrid");
+        List<DODInstance> filtered = ((InstanceListModel)grid.getModel()).getFiltered();
         
         if (checkAll.isChecked()) {
-            //Add al elements to checklist
+            //Add all elements to checklist
             for (int i=0; i < instances.size(); i++) {
-                if (!checked.contains(instances.get(i))) {
+                if (!checked.contains(instances.get(i)) && filtered.contains(instances.get(i))) {
                     checked.add(instances.get(i));
                 }
             }
-            ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
-            ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
-            ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
-            ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
-            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
-            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
-            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
-            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
+            if (checked.size() > 0) {
+                ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
+                ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
+                ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
+                ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+                ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
+                ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
+                ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
+                ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
+            }
         }
         else {
-            checked.removeAll(checked);
+            //Remove al elements to checklist
+            for (int i=0; i < instances.size(); i++) {
+                if (checked.contains(instances.get(i)) && filtered.contains(instances.get(i))) {
+                    checked.remove(instances.get(i));
+                }
+            }
             ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
@@ -205,7 +261,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         
         //Re-render the list
-        Grid grid = (Grid) getFellow("overviewGrid");
         ((InstanceListModel)grid.getModel()).setInstances(instances);
     }
     
@@ -321,7 +376,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Grid grid = (Grid) getFellow("overviewGrid");
         grid.setMold("default");
         Foot footer = (Foot) getFellow("footer");
-        footer.detach();
+        footer.setStyle("display:none");
     }
     
     /**
@@ -331,7 +386,21 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Grid grid = (Grid) getFellow("upgradesGrid");
         grid.setMold("default");
         Foot footer = (Foot) getFellow("footerUpgrades");
-        footer.detach();
+        footer.setStyle("display:none");
+    }
+    
+    /**
+     * Filters instances according to the content on the filter fields.
+     */
+    public void filterInstances () {
+        Grid grid = (Grid) getFellow("overviewGrid");
+        ((InstanceListModel)grid.getModel()).filter(((Textbox)getFellow("dbNameFilter")).getValue(),
+                                                    ((Textbox)getFellow("usernameFilter")).getValue(),
+                                                    ((Textbox)getFellow("eGroupFilter")).getValue(),
+                                                    (String)((Combobox)getFellow("categoryFilter")).getSelectedItem().getValue(),
+                                                    ((Textbox)getFellow("projectFilter")).getValue(),
+                                                    (String)((Combobox)getFellow("dbTypeFilter")).getSelectedItem().getValue(),
+                                                    (String)((Combobox)getFellow("actionFilter")).getSelectedItem().getValue());
     }
     
     /**

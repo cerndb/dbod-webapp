@@ -250,7 +250,7 @@ public class AddUpgradeController extends Window {
             upgrade.setVersionFrom(versionFrom.getValue());
             upgrade.setVersionTo(versionTo.getValue());
             if (upgradeDAO.insert(upgrade)) {
-                Executions.sendRedirect(DODConstants.PAGE_ADMIN);
+                ((AdminController)this.getRoot().getFellow("controller")).refreshInstances();
             } else {
                 showError(DODConstants.ERROR_ADDING_UPGRADE);
             }
