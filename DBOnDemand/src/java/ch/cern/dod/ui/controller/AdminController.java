@@ -105,18 +105,14 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * with the instances obtained before composing.
      */
     public void afterCompose() {
-        if (instancesSize > 0) {
-            Grid overviewGrid = (Grid) getFellow("overviewGrid");
-            overviewGrid.setModel(new InstanceListModel(instances));
-            overviewGrid.setRowRenderer(new OverviewGridRenderer(checked));
-            overviewGrid.getPagingChild().setMold("os");
-        }
-        if (upgradesSize > 0) {
-            Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-            upgradesGrid.setModel(new UpgradesListModel(upgrades));
-            upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
-            upgradesGrid.getPagingChild().setMold("os");
-        }
+        Grid overviewGrid = (Grid) getFellow("overviewGrid");
+        overviewGrid.setModel(new InstanceListModel(instances));
+        overviewGrid.setRowRenderer(new OverviewGridRenderer(checked));
+        overviewGrid.getPagingChild().setMold("os");
+        Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
+        upgradesGrid.setModel(new UpgradesListModel(upgrades));
+        upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
+        upgradesGrid.getPagingChild().setMold("os");
         
         displayOrHideAreas();
     }
@@ -186,17 +182,12 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         
-        if (upgradesSize > 0) {
-            //Set the new upgrades
-            Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-            ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
-        }
+        //Set the new upgrades
+        Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
+        ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
         
-        //Set the new instances
-        if (instancesSize > 0) {
-            Grid overviewGrid = (Grid) getFellow("overviewGrid");
-            ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
-        }
+        Grid overviewGrid = (Grid) getFellow("overviewGrid");
+        ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
         
         displayOrHideAreas();
     }
