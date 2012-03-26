@@ -581,3 +581,103 @@ END;
 -- Grant rights to fim_ora_ma to execute procedures
 GRANT EXECUTE ON dbondemand.approve_instance TO fim_ora_ma;
 GRANT EXECUTE ON dbondemand.destroy_instance TO fim_ora_ma;
+
+
+-- Updates the DB name  of an instance
+CREATE OR REPLACE PROCEDURE change_db_name (old_instance IN VARCHAR2, new_instance IN VARCHAR2)
+IS
+    backup_count INTEGER;
+    backup_name VARCHAR2 (512);
+    backup_action VARCHAR2 (1024);
+    backup_interval VARCHAR2 (64);
+    backup_start_date DATE;
+    tape_count INTEGER;
+    tape_name VARCHAR2 (512);
+    tape_action VARCHAR2 (1024);
+    tape_interval VARCHAR2 (64);
+    tape_start_date DATE;
+BEGIN
+    -- Update instance username
+    UPDATE dod_instances
+        SET db_name = new_instance
+        WHERE db_name = old_instance;
+
+    -- Drop and create new automatic backups in case there were any
+    -- Initialise name
+    backup_name := old_instance || '_BACKUP';
+
+    -- Query for any schedule backups with the same name running at the moment
+    SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO backup_count, backup_action, backup_start_date, backup_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = backup_name
+            GROUP BY job_action, start_date, repeat_interval;
+            
+    -- If there is a scheduled backup
+    IF backup_count > 0
+    THEN
+            -- Quote name for object
+            backup_name := '"' || old_instance || '_BACKUP"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  backup_name,
+                    force      =>  TRUE);
+
+            -- Quote name for object
+            backup_name := '"' || new_instance || '_BACKUP"';
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => backup_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(backup_action, '''' || old_instance || '''', '''' || new_instance || ''''),
+                    start_date           => backup_start_date,
+                    repeat_interval      => backup_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup job for DB On Demand');
+    END IF;
+
+    -- Drop and create new backups to tape in case there were any
+    -- Initialise name
+    tape_name := old_instance || '_BACKUP_TO_TAPE';
+
+    -- Query for any schedule backups with the same name running at the moment
+    SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO tape_count, tape_action, tape_start_date, tape_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_name
+            GROUP BY job_action, start_date, repeat_interval;
+            
+    -- If there is a scheduled backups to tape
+    IF tape_count > 0
+    THEN
+            -- Quote name for object
+            tape_name := '"' || old_instance || '_BACKUP_TO_TAPE"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_name,
+                    force      =>  TRUE);
+
+            -- Quote name for object
+            tape_name := '"' || new_instance || '_BACKUP_TO_TAPE"';
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => tape_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(tape_action, '''' || old_instance || '''', '''' || new_instance || ''''),
+                    start_date           => tape_start_date,
+                    repeat_interval      => tape_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup job for DB On Demand');
+    END IF;
+EXCEPTION
+       WHEN NO_DATA_FOUND THEN
+         NULL;
+       WHEN OTHERS THEN
+         RAISE;
+         ROLLBACK;
+END;
+/
