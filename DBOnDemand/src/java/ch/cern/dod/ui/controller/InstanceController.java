@@ -523,15 +523,15 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     }
 
     /**
-     * Opens the config files window.
+     * Opens the files window.
      */
-    public void doConfig() {
+    public void doFiles() {
         try {
-            ConfigController configController = new ConfigController(instance, username, jobHelper);
+            FileController fileController = new FileController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
-            if (this.getRoot().getFellowIfAny(configController.getId()) == null) {
-                configController.setParent(this.getRoot());
-                configController.doModal();
+            if (this.getRoot().getFellowIfAny(fileController.getId()) == null) {
+                fileController.setParent(this.getRoot());
+                fileController.doModal();
             }
         } catch (InterruptedException ex) {
             showError(ex, DODConstants.ERROR_DISPATCHING_JOB);

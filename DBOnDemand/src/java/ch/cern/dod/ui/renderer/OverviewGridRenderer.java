@@ -4,7 +4,7 @@ import ch.cern.dod.ui.controller.BackupController;
 import ch.cern.dod.ui.controller.MonitoringController;
 import ch.cern.dod.ui.controller.RestoreController;
 import ch.cern.dod.db.entity.DODInstance;
-import ch.cern.dod.ui.controller.ConfigController;
+import ch.cern.dod.ui.controller.FileController;
 import ch.cern.dod.ui.controller.UpgradeController;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
@@ -246,18 +246,18 @@ public class OverviewGridRenderer implements RowRenderer {
         }
 
         //Config files button
-        final Toolbarbutton configButton = new Toolbarbutton();
-        configButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_TITLE));
-        configButton.setImage(DODConstants.IMG_CONFIG);
-        configButton.setParent(box);
-        configButton.addEventListener(Events.ON_CLICK, new EventListener() {
+        final Toolbarbutton filesButton = new Toolbarbutton();
+        filesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_TITLE));
+        filesButton.setImage(DODConstants.IMG_FILES);
+        filesButton.setParent(box);
+        filesButton.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
                 try {
-                    ConfigController configController = new ConfigController(instance, username, jobHelper);
+                    FileController fileController = new FileController(instance, username, jobHelper);
                     //Only show window if it is not already being diplayed
-                    if (row.getRoot().getFellowIfAny(configController.getId()) == null) {
-                        configController.setParent(row.getRoot());
-                        configController.doModal();
+                    if (row.getRoot().getFellowIfAny(fileController.getId()) == null) {
+                        fileController.setParent(row.getRoot());
+                        fileController.doModal();
                     }
                 } catch (InterruptedException ex) {
                     showError(row, ex, DODConstants.ERROR_DISPATCHING_JOB);
@@ -267,10 +267,10 @@ public class OverviewGridRenderer implements RowRenderer {
 
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
-            configButton.setDisabled(true);
-            configButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
+            filesButton.setDisabled(true);
+            filesButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
         } else {
-            configButton.setZclass(DODConstants.STYLE_BUTTON);
+            filesButton.setZclass(DODConstants.STYLE_BUTTON);
         }
 
         //Dispatch a backup button

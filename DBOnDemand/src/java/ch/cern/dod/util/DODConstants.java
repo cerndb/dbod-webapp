@@ -139,6 +139,12 @@ public class DODConstants {
     public static final String LABEL_VERSION_FROM = "versionFrom";
     public static final String LABEL_VERSION_TO = "versionTo";
     public static final String LABEL_DELETE_UPGRADE = "deleteUpgrade";
+    public static final String LABEL_FILES_TITLE = "filesTitle";
+    public static final String LABEL_SLOW_LOGS_TITLE = "slowLogsTitle";
+    public static final String LABEL_SLOW_LOGS_MESSAGE = "slowLogsMessage";
+    public static final String LABEL_SLOW_LOGS_DOWNLOAD = "slowLogsDownload";
+    public static final String LABEL_NO_SLOW_LOGS = "noSlowLogs";
+    
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -190,6 +196,8 @@ public class DODConstants {
     public static final String ERROR_VERSION_EMPTY = "errorVersionEmpty";
     public static final String ERROR_VERSION_LENGTH = "errorVersionLength";
     public static final String ERROR_OPENING_ADD_UPGRADE = "errorOpeningAddUpgrade";
+    public static final String ERROR_SLOW_LOG_FILE = "errorSlowLogFile";
+    public static final String ERROR_DOWNLOADING_SLOW_LOG_FILE = "errorDownloadingSlowLogFile";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";
@@ -210,6 +218,8 @@ public class DODConstants {
     public static final String IMG_CANCEL = "/img/cancel.png";
     public static final String IMG_ACCEPT = "/img/accept.png";
     public static final String IMG_WARNING = "/img/warning.png";
+    public static final String IMG_FILES = "/img/files.png";
+    public static final String IMG_SLOW_LOGS = "/img/logs.png";
 
     //Style classes
     public static final String STYLE_BUTTON = "button";

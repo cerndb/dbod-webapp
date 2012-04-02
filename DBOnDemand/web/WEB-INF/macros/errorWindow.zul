@@ -6,7 +6,7 @@
     <vbox width="100%" align="right">
         <hbox height="24px" align="bottom">
             <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="errorWindow.setVisible(false);"/>
-            <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="errorWindow.setVisible(false);"/>
+            <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="errorWindow.setVisible(false);"/>
         </hbox>
     </vbox>
 </window>

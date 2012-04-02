@@ -49,7 +49,7 @@
                         <toolbarbutton id="shutdown" image="/img/shutdown_big.png" onClick="controller.doShutdown();" tooltiptext="${c:l('jobActionSHUTDOWN')}"/>
                     </div>
                     <div width="52px" height="52px">
-                        <toolbarbutton id="config" image="/img/config_big.png" onClick="controller.doConfig();"  tooltiptext="${c:l('configTitle')}"/>
+                        <toolbarbutton id="config" image="/img/files_big.png" onClick="controller.doFiles();"  tooltiptext="${c:l('filesTitle')}"/>
                     </div>
                     <div width="52px" height="52px">
                         <toolbarbutton id="backup" image="/img/backup_big.png" onClick="controller.doBackup();" tooltiptext="${c:l('jobActionBACKUP')}"/>
