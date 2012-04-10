@@ -247,7 +247,7 @@ public class OverviewGridRenderer implements RowRenderer {
 
         //Config files button
         final Toolbarbutton filesButton = new Toolbarbutton();
-        filesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_TITLE));
+        filesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_FILES_TITLE));
         filesButton.setImage(DODConstants.IMG_FILES);
         filesButton.setParent(box);
         filesButton.addEventListener(Events.ON_CLICK, new EventListener() {
