@@ -231,6 +231,10 @@ public class DODInstance implements Comparable, Cloneable{
         clone.setState(new String(state));
         clone.setStatus(status);
         clone.setUsername(new String(username));
+        if (upgradeTo != null)
+            clone.setUpgradeTo(new String(upgradeTo));
+        if (version != null)
+            clone.setVersion(new String(version));
         return clone;
     }
     
