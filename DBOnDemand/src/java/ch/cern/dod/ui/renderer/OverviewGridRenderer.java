@@ -275,7 +275,7 @@ public class OverviewGridRenderer implements RowRenderer {
 
         //Dispatch a backup button
         final Toolbarbutton backupBtn = new Toolbarbutton();
-        backupBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_BACKUP));
+        backupBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_TITLE));
         backupBtn.setImage(DODConstants.IMG_BACKUP);
         backupBtn.setParent(box);
         backupBtn.addEventListener(Events.ON_CLICK, new EventListener() {
