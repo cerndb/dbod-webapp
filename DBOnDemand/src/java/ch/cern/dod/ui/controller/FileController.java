@@ -201,55 +201,57 @@ public class FileController extends Window {
         config.appendChild(configBox);
         mainBox.appendChild(config);
         
-        //Slow logs groupbox
-        Groupbox slowLogs = new Groupbox();
-        slowLogs.setClosable(false);
-        Caption slowLogsCap = new Caption();
-        slowLogsCap.setLabel(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_TITLE));
-        slowLogsCap.setImage(DODConstants.IMG_SLOW_LOGS);
-        slowLogs.appendChild(slowLogsCap);
-        //Slow logs message
-        Label slowLogsMessage = new Label(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_MESSAGE));
-        slowLogs.appendChild(slowLogsMessage);
+        //Slow logs groupbox (only if instance is MySQL)
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
+            Groupbox slowLogs = new Groupbox();
+            slowLogs.setClosable(false);
+            Caption slowLogsCap = new Caption();
+            slowLogsCap.setLabel(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_TITLE));
+            slowLogsCap.setImage(DODConstants.IMG_SLOW_LOGS);
+            slowLogs.appendChild(slowLogsCap);
+            //Slow logs message
+            Label slowLogsMessage = new Label(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_MESSAGE));
+            slowLogs.appendChild(slowLogsMessage);
 
-        //Box containing the file selector and buttons
-        Hbox slowLogsBox =  new Hbox();
-        slowLogsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
-        slowLogsBox.setAlign("bottom");
-        //Create combobox for file selector
-        slowLog = getSlowLogsCombobox();
-        slowLogsBox.appendChild(slowLog);
-        //Download slow logs file button
-        Div downloadSlowDiv = new Div();
-        downloadSlowDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_DOWNLOAD));
-        Toolbarbutton downloadSlowBtn = new Toolbarbutton();
-        downloadSlowBtn.setZclass(DODConstants.STYLE_BUTTON);
-        downloadSlowBtn.setImage(DODConstants.IMG_DOWNLOAD);
-        downloadSlowBtn.setParent(downloadSlowDiv);
-        downloadSlowBtn.setTarget("slowLogIFrame");
-        downloadSlowBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                //Check config file value
-                if (isSlowLogValid()) {
-                    //Obtain file
-                    String filePath = ((String)slowLog.getSelectedItem().getValue());
-                    String url = fileHelper.getServedFileURL(instance, filePath);
-                    if (url != null && !url.isEmpty()) {
-                            Executions.sendRedirect(url);
-                            slowLog.getFellow("filesWindow").detach();
-                    }else {
-                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING SLOW LOG: " + filePath);
-                        showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
+            //Box containing the file selector and buttons
+            Hbox slowLogsBox =  new Hbox();
+            slowLogsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
+            slowLogsBox.setAlign("bottom");
+            //Create combobox for file selector
+            slowLog = getSlowLogsCombobox();
+            slowLogsBox.appendChild(slowLog);
+            //Download slow logs file button
+            Div downloadSlowDiv = new Div();
+            downloadSlowDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_DOWNLOAD));
+            Toolbarbutton downloadSlowBtn = new Toolbarbutton();
+            downloadSlowBtn.setZclass(DODConstants.STYLE_BUTTON);
+            downloadSlowBtn.setImage(DODConstants.IMG_DOWNLOAD);
+            downloadSlowBtn.setParent(downloadSlowDiv);
+            downloadSlowBtn.setTarget("slowLogIFrame");
+            downloadSlowBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    //Check config file value
+                    if (isSlowLogValid()) {
+                        //Obtain file
+                        String filePath = ((String)slowLog.getSelectedItem().getValue());
+                        String url = fileHelper.getServedFileURL(instance, filePath);
+                        if (url != null && !url.isEmpty()) {
+                                Executions.sendRedirect(url);
+                                slowLog.getFellow("filesWindow").detach();
+                        }else {
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING SLOW LOG: " + filePath);
+                            showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
+                        }
+                    }
+                    else{
+                        slowLog.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
                     }
                 }
-                else{
-                    slowLog.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
-                }
-            }
-        });
-        slowLogsBox.appendChild(downloadSlowDiv);
-        slowLogs.appendChild(slowLogsBox);
-        mainBox.appendChild(slowLogs);
+            });
+            slowLogsBox.appendChild(downloadSlowDiv);
+            slowLogs.appendChild(slowLogsBox);
+            mainBox.appendChild(slowLogs);
+        }
 
         //Div for accept and cancel buttons
         Div buttonsDiv = new Div();
@@ -304,6 +306,12 @@ public class FileController extends Window {
             myCfg.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_MY_CNF));
             myCfg.setValue(new String[]{DODConstants.CONFIG_FILE_MY_CNF, DODConstants.CONFIG_PATH_MY_CNF});
             toret.appendChild(myCfg);
+        }
+        else {
+            Comboitem noConfig = new Comboitem();
+            noConfig.setLabel(Labels.getLabel(DODConstants.LABEL_NO_CONFIG_FILES));
+            noConfig.setValue(null);
+            toret.appendChild(noConfig);
         }
         toret.setSelectedIndex(0);
         return toret;

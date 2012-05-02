@@ -254,7 +254,7 @@
                 <row style="border:none;">
                     <label value="${c:l('dbType')}"/>
                     <combobox id="dbType" width="200px" mold="rounded" readonly="true">
-                        <!-- <comboitem label="${c:l('dbTypeORACLE')}" /> -->
+                        <comboitem label="${c:l('dbTypeORACLE')}" />
                         <comboitem label="${c:l('dbTypeMYSQL')}" />
                     </combobox>
                 </row>

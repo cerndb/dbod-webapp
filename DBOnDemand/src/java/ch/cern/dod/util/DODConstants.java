@@ -113,6 +113,7 @@ public class DODConstants {
     public static final String LABEL_BACKUP_NOW_TITLE = "backupNowTitle";
     public static final String LABEL_BACKUP_NOW = "backupNow";
     public static final String LABEL_INTRODUCTION = "introduction";
+    public static final String LABEL_NO_CONFIG_FILES = "noConfigFiles";
     public static final String LABEL_NO_JOBS = "noJobs";
     public static final String LABEL_NO_SNAPSHOTS = "noSnapshots";
     public static final String LABEL_CATEGORY = "category";

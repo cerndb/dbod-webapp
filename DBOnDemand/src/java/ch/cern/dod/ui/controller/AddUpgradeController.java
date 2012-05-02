@@ -109,10 +109,10 @@ public class AddUpgradeController extends Window {
         selectOneType.setValue(null);
         selectOneType.setLabel(Labels.getLabel(DODConstants.LABEL_SELECT_ONE));
         dbType.appendChild(selectOneType);
-//        Comboitem oracle = new Comboitem();
-//        oracle.setValue(DODConstants.DB_TYPE_ORACLE);
-//        oracle.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_ORACLE));
-//        dbType.appendChild(oracle);
+        Comboitem oracle = new Comboitem();
+        oracle.setValue(DODConstants.DB_TYPE_ORACLE);
+        oracle.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_ORACLE));
+        dbType.appendChild(oracle);
         Comboitem mySQL = new Comboitem();
         mySQL.setValue(DODConstants.DB_TYPE_MYSQL);
         mySQL.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_MYSQL));
