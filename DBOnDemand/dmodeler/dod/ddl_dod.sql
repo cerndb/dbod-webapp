@@ -51,6 +51,9 @@ CREATE TABLE dod_instances
      project VARCHAR2 (128) , 
      description VARCHAR2 (1024) , 
      version VARCHAR2 (128) , 
+     master VARCHAR2 (32) , 
+     slave VARCHAR2 (32) ,
+     shared_instance VARCHAR2 (128) ,
      state VARCHAR2 (32) , 
      status CHAR (1) 
     ) 
