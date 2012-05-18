@@ -173,7 +173,7 @@ sub getTimedOutJobs{
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual)-1/24"; 
+            and creation_date < (select sysdate from dual)-6/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
