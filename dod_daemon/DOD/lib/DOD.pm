@@ -99,14 +99,14 @@ sub jobDispatcher {
         # Remove dispatched jobs from joblist
         $logger->debug( "Cleaning Dispatched jobs from job list. #JOBS = $pendingjobs");
         @job_list = grep( ( $_->{'STATE'} =~ 'PENDING' ), @job_list);
-        $logger->debug( sprintf("Pending jobs after cleaning Dispatched jobs #JOBS = %d", $#job_list + 1) );
+        $logger->debug( sprintf("Pending jobs = %d", $#job_list + 1) );
         
         # Cleaning workers pool
         
-        my $running_threads = threads->list();
+        my @running_threads = threads->list();
         my @finished_threads;
         for my $worker (@workers){
-            unless (grep( $_ == $worker->tid(), $running_threads) ){
+            unless (grep( $_ == $worker->tid(), @running_threads) ){
                 $worker->join();    
                 push(@finished_threads, $worker);
             }
