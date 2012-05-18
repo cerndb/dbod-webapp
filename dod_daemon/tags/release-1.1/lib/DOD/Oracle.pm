@@ -1,4 +1,4 @@
-package DOD::Database;
+package DOD::Oracle;
 
 use strict;
 use warnings;
