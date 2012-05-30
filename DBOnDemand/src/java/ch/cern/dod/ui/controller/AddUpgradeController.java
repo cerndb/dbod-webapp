@@ -3,10 +3,10 @@ package ch.cern.dod.ui.controller;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
+import ch.cern.dod.util.FormValidations;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -242,7 +242,10 @@ public class AddUpgradeController extends Window {
      * Method executed when user accepts the form. A job is created and the window is detached.
      */
     private void doAccept() {
-        if (isDbTypeValid() & isCategoryValid() & isVersionFromValid() & isVersionToValid()) {
+        if (FormValidations.isDbTypeValid(dbType)
+                & FormValidations.isCategoryValid(category)
+                & FormValidations.isVersionValid(versionFrom)
+                & FormValidations.isVersionValid(versionTo)) {
             ///Create new upgrade and insert it
             DODUpgrade upgrade = new DODUpgrade();
             upgrade.setDbType((String)dbType.getSelectedItem().getValue());
@@ -263,105 +266,6 @@ public class AddUpgradeController extends Window {
      */
     private void doCancel() {
         this.detach();
-    }
-    
-    /**
-     * Validates DB type
-     * @return true if DB type is valid, false otherwise
-     */
-    private boolean isDbTypeValid() {
-        //If there are no previous errors
-        if (dbType.getErrorMessage() == null || dbType.getErrorMessage().isEmpty()) {
-            //Check if user has selected a value
-            if (dbType.getSelectedItem() == null || dbType.getSelectedItem().getValue() == null) {
-                dbType.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_TYPE_EMPTY));
-                return false;
-            }
-            //Check dbtype Oracle or MySQL
-            if (!dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_ORACLE)
-                    && !dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_MYSQL)) {
-                dbType.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_TYPE_LIST));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-    
-    /**
-     * Validates category
-     * @return true if category is valid, false otherwise
-     */
-    private boolean isCategoryValid() {
-        //If there are no previous errors
-        if (category.getErrorMessage() == null || category.getErrorMessage().isEmpty()) {
-            //Check if user has selected a value
-            if (category.getSelectedItem() == null || category.getSelectedItem().getValue() == null) {
-                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_EMPTY));
-                return false;
-            }
-            //Check dbtype Oracle or MySQL
-            if (!category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_OFFICIAL)
-                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_PERSONAL)
-                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_TEST)) {
-                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_LIST));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-    
-    /**
-     * Validates version from
-     * @return true if version is valid, false otherwise
-     */
-    private boolean isVersionFromValid() {
-        //If there are no previous errors
-        if (versionFrom.getErrorMessage() == null || versionFrom.getErrorMessage().isEmpty()) {
-            //Trim
-            versionFrom.setValue(versionFrom.getValue().trim());
-            //Check if user has entered a value
-            if (versionFrom.getValue().isEmpty()) {
-                versionFrom.setErrorMessage(Labels.getLabel(DODConstants.ERROR_VERSION_EMPTY));
-                return false;
-            }
-            //Check dbName length
-            if (versionFrom.getValue().length() > DODConstants.MAX_VERSION_LENGTH) {
-                versionFrom.setErrorMessage(Labels.getLabel(DODConstants.ERROR_VERSION_LENGTH));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-    
-    /**
-     * Validates version to
-     * @return true if version is valid, false otherwise
-     */
-    private boolean isVersionToValid() {
-        //If there are no previous errors
-        if (versionTo.getErrorMessage() == null || versionTo.getErrorMessage().isEmpty()) {
-            //Trim
-            versionTo.setValue(versionTo.getValue().trim());
-            //Check if user has entered a value
-            if (versionTo.getValue().isEmpty()) {
-                versionTo.setErrorMessage(Labels.getLabel(DODConstants.ERROR_VERSION_EMPTY));
-                return false;
-            }
-            //Check dbName length
-            if (versionTo.getValue().length() > DODConstants.MAX_VERSION_LENGTH) {
-                versionTo.setErrorMessage(Labels.getLabel(DODConstants.ERROR_VERSION_LENGTH));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
     }
 
     /**

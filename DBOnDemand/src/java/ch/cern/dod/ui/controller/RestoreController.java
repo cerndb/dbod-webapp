@@ -23,12 +23,12 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Grid;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -481,9 +481,9 @@ public class RestoreController extends Window {
             //Create new job and update instance status
             if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
                 //If we are in the overview page
-                if (time.getRoot().getFellowIfAny("overviewGrid") != null) {
-                    Grid grid = (Grid) time.getRoot().getFellow("overviewGrid");
-                    grid.setModel(grid.getListModel());
+                if (time.getRoot().getFellowIfAny("overviewTree") != null) {
+                    Tree tree = (Tree) time.getRoot().getFellow("overviewTree");
+                    tree.setModel(tree.getModel());
                 } //If we are in the instance page
                 else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");

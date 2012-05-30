@@ -14,6 +14,7 @@ import org.zkoss.zul.ListModelExt;
  * Represents a list of instances. It implements sorting to save it from query to query.
  * @author Daniel Gomez Blanco
  * @version 04/10/2011
+ * @deprecated A tree is used now.
  */
 public class InstanceListModel extends AbstractListModel implements ListModelExt {
     /**

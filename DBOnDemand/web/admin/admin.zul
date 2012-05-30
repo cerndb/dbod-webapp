@@ -32,7 +32,7 @@
         <!-- Scripts for monitoring -->
         <script src="https://www.google.com/jsapi"/>
         <script src="/scripts/graph.js"/>
-
+        
         <!-- Groupbox for the instances overview -->
         <groupbox width="1200px" mold="3d" closable="false">
             <caption label=" ">
@@ -53,15 +53,15 @@
             </caption>
             <vbox width="100%" align="right">
                 <vbox width="100%" align="left" xmlns:c="http://www.zkoss.org/2005/zk/client">
-                    <!-- Overview grid (only shown when there are instances) -->
-                    <grid id="overviewGrid" mold="paging" pageSize="10" style="display:none">
+                    <!-- Overview tree (only shown when there are instances) -->
+                    <tree id="overviewTree" mold="paging" pageSize="10" style="display:none" width="1185px">
                         <auxhead sclass="category-center">
                             <auxheader colspan="1">
                             </auxheader>
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="dbNameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="110px" />
+                                    <textbox id="dbNameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -126,32 +126,32 @@
                                 </hbox>
                             </auxheader>
                         </auxhead>
-                        <columns>
-                            <column width="40px">
-                                <checkbox id="checkAll" onCheck="controller.checkAll()"/>
-                            </column>
-                            <column label="${c:l('dbName')}" sort="auto(dbName)" width="150px"/>
-                            <column label="${c:l('username')}" sort="auto(username)" width="90px"/>
-                            <column label="${c:l('eGroup')}" sort="auto(eGroup)" width="150px"/>
-                            <column label="${c:l('category')}" sort="auto(category)" width="65px"/>
-                            <column label="${c:l('project')}" sort="auto(project)" width="85px"/>
-                            <column label="${c:l('creationDate')}" sort="auto(creationDate)" width="90px"/>
-                            <column label="${c:l('expiryDate')}" sort="auto(expiryDate)" width="80px"/>
-                            <column label="${c:l('dbType')}" sort="auto(dbType)" width="65px"/>
-                            <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="60px"/>
-                            <column label="${c:l('noConn')}" sort="auto(noConnections)" width="65px"/>
-                            <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
-                            <column label="${c:l('actions')}" width="205px" align="center"/>
-                        </columns>
-                        <foot id="footer" style="display:none">
-                            <footer span="12">
+                        <treecols>
+                            <treecol width="70px">
+                                <checkbox id="checkAll" onCheck="controller.checkAll()" style="margin-left:15px"/>
+                            </treecol>
+                            <treecol label="${c:l('dbName')}" width="120px"/>
+                            <treecol label="${c:l('username')}" width="90px"/>
+                            <treecol label="${c:l('eGroup')}"  width="150px"/>
+                            <treecol label="${c:l('category')}" width="65px"/>
+                            <treecol label="${c:l('project')}" width="85px"/>
+                            <treecol label="${c:l('creationDate')}" width="90px"/>
+                            <treecol label="${c:l('expiryDate')}" width="80px"/>
+                            <treecol label="${c:l('dbType')}" width="65px"/>
+                            <treecol label="${c:l('dbSize')}" width="60px"/>
+                            <treecol label="${c:l('noConn')}" width="65px"/>
+                            <treecol label="${c:l('state')}" width="40px" align="center"/>
+                            <treecol label="${c:l('actions')}" align="center"/>
+                        </treecols>
+                        <treefoot id="footer" style="display:none">
+                            <treefooter span="12">
                                  <hbox height="24px" width="300px" align="bottom">
                                     <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
                                     <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
                                 </hbox>
-                            </footer>
-                        </foot>
-                    </grid>
+                            </treefooter>
+                        </treefoot>
+                    </tree>
                 </vbox>
                 <!--Show a message in case there no instances  -->
                 <div id="emptyInstancesMsg" style="display:none">
@@ -257,6 +257,21 @@
                         <comboitem label="${c:l('dbTypeORACLE')}" />
                         <comboitem label="${c:l('dbTypeMYSQL')}" />
                     </combobox>
+                </row>
+                <!-- Version -->
+                <row style="border:none;">
+                    <label value="${c:l('version')}" />
+                    <textbox id="version" width="200px"/>
+                </row>
+                <!-- Master -->
+                <row style="border:none;">
+                    <label value="${c:l('master')}" />
+                    <textbox id="master" width="200px"/>
+                </row>
+                <!-- Shared instance -->
+                <row style="border:none;">
+                    <label value="${c:l('sharedInstance')}" />
+                    <textbox id="sharedInstance" width="200px"/>
                 </row>
                 <!-- DB size -->
                 <row style="border:none;">

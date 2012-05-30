@@ -8,15 +8,15 @@ import ch.cern.dod.db.entity.DODJob;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
+import ch.cern.dod.util.FormValidations;
 import ch.cern.dod.util.JobHelper;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.xml.rpc.ServiceException;
 import org.apache.axis.AxisFault;
@@ -69,6 +69,14 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     DODInstance instance;
     /**
+     * Master (in case this instance is a slave).
+     */
+    DODInstance master;
+    /**
+     * Slave (in case this instance is a master).
+     */
+    DODInstance slave;
+    /**
      * List of jobs performed on this instance.
      */
     List<DODJob> jobs;
@@ -106,37 +114,64 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Method executed before composing the page. It instantiates the necessary attributes.
      */
     public void beforeCompose() {
-        //Get username and adminMode from headers
-        Execution execution = Executions.getCurrent();
-        username = execution.getHeader(DODConstants.ADFS_LOGIN);
-        String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
-        Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
-        admin = adminMode.booleanValue();
-        
-        //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
-        fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
-        String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
-        if (userCCIDText != null && !userCCIDText.isEmpty())
-            userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
-        else
-            userCCID = new Long(0);
-        
-        //Get instance and amdmin mode from session attributes
+        //Get instance
         instance = (DODInstance) Sessions.getCurrent().getAttribute(DODConstants.INSTANCE);
-        jobHelper = new JobHelper(admin);
-        dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
-        dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);
-        upgradeDAO = new DODUpgradeDAO();
-        instanceDAO = new DODInstanceDAO();
-        jobDAO = new DODJobDAO();
-        eGroupHelper = new EGroupHelper(wsUser, wsPswd);
-        
+        if (instance != null) {
+            //Get username and adminMode from headers
+            Execution execution = Executions.getCurrent();
+            username = execution.getHeader(DODConstants.ADFS_LOGIN);
+            String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
+            Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
+            admin = adminMode.booleanValue();
+
+            //Get user and password for the web services account
+            String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
+            String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+            fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
+            String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
+            if (userCCIDText != null && !userCCIDText.isEmpty())
+                userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
+            else
+                userCCID = new Long(0);
+
+            //Get instance and amdmin mode from session attributes
+            jobHelper = new JobHelper(admin);
+            dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
+            dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);
+            upgradeDAO = new DODUpgradeDAO();
+            instanceDAO = new DODInstanceDAO();
+            jobDAO = new DODJobDAO();
+            eGroupHelper = new EGroupHelper(wsUser, wsPswd);
+
+            //Load instance
+            getInstanceInfo();
+        }
+    }
+    
+    /**
+     * Gets the information of the current instance from the DB.
+     */
+    private void getInstanceInfo () {
         //Select upgrades
         upgrades = upgradeDAO.selectAll();
         //Query the database for the most recent version of this instance
-        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
+        instance = instanceDAO.selectByDbName(instance.getDbName(), upgrades);
+        
+        //Load master and slave
+        if (instance != null) {
+            if (instance.getMaster() != null && !instance.getMaster().isEmpty())
+                master = instanceDAO.selectByDbName(instance.getMaster(), upgrades);
+            else
+                master = null;
+            if (instance.getSlave() != null && !instance.getSlave().isEmpty())
+                slave = instanceDAO.selectByDbName(instance.getSlave(), upgrades);
+            else
+                slave = null;
+        }
+        else {
+            master = null;
+            slave = null;
+        }
     }
 
     /**
@@ -149,9 +184,17 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         ((Datebox) getFellow("expiryDateEdit")).setTimeZonesReadonly(true);
         ((Textbox) getFellow("projectEdit")).setMaxlength(DODConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(DODConstants.MAX_DESCRIPTION_LENGTH);
+        if (admin) {
+            ((Textbox) getFellow("noConnectionsEdit")).setMaxlength(String.valueOf(DODConstants.MAX_NO_CONNECTIONS).length());
+            ((Textbox) getFellow("dbSizeEdit")).setMaxlength(String.valueOf(DODConstants.MAX_DB_SIZE).length());
+            ((Textbox) getFellow("versionEdit")).setMaxlength(DODConstants.MAX_VERSION_LENGTH);
+            ((Textbox) getFellow("sharedInstanceEdit")).setMaxlength(DODConstants.MAX_SHARED_INSTANCE_LENGTH);
+        }
 
         //Load instance info if necessary
         if (instance != null) {
+            //Display or hide areas
+            displayOrHideAreas();
             //Load information for this instance
             loadInstanceInfo();
             //Load buttons
@@ -159,6 +202,27 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Load jobs
             loadJobs();
         }
+    }
+    
+    /**
+     * Displays or hides areas in the page depending on the instance information.
+     */
+    private void displayOrHideAreas () {
+        //Master area
+        if (instance.getMaster() != null && !instance.getMaster().isEmpty())
+            ((Hbox) getFellow("masterArea")).setVisible(true);
+        else
+            ((Hbox) getFellow("masterArea")).setVisible(false);
+        //Slave area
+        if (instance.getSlave() != null && !instance.getSlave().isEmpty())
+            ((Hbox) getFellow("slaveArea")).setVisible(true);
+        else
+            ((Hbox) getFellow("slaveArea")).setVisible(false);
+        //Shared instance area
+        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
+            ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
+        else
+            ((Hbox) getFellow("sharedInstanceArea")).setVisible(false);
     }
     
     /**
@@ -173,11 +237,13 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Refreshes the info for this instance.
      */
     public void refreshInfo () {
-        //Select upgrades
-        upgrades = upgradeDAO.selectAll();
-        //Query the database for the most recent version of this instance
-        instance = instanceDAO.selectById(instance.getUsername(), instance.getDbName(), upgrades);
+        //Refresh instance
+        getInstanceInfo();
+        
+        //Refresh information
         if (instance != null) {
+            //Display or hide areas
+            displayOrHideAreas();
             //Load information for this instance
             loadInstanceInfo();
             //Load buttons
@@ -235,6 +301,26 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         } else {
             ((Label) getFellow("noConnections")).setValue("-");
         }
+        
+        //Version (if any)
+        if (instance.getVersion() != null && !instance.getVersion().isEmpty()) {
+            ((Label) getFellow("version")).setValue(instance.getVersion());
+        } else {
+            ((Label) getFellow("version")).setValue("-");
+        }
+        
+        //Master (if any)
+        if (instance.getMaster() != null && !instance.getMaster().isEmpty()) {
+            ((Label) getFellow("master")).setValue(instance.getMaster());
+        }
+        //Slave (if any)
+        if (instance.getSlave() != null && !instance.getSlave().isEmpty()) {
+            ((Label) getFellow("slave")).setValue(instance.getSlave());
+        }
+        //Shared instance (if any)
+        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
+            ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
+        }
 
         //Description (if any)
         if (instance.getDescription() != null && !instance.getDescription().isEmpty()) {
@@ -287,6 +373,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));
             if (instance.getNoConnections() > 0)
                 ((Textbox) getFellow("noConnectionsEdit")).setValue(String.valueOf(instance.getNoConnections()));
+            if (instance.getVersion() != null && !instance.getVersion().isEmpty())
+                ((Textbox) getFellow("versionEdit")).setValue(String.valueOf(instance.getVersion()));
+            if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
+                ((Textbox) getFellow("sharedInstanceEdit")).setValue(String.valueOf(instance.getSharedInstance()));
         }
     }
 
@@ -631,7 +721,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         else {
             clone.setState(DODConstants.INSTANCE_STATE_RUNNING);
         }
-        if (instanceDAO.update(instance, clone) > 0) {
+        if (instanceDAO.update(clone) > 0) {
             instance = clone;
             loadInstanceInfo();
             loadButtons();
@@ -647,7 +737,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void checkAndEditEGroup() {
         //Check for errors in form
-        if (isEGroupValid()) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")))) {
             //If there is an egroup
             if(((Textbox) getFellow("eGroupEdit")).getValue() != null && !((Textbox) getFellow("eGroupEdit")).getValue().isEmpty()) {
                 //Check if e-group exists
@@ -690,7 +780,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void editEGroup(boolean eGroupExists) {
         //Check for errors in form
-        if (isEGroupValid()) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")))) {
             try {
                 boolean eGroupCreated = false;
                 //If the egroup does not exist create it
@@ -704,7 +794,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     //Clone the instance and override eGroup
                     DODInstance clone = instance.clone();
                     clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
-                    if (instanceDAO.update(instance, clone) > 0) {
+                    if (instanceDAO.update(clone) > 0) {
                         instance = clone;
                         if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
                             ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
@@ -736,11 +826,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the project of this instance.
      */
     public void editProject() {
-        if (isProjectValid()) {
+        if (FormValidations.isProjectValid(((Textbox) getFellow("projectEdit")))) {
             //Clone the instance and override project
             DODInstance clone = instance.clone();
             clone.setProject(((Textbox) getFellow("projectEdit")).getValue());
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 if (instance.getProject() != null && !instance.getProject().isEmpty())
                     ((Label) getFellow("project")).setValue(instance.getProject());
@@ -759,11 +849,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the expiry date of this instance.
      */
     public void editExpiryDate() {
-        if (isExpiryDateValid()) {
+        if (FormValidations.isExpiryDateValid((Datebox) getFellow("expiryDateEdit"))) {
             //Clone the instance and override expiry date
             DODInstance clone = instance.clone();
             clone.setExpiryDate(((Datebox) getFellow("expiryDateEdit")).getValue());
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 if (instance.getExpiryDate() != null)
                     ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
@@ -782,11 +872,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the description of this instance.
      */
     public void editDescription() {
-        if (isDescriptionValid()) {
+        if (FormValidations.isDescriptionValid((Textbox) getFellow("descriptionEdit"))) {
             //Clone the instance and override description
             DODInstance clone = instance.clone();
             clone.setDescription(((Textbox) getFellow("descriptionEdit")).getValue());
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 if (instance.getDescription() != null && !instance.getDescription().isEmpty())
                     ((Label) getFellow("description")).setValue(instance.getDescription());
@@ -805,11 +895,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the dbSize of this instance.
      */
     public void editDbSize() {
-        if (isDbSizeValid()) {
+        if (FormValidations.isDbSizeValid((Textbox) getFellow("dbSizeEdit"))) {
             //Clone the instance and override dbSize
             DODInstance clone = instance.clone();
             clone.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSizeEdit")).getValue()));
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 ((Label) getFellow("dbSize")).setValue(String.valueOf(instance.getDbSize()) + " GB");
                 ((Hbox) getFellow("dbSizeEditBox")).setVisible(false);
@@ -825,14 +915,14 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the noConnections of this instance.
      */
     public void editNoConnections() {
-        if (isNoConnectionsValid()) {
+        if (FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnectionsEdit"))) {
             //Clone the instance and override noConnections
             DODInstance clone = instance.clone();
             if (!((Textbox) getFellow("noConnectionsEdit")).getValue().isEmpty())
                 clone.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnectionsEdit")).getValue()));
             else
                 clone.setNoConnections(0);
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 if (instance.getNoConnections() > 0)
                     ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
@@ -851,11 +941,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Edits the category of this instance.
      */
     public void editCategory() {
-        if (isCategoryValid()) {
+        if (FormValidations.isCategoryValid((Combobox) getFellow("categoryEdit"))) {
             //Clone the instance and override dbSize
             DODInstance clone = instance.clone();
             clone.setCategory((String)((Combobox) getFellow("categoryEdit")).getSelectedItem().getValue());
-            if (instanceDAO.update(instance, clone) > 0) {
+            if (instanceDAO.update(clone) > 0) {
                 instance = clone;
                 ((Label) getFellow("category")).setValue(Labels.getLabel(DODConstants.LABEL_CATEGORY + instance.getCategory()));
                 ((Hbox) getFellow("categoryEditBox")).setVisible(false);
@@ -866,196 +956,112 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
         }
     }
-
+    
     /**
-     * Validates e-Group name
-     * @return true if e-Group name is valid, false otherwise
+     * Edits the database version.
      */
-    private boolean isEGroupValid() {
-        Textbox eGroup = (Textbox) getFellow("eGroupEdit");
-        //If there are no previous errors
-        if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
-            if (eGroup.getText().length() > 0) {
-                //Trim and lowercase
-                eGroup.setValue(eGroup.getValue().trim().toLowerCase());
-                //Check eGroup length
-                if (eGroup.getText().length() > DODConstants.MAX_E_GROUP_LENGTH) {
-                    eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_LENGTH));
-                    return false;
-                }
-                //Check if egroup name contains a dash
-                if (!eGroup.getValue().contains("-")) {
-                    eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_DASH));
-                    return false;
-                }
-                //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
-                if (!Pattern.matches("[\\da-zA-Z\\.\\-_]*", eGroup.getValue())) {
-                    eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CHARS));
-                    return false;
-                }
+    public void editVersion() {
+        if (FormValidations.isVersionValid((Textbox) getFellow("versionEdit"))) {
+            //Clone the instance and override version
+            DODInstance clone = instance.clone();
+            clone.setVersion(((Textbox) getFellow("versionEdit")).getValue());
+            if (instanceDAO.update(clone) > 0) {
+                instance = clone;
+                if (instance.getVersion() != null && !instance.getVersion().isEmpty())
+                    ((Label) getFellow("version")).setValue(instance.getVersion());
+                else
+                    ((Label) getFellow("version")).setValue("-");
+                ((Hbox) getFellow("versionEditBox")).setVisible(false);
+                ((Hbox) getFellow("versionBox")).setVisible(true);
+            }
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
             }
         }
-        else
-            return false;
-        return true;
-    }
-
-    /**
-     * Validates expiry date
-     * @return true if expiry date is valid, false otherwise
-     */
-    private boolean isExpiryDateValid() {
-        Datebox expiryDate = (Datebox) getFellow("expiryDateEdit");
-        //If there are no previous errors
-        if (expiryDate.getErrorMessage() == null || expiryDate.getErrorMessage().isEmpty()) {
-            //If the user has entered a value
-            if (!expiryDate.getText().isEmpty()) {
-                //Check valid date
-                if (expiryDate.getValue() == null) {
-                    expiryDate.setErrorMessage(Labels.getLabel(DODConstants.ERROR_EXPIRY_DATE_FORMAT));
-                    return false;
-                }
-                //Check if it is a future date
-                Date now = new Date();
-                if (expiryDate.getValue().compareTo(now) <= 0) {
-                    expiryDate.setErrorMessage(Labels.getLabel(DODConstants.ERROR_EXPIRY_DATE_FUTURE));
-                    return false;
-                }
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-
-    /**
-     * Validates project
-     * @return true if project is valid, false otherwise
-     */
-    private boolean isProjectValid() {
-        Textbox project = (Textbox) getFellow("projectEdit");
-        //If there are no previous errors
-        if (project.getErrorMessage() == null || project.getErrorMessage().isEmpty()) {
-            //Trim
-            project.setValue(project.getValue().trim());
-            //Check description length
-            if (project.getValue().length() > DODConstants.MAX_PROJECT_LENGTH) {
-                project.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PROJECT_LENGTH));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-
-    /**
-     * Validates description
-     * @return true if description is valid, false otherwise
-     */
-    private boolean isDescriptionValid() {
-        Textbox description = (Textbox) getFellow("descriptionEdit");
-        //If there are no previous errors
-        if (description.getErrorMessage() == null || description.getErrorMessage().isEmpty()) {
-            //Trim
-            description.setValue(description.getValue().trim());
-            //Check description length
-            if (description.getValue().length() > DODConstants.MAX_DESCRIPTION_LENGTH) {
-                description.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DESCRIPTION_LENGTH));
-                return false;
-            }
-        }
-        else
-            return false;
-        return true;
     }
     
     /**
-     * Validates category
-     * @return true if category is valid, false otherwise
+     * Edits the shared instance.
      */
-    private boolean isCategoryValid() {
-        Combobox category = (Combobox) getFellow("categoryEdit");
-        //If there are no previous errors
-        if (category.getErrorMessage() == null || category.getErrorMessage().isEmpty()) {
-            //Check if user has selected a value
-            if (category.getSelectedItem() == null) {
-                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_EMPTY));
-                return false;
+    public void editSharedInstance() {
+        if (FormValidations.isSharedInstanceValid((Textbox) getFellow("sharedInstanceEdit"), null)) {
+            //Clone the instance and override sharedInstance
+            DODInstance clone = instance.clone();
+            clone.setSharedInstance(((Textbox) getFellow("sharedInstanceEdit")).getValue());
+            if (instanceDAO.update(clone) > 0) {
+                instance = clone;
+                if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
+                    ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
+                else
+                    ((Label) getFellow("sharedInstance")).setValue("-");
+                ((Hbox) getFellow("sharedInstanceEditBox")).setVisible(false);
+                ((Hbox) getFellow("sharedInstanceBox")).setVisible(true);
             }
-            //Check dbtype Oracle or MySQL
-            if (!category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_OFFICIAL)
-                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_PERSONAL)
-                    && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_TEST)) {
-                category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_LIST));
-                return false;
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
             }
         }
-        else
-            return false;
-        return true;
     }
     
     /**
-     * Validates DB size
-     * @return true if DB size is valid, false otherwise
+     * Swaps master and slave instances.
      */
-    private boolean isDbSizeValid() {
-        Textbox dbSize = (Textbox) getFellow("dbSizeEdit");
-        //If there are no previous errors
-        if (dbSize.getErrorMessage() == null || dbSize.getErrorMessage().isEmpty()) {
-            //Trim
-            dbSize.setValue(dbSize.getValue().trim());
-            //Check if user has entered a value
-            if (dbSize.getValue().isEmpty()) {
-                dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_EMPTY));
-                return false;
+    public void swapMasterSlave() {
+        //If instance is a master
+        if (instance.getSlave() != null && !instance.getSlave().isEmpty() && slave != null) {
+            //Clone instance and slave
+            DODInstance clone = instance.clone();
+            DODInstance slaveClone = slave.clone();
+            //Set slave to master of this instance
+            clone.setMaster(slave.getDbName());
+            clone.setSlave(null);
+            //Set this instance as slave of the master
+            slaveClone.setMaster(null);
+            slaveClone.setSlave(instance.getDbName());
+            ArrayList<DODInstance> clones = new ArrayList<DODInstance>();
+            clones.add(clone);
+            clones.add(slaveClone);
+            if (instanceDAO.update(clones) > 0) {
+                instance = clone;
+                master = slaveClone;
+                slave = null;
+                ((Hbox) getFellow("masterArea")).setVisible(true);
+                ((Hbox) getFellow("slaveArea")).setVisible(false);
+                ((Label) getFellow("master")).setValue(instance.getMaster());
+                ((Label) getFellow("slave")).setValue(null);
             }
-            try {
-                Integer size = Integer.valueOf(dbSize.getText());
-                //Check dbName length
-                if (size <= 0 || size > DODConstants.MAX_DB_SIZE) {
-                    dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
-                    return false;
-                }
-            } catch (NumberFormatException ex) {
-                dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
             }
         }
-        else
-            return false;
-        return true;
-    }
-
-    /**
-     * Validates NO Connections
-     * @return true if NO Connections is valid, false otherwise
-     */
-    private boolean isNoConnectionsValid() {
-        Textbox noConnections = (Textbox) getFellow("noConnectionsEdit");
-        //If there are no previous errors
-        if (noConnections.getErrorMessage() == null || noConnections.getErrorMessage().isEmpty()) {
-            //Trim
-            noConnections.setValue(noConnections.getValue().trim());
-            //Check only if user has entered a value
-            if (!noConnections.getValue().isEmpty()) {
-                try {
-                    int noConn = Integer.valueOf(noConnections.getText()).intValue();
-                    //Check dbName length
-                    if (noConn <= 0 || noConn > DODConstants.MAX_NO_CONNECTIONS) {
-                        noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
-                        return false;
-                    }
-                } catch (NumberFormatException ex) {
-                    noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
-                }
+        //If instance is a slave
+        else if (instance.getMaster() != null && !instance.getMaster().isEmpty() && master != null) {
+            //Clone instance and slave
+            DODInstance clone = instance.clone();
+            DODInstance masterClone = master.clone();
+            //set master as slave of this instance
+            clone.setSlave(master.getDbName());
+            clone.setMaster(null);
+            //Set this instance as slave of the master
+            masterClone.setSlave(null);
+            masterClone.setMaster(instance.getDbName());
+            ArrayList<DODInstance> clones = new ArrayList<DODInstance>();
+            clones.add(clone);
+            clones.add(masterClone);
+            if (instanceDAO.update(clones) > 0) {
+                instance = clone;
+                slave = masterClone;
+                master = null;
+                ((Hbox) getFellow("masterArea")).setVisible(false);
+                ((Hbox) getFellow("slaveArea")).setVisible(true);
+                ((Label) getFellow("master")).setValue(null);
+                ((Label) getFellow("slave")).setValue(instance.getSlave());
+            }
+            else {
+                showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
             }
         }
-        else
-            return false;
-        return true;
     }
-
 
     /**
      * Displays an error window for the error code provided.

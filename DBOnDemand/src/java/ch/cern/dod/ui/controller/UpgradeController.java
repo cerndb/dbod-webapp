@@ -1,8 +1,12 @@
 package ch.cern.dod.ui.controller;
 
+import ch.cern.dod.db.dao.DODInstanceDAO;
+import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -11,11 +15,11 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Grid;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -37,6 +41,11 @@ public class UpgradeController extends Window {
      * User authenticated in the system at the moment.
      */
     private String username;
+    /**
+     * List of instances shared wit the current one.
+     */
+    private List<DODInstance> sharedInstances;
+
 
     /**
      * Constructor for this window.
@@ -53,6 +62,15 @@ public class UpgradeController extends Window {
         this.instance = inst;
         this.jobHelper = jobHelper;
         this.username = user;
+        
+        //Get shared instances
+        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
+            DODUpgradeDAO upgradeDAO = new DODUpgradeDAO();
+            List<DODUpgrade> upgrades = upgradeDAO.selectAll();
+            DODInstanceDAO instanceDAO = new DODInstanceDAO();
+            sharedInstances = instanceDAO.selectSharedInstances(instance.getSharedInstance(), upgrades);
+            sharedInstances.remove(instance);
+        }
 
         //Basic window properties
         this.setId("upgradeWindow");
@@ -73,8 +91,19 @@ public class UpgradeController extends Window {
         messageBox.setAlign("center");
         messageBox.appendChild(new Image(DODConstants.IMG_WARNING));
         //Main message
-        Label message = new Label(Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
-                                    + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?");
+        String messageStr = Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
+                                    + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?";
+        
+        //Append warning to message in case of sharedInstance
+        if (sharedInstances != null && sharedInstances.size() > 0) {
+            messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getSharedInstance() + " (";
+            for (int i = 0; i < sharedInstances.size() - 1; i++) {
+                messageStr += sharedInstances.get(i).getDbName() + ", ";
+            }
+            messageStr += sharedInstances.get(sharedInstances.size() - 1).getDbName() + ").";
+        }
+        
+        Label message = new Label(messageStr);
         messageBox.appendChild(message);
         mainBox.appendChild(messageBox);
 
@@ -144,9 +173,9 @@ public class UpgradeController extends Window {
         ///Create new job and update instance status
         if (jobHelper.doUpgrade(instance, username)) {
             //If we are in the overview page
-            if (this.getRoot().getFellowIfAny("overviewGrid") != null) {
-                Grid grid = (Grid) this.getRoot().getFellow("overviewGrid");
-                grid.setModel(grid.getListModel());
+            if (this.getRoot().getFellowIfAny("overviewTree") != null) {
+                Tree tree = (Tree) this.getRoot().getFellow("overviewTree");
+                tree.setModel(tree.getModel());
             } //If we are in the instance page
             else if (this.getRoot().getFellowIfAny("controller") != null && this.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) this.getRoot().getFellow("controller");
@@ -154,7 +183,7 @@ public class UpgradeController extends Window {
             }
         }
         else {
-            showError(DODConstants.ERROR_DISPATCHING_JOB);
+            showError(DODConstants.ERROR_DISPATCHING_UPGRADE_JOB);
         }
         this.detach();
     }

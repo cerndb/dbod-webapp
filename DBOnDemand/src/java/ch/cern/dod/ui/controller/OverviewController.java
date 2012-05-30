@@ -4,19 +4,17 @@ import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODUpgrade;
-import ch.cern.dod.ui.model.InstanceListModel;
-import ch.cern.dod.ui.renderer.OverviewGridRenderer;
+import ch.cern.dod.ui.model.OverviewTreeModel;
+import ch.cern.dod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dod.util.DODConstants;
 import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
-import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Foot;
-import org.zkoss.zul.Grid;
-import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treefoot;
 import org.zkoss.zul.Vbox;
 
 /**
@@ -37,10 +35,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * List of instances. In this case, all the instances in the database.
      */
     private List<DODInstance> instances;
-    /**
-     * Number of instances, defining a public method to show the grid or not.
-     */
-    private int instancesSize;
     /**
      * List of upgrades.
      */
@@ -71,11 +65,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         //Get instances
         instanceDAO = new DODInstanceDAO();
         instances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
-        if (instances != null)
-            instancesSize = instances.size();
-        else
-            instancesSize = 0;
-
     }
 
     /**
@@ -83,11 +72,11 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * with the instances obtained before composing.
      */
     public void afterCompose() {
-        if (instancesSize > 0) {
-            Grid grid = (Grid) getFellow("overviewGrid");
-            grid.setModel(new InstanceListModel(instances));
-            grid.setRowRenderer(new OverviewGridRenderer());
-            grid.getPagingChild().setMold("os");
+        if (instances != null && instances.size() > 0) {
+            Tree overviewTree = (Tree) getFellow("overviewTree");
+            overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+            overviewTree.setItemRenderer(new OverviewTreeRenderer(false));
+            overviewTree.getPagingChild().setMold("os");
         }
         
         displayOrHideAreas();
@@ -97,20 +86,20 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Displays or hides certain areas when refreshing instances and upgrades
      */
     private void displayOrHideAreas () {
-        if (instancesSize > 0) {
-            ((Grid) getFellow("overviewGrid")).setStyle("display:block");
+        if (instances != null && instances.size() > 0) {
+            ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (instancesSize > 10 && ((Grid) getFellow("overviewGrid")).getMold().equals("paging")) {
-                ((Foot) getFellow("footer")).setStyle("display:block");
+            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+                ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
-                ((Foot) getFellow("footer")).setStyle("display:none");
+                ((Treefoot) getFellow("footer")).setStyle("display:none");
             }
         }
         else {
-            ((Grid) getFellow("overviewGrid")).setStyle("display:none");
+            ((Tree) getFellow("overviewTree")).setStyle("display:none");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
-            ((Foot) getFellow("footer")).setStyle("display:none");
+            ((Treefoot) getFellow("footer")).setStyle("display:none");
         }
     }
 
@@ -122,33 +111,21 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         upgrades = upgradeDAO.selectAll();
         //Get instances
         instances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
-        if (instances != null)
-            instancesSize = instances.size();
-        else
-            instancesSize = 0;
 
         //Set the new instances
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+        Tree overviewTree = (Tree) getFellow("overviewTree");
+        overviewTree.setModel(OverviewTreeModel.getInstance(instances));
         
         displayOrHideAreas();
-    }
-
-    /**
-     * Getter for the instances size.
-     * @return number of instances.
-     */
-    public int getInstancesSize() {
-        return instancesSize;
     }
     
     /**
      * Displays all instances in the view
      */
     public void showAll() {
-        Grid grid = (Grid) getFellow("overviewGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("footer");
+        Tree tree = (Tree) getFellow("overviewTree");
+        tree.setMold("default");
+        Treefoot footer = (Treefoot) getFellow("footer");
         footer.setStyle("display:none");
     }
     
@@ -156,13 +133,9 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Filters instances according to the content on the filter fields.
      */
     public void filterInstances () {
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).filter(((Textbox)getFellow("dbNameFilter")).getValue(),
-                                                    ((Textbox)getFellow("usernameFilter")).getValue(),
-                                                    ((Textbox)getFellow("eGroupFilter")).getValue(),
-                                                    (String)((Combobox)getFellow("categoryFilter")).getSelectedItem().getValue(),
-                                                    ((Textbox)getFellow("projectFilter")).getValue(),
-                                                    (String)((Combobox)getFellow("dbTypeFilter")).getSelectedItem().getValue(),
-                                                    (String)((Combobox)getFellow("actionFilter")).getSelectedItem().getValue());
+        //Re-render the tree
+        Tree tree = (Tree) getFellow("overviewTree");
+        tree.setModel(OverviewTreeModel.getInstance(instances));
+        displayOrHideAreas();
     }
 }

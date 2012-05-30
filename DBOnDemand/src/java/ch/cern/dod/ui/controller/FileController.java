@@ -5,7 +5,6 @@ import ch.cern.dod.exception.ConfigFileSizeException;
 import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,18 +18,16 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.UploadEvent;
-import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Caption;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Filedownload;
-import org.zkoss.zul.Grid;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -145,9 +142,9 @@ public class FileController extends Window {
                         //Depending on the result
                         if (result) {
                             //If we are in the overview page
-                            if (type.getRoot().getFellowIfAny("overviewGrid") != null) {
-                                Grid grid = (Grid) type.getRoot().getFellow("overviewGrid");
-                                grid.setModel(grid.getListModel());
+                            if (type.getRoot().getFellowIfAny("overviewTree") != null) {
+                                Tree tree = (Tree) type.getRoot().getFellow("overviewTree");
+                                tree.setModel(tree.getModel());
                             } //If we are in the instance page
                             else if (type.getRoot().getFellowIfAny("controller") != null && type.getRoot().getFellow("controller") instanceof InstanceController) {
                                 InstanceController controller = (InstanceController) type.getRoot().getFellow("controller");

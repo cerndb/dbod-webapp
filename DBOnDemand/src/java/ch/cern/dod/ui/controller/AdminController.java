@@ -4,13 +4,12 @@ import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODUpgrade;
-import ch.cern.dod.ui.model.InstanceListModel;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.ui.model.UpgradesListModel;
-import ch.cern.dod.ui.renderer.OverviewGridRenderer;
+import ch.cern.dod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,14 +20,14 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Foot;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treefoot;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -49,22 +48,11 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * List of instances. In this case, all the instances in the database.
      */
     private List<DODInstance> instances;
-    /**
-     * Number of instances, defining a public method to show the grid or not.
-     */
-    private int instancesSize;
-    /**
-     * Instances checked on the grid.
-     */
-    private ArrayList<DODInstance> checked;
+
     /**
      * List of upgrades.
      */
     private List<DODUpgrade> upgrades;
-    /**
-     * Number of upgrades, defining a public method to show the grid or not.
-     */
-    private int upgradesSize;
     /**
      * Job helper to perform admin actions.
      */
@@ -81,23 +69,14 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Execution execution = Executions.getCurrent();
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
         jobHelper = new JobHelper(true);
-        checked = new ArrayList<DODInstance>();
         
         //Select upgrades
         upgradeDAO = new DODUpgradeDAO();
         upgrades = upgradeDAO.selectAll();
-        if (upgrades != null)
-            upgradesSize = upgrades.size();
-        else
-            upgradesSize = 0;
+
         //Select instances
         instanceDAO = new DODInstanceDAO();
         instances = instanceDAO.selectAll(upgrades);
-        if (instances != null)
-            instancesSize = instances.size();
-        else
-            instancesSize = 0;
-        
     }
 
     /**
@@ -105,10 +84,11 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * with the instances obtained before composing.
      */
     public void afterCompose() {
-        Grid overviewGrid = (Grid) getFellow("overviewGrid");
-        overviewGrid.setModel(new InstanceListModel(instances));
-        overviewGrid.setRowRenderer(new OverviewGridRenderer(checked));
-        overviewGrid.getPagingChild().setMold("os");
+        Tree overviewTree = (Tree) getFellow("overviewTree");
+        overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+        overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
+        overviewTree.getPagingChild().setMold("os");
+        
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
         upgradesGrid.setModel(new UpgradesListModel(upgrades));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
@@ -121,28 +101,28 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * Displays or hides certain areas when refreshing instances and upgrades
      */
     private void displayOrHideAreas () {
-        if (instancesSize > 0) {
+        if (instances != null && instances.size() > 0) {
             ((Hbox) getFellow("collectiveBtns")).setStyle("display:block");
-            ((Grid) getFellow("overviewGrid")).setStyle("display:block");
+            ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (instancesSize > 10 && ((Grid) getFellow("overviewGrid")).getMold().equals("paging")) {
-                ((Foot) getFellow("footer")).setStyle("display:block");
+            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+                ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
-                ((Foot) getFellow("footer")).setStyle("display:none");
+                ((Treefoot) getFellow("footer")).setStyle("display:none");
             }
         }
         else {
             ((Hbox) getFellow("collectiveBtns")).setStyle("display:none");
-            ((Grid) getFellow("overviewGrid")).setStyle("display:none");
+            ((Tree) getFellow("overviewTree")).setStyle("display:none");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
-            ((Foot) getFellow("footer")).setStyle("display:none");
+            ((Treefoot) getFellow("footer")).setStyle("display:none");
         }
         
-        if (upgradesSize > 0) {
+        if (upgrades != null && upgrades.size() > 0) {
             ((Grid) getFellow("upgradesGrid")).setStyle("display:block");
             ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:none");
-            if (upgradesSize > 10 && ((Grid) getFellow("upgradesGrid")).getMold().equals("paging")) {
+            if (upgrades.size() > 10 && ((Grid) getFellow("upgradesGrid")).getMold().equals("paging")) {
                 ((Foot) getFellow("footerUpgrades")).setStyle("display:block");
             }
             else {
@@ -162,50 +142,21 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void refreshInstances(){
         //Get upgrades
         upgrades = upgradeDAO.selectAll();
-        if (upgrades != null)
-            upgradesSize = upgrades.size();
-        else
-            upgradesSize = 0;
         
         //Get instances
         instances = instanceDAO.selectAll(upgrades);
-        if (instances != null)
-            instancesSize = instances.size();
-        else
-            instancesSize = 0;
         
         //Refresh checked list
-        for (int i=0; i < checked.size(); i++) {
-            for (int j=0; j < instances.size(); j++) {
-                if (checked.get(i).equals(instances.get(j)))
-                    checked.set(i, instances.get(j));
-            }
-        }
+        Tree tree = (Tree) getFellow("overviewTree");
+        ((OverviewTreeRenderer)tree.getItemRenderer()).updateCheckedInstances(instances);
+        //Set the new instances
+        tree.setModel(OverviewTreeModel.getInstance(instances));
         
         //Set the new upgrades
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
         ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
-        
-        Grid overviewGrid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)overviewGrid.getModel()).setInstances(instances);
-        
-        displayOrHideAreas();
-    }
 
-    /**
-     * Getter for the instances size.
-     * @return number of instances.
-     */
-    public int getInstancesSize() {
-        return instancesSize;
-    }
-    
-    /**
-     * Getter for the upgrades size.
-     * @return number of upgrades.
-     */
-    public int getUpgradesSize() {
-        return upgradesSize;
+        displayOrHideAreas();
     }
     
     /**
@@ -213,16 +164,11 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void checkAll() {
         Checkbox checkAll = (Checkbox)getFellow("checkAll");
-        Grid grid = (Grid) getFellow("overviewGrid");
-        List<DODInstance> filtered = ((InstanceListModel)grid.getModel()).getFiltered();
+        Tree tree = (Tree) getFellow("overviewTree");
+        ((OverviewTreeRenderer)tree.getItemRenderer()).checkAll(instances, tree, checkAll.isChecked());
+        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         
         if (checkAll.isChecked()) {
-            //Add all elements to checklist
-            for (int i=0; i < instances.size(); i++) {
-                if (!checked.contains(instances.get(i)) && filtered.contains(instances.get(i))) {
-                    checked.add(instances.get(i));
-                }
-            }
             if (checked.size() > 0) {
                 ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
                 ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
@@ -235,12 +181,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         else {
-            //Remove al elements to checklist
-            for (int i=0; i < instances.size(); i++) {
-                if (checked.contains(instances.get(i)) && filtered.contains(instances.get(i))) {
-                    checked.remove(instances.get(i));
-                }
-            }
             ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
@@ -251,8 +191,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
         }
         
-        //Re-render the list
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+        //Re-render the tree
+        tree.setModel(OverviewTreeModel.getInstance(instances));
     }
     
     /**
@@ -261,6 +201,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void startupAll() {
         boolean error = false;
+        Tree tree = (Tree) getFellow("overviewTree");
+        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
@@ -269,9 +211,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
                 }
             }
         }
-        //Re-render the list
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+        //Re-render the tree
+        tree.setModel(OverviewTreeModel.getInstance(instances));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -283,6 +224,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void shutdownAll() {
         boolean error = false;
+        Tree tree = (Tree) getFellow("overviewTree");
+        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
@@ -291,9 +234,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
                 }
             }
         }
-        //Re-render the list
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+        //Re-render the tree
+        tree.setModel(OverviewTreeModel.getInstance(instances));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -305,6 +247,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void backupAll(){
         boolean error = false;
+        Tree tree = (Tree) getFellow("overviewTree");
+        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
@@ -313,9 +257,9 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
                 }
             }
         }
-        //Re-render the list
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+
+        //Re-render the tree
+        tree.setModel(OverviewTreeModel.getInstance(instances));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -327,17 +271,18 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     public void upgradeAll(){
         boolean error = false;
+        Tree tree = (Tree) getFellow("overviewTree");
+        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
-            if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && instance.getVersion() != null && !instance.getVersion().isEmpty()) {
+            if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && instance.getUpgradeTo() != null && !instance.getUpgradeTo().isEmpty()) {
                 if (!jobHelper.doUpgrade(instance, username)){
                     error = true;
                 }
             }
         }
-        //Re-render the list
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).setInstances(instances);
+        //Re-render the tree
+        tree.setModel(OverviewTreeModel.getInstance(instances));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -364,9 +309,9 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * Displays all instances in the view
      */
     public void showAll() {
-        Grid grid = (Grid) getFellow("overviewGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("footer");
+        Tree tree = (Tree) getFellow("overviewTree");
+        tree.setMold("default");
+        Treefoot footer = (Treefoot) getFellow("footer");
         footer.setStyle("display:none");
     }
     
@@ -381,17 +326,13 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     }
     
     /**
-     * Filters instances according to the content on the filter fields.
+     * Re-renders the tree in order to filter instances.
      */
     public void filterInstances () {
-        Grid grid = (Grid) getFellow("overviewGrid");
-        ((InstanceListModel)grid.getModel()).filter(((Textbox)getFellow("dbNameFilter")).getValue(),
-                                                    ((Textbox)getFellow("usernameFilter")).getValue(),
-                                                    ((Textbox)getFellow("eGroupFilter")).getValue(),
-                                                    (String)((Combobox)getFellow("categoryFilter")).getSelectedItem().getValue(),
-                                                    ((Textbox)getFellow("projectFilter")).getValue(),
-                                                    (String)((Combobox)getFellow("dbTypeFilter")).getSelectedItem().getValue(),
-                                                    (String)((Combobox)getFellow("actionFilter")).getSelectedItem().getValue());
+        //Re-render the tree
+        Tree tree = (Tree) getFellow("overviewTree");
+        tree.setModel(OverviewTreeModel.getInstance(instances));
+        displayOrHideAreas();
     }
     
     /**

@@ -184,6 +184,46 @@
                         </hbox>
                     </hbox>
                 </hbox>
+                <hbox align="bottom" height="22px">
+                    <!-- Number of connections -->
+                    <hbox width="500px" align="bottom">
+                        <label value="${c:l('version')}: " style="font-weight:bold"/>
+                        <hbox id="versionBox" align="bottom">
+                            <label id="version"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="versionBox.setVisible(false);versionEditBox.setVisible(true);" if="${controller.admin}"/>
+                        </hbox>
+                        <hbox id="versionEditBox" visible="false" align="bottom" if="${controller.admin}">
+                            <textbox id="versionEdit" width="224px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editVersion();"/>
+                        </hbox>
+                    </hbox>
+                    <!-- DB size -->
+                    <hbox width="500px" align="bottom" id="masterArea" visible="false">
+                        <label value="${c:l('master')}: " style="font-weight:bold"/>
+                        <hbox id="masterBox" align="bottom">
+                            <label id="master"/>
+                            <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
+                        </hbox>
+                    </hbox>
+                    <hbox width="500px" align="bottom" id="slaveArea" visible="false">
+                        <label value="${c:l('slave')}: " style="font-weight:bold"/>
+                        <hbox id="slaveBox" align="bottom">
+                            <label id="slave"/>
+                            <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
+                        </hbox>
+                    </hbox>
+                    <hbox width="500px" align="bottom" id="sharedInstanceArea" visible="false">
+                        <label value="${c:l('sharedInstance')}: " style="font-weight:bold"/>
+                        <hbox id="sharedInstanceBox" align="bottom">
+                            <label id="sharedInstance"/>
+                            <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="sharedInstanceBox.setVisible(false);sharedInstanceEditBox.setVisible(true);" if="${controller.admin}"/>
+                        </hbox>
+                        <hbox id="sharedInstanceEditBox" visible="false" align="bottom" if="${controller.admin}">
+                            <textbox id="sharedInstanceEdit" width="224px"/>
+                            <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editSharedInstance();"/>
+                        </hbox>
+                    </hbox>
+                </hbox>
                 <hbox align="bottom">
                     <!-- Description -->
                     <hbox width="1000px">

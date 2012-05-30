@@ -77,6 +77,21 @@ public class DODInstance implements Comparable, Cloneable{
      * Logical status (active or inactive)
      */
     private boolean status;
+    
+    /**
+     * DB name of the master (if slave)
+     */
+    private String master;
+    
+    /**
+     * DB name of the slave (if master)
+     */
+    private String slave;
+    
+    /**
+     * Virtual machine where instance is stored (if shared)
+     */
+    private String sharedInstance;
 
     /**
      * State (On Creation, Running, Stopped, etc)
@@ -206,6 +221,30 @@ public class DODInstance implements Comparable, Cloneable{
         this.state = state;
     }
 
+    public String getMaster() {
+        return master;
+    }
+
+    public void setMaster(String master) {
+        this.master = master;
+    }
+
+    public String getSlave() {
+        return slave;
+    }
+
+    public void setSlave(String slave) {
+        this.slave = slave;
+    }
+
+    public String getSharedInstance() {
+        return sharedInstance;
+    }
+
+    public void setSharedInstance(String sharedInstance) {
+        this.sharedInstance = sharedInstance;
+    }
+
     public int compareTo(Object object) {
         DODInstance instance = (DODInstance) object;
         return this.getDbName().compareTo(instance.getDbName());
@@ -235,6 +274,12 @@ public class DODInstance implements Comparable, Cloneable{
             clone.setUpgradeTo(new String(upgradeTo));
         if (version != null)
             clone.setVersion(new String(version));
+        if (master != null)
+            clone.setMaster(new String(master));
+        if (slave != null)
+            clone.setSlave(new String(slave));
+        if (sharedInstance != null)
+            clone.setSharedInstance(new String(sharedInstance));
         return clone;
     }
     

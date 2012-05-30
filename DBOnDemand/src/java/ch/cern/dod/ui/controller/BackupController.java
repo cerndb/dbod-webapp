@@ -17,13 +17,13 @@ import org.zkoss.zul.Caption;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Grid;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
+import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -311,9 +311,9 @@ public class BackupController extends Window {
         }
         else {
             //If we are in the overview page
-            if (interval.getRoot().getFellowIfAny("overviewGrid") != null) {
-                Grid grid = (Grid) interval.getRoot().getFellow("overviewGrid");
-                grid.setModel(grid.getListModel());
+            if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
+                Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
+                tree.setModel(tree.getModel());
             } //If we are in the instance page
             else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");
@@ -377,9 +377,9 @@ public class BackupController extends Window {
             //If the operation was successful update instance status
             if (backupToTapeResult && result) {
                 //If we are in the overview page
-                if (interval.getRoot().getFellowIfAny("overviewGrid") != null) {
-                    Grid grid = (Grid) interval.getRoot().getFellow("overviewGrid");
-                    grid.setModel(grid.getListModel());
+                if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
+                    Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
+                    tree.setModel(tree.getModel());
                 } //If we are in the instance page
                 else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");

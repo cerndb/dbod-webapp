@@ -24,6 +24,9 @@ public class DODConstants {
     public static final String DATE_TIME_FORMAT_PITR = "yyyy-MM-dd_HH:mm:ss";
     public static final String TIME_FORMAT = "H:mm:ss";
     public static final String INSTANCE = "instance";
+    public static final String MASTER = "master";
+    public static final String SLAVE = "slave";
+    public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
     public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M&days=30&raw=1";
     public static final String MONITORING_INSTANCE = "tgt";
     public static final String MONITORING_METRIC = "metric";
@@ -38,6 +41,7 @@ public class DODConstants {
     public static final int MAX_DB_NAME_LENGTH = 8;
     public static final int MAX_E_GROUP_LENGTH = 256;
     public static final int MAX_PROJECT_LENGTH = 128;
+    public static final int MAX_SHARED_INSTANCE_LENGTH = 128;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
@@ -71,7 +75,7 @@ public class DODConstants {
     public static final String PARAM_CONFIG_FILE = "CONFIG_FILE";
     public static final String CONFIG_FILE_MY_CNF = "MY_CNF";
     public static final String PARAM_CONFIG_PATH = "CONFIG_PATH";
-    public static final String CONFIG_PATH_MY_CNF = "/etc/my.cnf";
+    public static final String CONFIG_PATH_MY_CNF = "my.cnf";
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
     public static final String PARAM_PITR_TIME = "TIMESTAMP";
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";
@@ -145,6 +149,7 @@ public class DODConstants {
     public static final String LABEL_SLOW_LOGS_MESSAGE = "slowLogsMessage";
     public static final String LABEL_SLOW_LOGS_DOWNLOAD = "slowLogsDownload";
     public static final String LABEL_NO_SLOW_LOGS = "noSlowLogs";
+    public static final String LABEL_SHARED_INSTANCE_WARNING = "sharedInstanceWarning";
     
 
     //Errors
@@ -170,6 +175,7 @@ public class DODConstants {
     public static final String ERROR_UPLOADING_CONFIG_FILE_SIZE = "errorUploadingConfigFileSize";
     public static final String ERROR_DOWNLOADING_CONFIG_FILE = "errorDownloadingConfigFile";
     public static final String ERROR_DISPATCHING_JOB = "errorDispatchingJob";
+    public static final String ERROR_DISPATCHING_UPGRADE_JOB = "errorDispatchingUpgradeJob";
     public static final String ERROR_SELECT_SNAPSHOT = "errorSelectSnapshot";
     public static final String ERROR_OBTAINING_METRICS = "errorObtainingMetrics";
     public static final String ERROR_DISPLAYING_HELP = "errorDisplayingHelp";
@@ -199,6 +205,10 @@ public class DODConstants {
     public static final String ERROR_OPENING_ADD_UPGRADE = "errorOpeningAddUpgrade";
     public static final String ERROR_SLOW_LOG_FILE = "errorSlowLogFile";
     public static final String ERROR_DOWNLOADING_SLOW_LOG_FILE = "errorDownloadingSlowLogFile";
+    public static final String ERROR_SHARED_INSTANCE_LENGTH = "errorSharedInstanceLength";
+    public static final String ERROR_MASTER_DOES_NOT_EXIST = "errorMasterDoesNotExist";
+    public static final String ERROR_MASTER_SHARED_INSTANCE = "errorMasterSharedInstance";
+    public static final String ERROR_SLAVE_SHARED_INSTANCE = "errorSlaveSharedInstance";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";

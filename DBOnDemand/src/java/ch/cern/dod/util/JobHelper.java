@@ -422,7 +422,7 @@ public class JobHelper {
         params.add(versionTo);
 
         //Execute
-        int result = jobDAO.insert(job, params);
+        int result = jobDAO.insertUpgradeJob(job, params);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);

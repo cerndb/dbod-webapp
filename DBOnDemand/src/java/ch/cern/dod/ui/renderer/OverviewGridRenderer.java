@@ -33,9 +33,10 @@ import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 /**
- * Renderer for grid in databases overview
+ * Renderer for grid in databases overview.
  * @author Daniel Gomez Blanco
  * @version 23/09/2011
+ * @deprecated A tree is used now.
  */
 public class OverviewGridRenderer implements RowRenderer {
 

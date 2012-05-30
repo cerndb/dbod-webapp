@@ -42,13 +42,13 @@
             </caption>
             <vbox width="100%" align="right">
                 <vbox width="100%" align="left">
-                    <!-- Overview grid (only shown when there are instances) -->
-                    <grid id="overviewGrid" mold="paging" pageSize="10" style="display:none">
+                    <!-- Overview tree (only shown when there are instances) -->
+                    <tree id="overviewTree" mold="paging" pageSize="10" style="display:none" width="1185px">
                         <auxhead sclass="category-center">
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="dbNameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="110px" />
+                                    <textbox id="dbNameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -80,7 +80,7 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="45px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="2" />
@@ -113,29 +113,29 @@
                                 </hbox>
                             </auxheader>
                         </auxhead>
-                        <columns>
-                            <column label="${c:l('dbName')}" sort="auto(dbName)" width="150px"/>
-                            <column label="${c:l('username')}" sort="auto(username)" width="90px"/>
-                            <column label="${c:l('eGroup')}" sort="auto(eGroup)" width="150px"/>
-                            <column label="${c:l('category')}" sort="auto(category)" width="75px"/>
-                            <column label="${c:l('project')}" sort="auto(project)" width="95px"/>
-                            <column label="${c:l('creationDate')}" sort="auto(creationDate)" width="90px"/>
-                            <column label="${c:l('expiryDate')}" sort="auto(expiryDate)" width="90px"/>
-                            <column label="${c:l('dbType')}" sort="auto(dbType)" width="65px"/>
-                            <column label="${c:l('dbSize')}" sort="auto(dbSize)" width="65px"/>
-                            <column label="${c:l('noConn')}" sort="auto(noConnections)" width="65px"/>
-                            <column label="${c:l('state')}" sort="auto(state)" width="40px" align="center"/>
-                            <column label="${c:l('actions')}" width="210px" align="center"/>
-                        </columns>
-                        <foot id="footer" style="display:none">
-                            <footer span="12">
-                                 <hbox height="24px" align="bottom">
-                                    <toolbarbutton id="showAllBtn" tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
-                                    <label id="showAllLbl" value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
+                        <treecols>
+                            <treecol label="${c:l('dbName')}" width="120px"/>
+                            <treecol label="${c:l('username')}" width="90px"/>
+                            <treecol label="${c:l('eGroup')}"  width="150px"/>
+                            <treecol label="${c:l('category')}" width="75px"/>
+                            <treecol label="${c:l('project')}" width="120px"/>
+                            <treecol label="${c:l('creationDate')}" width="90px"/>
+                            <treecol label="${c:l('expiryDate')}" width="90px"/>
+                            <treecol label="${c:l('dbType')}" width="70px"/>
+                            <treecol label="${c:l('dbSize')}" width="65px"/>
+                            <treecol label="${c:l('noConn')}" width="70px"/>
+                            <treecol label="${c:l('state')}" width="40px" align="center"/>
+                            <treecol label="${c:l('actions')}" align="center"/>
+                        </treecols>
+                        <treefoot id="footer" style="display:none">
+                            <treefooter span="12">
+                                 <hbox height="24px" width="300px" align="bottom">
+                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
+                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
                                 </hbox>
-                            </footer>
-                        </foot>
-                    </grid>
+                            </treefooter>
+                        </treefoot>
+                    </tree>
                 </vbox>
                 <!--Show a message in case there no instances  -->
                 <div id="emptyInstancesMsg" style="display:none">
