@@ -62,7 +62,6 @@ BEGIN
                                 <li><b>Completion date</b>: ' || TO_CHAR(:NEW.completion_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
                                 <li><b>Requester</b>: ' || :NEW.requester || '</li>
                                 <li><b>Admin action</b>: ' || :NEW.admin_action || '</li>
-                                <li><b>Requester</b>: ' || :NEW.requester || '</li>
                                 <li><b>State</b>: ' || :NEW.state || '</li>
                             </ul>
                         </body>

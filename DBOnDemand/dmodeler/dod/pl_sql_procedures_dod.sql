@@ -506,7 +506,6 @@ BEGIN
                                 <li><b>Creation date</b>: ' || TO_CHAR(pending_job.creation_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
                                 <li><b>Requester</b>: ' || pending_job.requester || '</li>
                                 <li><b>Admin action</b>: ' || pending_job.admin_action || '</li>
-                                <li><b>Requester</b>: ' || pending_job.requester || '</li>
                                 <li><b>State</b>: ' || pending_job.state || '</li>
                             </ul>
                         </body>
@@ -537,7 +536,6 @@ BEGIN
                                 <li><b>Creation date</b>: ' || TO_CHAR(running_job.creation_date,'DD/MM/YYYY HH24:MI:SS') || '</li>
                                 <li><b>Requester</b>: ' || running_job.requester || '</li>
                                 <li><b>Admin action</b>: ' || running_job.admin_action || '</li>
-                                <li><b>Requester</b>: ' || running_job.requester || '</li>
                                 <li><b>State</b>: ' || running_job.state || '</li>
                             </ul>
                         </body>
