@@ -65,5 +65,6 @@ sub state_checker{
     return ($job_state, $instance_state);
 }
 
-
-
+END {
+1;
+}
