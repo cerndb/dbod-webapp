@@ -14,6 +14,7 @@ use POSIX qw(strftime);
 
 use DOD::Database;
 use DOD::MySQL;
+use DOD::Oracle;
 use DOD::All;
 
 use POSIX ":sys_wait_h";
@@ -49,9 +50,8 @@ my %command_callback_table = (
 
 my %state_checker_table = (
     'MYSQL' => \&DOD::MySQL::state_checker,
-    'ORACLE' => undef
+    'ORACLE' => \&DOD::Oracle::state_checker 
 );
-
 
 sub jobDispatcher {
     # This is neccesary because daemonizing closes all file descriptors
