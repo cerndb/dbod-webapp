@@ -16,7 +16,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $l
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(test_instance get_variable get_version state_checker upgrade_callback);
+@EXPORT      = qw();
 @EXPORT_OK   = qw();
 %EXPORT_TAGS = ( );
 

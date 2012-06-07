@@ -13,8 +13,8 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $l
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(getJobList updateJobState updateJobCompletionDate updateJobLog finishJob getDBH);
-@EXPORT_OK   = qw(getDBH);
+@EXPORT      = qw();
+@EXPORT_OK   = qw();
 %EXPORT_TAGS = ( );
 
 # Load general configuration
@@ -65,6 +65,4 @@ sub state_checker{
     return ($job_state, $instance_state);
 }
 
-END {
 1;
-}

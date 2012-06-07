@@ -54,7 +54,7 @@ sub Main{
 
     unless (-e $lock_file){
 
-        $logger->debug("Creating lock file");
+        $logger->debug("Creating lock file: $lock_file");
         open(LOCKF, ">$lock_file");
         close(LOCKF);
 
