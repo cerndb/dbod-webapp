@@ -16,7 +16,7 @@ use POSIX qw(strftime);
 use DOD::ConfigParser;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -63,6 +63,8 @@ $DATEFORMAT = $config->{'DB_DATE_FORMAT'};
 my @buf = split( /_/, $DBTAG );
 $user = pop( @buf );
 $password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
+
+$MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
 
 } # BEGIN BLOCK
 
@@ -173,7 +175,7 @@ sub getTimedOutJobs{
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual)-6/24"; 
+            and creation_date < (select sysdate from dual) -$MAX_JOB_TIMEOUT/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
