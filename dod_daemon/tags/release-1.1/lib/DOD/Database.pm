@@ -109,6 +109,79 @@ sub getInstanceList{
     return @result;
 }   
 
+sub isShared{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select db_name from dod_instances 
+        where shared_instance in 
+        (select shared_instance 
+            from dod_instances 
+            where db_name= ?) 
+        and db_name <> ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $sth->bind_param(2, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is shared with " . $ref->{'DB_NAME'});
+            return $ref->{'DB_NAME'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
+sub isMaster{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select slave from dod_instances where db_name = ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is slave to " . $ref->{'SLAVE'});
+            return $ref->{'SLAVE'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
+sub isSlave{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select master from dod_instances where db_name = ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is slave to " . $ref->{'MASTER'});
+            return $ref->{'MASTER'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
+
 sub getJobList{
     my $dbh;
     if ($#_ == 0){
