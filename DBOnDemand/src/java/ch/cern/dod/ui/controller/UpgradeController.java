@@ -54,20 +54,29 @@ public class UpgradeController extends Window {
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
-    public UpgradeController (DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {
+    public UpgradeController (DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {        
         //Call super constructor
         super();
-
+        
         //Initialize instance and create job helper
         this.instance = inst;
         this.jobHelper = jobHelper;
         this.username = user;
         
+        DODInstanceDAO instanceDAO = new DODInstanceDAO();
+        DODUpgradeDAO upgradeDAO = new DODUpgradeDAO();
+        List<DODUpgrade> upgrades = upgradeDAO.selectAll();
+        
+        //Boolean that indicates if the slave is upgraded (requirement in case of master upgrade)
+        boolean slaveUpgraded = true;
+        if (instance.getSlave() != null && !instance.getSlave().isEmpty()) {
+            DODInstance slave = instanceDAO.selectByDbName(instance.getSlave(), upgrades);
+            if (slave.getUpgradeTo() != null && !slave.getUpgradeTo().isEmpty())
+                slaveUpgraded = false;
+        }
+        
         //Get shared instances
         if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
-            DODUpgradeDAO upgradeDAO = new DODUpgradeDAO();
-            List<DODUpgrade> upgrades = upgradeDAO.selectAll();
-            DODInstanceDAO instanceDAO = new DODInstanceDAO();
             sharedInstances = instanceDAO.selectSharedInstances(instance.getSharedInstance(), upgrades);
             sharedInstances.remove(instance);
         }
@@ -91,16 +100,24 @@ public class UpgradeController extends Window {
         messageBox.setAlign("center");
         messageBox.appendChild(new Image(DODConstants.IMG_WARNING));
         //Main message
-        String messageStr = Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
-                                    + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?";
+        String messageStr;
         
-        //Append warning to message in case of sharedInstance
-        if (sharedInstances != null && sharedInstances.size() > 0) {
-            messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getSharedInstance() + " (";
-            for (int i = 0; i < sharedInstances.size() - 1; i++) {
-                messageStr += sharedInstances.get(i).getDbName() + ", ";
+        //If the slave is upgraded (or instance is not master)
+        if (slaveUpgraded) {
+            messageStr = Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
+                                        + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?";
+
+            //Append warning to message in case of sharedInstance
+            if (sharedInstances != null && sharedInstances.size() > 0) {
+                messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getSharedInstance() + " (";
+                for (int i = 0; i < sharedInstances.size() - 1; i++) {
+                    messageStr += sharedInstances.get(i).getDbName() + ", ";
+                }
+                messageStr += sharedInstances.get(sharedInstances.size() - 1).getDbName() + ").";
             }
-            messageStr += sharedInstances.get(sharedInstances.size() - 1).getDbName() + ").";
+        }
+        else {
+            messageStr = Labels.getLabel(DODConstants.LABEL_UPGRADE_SLAVE_FIRST);
         }
         
         Label message = new Label(messageStr);
@@ -137,32 +154,34 @@ public class UpgradeController extends Window {
         cancelBox.appendChild(cancelLabel);
         buttonsDiv.appendChild(cancelBox);
 
-        //Accept button
-        Hbox acceptBox = new Hbox();
-        acceptBox.setHeight("24px");
-        acceptBox.setAlign("bottom");
-        acceptBox.setStyle("float:right;");
-        Label acceptLabel = new Label(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptLabel.setSclass(DODConstants.STYLE_TITLE);
-        acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
-        acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                doAccept();
-            }
-        });
-        acceptBox.appendChild(acceptLabel);
-        Toolbarbutton acceptButton = new Toolbarbutton();
-        acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
-        acceptButton.setZclass(DODConstants.STYLE_BUTTON);
-        acceptButton.setImage(DODConstants.IMG_ACCEPT);
-        acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                doAccept();
-            }
-        });
-        acceptBox.appendChild(acceptButton);
-        buttonsDiv.appendChild(acceptBox);
-        this.appendChild(buttonsDiv);
+        //Accept button (only created when slave is upgraded or instance is not master)
+        if (slaveUpgraded) {
+            Hbox acceptBox = new Hbox();
+            acceptBox.setHeight("24px");
+            acceptBox.setAlign("bottom");
+            acceptBox.setStyle("float:right;");
+            Label acceptLabel = new Label(Labels.getLabel(DODConstants.LABEL_ACCEPT));
+            acceptLabel.setSclass(DODConstants.STYLE_TITLE);
+            acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
+            acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doAccept();
+                }
+            });
+            acceptBox.appendChild(acceptLabel);
+            Toolbarbutton acceptButton = new Toolbarbutton();
+            acceptButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_ACCEPT));
+            acceptButton.setZclass(DODConstants.STYLE_BUTTON);
+            acceptButton.setImage(DODConstants.IMG_ACCEPT);
+            acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    doAccept();
+                }
+            });
+            acceptBox.appendChild(acceptButton);
+            buttonsDiv.appendChild(acceptBox);
+            this.appendChild(buttonsDiv);
+        }
     }
     
 

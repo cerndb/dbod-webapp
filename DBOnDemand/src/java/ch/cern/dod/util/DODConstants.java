@@ -150,6 +150,7 @@ public class DODConstants {
     public static final String LABEL_SLOW_LOGS_DOWNLOAD = "slowLogsDownload";
     public static final String LABEL_NO_SLOW_LOGS = "noSlowLogs";
     public static final String LABEL_SHARED_INSTANCE_WARNING = "sharedInstanceWarning";
+    public static final String LABEL_UPGRADE_SLAVE_FIRST = "upgradeSlaveFirst";
     
 
     //Errors

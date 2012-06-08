@@ -321,8 +321,8 @@ public class JobHelper {
         snapshotFile.setName(DODConstants.PARAM_SNAPSHOT);
         snapshotFile.setValue(snapshot.getFileLocator());
         params.add(snapshotFile);
-        //Only add PIT if the date is different form the snapshot date (changed for a problem with binlogs)
-//        if (!formatter.format(snapshot.getCreationDate()).equals(formatter.format(pitrTime))) {
+        //Only add PIT if the date is different form the snapshot date
+        if (!formatter.format(snapshot.getCreationDate()).equals(formatter.format(pitrTime))) {
             DODCommandParam pitrParam = new DODCommandParam();
             pitrParam.setUsername(instance.getUsername());
             pitrParam.setDbName(instance.getDbName());
@@ -332,7 +332,7 @@ public class JobHelper {
             pitrParam.setName(DODConstants.PARAM_PITR_TIME);
             pitrParam.setValue(formatter.format(pitrTime));
             params.add(pitrParam);
-//        }
+        }
         //Insert job
         int result = jobDAO.insert(job, params);
         //If everything went OK update instance object
