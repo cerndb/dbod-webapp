@@ -31,7 +31,7 @@ BEGIN
 		INTO now
 		FROM dual;
        INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
-		VALUES (username, db_name, 'ENABLE_AUTOMATIC_BACKUPS', type, now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups enabled every ' || interval_hours || ' hours!');
+		VALUES (username, db_name, 'ENABLE_AUTOMATIC_BACKUPS', 'ALL', now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups enabled every ' || interval_hours || ' hours!');
 	-- Initialise name and action
 	name := db_name || '_BACKUP';
 	action := 'BEGIN
@@ -87,7 +87,7 @@ BEGIN
                 INTO now
                 FROM dual;
         INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
-                VALUES (username, db_name, 'DISABLE_AUTOMATIC_BACKUPS', type, now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups disabled!');
+                VALUES (username, db_name, 'DISABLE_AUTOMATIC_BACKUPS', 'ALL', now, now, requester, admin_action, 'FINISHED_OK', 'Automatic backups disabled!');
 
 	-- Initialise name
 	name := db_name || '_BACKUP';
@@ -151,7 +151,7 @@ BEGIN
 		INTO now
 		FROM dual;
        INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
-		VALUES (username, db_name, 'ENABLE_BACKUPS_TO_TAPE', type, now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape enabled starting on ' || TO_CHAR(start_date_param,'DD/MM/YYYY HH24:MI:SS') || '!');
+		VALUES (username, db_name, 'ENABLE_BACKUPS_TO_TAPE', 'ALL', now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape enabled starting on ' || TO_CHAR(start_date_param,'DD/MM/YYYY HH24:MI:SS') || '!');
 	-- Initialise name and action
 	name := db_name || '_BACKUP_TO_TAPE';
 	action := 'BEGIN
@@ -206,7 +206,7 @@ BEGIN
                 INTO now
                 FROM dual;
         INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
-                VALUES (username, db_name, 'DISABLE_BACKUPS_TO_TAPE', type, now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape disabled!');
+                VALUES (username, db_name, 'DISABLE_BACKUPS_TO_TAPE', 'ALL', now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape disabled!');
 
 	-- Initialise name
 	name := db_name || '_BACKUP_TO_TAPE';

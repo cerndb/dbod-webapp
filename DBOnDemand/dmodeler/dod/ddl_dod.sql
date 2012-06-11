@@ -9,7 +9,7 @@ CREATE TABLE dod_command_definition
     ( 
      command_name VARCHAR2 (64)  NOT NULL , 
      type VARCHAR2 (64)  NOT NULL , 
-     exec VARCHAR2 (2048)  NOT NULL 
+     exec VARCHAR2 (2048)  
     ) 
 ;
 
