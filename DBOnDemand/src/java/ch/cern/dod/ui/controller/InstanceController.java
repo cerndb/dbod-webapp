@@ -211,7 +211,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Master area
         if (instance.getMaster() != null && !instance.getMaster().isEmpty())
             ((Hbox) getFellow("masterArea")).setVisible(true);
-        else
+        else 
             ((Hbox) getFellow("masterArea")).setVisible(false);
         //Slave area
         if (instance.getSlave() != null && !instance.getSlave().isEmpty())
@@ -223,6 +223,12 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
         else
             ((Hbox) getFellow("sharedInstanceArea")).setVisible(false);
+        
+        //If all fields are empty, but user is admin, allow editing shared instance
+        if (admin && (instance.getMaster() == null || instance.getMaster().isEmpty())
+                && (instance.getSlave() == null || instance.getSlave().isEmpty())
+                && (instance.getSharedInstance() == null || instance.getSharedInstance().isEmpty()))
+            ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
     }
     
     /**
@@ -320,6 +326,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Shared instance (if any)
         if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
             ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
+        } else {
+            ((Label) getFellow("sharedInstance")).setValue("-");
         }
 
         //Description (if any)

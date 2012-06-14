@@ -185,7 +185,7 @@
                     </hbox>
                 </hbox>
                 <hbox align="bottom" height="22px">
-                    <!-- Number of connections -->
+                    <!-- Version -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('version')}: " style="font-weight:bold"/>
                         <hbox id="versionBox" align="bottom">
@@ -197,7 +197,7 @@
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editVersion();"/>
                         </hbox>
                     </hbox>
-                    <!-- DB size -->
+                    <!-- Master/slave or shared instance -->
                     <hbox width="500px" align="bottom" id="masterArea" visible="false">
                         <label value="${c:l('master')}: " style="font-weight:bold"/>
                         <hbox id="masterBox" align="bottom">
