@@ -180,8 +180,8 @@ public class UpgradeController extends Window {
             });
             acceptBox.appendChild(acceptButton);
             buttonsDiv.appendChild(acceptBox);
-            this.appendChild(buttonsDiv);
         }
+        this.appendChild(buttonsDiv);
     }
     
 
