@@ -397,7 +397,7 @@ public class DODInstanceDAO {
             connection.setAutoCommit(false);
             
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String instanceQuery = "INSERT INTO dod_instances (username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, state, status, master, slave, shared_instance)"
+            String instanceQuery = "INSERT INTO dod_instances (username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance)"
                             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             instanceStatement = connection.prepareStatement(instanceQuery);
             //Assign values to variables
@@ -415,11 +415,12 @@ public class DODInstanceDAO {
             instanceStatement.setInt(9, instance.getNoConnections());
             instanceStatement.setString(10, instance.getProject());
             instanceStatement.setString(11, instance.getDescription());
-            instanceStatement.setString(12, instance.getState());
-            instanceStatement.setBoolean(13, instance.getStatus());
-            instanceStatement.setString(14, instance.getMaster());
-            instanceStatement.setString(15, instance.getSlave());
-            instanceStatement.setString(16, instance.getSharedInstance());
+            instanceStatement.setString(12, instance.getVersion());
+            instanceStatement.setString(13, instance.getState());
+            instanceStatement.setBoolean(14, instance.getStatus());
+            instanceStatement.setString(15, instance.getMaster());
+            instanceStatement.setString(16, instance.getSlave());
+            instanceStatement.setString(17, instance.getSharedInstance());
             //Execute query
             instanceResult = instanceStatement.executeUpdate();
             
