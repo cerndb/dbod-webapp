@@ -1,0 +1,131 @@
+#!/usr/bin/perl -w
+
+package dod_state_checker;
+
+use strict;
+use DOD;
+use DOD::Database;
+
+# Initializes Logging Settings
+
+our ($logger, $lock_file); 
+
+BEGIN{
+$logger = Log::Log4perl::get_logger("dod_state_checker");
+$logger->debug("Logger created");
+
+$lock_file = $DOD::config->{'SC_LOCK_FILE'};
+
+}
+
+sub usage() {
+    print "USAGE:\n\tcommand\n";
+    exit -1;
+}
+
+sub worker {
+    my ($instance, $dbh) = @_;
+    my $db_name = $instance->{'DB_NAME'};
+    my $instance_name = "dod_$db_name";
+    $logger->debug( "Checking $instance_name" );
+    my $state_checker = DOD::get_state_checker($instance);
+    if (!defined $state_checker){
+        $logger->error( "Not state checker defined for this DB type" );
+        return 1;
+    }
+    my ($buf, $instance_state) = $state_checker->($instance, 0);
+    
+    if ((($instance->{'STATE'} eq 'RUNNING') || ($instance->{'STATE'} eq 'STOPPED')) &&
+        ($instance->{'STATE'} ne $instance_state)) {
+        $logger->debug( "Updating $instance_name STATE to $instance_state");
+        DOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
+        $logger->debug( "$instance_name state update successfully");
+    }
+    else{
+        $instance_state = $instance->{'STATE'};
+        $logger->debug( "State untouched for $instance_name: $instance_state" );
+    }
+    return 0;
+}
+
+sub Main{
+
+    usage() if (@ARGV != 0);
+
+    unless (-e $lock_file){
+
+        $logger->debug("Creating lock file: $lock_file");
+        open(LOCKF, ">$lock_file");
+        close(LOCKF);
+
+        $logger->debug("Opening DB connection");
+        my $dbh = DOD::Database::getDBH();
+        my $rc;
+
+        if (defined($dbh)){
+            my @instances = DOD::Database::getInstanceList($dbh);
+            foreach my $instance (@instances){
+                $logger->debug( "Checking state for instance: $instance" );
+                worker($instance, $dbh);
+            }
+            $logger->debug("Closing DB connection");
+            $rc = 0;
+        }
+        else{
+            $logger->error("Unable to get DB connection");
+            $rc = -1;
+        }
+
+        $logger->debug("Deleting lock file");
+        unlink($lock_file);
+
+        exit $rc;
+    }
+    else{
+        $logger->debug("Another instance of dod_state_checker is running.\n Skipping execution");
+    }
+
+}
+
+&Main();
+
+END{}
+
+=head1 NAME
+
+dod_state_checker - State checker for DOD instances
+
+=cut
+
+=head1 USE
+
+=over
+
+=item * 
+
+dod_state_checker
+
+=back
+
+=cut
+
+=head1 COMMENTS
+
+This is the script in charge of checking maintaining an updated
+state for the DB instances in the DBOD application database.
+
+Configuration and additional support files (i.e. templates for DBMS configuration files)
+can be found at: <PATH_TO_PERL_SHARE>/DOD/. Expected files are:
+
+- dod.conf : General configuration file. YAML format
+
+- dod_daemon_logger.conf : Logger configuration file
+
+=head1 AUTHOR
+
+Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+
+IT-DB-DBB
+
+
+=cut
