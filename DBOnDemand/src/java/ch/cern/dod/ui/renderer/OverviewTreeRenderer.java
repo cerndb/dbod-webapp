@@ -147,6 +147,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 }
 
                 //Render DB name as a link
+                Treecell dbNameCell = new Treecell();
                 Label dbName = getFormattedLabel(instance.getDbName(), 20);
                 dbName.setStyle("hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;color:blue;cursor:pointer;text-decoration:underline");
                 dbName.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -155,8 +156,13 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         Executions.sendRedirect(DODConstants.PAGE_INSTANCE);
                     }
                 });
-                Treecell dbNameCell = new Treecell();
                 dbNameCell.appendChild(dbName);
+                //If instance is master append (M) to name
+                if (instance.getSlave() != null && !instance.getSlave().isEmpty())
+                    dbNameCell.appendChild(new Label(" (M)"));
+                //If instance is slave append (S) to name
+                if (instance.getMaster() != null && !instance.getMaster().isEmpty())
+                    dbNameCell.appendChild(new Label(" (S)"));
                 row.appendChild(dbNameCell);
 
                 //Render username
