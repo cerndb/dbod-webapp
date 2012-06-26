@@ -210,6 +210,7 @@ public class DODConstants {
     public static final String ERROR_MASTER_DOES_NOT_EXIST = "errorMasterDoesNotExist";
     public static final String ERROR_MASTER_SHARED_INSTANCE = "errorMasterSharedInstance";
     public static final String ERROR_SLAVE_SHARED_INSTANCE = "errorSlaveSharedInstance";
+    public static final String ERROR_PIT_ONE_MINUTE = "errorPITOneMinute";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";

@@ -72,6 +72,10 @@ public class RestoreController extends Window {
      */
     private DateFormat dateFormatter;
     /**
+     * Date formatter for PITR
+     */
+    private DateFormat pitrFormatter;
+    /**
      * List of snapshots for the current instance.
      */
     private List<DODSnapshot> snapshots;
@@ -113,6 +117,7 @@ public class RestoreController extends Window {
         this.jobHelper = jobHelper;
         timeFormatter = new SimpleDateFormat(DODConstants.TIME_FORMAT);
         dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
+        pitrFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT_PITR);
 
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
@@ -252,7 +257,14 @@ public class RestoreController extends Window {
             //If it is a date in the past
             if (dateToRestore.compareTo(new Date()) < 0) {
                 DODSnapshot snapshotToRestore = getSnapshotToRestore(dateToRestore);
+                //If there is an available snapshot
                 if (snapshotToRestore != null) {
+                    //If the time is different and more than 1 minute in the future
+                    if (!pitrFormatter.format(dateToRestore).equals(pitrFormatter.format(snapshotToRestore.getCreationDate()))
+                            && dateToRestore.getTime() - snapshotToRestore.getCreationDate().getTime() < 60000) {
+                        time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PIT_ONE_MINUTE));
+                        return;
+                    }
                     try {
                         RestoreConfirmWindow confirmWindow = new RestoreConfirmWindow(snapshotToRestore, dateToRestore);
                         //Only show window if it is not already being diplayed
