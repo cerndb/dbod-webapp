@@ -398,7 +398,7 @@ public class DODInstanceDAO {
             
             //Prepare query for the prepared statement (to avoid SQL injection)
             String instanceQuery = "INSERT INTO dod_instances (username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             instanceStatement = connection.prepareStatement(instanceQuery);
             //Assign values to variables
             instanceStatement.setString(1, instance.getUsername());
