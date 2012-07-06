@@ -33,7 +33,7 @@
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
                     </div>
                 </caption>
-                <iframe id="tree" width="250px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemand?template=viewplain"/>
+                <iframe id="tree" width="300px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemand?template=viewplain"/>
                 <iframe id="content" name="dodhelpcontent" width="900px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemandManifesto?template=viewplain"/>
             </groupbox>
         </hbox>
