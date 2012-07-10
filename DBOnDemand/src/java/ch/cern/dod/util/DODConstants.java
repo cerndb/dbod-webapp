@@ -46,6 +46,14 @@ public class DODConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
+    public static final String[][] MYSQL_OVERVIEW_METRICS = {{"Aborted_connects","Number of aborted connections"},
+                                                                {"Connections","Number of active connections"},
+                                                                {"Innodb_data_written","Amount of data written"},
+                                                                {"Qcache_hits","Number of query cache hits"},
+                                                                {"Qcache_not_cached","Number of noncached queries"},
+                                                                {"Queries","Number of statement executed by the query"},
+                                                                {"Slow_queries","Number of queries that have taken more than long_query_time seconds"},
+                                                                {"Threads_connected","Number of currently open connections"}};
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
@@ -91,6 +99,7 @@ public class DODConstants {
     public static final String PAGE_ERROR = "/error.zul";
     public static final String PAGE_INDEX = "/index.zul";
     public static final String PAGE_ADMIN = "/admin/admin.zul";
+    public static final String PAGE_MONITORING_OVERVIEW = "/monitoring_overview.zul";
 
     //Labels
     public static final String LABEL_WELCOME = "welcome";
@@ -151,7 +160,9 @@ public class DODConstants {
     public static final String LABEL_NO_SLOW_LOGS = "noSlowLogs";
     public static final String LABEL_SHARED_INSTANCE_WARNING = "sharedInstanceWarning";
     public static final String LABEL_UPGRADE_SLAVE_FIRST = "upgradeSlaveFirst";
-    
+    public static final String LABEL_MONITORING_OVERVIEW_TITLE = "monitoringOverviewTitle";
+    public static final String LABEL_MONITORING_OVERVIEW_MESSAGE = "monitoringOerviewMessage";
+    public static final String LABEL_MONITORING_OVERVIEW = "monitoringOverview";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";

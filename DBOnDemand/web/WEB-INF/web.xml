@@ -238,6 +238,8 @@
         <filter-name>InstanceFilter</filter-name>
         <url-pattern>/instance.zul</url-pattern>
     </filter-mapping>
-    
-    
+    <filter-mapping>
+        <filter-name>InstanceFilter</filter-name>
+        <url-pattern>/monitoring_overview.zul</url-pattern>
+    </filter-mapping>
 </web-app>

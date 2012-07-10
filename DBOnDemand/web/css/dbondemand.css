@@ -114,3 +114,7 @@
     font-size:12px;
     font-family: arial,helvetica,sans-serif;
 }
+
+a:visited {
+color: blue;
+}

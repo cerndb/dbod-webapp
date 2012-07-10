@@ -9,10 +9,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 import org.zkoss.json.JSONArray;
@@ -70,9 +68,9 @@ public class MonitoringHelper {
      * @return JSON array.
      * @throws IOException if there is an error processing the response.
      */
-    public String getJSONMetric (DODInstance instance, String metric) throws IOException {
+    public String getJSONMetric (String instance, String metric) throws IOException {
         ArrayList<String[]> values = new ArrayList<String[]>();
-        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName() + "&"
+        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
         URLConnection plotConnection = plotUrl.openConnection();
         BufferedReader in = new BufferedReader(

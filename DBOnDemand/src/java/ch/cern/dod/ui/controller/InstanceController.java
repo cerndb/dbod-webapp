@@ -115,36 +115,40 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void beforeCompose() {
         //Get instance
-        instance = (DODInstance) Sessions.getCurrent().getAttribute(DODConstants.INSTANCE);
-        if (instance != null) {
-            //Get username and adminMode from headers
-            Execution execution = Executions.getCurrent();
-            username = execution.getHeader(DODConstants.ADFS_LOGIN);
-            String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
-            Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
-            admin = adminMode.booleanValue();
-
-            //Get user and password for the web services account
-            String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-            String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
-            fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
-            String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
-            if (userCCIDText != null && !userCCIDText.isEmpty())
-                userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
-            else
-                userCCID = new Long(0);
-
-            //Get instance and amdmin mode from session attributes
-            jobHelper = new JobHelper(admin);
-            dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
-            dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);
+        String dbName = (String) Executions.getCurrent().getParameter(DODConstants.INSTANCE);
+        if (dbName != null && !dbName.isEmpty()) {
             upgradeDAO = new DODUpgradeDAO();
+            upgrades = upgradeDAO.selectAll();
             instanceDAO = new DODInstanceDAO();
-            jobDAO = new DODJobDAO();
-            eGroupHelper = new EGroupHelper(wsUser, wsPswd);
+            instance = instanceDAO.selectByDbName(dbName, upgrades);
+            if (instance != null) {
+                //Get username and adminMode from headers
+                Execution execution = Executions.getCurrent();
+                username = execution.getHeader(DODConstants.ADFS_LOGIN);
+                String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
+                Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
+                admin = adminMode.booleanValue();
 
-            //Load instance
-            getInstanceInfo();
+                //Get user and password for the web services account
+                String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
+                String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+                fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
+                String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
+                if (userCCIDText != null && !userCCIDText.isEmpty())
+                    userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
+                else
+                    userCCID = new Long(0);
+
+                //Get instance and amdmin mode from session attributes
+                jobHelper = new JobHelper(admin);
+                dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
+                dateTimeFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT);     
+                jobDAO = new DODJobDAO();
+                eGroupHelper = new EGroupHelper(wsUser, wsPswd);
+
+                //Load instance
+                getInstanceInfo();
+            }
         }
     }
     

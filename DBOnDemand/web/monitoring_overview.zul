@@ -1,0 +1,43 @@
+<?page docType="html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;" ?>
+<?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
+<?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
+<?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
+<?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+<?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
+
+<zk>
+    <!-- Import controllers -->
+    <zscript>
+        <![CDATA[
+            import ch.cern.dod.ui.controller.MonitoringOverviewController;
+            import ch.cern.dod.ui.controller.TopBarController;
+            import org.zkoss.image.AImage;
+        ]]>
+    </zscript>
+
+    <!-- Include top bar -->
+    <topBar/>
+
+    <vbox style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
+        <!-- Main container for the help page (calls init method when created)-->
+        <hbox align="top" use="MonitoringOverviewController" id="controller">
+            <!-- Error window -->
+            <error/>
+            
+            <!-- Scripts for monitoring -->
+            <script src="https://www.google.com/jsapi"/>
+            <script src="/scripts/graph.js"/>
+
+            <!-- Groupbox for the  tree -->
+            <groupbox mold="3d" closable="false" width="1200" id="container">
+                <caption label=" ">
+                    <div height="24px">
+                        <label id="monitoringTitle" sclass="title" style="float:left;"/>
+                    </div>
+                </caption>
+            </groupbox>
+        </hbox>
+    </vbox>
+</zk>

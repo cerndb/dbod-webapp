@@ -25,19 +25,7 @@ import org.zkoss.zk.ui.event.CheckEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
-import org.zkoss.zul.Treecell;
-import org.zkoss.zul.Treeitem;
-import org.zkoss.zul.TreeitemRenderer;
-import org.zkoss.zul.Treerow;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
 
 /**
  * Renders rows in the overview tree.
@@ -148,14 +136,10 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Render DB name as a link
                 Treecell dbNameCell = new Treecell();
-                Label dbName = getFormattedLabel(instance.getDbName(), 20);
-                dbName.setStyle("hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;color:blue;cursor:pointer;text-decoration:underline");
-                dbName.addEventListener(Events.ON_CLICK, new EventListener() {
-                    public void onEvent(Event event) throws Exception {
-                        Sessions.getCurrent().setAttribute(DODConstants.INSTANCE, instance);
-                        Executions.sendRedirect(DODConstants.PAGE_INSTANCE);
-                    }
-                });
+                Html dbName = new Html();
+                dbName.setContent("<a style=\"text-decoration:underline;color:blue\" class=\"z-label\" href=\""
+                                    + Executions.encodeURL(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName()) 
+                                    +"\">" + instance.getDbName() + "</a>");
                 dbNameCell.appendChild(dbName);
                 //If instance is master append (M) to name
                 if (instance.getSlave() != null && !instance.getSlave().isEmpty())

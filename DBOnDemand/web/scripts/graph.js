@@ -1,8 +1,8 @@
 google.load('visualization', '1', {'packages':['annotatedtimeline']});
 //google.setOnLoadCallback(drawGraph);
 
-function drawGraph (values) {
-    var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById('graphDiv'));
+function drawGraph (values, divId) {
+    var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById(divId));
     var data = new google.visualization.DataTable();
     data.addColumn('datetime', 'Date');
     data.addColumn('number', '');

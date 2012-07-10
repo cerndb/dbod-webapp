@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
@@ -102,7 +103,7 @@ public class MonitoringController extends Window {
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     try {
-                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, (String) metrics.getSelectedItem().getValue()) + ");");
+                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue()) + ");");
                     } catch (IOException ex) {
                         Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                         showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -117,11 +118,22 @@ public class MonitoringController extends Window {
         graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\"></div>");
         mainBox.appendChild(graphDiv);
         try {
-            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, (String) metrics.getItemAtIndex(0).getValue()) + ");");
+            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getItemAtIndex(0).getValue()) + ", 'graphDiv');");
         } catch (IOException ex) {
             Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
             showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
+        
+        //Link to monitoring overview
+        Hbox overviewBox = new Hbox();
+        Label overviewMessage = new Label(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_MESSAGE));
+        Html overviewLink = new Html();
+        overviewLink.setContent("<a target=\"_blank\" style=\"text-decoration:underline;color:blue\" class=\"z-label\" href=\""
+                                    + Executions.encodeURL(DODConstants.PAGE_MONITORING_OVERVIEW + "?" + DODConstants.INSTANCE + "=" + instance.getDbName()) 
+                                    +"\">" + Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW) + "</a>");
+        overviewBox.appendChild(overviewMessage);
+        overviewBox.appendChild(overviewLink);
+        mainBox.appendChild(overviewBox);
 
         //Load link to Lemon
         if (!lemonURL.isEmpty()) {
@@ -133,7 +145,7 @@ public class MonitoringController extends Window {
             lemonBox.appendChild(lemonLink);
             mainBox.appendChild(lemonBox);
         }
-
+        
         //Close button
         Div buttonsDiv = new Div();
         buttonsDiv.setWidth("100%");
