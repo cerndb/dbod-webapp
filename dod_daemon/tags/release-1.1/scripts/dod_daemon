@@ -10,11 +10,13 @@ use Proc::Daemon;
 
 use DOD;
 
-our ($logger); 
+our ($logger, $workdir, $pidfile); 
 
 BEGIN{
-$logger = Log::Log4perl::get_logger("daemon");
-$logger->debug("Logger created");
+    $logger = Log::Log4perl::get_logger("daemon");
+    $logger->debug("Logger created");
+    $workdir = $config->{'DAEMON_WORKDIR'};
+    $pidfile = $config->{'DAEMON_PIDFILE'}
 }
 
 sub usage(){
@@ -31,25 +33,42 @@ sub Main{
                                     child_STDOUT => ">>$config->{'DAEMON_STDOUT'}",
                                     child_STDERR => ">>$config->{'DAEMON_STDERR'}",
                                     pid_file => $config->{'DAEMON_PIDFILE'});
-    if ($start){
-        $logger->debug( "Starting DOD daemon" );
-        my $dispatcher = $daemon->Init();
-        unless ($dispatcher){
-            # Daemon process
-            DOD::jobDispatcher();
+
+    if (-e $pidfile){
+        if ($stop){
+            $logger->debug( "Stopping daemon process" );
+            my $stopped = $daemon->Kill_Daemon( "$config->{'DAEMON_WORKDIR'}/$config->{'DAEMON_PIDFILE'}" );
+            unlink($pidfile);
+            exit 0;
         }
-        $logger->debug( "Job dispatcher PID: $dispatcher" );
-        my $status = $daemon->Status($dispatcher);
-        print "PID: $dispatcher\n";
+        elsif ($start){
+            my $pid = `cat $workdir/$pidfile`;
+            chomp $pid;
+            print "A daemon is running with PID: $pid\n";
+            exit -1;
+        }
     }
-    elsif ($stop){
-        $logger->debug( "Stopping daemon process" );
-        my $stopped = $daemon->Kill_Daemon( "$config->{'DAEMON_WORKDIR'}/$config->{'DAEMON_PIDFILE'}" );
+    else{
+        if ($start){
+            $logger->debug( "Starting DOD daemon" );
+            my $dispatcher = $daemon->Init();
+            unless ($dispatcher){
+                # Daemon process
+                DOD::jobDispatcher();
+            }
+            $logger->debug( "Job dispatcher PID: $dispatcher" );
+            my $status = $daemon->Status($dispatcher);
+            print "PID: $dispatcher\n";
+            exit 0;
+        }
+        elsif($stop){
+            print("No processes running.\n");
+            exit -1;
+        }
     }
 }
 
 &Main();
-exit 0;
 1;
 
 END{}
