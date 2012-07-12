@@ -69,7 +69,6 @@ public class MonitoringHelper {
      * @throws IOException if there is an error processing the response.
      */
     public String getJSONMetric (String instance, String metric) throws IOException {
-        ArrayList<String[]> values = new ArrayList<String[]>();
         URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
         URLConnection plotConnection = plotUrl.openConnection();
@@ -77,12 +76,35 @@ public class MonitoringHelper {
                                 new InputStreamReader(
                                 plotConnection.getInputStream()));
         String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            StringTokenizer tokens = new StringTokenizer(inputLine, ",");
-            values.add(new String[]{tokens.nextToken(), tokens.nextToken()});
+        StringBuilder toret = new StringBuilder();
+        float delta;
+        if ((inputLine = in.readLine()) != null) {
+            toret.append("{cols: [{id: 'date', label: 'Date', type: 'datetime'}, {id: 'value', label: 'Cumulative', type: 'number'}, {id: 'value', label: 'Delta', type: 'number'}], rows: [");
+            String[] values = inputLine.split(",");
+            toret.append("{c: [{v: new Date(");
+            toret.append(Long.parseLong(values[0]) * 1000);
+            toret.append(")}, {v: ");
+            toret.append(Float.parseFloat(values[1]));
+            toret.append("}, {v: 0}]}");
+            delta = Float.parseFloat(values[1]);
+            while ((inputLine = in.readLine()) != null) {
+                values = inputLine.split(",");
+                toret.append(", {c: [{v: new Date(");
+                toret.append(Long.parseLong(values[0]) * 1000);
+                toret.append(")}, {v: ");
+                toret.append(Float.parseFloat(values[1]));
+                toret.append("}, {v: ");
+                toret.append(Float.parseFloat(values[1]) - delta);
+                toret.append("}]}");
+                delta = Float.parseFloat(values[1]);
+            }
+            toret.append("]}");
         }
         in.close();
 
-        return JSONArray.toJSONString(values);
+        if (toret.length() > 0)
+            return toret.toString();
+        else
+            return "null";
     }
 }

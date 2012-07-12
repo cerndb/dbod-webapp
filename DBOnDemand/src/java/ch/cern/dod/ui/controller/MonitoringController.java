@@ -103,7 +103,7 @@ public class MonitoringController extends Window {
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     try {
-                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue()) + ");");
+                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue()) + ", 'graphDiv');");
                     } catch (IOException ex) {
                         Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                         showError(DODConstants.ERROR_DISPATCHING_JOB);
