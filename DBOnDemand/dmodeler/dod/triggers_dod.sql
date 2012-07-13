@@ -77,3 +77,70 @@ BEGIN
     END IF;
 END;
 /
+
+-- Trigger to monitor any database error
+CREATE OR REPLACE TRIGGER monitor_db_errors
+AFTER SERVERERROR ON SCHEMA
+DECLARE
+   sql_text ORA_NAME_LIST_T;
+   error_msg VARCHAR2(1024) := NULL;
+   stmt VARCHAR2(1024) := NULL;
+   message VARCHAR2 (3072);
+BEGIN
+  FOR depth IN 1 .. ORA_SERVER_ERROR_DEPTH LOOP
+    error_msg := error_msg || ORA_SERVER_ERROR_MSG(depth);
+  END LOOP;
+
+  FOR i IN 1 .. ORA_SQL_TXT(sql_text) LOOP
+     stmt := stmt || sql_text(i);
+  END LOOP;
+
+  message := '<html>
+                    <body>
+                        <p>
+                        The management database has encountered the following error:
+                        </p>
+                        <p>
+                        '|| error_msg ||'
+                        </p>
+                        <p>
+                        Caused by the following statement:
+                        </p>
+                        <p>
+                        '|| stmt ||'
+                        </p>
+                    </body>
+                </html>';
+
+    UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+        recipients => 'dbondemand-admin@cern.ch',
+        subject => 'DBOD: ERROR IN MANAGEMENT DATABASE ',
+        message => message,
+        mime_type => 'text/html');
+END;
+/
+
+-- Trigger to send an email when an instance is deleted.
+CREATE OR REPLACE TRIGGER dod_instances_delete
+AFTER UPDATE OF status ON dod_instances
+FOR EACH ROW
+DECLARE
+    message VARCHAR2 (1024);
+BEGIN
+    IF :NEW.status = '0'
+    THEN
+        message := '<html>
+                        <body>
+                            Instance ' || :NEW.db_name || ' has been removed from FIM and marked for deletion.
+                            Please take the necessary actions to free the allocated resources.
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: ' || :NEW.db_name || ' marked for deletion',
+            message => message,
+            mime_type => 'text/html');
+    END IF;
+END;
+/
