@@ -27,9 +27,10 @@ public class DODConstants {
     public static final String MASTER = "master";
     public static final String SLAVE = "slave";
     public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
-    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M&days=30&raw=1";
+    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M&raw=1";
     public static final String MONITORING_INSTANCE = "tgt";
     public static final String MONITORING_METRIC = "metric";
+    public static final String MONITORING_DAYS = "days";
     public static final String HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/user_help_html/";
     public static final String ADMIN_HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/admin_help_html/";
     public static final String LEMON_URL = "http://lemonweb.cern.ch/lemon-web/info.php?entity=";
@@ -163,6 +164,7 @@ public class DODConstants {
     public static final String LABEL_MONITORING_OVERVIEW_TITLE = "monitoringOverviewTitle";
     public static final String LABEL_MONITORING_OVERVIEW_MESSAGE = "monitoringOerviewMessage";
     public static final String LABEL_MONITORING_OVERVIEW = "monitoringOverview";
+    public static final String LABEL_MONITORING_OVERVIEW_WARNING = "monitoringOverviewWarning";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";

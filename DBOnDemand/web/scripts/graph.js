@@ -8,7 +8,7 @@ function drawGraph (values, divId) {
         var data = new google.visualization.DataTable(values);
         annotatedtimeline.draw(data, {
             colors: ['green','red'], // The colors to be used
-            displayExactValues: false, // Do not truncate values (i.e. using K suffix)
+            displayExactValues: true, // Do not truncate values (i.e. using K suffix)
             displayRangeSelector: true, // Do not sow the range selector
             displayZoomButtons: true, // DO not display the zoom buttons
             fill: 30, // Fill the area below the lines with 30% opacity
@@ -26,7 +26,7 @@ function drawGraph (values, divId) {
         data.addColumn('number', '');
         annotatedtimeline.draw(data, {
             colors: ['green'], // The colors to be used
-            displayExactValues: false, // Do not truncate values (i.e. using K suffix)
+            displayExactValues: true, // Do not truncate values (i.e. using K suffix)
             displayRangeSelector: true, // Do not sow the range selector
             displayZoomButtons: true, // DO not display the zoom buttons
             fill: 30, // Fill the area below the lines with 30% opacity
@@ -39,4 +39,8 @@ function drawGraph (values, divId) {
             wmode: 'transparent'
         });
     }
+    google.visualization.events.addListener(annotatedtimeline, 'ready',
+        function (event) {
+            document.getElementById(divId).className = document.getElementById(divId).className.replace( /(?:^|\s)preloader(?!\S)/ , '' );
+        });
 }

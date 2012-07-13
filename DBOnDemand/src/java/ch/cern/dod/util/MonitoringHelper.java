@@ -68,8 +68,9 @@ public class MonitoringHelper {
      * @return JSON array.
      * @throws IOException if there is an error processing the response.
      */
-    public String getJSONMetric (String instance, String metric) throws IOException {
-        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance + "&"
+    public String getJSONMetric (String instance, String metric, int days) throws IOException {
+        URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_DAYS + "=" + days
+                            + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
         URLConnection plotConnection = plotUrl.openConnection();
         BufferedReader in = new BufferedReader(

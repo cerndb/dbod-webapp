@@ -103,7 +103,8 @@ public class MonitoringController extends Window {
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     try {
-                        Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue()) + ", 'graphDiv');");
+                        Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
+                                + "drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue(), 30) + ", 'graphDiv');");
                     } catch (IOException ex) {
                         Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                         showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -115,10 +116,10 @@ public class MonitoringController extends Window {
 
         //Create graph
         Html graphDiv = new Html();
-        graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\"></div>");
+        graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
         mainBox.appendChild(graphDiv);
         try {
-            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getItemAtIndex(0).getValue()) + ", 'graphDiv');");
+            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getItemAtIndex(0).getValue(), 30) + ", 'graphDiv');");
         } catch (IOException ex) {
             Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
             showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -131,8 +132,10 @@ public class MonitoringController extends Window {
         overviewLink.setContent("<a target=\"_blank\" style=\"text-decoration:underline;color:blue\" class=\"z-label\" href=\""
                                     + Executions.encodeURL(DODConstants.PAGE_MONITORING_OVERVIEW + "?" + DODConstants.INSTANCE + "=" + instance.getDbName()) 
                                     +"\">" + Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW) + "</a>");
+        Label overviewWarning = new Label(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_WARNING));
         overviewBox.appendChild(overviewMessage);
         overviewBox.appendChild(overviewLink);
+        overviewBox.appendChild(overviewWarning);
         mainBox.appendChild(overviewBox);
 
         //Load link to Lemon

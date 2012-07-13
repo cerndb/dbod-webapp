@@ -118,3 +118,8 @@
 a:visited {
 color: blue;
 }
+
+.preloader {
+    height:350px;
+    background:url(../img/loading.gif) center center no-repeat;
+}

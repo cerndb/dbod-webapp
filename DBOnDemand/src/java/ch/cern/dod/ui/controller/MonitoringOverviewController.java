@@ -43,6 +43,7 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
     public void afterCompose() {
         //Set title
         ((Label) getFellow("monitoringTitle")).setValue(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_TITLE) + " " + instance);
+        String javascript = "";
         
         //Compose graphs
         for (int i=0; i+1 < DODConstants.MYSQL_OVERVIEW_METRICS.length; i = i+2) {
@@ -58,10 +59,10 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
             labelLeft.setSclass("titleSmall");
             vboxLeft.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"\" style=\"width:560px; height:300px\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxLeft.appendChild(graphLeft);
             try {
-                Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i][0]) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"');");
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i][0], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -75,10 +76,10 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
             labelRight.setSclass("titleSmall");
             vboxRight.appendChild(labelRight);
             Html graphRight = new Html();
-            graphRight.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"\" style=\"width:560px; height:300px\"></div>");
+            graphRight.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxRight.appendChild(graphRight);
             try {
-                Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i+1][0]) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"');");
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i+1][0], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -97,17 +98,19 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
             labelLeft.setSclass("titleSmall");
             vbox.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"\" style=\"width:560px; height:300px\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vbox.appendChild(graphLeft);
             try {
-                Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][0])
-                                        + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"');");
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][0], 14)
+                                        + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
             }
             ((Groupbox) getFellow("container")).appendChild(vbox);
         }
+        //Eval javascript
+        Clients.evalJavaScript(javascript);
     }
 
     /**
