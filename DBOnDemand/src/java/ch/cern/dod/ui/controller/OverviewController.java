@@ -10,6 +10,7 @@ import ch.cern.dod.util.DODConstants;
 import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Div;
@@ -114,7 +115,12 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
 
         //Set the new instances
         Tree overviewTree = (Tree) getFellow("overviewTree");
+        int activePage = overviewTree.getActivePage();
         overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+        try {
+            overviewTree.setActivePage(activePage);
+        }
+        catch (WrongValueException ex) {}
         
         displayOrHideAreas();
     }

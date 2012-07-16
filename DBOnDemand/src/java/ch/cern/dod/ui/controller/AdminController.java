@@ -17,6 +17,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Checkbox;
@@ -148,13 +149,23 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         
         //Refresh checked list
         Tree tree = (Tree) getFellow("overviewTree");
+        int activePage = tree.getActivePage();
         ((OverviewTreeRenderer)tree.getItemRenderer()).updateCheckedInstances(instances);
         //Set the new instances
         tree.setModel(OverviewTreeModel.getInstance(instances));
+        try {
+            tree.setActivePage(activePage);
+        }
+        catch (WrongValueException ex) {}
         
         //Set the new upgrades
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
+        activePage = upgradesGrid.getActivePage();
         ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
+        try {
+            upgradesGrid.setActivePage(activePage);
+        }
+        catch (WrongValueException ex) {}
 
         displayOrHideAreas();
     }
