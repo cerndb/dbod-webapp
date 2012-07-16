@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zk.ui.util.Clients;
@@ -17,7 +18,7 @@ import org.zkoss.zul.*;
  * Controller for the monitoring window.
  * @author Daniel Gomez Blanco
  */
-public class MonitoringOverviewController extends Hbox  implements AfterCompose, BeforeCompose{
+public class MonitoringOverviewController extends Hbox  implements BeforeCompose, AfterCompose{
 
     /**
      * Instance being managed at the moment
@@ -37,14 +38,20 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
         helper = new MonitoringHelper();
     }
     
-    /**
-     * Method called after composing the page, it load metrics.
-     */
     public void afterCompose() {
         //Set title
         ((Label) getFellow("monitoringTitle")).setValue(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_TITLE) + " " + instance);
+        ((Groupbox) getFellow("container")).setOpen(true);
+        Events.echoEvent("onOpen", (Groupbox) getFellow("container"), null);
+    }
+    
+    /**
+     * Method called after composing the page, it load metrics.
+     */
+    public void renderCharts() {
+        //Detach loading GIF
+        ((Image) getFellow("loading")).detach();
         String javascript = "";
-        
         //Compose graphs
         for (int i=0; i+1 < DODConstants.MYSQL_OVERVIEW_METRICS.length; i = i+2) {
             //Hbox for two graphs
@@ -86,7 +93,7 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
             }
             hbox.appendChild(vboxRight);
             //Add to container
-            ((Groupbox) getFellow("container")).appendChild(hbox);
+            ((Vbox) getFellow("chartContainer")).appendChild(hbox);
         }
         //If array has an odd number of elements add one more in the center
         if  (DODConstants.MYSQL_OVERVIEW_METRICS.length % 2 == 1) {
@@ -107,7 +114,7 @@ public class MonitoringOverviewController extends Hbox  implements AfterCompose,
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
             }
-            ((Groupbox) getFellow("container")).appendChild(vbox);
+            ((Vbox) getFellow("chartContainer")).appendChild(vbox);
         }
         //Eval javascript
         Clients.evalJavaScript(javascript);
