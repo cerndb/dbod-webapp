@@ -70,9 +70,9 @@ public class DODUpgradeDAO {
                 upgrades.add(upgrade);
             }
         } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
         } finally {
             try {
                 result.close();
@@ -133,9 +133,9 @@ public class DODUpgradeDAO {
             }
             
         } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
         } finally {
             try {
                 updateStatement.close();
@@ -182,9 +182,9 @@ public class DODUpgradeDAO {
             result = deleteStatement.executeUpdate();
             
         } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
+            Logger.getLogger(DODUpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE FOR TYPE " + upgrade.getDbType() + " AND CATEGORY " + upgrade.getCategory(), ex);
         } finally {
             try {
                 deleteStatement.close();

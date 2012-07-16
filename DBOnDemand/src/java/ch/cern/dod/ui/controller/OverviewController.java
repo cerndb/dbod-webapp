@@ -115,10 +115,15 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
 
         //Set the new instances
         Tree overviewTree = (Tree) getFellow("overviewTree");
-        int activePage = overviewTree.getActivePage();
+        int activePage = 0;
+        if (overviewTree.getMold().equals("paging")) {
+             activePage = overviewTree.getActivePage();
+        }
         overviewTree.setModel(OverviewTreeModel.getInstance(instances));
         try {
-            overviewTree.setActivePage(activePage);
+            if (overviewTree.getMold().equals("paging")) {
+                overviewTree.setActivePage(activePage);
+            }
         }
         catch (WrongValueException ex) {}
         

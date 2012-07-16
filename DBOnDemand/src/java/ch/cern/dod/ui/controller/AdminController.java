@@ -1,11 +1,18 @@
 package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODInstanceDAO;
+import ch.cern.dod.db.dao.DODStatsDAO;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
+import ch.cern.dod.db.entity.DODCommandStat;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODJobStat;
 import ch.cern.dod.db.entity.DODUpgrade;
+import ch.cern.dod.ui.model.CommandStatsModel;
+import ch.cern.dod.ui.model.JobStatsModel;
 import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.ui.model.UpgradesListModel;
+import ch.cern.dod.ui.renderer.CommandStatsRenderer;
+import ch.cern.dod.ui.renderer.JobStatsRenderer;
 import ch.cern.dod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dod.util.DODConstants;
@@ -20,17 +27,7 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
-import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Div;
-import org.zkoss.zul.Foot;
-import org.zkoss.zul.Grid;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
-import org.zkoss.zul.Treefoot;
-import org.zkoss.zul.Vbox;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
 
 /**
  * Controller for the admin overview of instances. It allows the admins to manage every instance.
@@ -46,6 +43,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     private DODInstanceDAO instanceDAO;
     /**
+     * Stats DAO
+     */
+    private DODStatsDAO statsDAO;
+    /**
      * List of instances. In this case, all the instances in the database.
      */
     private List<DODInstance> instances;
@@ -54,6 +55,14 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * List of upgrades.
      */
     private List<DODUpgrade> upgrades;
+    /**
+     * List of command stats.
+     */
+    private List<DODCommandStat> commandStats;
+    /**
+     * List of upgrades.
+     */
+    private List<DODJobStat> jobStats;
     /**
      * Job helper to perform admin actions.
      */
@@ -78,6 +87,11 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Select instances
         instanceDAO = new DODInstanceDAO();
         instances = instanceDAO.selectAll(upgrades);
+        
+        //Select stats
+        statsDAO = new DODStatsDAO();
+        commandStats = statsDAO.selectCommandStats();
+        jobStats = statsDAO.selectJobStats();
     }
 
     /**
@@ -85,15 +99,29 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * with the instances obtained before composing.
      */
     public void afterCompose() {
+        //Instances tree
         Tree overviewTree = (Tree) getFellow("overviewTree");
         overviewTree.setModel(OverviewTreeModel.getInstance(instances));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
         overviewTree.getPagingChild().setMold("os");
         
+        //Upgrades grid
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
         upgradesGrid.setModel(new UpgradesListModel(upgrades));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
         upgradesGrid.getPagingChild().setMold("os");
+        
+        //Command stats grid
+        Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
+        commandStatsGrid.setModel(new CommandStatsModel(commandStats));
+        commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
+        commandStatsGrid.getPagingChild().setMold("os");
+        
+        //Job stats grid
+        Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
+        jobStatsGrid.setModel(new JobStatsModel(jobStats));
+        jobStatsGrid.setRowRenderer(new JobStatsRenderer());
+        jobStatsGrid.getPagingChild().setMold("os");
         
         displayOrHideAreas();
     }
@@ -135,6 +163,38 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:block");
             ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
         }
+        
+        if (commandStats != null && commandStats.size() > 0) {
+            ((Grid) getFellow("commandStatsGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyCommandStatsMsg")).setStyle("display:none");
+            if (commandStats.size() > 10 && ((Grid) getFellow("commandStatsGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("commandStatsFooter")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("commandStatsFooter")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Grid) getFellow("commandStatsGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyCommandStatsMsg")).setStyle("display:block");
+            ((Foot) getFellow("commandStatsFooter")).setStyle("display:none");
+        }
+        
+        if (jobStats != null && jobStats.size() > 0) {
+            ((Grid) getFellow("jobStatsGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:none");
+            if (jobStats.size() > 10 && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("jobStatsFooter")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("jobStatsFooter")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Grid) getFellow("jobStatsGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:block");
+            ((Foot) getFellow("jobStatsFooter")).setStyle("display:none");
+        }
     }
 
     /**
@@ -147,23 +207,64 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Get instances
         instances = instanceDAO.selectAll(upgrades);
         
+        //Get command stats
+        commandStats = statsDAO.selectCommandStats();
+        
+        //Get job stats
+        jobStats = statsDAO.selectJobStats();
+        
         //Refresh checked list
         Tree tree = (Tree) getFellow("overviewTree");
-        int activePage = tree.getActivePage();
+        int activePage = 0;
+        if (tree.getMold().equals("paging")) {
+            activePage = tree.getActivePage();
+        }
         ((OverviewTreeRenderer)tree.getItemRenderer()).updateCheckedInstances(instances);
         //Set the new instances
         tree.setModel(OverviewTreeModel.getInstance(instances));
         try {
-            tree.setActivePage(activePage);
+            if (tree.getMold().equals("paging")) {
+                tree.setActivePage(activePage);
+            }
         }
         catch (WrongValueException ex) {}
         
         //Set the new upgrades
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        activePage = upgradesGrid.getActivePage();
+        if (upgradesGrid.getMold().equals("paging")) {
+            activePage = upgradesGrid.getActivePage();
+        }
         ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
         try {
-            upgradesGrid.setActivePage(activePage);
+            if (upgradesGrid.getMold().equals("paging")) {
+                upgradesGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
+        
+        //Set the new command stats
+        Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
+        if (commandStatsGrid.getMold().equals("paging")) {
+            activePage = commandStatsGrid.getActivePage();
+        }
+        ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
+        try {
+            if (commandStatsGrid.getMold().equals("paging")) {
+                commandStatsGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
+        
+        //Set the new job stats
+        Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
+        if (jobStatsGrid.getMold().equals("paging")) {
+            activePage = jobStatsGrid.getActivePage();
+        }
+        ((JobStatsModel)jobStatsGrid.getModel()).setJobStats(jobStats);
+        try {
+            if (jobStatsGrid.getMold().equals("paging")) {
+                jobStatsGrid.setActivePage(activePage);
+            }
         }
         catch (WrongValueException ex) {}
 
@@ -327,12 +428,32 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     }
     
     /**
-     * Displays all instances in the view
+     * Displays all upgrades in the view
      */
     public void showAllUpgrades() {
         Grid grid = (Grid) getFellow("upgradesGrid");
         grid.setMold("default");
         Foot footer = (Foot) getFellow("footerUpgrades");
+        footer.setStyle("display:none");
+    }
+    
+    /**
+     * Displays all command stats in the view
+     */
+    public void showAllCommandStats() {
+        Grid grid = (Grid) getFellow("commandStatsGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("commandStatsFooter");
+        footer.setStyle("display:none");
+    }
+    
+    /**
+     * Displays all job stats in the view
+     */
+    public void showAllJobStats() {
+        Grid grid = (Grid) getFellow("jobStatsGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("jobStatsFooter");
         footer.setStyle("display:none");
     }
     
