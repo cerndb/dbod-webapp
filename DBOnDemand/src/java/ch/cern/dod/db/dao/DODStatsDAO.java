@@ -2,7 +2,6 @@ package ch.cern.dod.db.dao;
 
 import ch.cern.dod.db.entity.DODCommandStat;
 import ch.cern.dod.db.entity.DODJobStat;
-import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
