@@ -14,7 +14,7 @@ function drawGraph (values, divId) {
             fill: 30, // Fill the area below the lines with 30% opacity
             legendPosition: 'newRow', // Can be sameRow
             scaleColumns: [0, 1], // Have two scales, by the first and second lines
-            scaleType: 'allmaximized', // See docs...
+            scaleType: 'allfixed', // See docs...
             thickness: 2, // Make the lines thicker
             wmode: 'transparent'
         });
@@ -32,7 +32,7 @@ function drawGraph (values, divId) {
             fill: 30, // Fill the area below the lines with 30% opacity
             legendPosition: 'newRow', // Can be sameRow
             scaleColumns: [0, 1], // Have two scales, by the first and second lines
-            scaleType: 'almaximized', // See docs...
+            scaleType: 'allfixed', // See docs...
             thickness: 2, // Make the lines thicker
             zoomStartTime: new Date(), //NOTE: month 1 = Feb (javascript to blame)
             zoomEndTime: new Date(), //NOTE: month 1 = Feb (javascript to blame)

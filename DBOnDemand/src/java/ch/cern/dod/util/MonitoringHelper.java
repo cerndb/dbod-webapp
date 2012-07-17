@@ -69,6 +69,7 @@ public class MonitoringHelper {
      * @throws IOException if there is an error processing the response.
      */
     public String getJSONMetric (String instance, String metric, int days) throws IOException {
+        //HTTP call to RACMon
         URL plotUrl = new URL(DODConstants.MONITORING_URL + "&" + DODConstants.MONITORING_DAYS + "=" + days
                             + "&" + DODConstants.MONITORING_INSTANCE + "=" + DODConstants.PREFIX_INSTANCE_NAME + instance + "&"
                             + DODConstants.MONITORING_METRIC + "=" + metric);
@@ -78,31 +79,59 @@ public class MonitoringHelper {
                                 plotConnection.getInputStream()));
         String inputLine;
         StringBuilder toret = new StringBuilder();
-        float delta;
+        //If there is data to read
         if ((inputLine = in.readLine()) != null) {
+            //Create the columns and get the first row
             toret.append("{cols: [{id: 'date', label: 'Date', type: 'datetime'}, {id: 'value', label: 'Cumulative', type: 'number'}, {id: 'value', label: 'Delta', type: 'number'}], rows: [");
             String[] values = inputLine.split(",");
+            long lastDate = Long.parseLong(values[0]) * 1000;
+            float lastValue = Float.parseFloat(values[1]);
             toret.append("{c: [{v: new Date(");
             toret.append(Long.parseLong(values[0]) * 1000);
             toret.append(")}, {v: ");
-            toret.append(Float.parseFloat(values[1]));
+            toret.append(lastValue);
             toret.append("}, {v: 0}]}");
-            delta = Float.parseFloat(values[1]);
+
+            //For every row
             while ((inputLine = in.readLine()) != null) {
                 values = inputLine.split(",");
+                long currentDate = Long.parseLong(values[0]) * 1000;
+                float currentValue = Float.parseFloat(values[1]);
+                //If more than 7 minutes passed without changes, add a delta 0 6 minutes before for plotting
+                if (lastDate + 420000 < currentDate) {
+                    toret.append(", {c: [{v: new Date(");
+                    toret.append(lastDate + 360000);
+                    toret.append(")}, {}, {v:0}]}");
+                }
+                if (currentDate - 420000 > lastDate) {
+                    toret.append(", {c: [{v: new Date(");
+                    toret.append(currentDate - 360000);
+                    toret.append(")}, {}, {v:0}]}");
+                }
+                //Append the accumulative value
                 toret.append(", {c: [{v: new Date(");
-                toret.append(Long.parseLong(values[0]) * 1000);
+                toret.append(currentDate);
                 toret.append(")}, {v: ");
-                toret.append(Float.parseFloat(values[1]));
-                toret.append("}, {v: ");
-                toret.append(Float.parseFloat(values[1]) - delta);
+                toret.append(currentValue);
+                //If last time and current time are the same then append delta
+                if (currentDate == lastDate) {
+                    toret.append("}, {v: ");
+                    toret.append(currentValue - lastValue);
+                }
                 toret.append("}]}");
-                delta = Float.parseFloat(values[1]);
+                //Update last value and last date
+                lastValue = currentValue;
+                lastDate = currentDate;
             }
+            //Append a delta 0 at the end of the graph to close the line
+            toret.append(", {c: [{v: new Date(");
+            toret.append(lastDate);
+            toret.append(")}, {}, {v:0}]}");
             toret.append("]}");
         }
         in.close();
 
+        //If there is data return the JSON object, if not the return null
         if (toret.length() > 0)
             return toret.toString();
         else
