@@ -111,7 +111,7 @@ public class BackupController extends Window {
 
         //Basic window properties
         this.setId("backupWindow");
-        this.setTitle(Labels.getLabel(DODConstants.LABEL_BACKUP_TITLE));
+        this.setTitle(Labels.getLabel(DODConstants.LABEL_BACKUP_TITLE) + " " + instance.getDbName());
         this.setBorder("normal");
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");

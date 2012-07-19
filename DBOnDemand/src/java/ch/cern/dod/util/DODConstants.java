@@ -121,6 +121,7 @@ public class DODConstants {
     public static final String LABEL_AUTOMATIC_BACKUP = "automaticBackup";
     public static final String LABEL_HOURS = "hours";
     public static final String LABEL_BACKUP_TITLE = "backupTitle";
+    public static final String LABEL_BACKUP_POPUP = "backupPopup";
     public static final String LABEL_BACKUP_CONFIG = "backupConfiguration";
     public static final String LABEL_BACKUP_TO_TAPE = "backupToTape";
     public static final String LABEL_BACKUP_TO_TAPE_WARNING = "backupToTapeWarning";
@@ -155,6 +156,7 @@ public class DODConstants {
     public static final String LABEL_VERSION_TO = "versionTo";
     public static final String LABEL_DELETE_UPGRADE = "deleteUpgrade";
     public static final String LABEL_FILES_TITLE = "filesTitle";
+    public static final String LABEL_FILES_POPUP = "filesPopup";
     public static final String LABEL_SLOW_LOGS_TITLE = "slowLogsTitle";
     public static final String LABEL_SLOW_LOGS_MESSAGE = "slowLogsMessage";
     public static final String LABEL_SLOW_LOGS_DOWNLOAD = "slowLogsDownload";
@@ -165,6 +167,8 @@ public class DODConstants {
     public static final String LABEL_MONITORING_OVERVIEW_MESSAGE = "monitoringOerviewMessage";
     public static final String LABEL_MONITORING_OVERVIEW = "monitoringOverview";
     public static final String LABEL_MONITORING_OVERVIEW_WARNING = "monitoringOverviewWarning";
+    public static final String LABEL_SHUTDOWN_TITLE = "shutdownTitle";
+    public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";

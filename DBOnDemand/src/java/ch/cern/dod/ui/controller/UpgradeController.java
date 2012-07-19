@@ -83,7 +83,7 @@ public class UpgradeController extends Window {
 
         //Basic window properties
         this.setId("upgradeWindow");
-        this.setTitle(Labels.getLabel(DODConstants.LABEL_UPGRADE_TITLE));
+        this.setTitle(Labels.getLabel(DODConstants.LABEL_UPGRADE_TITLE) + " " + instance.getDbName());
         this.setBorder("normal");
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
@@ -225,9 +225,9 @@ public class UpgradeController extends Window {
         try {
             errorWindow.doModal();
         } catch (InterruptedException ex) {
-            Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
+            Logger.getLogger(UpgradeController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
-            Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
+            Logger.getLogger(UpgradeController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
     }
 }

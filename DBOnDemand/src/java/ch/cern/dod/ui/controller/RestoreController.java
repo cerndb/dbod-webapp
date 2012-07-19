@@ -130,7 +130,7 @@ public class RestoreController extends Window {
 
         //Basic window properties
         this.setId("restoreWindow");
-        this.setTitle(Labels.getLabel(DODConstants.LABEL_RESTORE_TITLE));
+        this.setTitle(Labels.getLabel(DODConstants.LABEL_RESTORE_TITLE) + " " + instance.getDbName());
         this.setBorder("normal");
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");

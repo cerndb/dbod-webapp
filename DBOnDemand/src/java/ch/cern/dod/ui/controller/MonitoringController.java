@@ -76,7 +76,7 @@ public class MonitoringController extends Window {
 
         //Basic window properties
         this.setId("monitoringWindow");
-        this.setTitle(Labels.getLabel(DODConstants.LABEL_METRICS_TITLE));
+        this.setTitle(Labels.getLabel(DODConstants.LABEL_METRICS_TITLE) + " " + instance.getDbName());
         this.setBorder("normal");
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");

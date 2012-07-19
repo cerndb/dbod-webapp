@@ -616,11 +616,15 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Creates job to shutdown the instance.
      */
     public void doShutdown() {
-        //Create new job and update instance status
-        if (jobHelper.doShutdown(instance, username)) {
-            afterCompose();
-        } else {
-            showError(null, DODConstants.ERROR_DISPATCHING_JOB);
+        try {
+            ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper);
+            //Only show window if it is not already being diplayed
+            if (this.getRoot().getFellowIfAny(shutdownController.getId()) == null) {
+                shutdownController.setParent(this.getRoot());
+                shutdownController.doModal();
+            }
+        } catch (InterruptedException ex) {
+            showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
         }
     }
 

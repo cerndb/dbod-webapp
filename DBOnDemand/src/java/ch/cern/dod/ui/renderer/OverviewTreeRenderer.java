@@ -1,11 +1,7 @@
 package ch.cern.dod.ui.renderer;
 
 import ch.cern.dod.db.entity.DODInstance;
-import ch.cern.dod.ui.controller.BackupController;
-import ch.cern.dod.ui.controller.FileController;
-import ch.cern.dod.ui.controller.MonitoringController;
-import ch.cern.dod.ui.controller.RestoreController;
-import ch.cern.dod.ui.controller.UpgradeController;
+import ch.cern.dod.ui.controller.*;
 import ch.cern.dod.ui.model.OverviewTreeNode;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
@@ -267,11 +263,17 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 shutdownBtn.setParent(box);
                 shutdownBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                     public void onEvent(Event event) {
-                        //Create new job and update instance status
-                        if (jobHelper.doShutdown(instance, username))
-                            row.getTree().setModel(row.getTree().getModel());
-                        else
-                            showError(item, null, DODConstants.ERROR_DISPATCHING_JOB);
+                        //Show shutdown window
+                        try {
+                            ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper);
+                            //Only show window if it is not already being diplayed
+                            if (row.getRoot().getFellowIfAny(shutdownController.getId()) == null) {
+                                shutdownController.setParent(row.getRoot());
+                                shutdownController.doModal();
+                            }
+                        } catch (InterruptedException ex) {
+                            showError(item, ex, DODConstants.ERROR_DISPATCHING_JOB);
+                        }
                     }
                 });
                 //Only enable button if the instance is running
@@ -284,7 +286,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Config files button
                 final Toolbarbutton filesButton = new Toolbarbutton();
-                filesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_FILES_TITLE));
+                filesButton.setTooltiptext(Labels.getLabel(DODConstants.LABEL_FILES_POPUP));
                 filesButton.setImage(DODConstants.IMG_FILES);
                 filesButton.setParent(box);
                 filesButton.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -312,7 +314,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Dispatch a backup button
                 final Toolbarbutton backupBtn = new Toolbarbutton();
-                backupBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_TITLE));
+                backupBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_BACKUP_POPUP));
                 backupBtn.setImage(DODConstants.IMG_BACKUP);
                 backupBtn.setParent(box);
                 backupBtn.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -373,7 +375,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 upgradeBtn.setParent(box);
                 upgradeBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                     public void onEvent(Event event) {
-                        //Show destroy window
+                        //Show upgrade window
                         try {
                             UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
                             //Only show window if it is not already being diplayed

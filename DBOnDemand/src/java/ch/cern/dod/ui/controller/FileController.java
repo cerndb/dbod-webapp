@@ -91,7 +91,7 @@ public class FileController extends Window {
 
         //Basic window properties
         this.setId("filesWindow");
-        this.setTitle(Labels.getLabel(DODConstants.LABEL_FILES_TITLE));
+        this.setTitle(Labels.getLabel(DODConstants.LABEL_FILES_TITLE) + " " + instance.getDbName());
         this.setBorder("normal");
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
