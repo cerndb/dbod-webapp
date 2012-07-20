@@ -4,7 +4,7 @@ package ch.cern.dod.db.entity;
  * This class represents a job statistic.
  * @author Daniel Gomez Blanco
  */
-public class DODJobStat {
+public class DODJobStat implements Comparable{
     /**
      * DB name of the instance.
      */
@@ -52,5 +52,9 @@ public class DODJobStat {
 
     public void setMeanDuration(float meanDuration) {
         this.meanDuration = meanDuration;
+    }
+
+    public int compareTo(Object o) {
+        return dbName.compareTo(((DODJobStat)o).getDbName());
     }
 }

@@ -35,14 +35,6 @@ public class CommandStatsModel extends AbstractListModel implements ListModelExt
     }
 
     /**
-     * Setter for the stats, passing the list of command stats as a parameter.
-     * @param commandStats command stats to make the model of.
-     */
-    public void setCommandStats(List<DODCommandStat> commandStats) {
-        this.commandStats = commandStats;
-    }
-
-    /**
      * Overrides the method to get the size of the model.
      * @return the number of stats in the model.
      */

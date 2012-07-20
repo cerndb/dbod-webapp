@@ -183,7 +183,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (jobStats != null && jobStats.size() > 0) {
             ((Grid) getFellow("jobStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:none");
-            if (jobStats.size() > 10 && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
+            if (((Grid) getFellow("jobStatsGrid")).getModel().getSize() > 10
+                    && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
                 ((Foot) getFellow("jobStatsFooter")).setStyle("display:block");
             }
             else {
@@ -247,7 +248,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (commandStatsGrid.getMold().equals("paging")) {
             activePage = commandStatsGrid.getActivePage();
         }
-        ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
+        commandStatsGrid.setModel(new CommandStatsModel(commandStats));
         try {
             if (commandStatsGrid.getMold().equals("paging")) {
                 commandStatsGrid.setActivePage(activePage);
@@ -464,6 +465,16 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
         tree.setModel(OverviewTreeModel.getInstance(instances));
+        displayOrHideAreas();
+    }
+    
+    /**
+     * Re-renders the grid in order to filter job stats.
+     */
+    public void filterJobStats () {
+        //Re-render the grid
+        Grid grid = (Grid) getFellow("jobStatsGrid");
+        ((JobStatsModel) grid.getModel()).filterJobStats(((Textbox) getFellow("jobStatsDBNameFilter")).getValue(), ((Textbox) getFellow("jobStatsCommandFilter")).getValue());
         displayOrHideAreas();
     }
     

@@ -11,6 +11,12 @@ import org.zkoss.zul.RowRenderer;
  */
 public class JobStatsRenderer implements RowRenderer{
 
+    /**
+     * Renders a row in the job stats table.
+     * @param row row to render.
+     * @param object stat to render.
+     * @throws Exception 
+     */
     public void render(Row row, Object object) throws Exception {
         DODJobStat stat = (DODJobStat) object; 
         // the data append to each row with simple label
@@ -19,5 +25,4 @@ public class JobStatsRenderer implements RowRenderer{
         row.appendChild(new Label(String.valueOf(stat.getCount())));
         row.appendChild(new Label(String.valueOf(stat.getMeanDuration())));
     }
-    
 }

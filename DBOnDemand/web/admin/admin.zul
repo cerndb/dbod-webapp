@@ -254,6 +254,22 @@
                         <vbox width="100%" align="left">
                             <!-- Job stats grid (only shown when there are stats) -->
                             <grid id="jobStatsGrid" mold="paging" pageSize="10" style="display:none">
+                                <auxhead sclass="category-center">
+                                    <auxheader colspan="1">
+                                        <hbox align="bottom">
+                                            <image src="/img/filter.png" width="18px" height="18px"/>
+                                            <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                        </hbox>
+                                    </auxheader>
+                                    <auxheader colspan="1">
+                                        <hbox align="bottom">
+                                            <image src="/img/filter.png" width="18px" height="18px"/>
+                                            <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                        </hbox>
+                                    </auxheader>
+                                    <auxheader colspan="2">
+                                    </auxheader>
+                                </auxhead>
                                 <columns>
                                     <column label="${c:l('dbName')}" sort="auto(dbName)" width="240px"/>
                                     <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="240px"/>
