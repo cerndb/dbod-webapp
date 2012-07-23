@@ -555,8 +555,23 @@ BEGIN
 END;
 /
 
+-- Clean the jobs table, deleting jobs older than 90 days
+CREATE OR REPLACE PROCEDURE clean_jobs
+IS
+    now DATE;
+BEGIN
+    -- Insert a row in the jobs table
+    SELECT sysdate
+        INTO now
+        FROM dual;
 
--- Add check_ownership and monitor_jobs to dbms_scheduler
+    -- Delete old jobs
+    DELETE FROM dod_jobs
+        WHERE now - creation_date > 90;
+END;
+/
+
+-- Add check_ownership, monitor_jobs and clean_jobs to dbms_scheduler
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
         job_name             => 'DBOD_OWNERSHIP_CHECK',
@@ -573,6 +588,14 @@ BEGIN
         repeat_interval      => 'FREQ=MINUTELY;INTERVAL=5',
         enabled              =>  TRUE,
         comments             => 'Scheduled job to check for timed out jobs');
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name             => 'DBOD_CLEAN_JOBS',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.clean_jobs; END;',
+        repeat_interval      => 'FREQ=DAILY;',
+        enabled              =>  TRUE,
+        comments             => 'Scheduled job to clean jobs table');
 END;
 /
 
