@@ -318,7 +318,7 @@ public class DODInstanceDAO {
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
             query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
-                            + " FROM dod_instances WHERE db_name = ?");
+                            + " FROM dod_instances WHERE db_name = ? AND status = '1'");
             statement = connection.prepareStatement(query.toString());
 
             //Assign values to variables
