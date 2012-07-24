@@ -62,7 +62,7 @@ public class DODStatsDAO {
                 DODCommandStat commandStat = new DODCommandStat();
                 commandStat.setCommandName(result.getString(1));
                 commandStat.setCount(result.getInt(2));
-                commandStat.setMeanDuration(result.getFloat(3));
+                commandStat.setMeanDuration(result.getInt(3));
                 commandStats.add(commandStat);
             }
         } catch (NamingException ex) {
@@ -114,7 +114,7 @@ public class DODStatsDAO {
                 jobStat.setDbName(result.getString(1));
                 jobStat.setCommandName(result.getString(2));
                 jobStat.setCount(result.getInt(3));
-                jobStat.setMeanDuration(result.getFloat(4));
+                jobStat.setMeanDuration(result.getInt(4));
                 jobStats.add(jobStat);
             }
         } catch (NamingException ex) {

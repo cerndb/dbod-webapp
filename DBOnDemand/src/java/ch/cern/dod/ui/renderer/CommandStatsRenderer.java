@@ -16,7 +16,7 @@ public class CommandStatsRenderer implements RowRenderer{
         // the data append to each row with simple label
         row.appendChild(new Label(stat.getCommandName()));
         row.appendChild(new Label(String.valueOf(stat.getCount())));
-        row.appendChild(new Label(String.valueOf(stat.getMeanDuration())));
+        row.appendChild(new Label(String.valueOf(stat.getMeanDuration()) + " s"));
     }
     
 }

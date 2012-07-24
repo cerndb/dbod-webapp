@@ -23,6 +23,6 @@ public class JobStatsRenderer implements RowRenderer{
         row.appendChild(new Label(stat.getDbName()));
         row.appendChild(new Label(stat.getCommandName()));
         row.appendChild(new Label(String.valueOf(stat.getCount())));
-        row.appendChild(new Label(String.valueOf(stat.getMeanDuration())));
+        row.appendChild(new Label(String.valueOf(stat.getMeanDuration()) + " s"));
     }
 }

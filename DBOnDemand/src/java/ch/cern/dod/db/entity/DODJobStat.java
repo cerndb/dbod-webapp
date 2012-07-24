@@ -20,7 +20,7 @@ public class DODJobStat implements Comparable{
     /**
      * Mean duration of the command executions
      */
-    private float meanDuration;
+    private int meanDuration;
 
     public String getDbName() {
         return dbName;
@@ -46,11 +46,11 @@ public class DODJobStat implements Comparable{
         this.count = count;
     }
 
-    public float getMeanDuration() {
+    public int getMeanDuration() {
         return meanDuration;
     }
 
-    public void setMeanDuration(float meanDuration) {
+    public void setMeanDuration(int meanDuration) {
         this.meanDuration = meanDuration;
     }
 
