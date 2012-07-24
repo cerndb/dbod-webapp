@@ -2,6 +2,7 @@ package ch.cern.dod.ui.renderer;
 
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ui.controller.*;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.ui.model.OverviewTreeNode;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
@@ -64,7 +65,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      */
     public void render(final Treeitem item, final Object data) throws Exception {
         //Only render instance if it's filtered
-        if (data != null && filterNode ((OverviewTreeNode)data, item.getTree())) {
+        if (data != null) {
             
             //Render normal instance
             if (((OverviewTreeNode) data).getData() instanceof DODInstance) {
@@ -482,93 +483,30 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         return toret;
     }
     
-    /**
-     * Filters a node.
-     * @param node Node to filter.
-     * @param tree Tree containing the node.
-     * @return true if the node is filtered, false otherwise.
-     */
-    private boolean filterNode (OverviewTreeNode node, Tree tree) {        
-        //Check if it is  a DOD instance
-        if (node.getData() instanceof DODInstance) {
-            DODInstance instance = (DODInstance) node.getData();
-            if (filterInstance(instance, tree))
-                return true;
-        }
-        //If node has children check if any of the children is filtered
-        if (node.getChildren() != null && node.getChildren().size() > 0) {
-            for (int i=0; i < node.getChildren().size(); i++) {
-                if (filterNode((OverviewTreeNode)node.getChildAt(i), tree))
-                    return true;
-            }
-        }
-        
-        return false;
-    }
     
-    /**
-     * Filters an instance considering the information contained in the filter fields.
-     * @param instance Instance to be filtered
-     * @param tree Tree containing the instance
-     * @return true if the instance is filtered, false otherwise
-     */
-    private boolean filterInstance (DODInstance instance, Tree tree) {
-        //Get field values
-        String dbName = ((Textbox) tree.getFellow("dbNameFilter")).getValue().trim();
-        String user = ((Textbox) tree.getFellow("usernameFilter")).getValue().trim();
-        String eGroup = ((Textbox) tree.getFellow("eGroupFilter")).getValue().trim();
-        String category = "";
-        if (((Combobox)tree.getFellow("categoryFilter")).getSelectedItem() != null)
-            category = ((String)((Combobox)tree.getFellow("categoryFilter")).getSelectedItem().getValue()).trim();
-        String project = ((Textbox) tree.getFellow("projectFilter")).getValue().trim();
-        String dbType = "";
-        if (((Combobox) tree.getFellow("dbTypeFilter")).getSelectedItem() != null)
-            dbType = ((String)((Combobox) tree.getFellow("dbTypeFilter")).getSelectedItem().getValue()).trim();
-        String action = "";
-        if (((Combobox) tree.getFellow("actionFilter")).getSelectedItem() != null)
-            action = ((String)((Combobox) tree.getFellow("actionFilter")).getSelectedItem().getValue()).trim();
-        
-        if (instance.getDbName().indexOf(dbName.trim()) >= 0 && instance.getUsername().indexOf(user) >= 0
-                && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().indexOf(eGroup.trim()) >= 0))
-                && (project.isEmpty() || (instance.getProject() != null && instance.getProject().indexOf(project.trim()) >= 0))
-                && (category.isEmpty() || instance.getCategory().equals(category))
-                && (dbType.isEmpty() || instance.getDbType().equals(dbType))) {
-            if (action.isEmpty()) {
-                return true;
-            }
-            else {
-                //Check actions (a bit different behaviour)
-                if ((action.equals(DODConstants.JOB_STARTUP) && instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
-                        || (action.equals(DODConstants.JOB_SHUTDOWN) && instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING))
-                        || (action.equals(DODConstants.JOB_UPGRADE) && instance.getUpgradeTo() != null && !instance.getUpgradeTo().isEmpty()))
-                    return true;
-            }
-        }
-        return false;
-        
-    }
     
     /**
      * Checks all the instances.
      * @param instances list of instances in the view.
      */
-    public void checkAll (List<DODInstance> instances, Tree tree, boolean check) {
+    public void checkAll (Tree tree, boolean check) {
         if (check) {
-            //Add all elements to checklist
-            for (int i=0; i < instances.size(); i++) {
-                if (!checked.contains(instances.get(i)) && filterInstance(instances.get(i), tree)) {
-                    checked.add(instances.get(i));
-                }
-            }
+            OverviewTreeNode root = (OverviewTreeNode) ((OverviewTreeModel)tree.getModel()).getRoot();
+            if (root != null && root.getChildCount() > 0)
+                checkAll(root);
         }
         else {
             //Remove al elements to checklist
-            for (int i=0; i < instances.size(); i++) {
-                if (checked.contains(instances.get(i)) && filterInstance(instances.get(i), tree)) {
-                    checked.remove(instances.get(i));
-                }
-            }
+            checked = new ArrayList<DODInstance>();
         }
+    }
+    
+    private void checkAll (OverviewTreeNode root) {
+        if (root.getData() instanceof DODInstance)
+            checked.add((DODInstance)root.getData());
+        if (root.getChildCount() > 0)
+            for (int i=0; i < root.getChildCount(); i++)
+                checkAll((OverviewTreeNode)root.getChildAt(i));
     }
     
     /**

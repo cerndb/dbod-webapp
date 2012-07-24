@@ -101,7 +101,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void afterCompose() {
         //Instances tree
         Tree overviewTree = (Tree) getFellow("overviewTree");
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
         overviewTree.getPagingChild().setMold("os");
         
@@ -222,7 +222,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         ((OverviewTreeRenderer)tree.getItemRenderer()).updateCheckedInstances(instances);
         //Set the new instances
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         try {
             if (tree.getMold().equals("paging")) {
                 tree.setActivePage(activePage);
@@ -278,7 +278,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void checkAll() {
         Checkbox checkAll = (Checkbox)getFellow("checkAll");
         Tree tree = (Tree) getFellow("overviewTree");
-        ((OverviewTreeRenderer)tree.getItemRenderer()).checkAll(instances, tree, checkAll.isChecked());
+        ((OverviewTreeRenderer)tree.getItemRenderer()).checkAll(tree, checkAll.isChecked());
         List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
         
         if (checkAll.isChecked()) {
@@ -305,7 +305,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
     }
     
     /**
@@ -325,7 +325,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -348,7 +348,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -372,7 +372,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
 
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -395,7 +395,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -464,7 +464,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void filterInstances () {
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         displayOrHideAreas();
     }
     

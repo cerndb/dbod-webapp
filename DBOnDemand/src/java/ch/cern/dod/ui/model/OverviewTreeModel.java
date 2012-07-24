@@ -1,10 +1,14 @@
 package ch.cern.dod.ui.model;
 
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.util.DODConstants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zul.AbstractTreeModel;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Tree;
 
 /**
  * Model for overview tree.
@@ -25,7 +29,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param instances List of instances to get the model from.
      * @return Model representing the list of instances passed as parameter.
      */
-    public static OverviewTreeModel getInstance (List<DODInstance> instances) {
+    public static OverviewTreeModel getInstance (List<DODInstance> instances, Tree tree) {
         ArrayList<OverviewTreeNode> mainList = new ArrayList<OverviewTreeNode>();
         ArrayList<DODInstance> masters = new ArrayList<DODInstance>();
         ArrayList<DODInstance> slaves = new ArrayList<DODInstance>();
@@ -42,26 +46,29 @@ public class OverviewTreeModel extends AbstractTreeModel{
                 slaves.add(instance);
             }
             else {
-                //If instance is shared then create node or add instance to existing node
-                if (instance.getSharedInstance() != null) {
-                    boolean found = false;
-                    for (int j=0; j < sharedInstances.size(); j++) {
-                        OverviewTreeNode node = sharedInstances.get(j);
-                        if (((String)node.getData()).equals(instance.getSharedInstance())) {
-                            node.add(new OverviewTreeNode(instance));
-                            found = true;
-                            break;
+                //Only add instance to tree if it is filtered
+                if (filterInstance(instance, tree)) {
+                    //If instance is shared then create node or add instance to existing node
+                    if (instance.getSharedInstance() != null) {
+                        boolean found = false;
+                        for (int j=0; j < sharedInstances.size(); j++) {
+                            OverviewTreeNode node = sharedInstances.get(j);
+                            if (((String)node.getData()).equals(instance.getSharedInstance())) {
+                                node.add(new OverviewTreeNode(instance));
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            ArrayList<OverviewTreeNode> sharedList =  new ArrayList<OverviewTreeNode>();
+                            sharedList.add(new OverviewTreeNode(instance));
+                            sharedInstances.add(new OverviewTreeNode(instance.getSharedInstance(), sharedList));
                         }
                     }
-                    if (!found) {
-                        ArrayList<OverviewTreeNode> sharedList =  new ArrayList<OverviewTreeNode>();
-                        sharedList.add(new OverviewTreeNode(instance));
-                        sharedInstances.add(new OverviewTreeNode(instance.getSharedInstance(), sharedList));
+                    //If it's a single instance create leaf node
+                    else {
+                        mainList.add(new OverviewTreeNode(instance));
                     }
-                }
-                //If it's a single instance create leaf node
-                else {
-                    mainList.add(new OverviewTreeNode(instance));
                 }
             }
         }
@@ -71,14 +78,20 @@ public class OverviewTreeModel extends AbstractTreeModel{
         //Merge masters and slaves
         for (int i=0; i < masters.size(); i++) {
             DODInstance master = masters.get(i);
+            ArrayList<OverviewTreeNode> slavesList =  new ArrayList<OverviewTreeNode>();
             for (int j=0; j < slaves.size(); j++) {
                 DODInstance slave = slaves.get(j);
-                ArrayList<OverviewTreeNode> slavesList =  new ArrayList<OverviewTreeNode>();
-                if (slave.getMaster().equals(master.getDbName())) {
+                if (slave.getMaster().equals(master.getDbName()) && filterInstance(slave, tree)) {
                     slavesList.add(new OverviewTreeNode(slave));
-                    mainList.add(new OverviewTreeNode(master, slavesList));
                 }
-            }  
+            }
+            //If there are filtered slaves
+            if (slavesList.size() > 0)
+                mainList.add(new OverviewTreeNode(master, slavesList));
+            else {
+                if (filterInstance(master, tree))
+                    mainList.add(new OverviewTreeNode(master));
+            }
         }
         
         //Order list
@@ -121,5 +134,47 @@ public class OverviewTreeModel extends AbstractTreeModel{
             return ((OverviewTreeNode)node).getChildCount();
         else
             return 0;
+    }
+    
+    /**
+     * Filters an instance considering the information contained in the filter fields.
+     * @param instance Instance to be filtered
+     * @param tree Tree containing the instance
+     * @return true if the instance is filtered, false otherwise
+     */
+    public static boolean filterInstance (DODInstance instance, Tree tree) {
+        //Get field values
+        String dbName = ((Textbox) tree.getFellow("dbNameFilter")).getValue().trim();
+        String user = ((Textbox) tree.getFellow("usernameFilter")).getValue().trim();
+        String eGroup = ((Textbox) tree.getFellow("eGroupFilter")).getValue().trim();
+        String category = "";
+        if (((Combobox)tree.getFellow("categoryFilter")).getSelectedItem() != null)
+            category = ((String)((Combobox)tree.getFellow("categoryFilter")).getSelectedItem().getValue()).trim();
+        String project = ((Textbox) tree.getFellow("projectFilter")).getValue().trim();
+        String dbType = "";
+        if (((Combobox) tree.getFellow("dbTypeFilter")).getSelectedItem() != null)
+            dbType = ((String)((Combobox) tree.getFellow("dbTypeFilter")).getSelectedItem().getValue()).trim();
+        String action = "";
+        if (((Combobox) tree.getFellow("actionFilter")).getSelectedItem() != null)
+            action = ((String)((Combobox) tree.getFellow("actionFilter")).getSelectedItem().getValue()).trim();
+        
+        if (instance.getDbName().indexOf(dbName.trim()) >= 0 && instance.getUsername().indexOf(user) >= 0
+                && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().indexOf(eGroup.trim()) >= 0))
+                && (project.isEmpty() || (instance.getProject() != null && instance.getProject().indexOf(project.trim()) >= 0))
+                && (category.isEmpty() || instance.getCategory().equals(category))
+                && (dbType.isEmpty() || instance.getDbType().equals(dbType))) {
+            if (action.isEmpty()) {
+                return true;
+            }
+            else {
+                //Check actions (a bit different behaviour)
+                if ((action.equals(DODConstants.JOB_STARTUP) && instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
+                        || (action.equals(DODConstants.JOB_SHUTDOWN) && instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING))
+                        || (action.equals(DODConstants.JOB_UPGRADE) && instance.getUpgradeTo() != null && !instance.getUpgradeTo().isEmpty()))
+                    return true;
+            }
+        }
+        return false;
+        
     }
 }

@@ -75,7 +75,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     public void afterCompose() {
         if (instances != null && instances.size() > 0) {
             Tree overviewTree = (Tree) getFellow("overviewTree");
-            overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+            overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
             overviewTree.setItemRenderer(new OverviewTreeRenderer(false));
             overviewTree.getPagingChild().setMold("os");
         }
@@ -119,7 +119,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (overviewTree.getMold().equals("paging")) {
              activePage = overviewTree.getActivePage();
         }
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances));
+        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
         try {
             if (overviewTree.getMold().equals("paging")) {
                 overviewTree.setActivePage(activePage);
@@ -146,7 +146,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     public void filterInstances () {
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setModel(OverviewTreeModel.getInstance(instances));
+        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         displayOrHideAreas();
     }
 }
