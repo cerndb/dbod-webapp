@@ -4,7 +4,7 @@ package ch.cern.dod.db.entity;
  * This class represents a command statistic.
  * @author Daniel Gomez Blanco
  */
-public class DODCommandStat {
+public class DODCommandStat implements Comparable{
     /**
      * Name of the command executed.
      */
@@ -40,5 +40,9 @@ public class DODCommandStat {
 
     public void setMeanDuration(int meanDuration) {
         this.meanDuration = meanDuration;
+    }
+
+    public int compareTo(Object o) {
+        return commandName.compareTo(((DODCommandStat)o).getCommandName());
     }
 }

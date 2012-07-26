@@ -7,10 +7,7 @@ import ch.cern.dod.db.entity.DODCommandStat;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODJobStat;
 import ch.cern.dod.db.entity.DODUpgrade;
-import ch.cern.dod.ui.model.CommandStatsModel;
-import ch.cern.dod.ui.model.JobStatsModel;
-import ch.cern.dod.ui.model.OverviewTreeModel;
-import ch.cern.dod.ui.model.UpgradesListModel;
+import ch.cern.dod.ui.model.*;
 import ch.cern.dod.ui.renderer.CommandStatsRenderer;
 import ch.cern.dod.ui.renderer.JobStatsRenderer;
 import ch.cern.dod.ui.renderer.OverviewTreeRenderer;
@@ -206,7 +203,18 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         upgrades = upgradeDAO.selectAll();
         
         //Get instances
-        instances = instanceDAO.selectAll(upgrades);
+        List<DODInstance> newInstances = instanceDAO.selectAll(upgrades);
+        
+        //Update checked instances
+        for (int i=0; i < newInstances.size(); i++) {
+            for (int j=0; j < instances.size(); j++) {
+                if (newInstances.get(i).equals(instances.get(j)) && instances.get(j).isChecked()) {
+                    newInstances.get(i).setChecked(true);
+                    break;
+                }
+            }
+        }
+        instances = newInstances;
         
         //Get command stats
         commandStats = statsDAO.selectCommandStats();
@@ -214,13 +222,12 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Get job stats
         jobStats = statsDAO.selectJobStats();
         
-        //Refresh checked list
+        //Refresh tree
         Tree tree = (Tree) getFellow("overviewTree");
         int activePage = 0;
         if (tree.getMold().equals("paging")) {
             activePage = tree.getActivePage();
         }
-        ((OverviewTreeRenderer)tree.getItemRenderer()).updateCheckedInstances(instances);
         //Set the new instances
         tree.setModel(OverviewTreeModel.getInstance(instances, tree));
         try {
@@ -232,42 +239,15 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         
         //Set the new upgrades
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        if (upgradesGrid.getMold().equals("paging")) {
-            activePage = upgradesGrid.getActivePage();
-        }
         ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
-        try {
-            if (upgradesGrid.getMold().equals("paging")) {
-                upgradesGrid.setActivePage(activePage);
-            }
-        }
-        catch (WrongValueException ex) {}
         
         //Set the new command stats
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
-        if (commandStatsGrid.getMold().equals("paging")) {
-            activePage = commandStatsGrid.getActivePage();
-        }
-        commandStatsGrid.setModel(new CommandStatsModel(commandStats));
-        try {
-            if (commandStatsGrid.getMold().equals("paging")) {
-                commandStatsGrid.setActivePage(activePage);
-            }
-        }
-        catch (WrongValueException ex) {}
+        ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
         
         //Set the new job stats
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
-        if (jobStatsGrid.getMold().equals("paging")) {
-            activePage = jobStatsGrid.getActivePage();
-        }
         ((JobStatsModel)jobStatsGrid.getModel()).setJobStats(jobStats);
-        try {
-            if (jobStatsGrid.getMold().equals("paging")) {
-                jobStatsGrid.setActivePage(activePage);
-            }
-        }
-        catch (WrongValueException ex) {}
 
         displayOrHideAreas();
     }
@@ -278,20 +258,18 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void checkAll() {
         Checkbox checkAll = (Checkbox)getFellow("checkAll");
         Tree tree = (Tree) getFellow("overviewTree");
-        ((OverviewTreeRenderer)tree.getItemRenderer()).checkAll(tree, checkAll.isChecked());
-        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
+        ((OverviewTreeModel)tree.getModel()).checkAll((OverviewTreeNode)tree.getModel().getRoot(), checkAll.isChecked());
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         
-        if (checkAll.isChecked()) {
-            if (checked.size() > 0) {
-                ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
-                ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
-                ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
-                ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
-                ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
-                ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
-                ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
-                ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
-            }
+        if (checked.size() > 0) {
+            ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
         }
         else {
             ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
@@ -305,7 +283,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        tree.setModel(tree.getModel());
     }
     
     /**
@@ -315,7 +293,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void startupAll() {
         boolean error = false;
         Tree tree = (Tree) getFellow("overviewTree");
-        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
@@ -325,7 +303,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        tree.setModel(tree.getModel());
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -338,7 +316,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void shutdownAll() {
         boolean error = false;
         Tree tree = (Tree) getFellow("overviewTree");
-        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
@@ -348,7 +326,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        tree.setModel(tree.getModel());
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -361,7 +339,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void backupAll(){
         boolean error = false;
         Tree tree = (Tree) getFellow("overviewTree");
-        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
@@ -372,7 +350,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
 
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        tree.setModel(tree.getModel());
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -385,7 +363,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void upgradeAll(){
         boolean error = false;
         Tree tree = (Tree) getFellow("overviewTree");
-        List<DODInstance> checked = ((OverviewTreeRenderer)tree.getItemRenderer()).getChecked();
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && instance.getUpgradeTo() != null && !instance.getUpgradeTo().isEmpty()) {
@@ -395,7 +373,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
         //Re-render the tree
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        tree.setModel(tree.getModel());
         //Show error if any
         if (error)
             showError(DODConstants.ERROR_COLLECTIVE_ACTION);
@@ -464,7 +442,32 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void filterInstances () {
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
+        //Set the new instances
         tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        //Update group actions
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
+        
+        if (checked.size() > 0) {
+            ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
+        }
+        else {
+            ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
+        }
+        
         displayOrHideAreas();
     }
     
@@ -474,7 +477,9 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     public void filterJobStats () {
         //Re-render the grid
         Grid grid = (Grid) getFellow("jobStatsGrid");
-        ((JobStatsModel) grid.getModel()).filterJobStats(((Textbox) getFellow("jobStatsDBNameFilter")).getValue(), ((Textbox) getFellow("jobStatsCommandFilter")).getValue());
+        ((JobStatsModel) grid.getModel()).filterJobStats(((Textbox) getFellow("jobStatsDBNameFilter")).getValue(),
+                                                            ((Textbox) getFellow("jobStatsCommandFilter")).getValue());
+        
         displayOrHideAreas();
     }
     

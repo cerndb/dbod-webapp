@@ -14,6 +14,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -143,8 +144,19 @@ public class FileController extends Window {
                         if (result) {
                             //If we are in the overview page
                             if (type.getRoot().getFellowIfAny("overviewTree") != null) {
+                                //Reload the tree
                                 Tree tree = (Tree) type.getRoot().getFellow("overviewTree");
+                                int activePage = 0;
+                                if (tree.getMold().equals("paging")) {
+                                    activePage = tree.getActivePage();
+                                }
                                 tree.setModel(tree.getModel());
+                                try {
+                                    if (tree.getMold().equals("paging")) {
+                                        tree.setActivePage(activePage);
+                                    }
+                                }
+                                catch (WrongValueException ex) {}
                             } //If we are in the instance page
                             else if (type.getRoot().getFellowIfAny("controller") != null && type.getRoot().getFellow("controller") instanceof InstanceController) {
                                 InstanceController controller = (InstanceController) type.getRoot().getFellow("controller");

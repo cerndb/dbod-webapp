@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -494,8 +495,19 @@ public class RestoreController extends Window {
             if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
                 //If we are in the overview page
                 if (time.getRoot().getFellowIfAny("overviewTree") != null) {
+                    //Reload the tree
                     Tree tree = (Tree) time.getRoot().getFellow("overviewTree");
+                    int activePage = 0;
+                    if (tree.getMold().equals("paging")) {
+                        activePage = tree.getActivePage();
+                    }
                     tree.setModel(tree.getModel());
+                    try {
+                        if (tree.getMold().equals("paging")) {
+                            tree.setActivePage(activePage);
+                        }
+                    }
+                    catch (WrongValueException ex) {}
                 } //If we are in the instance page
                 else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");

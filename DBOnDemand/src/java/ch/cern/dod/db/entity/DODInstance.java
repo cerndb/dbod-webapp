@@ -97,6 +97,11 @@ public class DODInstance implements Comparable, Cloneable{
      * State (On Creation, Running, Stopped, etc)
      */
     private String state;
+    
+    /**
+     * If an instance is checked or not in the overview.
+     */
+    private boolean checked;
 
     public String getUsername() {
         return username;
@@ -243,6 +248,14 @@ public class DODInstance implements Comparable, Cloneable{
 
     public void setSharedInstance(String sharedInstance) {
         this.sharedInstance = sharedInstance;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public int compareTo(Object object) {

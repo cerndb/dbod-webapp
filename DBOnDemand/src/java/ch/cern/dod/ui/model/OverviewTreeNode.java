@@ -13,7 +13,7 @@ import org.zkoss.zul.DefaultTreeNode;
  * @author Daniel Gomez Blanco
  */
 public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
- 
+            
     /**
      * Constructor of this class.
      * @param data Data associated with this node, in this case a DODInstance or a String in case of shared instances.

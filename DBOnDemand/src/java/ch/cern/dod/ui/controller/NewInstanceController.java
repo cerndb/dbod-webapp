@@ -204,7 +204,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                         //Hide window and redirect to the instance page
                         this.setVisible(false);
                         Sessions.getCurrent().setAttribute(DODConstants.INSTANCE, instance);
-                        Executions.sendRedirect(DODConstants.PAGE_INSTANCE);
+                        Executions.sendRedirect(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName());
                     }
                     else if (result == -1){
                         ((Textbox) getFellow("dbName")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_INSTANCE_UNIQUE));

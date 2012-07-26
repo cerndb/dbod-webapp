@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -312,12 +313,23 @@ public class BackupController extends Window {
         else {
             //If we are in the overview page
             if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
+                //Reload the tree
                 Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
+                int activePage = 0;
+                if (tree.getMold().equals("paging")) {
+                    activePage = tree.getActivePage();
+                }
                 tree.setModel(tree.getModel());
+                try {
+                    if (tree.getMold().equals("paging")) {
+                        tree.setActivePage(activePage);
+                    }
+                }
+                catch (WrongValueException ex) {}
             } //If we are in the instance page
             else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");
-                controller.afterCompose();
+                controller.refreshInfo();
             }
             interval.getFellow("backupWindow").detach();
         }
@@ -378,8 +390,19 @@ public class BackupController extends Window {
             if (backupToTapeResult && result) {
                 //If we are in the overview page
                 if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
+                    //Reload the tree
                     Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
+                    int activePage = 0;
+                    if (tree.getMold().equals("paging")) {
+                        activePage = tree.getActivePage();
+                    }
                     tree.setModel(tree.getModel());
+                    try {
+                        if (tree.getMold().equals("paging")) {
+                            tree.setActivePage(activePage);
+                        }
+                    }
+                    catch (WrongValueException ex) {}
                 } //If we are in the instance page
                 else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");

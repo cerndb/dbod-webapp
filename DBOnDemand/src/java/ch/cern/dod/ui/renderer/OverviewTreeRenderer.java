@@ -17,6 +17,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.CheckEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -33,10 +34,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * Helper to create jobs
      */
     private JobHelper jobHelper;
-    /**
-     * Checked instances for group operations.
-     */
-     private List<DODInstance> checked;
 
      /**
      * Items that are closed.
@@ -53,8 +50,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
         this.jobHelper = new JobHelper(adminMode.booleanValue());
         this.closed = new ArrayList<String>();
-        if (checkboxes)
-            this.checked = new ArrayList<DODInstance>();
     }
 
     /**
@@ -94,35 +89,42 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Render check only for admins
-                if (checked != null) {
+                if (jobHelper.isAdminMode()) {
                     Treecell checkboxCell = new Treecell();
                     Checkbox checkbox = new Checkbox();
                     //Check the instance if it was already checked
-                    if (checked.contains(instance))
+                    if (instance.isChecked())
                         checkbox.setChecked(true);
                     checkbox.addEventListener(Events.ON_CHECK, new EventListener() {
                         public void onEvent(Event event) {
                             //Update arraylist
                             CheckEvent checkEvent = (CheckEvent) event;
                             if (checkEvent.isChecked()) {
-                                if (!checked.contains(instance))
-                                    checked.add(instance);
+                                instance.setChecked(true);
                             }
                             else {
-                                checked.remove(instance);
+                                instance.setChecked(false);
                             }
-                            //Update buttons
-                            if (checked.isEmpty()) {
+                            //If there are no checked instnces disable button   
+                            if (((OverviewTreeModel)row.getTree().getModel()).getChecked((OverviewTreeNode)row.getTree().getModel().getRoot()).isEmpty()) {
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setDisabled(true);
+                                ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setZclass("buttonDisabled");
+                                ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
+                                ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setZclass("buttonDisabled");
+                                ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
                             }
                             else {
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setDisabled(false);
+                                ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setZclass("button");
+                                ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setZclass("button");
+                                ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setZclass("button");
+                                ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setZclass("button");
                             }
                         }
                     });
@@ -242,8 +244,21 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 startupBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                     public void onEvent(Event event) {
                         //Create new job and update instance status
-                        if (jobHelper.doStartup(instance, username))
-                            row.getTree().setModel(row.getTree().getModel());
+                        if (jobHelper.doStartup(instance, username)) {
+                            //Reload the tree
+                            Tree tree = row.getTree();
+                            int activePage = 0;
+                            if (tree.getMold().equals("paging")) {
+                                activePage = tree.getActivePage();
+                            }
+                            tree.setModel(tree.getModel());
+                            try {
+                                if (tree.getMold().equals("paging")) {
+                                    tree.setActivePage(activePage);
+                                }
+                            }
+                            catch (WrongValueException ex) {}
+                        }
                         else
                             showError(item, null, DODConstants.ERROR_DISPATCHING_JOB);
                     }
@@ -481,61 +496,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         }
         toret.setStyle("hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;");
         return toret;
-    }
-    
-    
-    
-    /**
-     * Checks all the instances.
-     * @param instances list of instances in the view.
-     */
-    public void checkAll (Tree tree, boolean check) {
-        if (check) {
-            OverviewTreeNode root = (OverviewTreeNode) ((OverviewTreeModel)tree.getModel()).getRoot();
-            if (root != null && root.getChildCount() > 0)
-                checkAll(root);
-        }
-        else {
-            //Remove al elements to checklist
-            checked = new ArrayList<DODInstance>();
-        }
-    }
-    
-    private void checkAll (OverviewTreeNode root) {
-        if (root.getData() instanceof DODInstance)
-            checked.add((DODInstance)root.getData());
-        if (root.getChildCount() > 0)
-            for (int i=0; i < root.getChildCount(); i++)
-                checkAll((OverviewTreeNode)root.getChildAt(i));
-    }
-    
-    /**
-     * Update checked instances.
-     * @param instances in the view.
-     */
-    public void updateCheckedInstances (List<DODInstance> instances) {
-        for (int i=0; i < checked.size(); i++) {
-            boolean found = false;
-            //Search instance
-            for (int j=0; j < instances.size(); j++) {
-                if (checked.get(i).equals(instances.get(j))) {
-                    checked.set(i, instances.get(j));
-                    found = true;
-                    break;
-                }
-            }
-            //If the instance is not there remove it
-            if (!found)
-                checked.remove(i);
-        }
-    }
-
-    /**
-     * Getter for checked list.
-     * @return List of checked instances.
-     */
-    public List<DODInstance> getChecked() {
-        return checked;
     }
 
     /**

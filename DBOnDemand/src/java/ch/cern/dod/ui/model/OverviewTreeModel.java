@@ -142,7 +142,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param tree Tree containing the instance
      * @return true if the instance is filtered, false otherwise
      */
-    public static boolean filterInstance (DODInstance instance, Tree tree) {
+    private static boolean filterInstance (DODInstance instance, Tree tree) {
         //Get field values
         String dbName = ((Textbox) tree.getFellow("dbNameFilter")).getValue().trim();
         String user = ((Textbox) tree.getFellow("usernameFilter")).getValue().trim();
@@ -176,5 +176,31 @@ public class OverviewTreeModel extends AbstractTreeModel{
         }
         return false;
         
+    }
+    
+    /**
+     * Checks (or unchecks) all the instances in the model.
+     * @param root root node to start checking.
+     * @param checked true or false, depending if the action is checking or unchecking.
+     */
+    public void checkAll (OverviewTreeNode root, boolean checked) {
+        if (root.getData() instanceof DODInstance)
+            ((DODInstance)root.getData()).setChecked(checked);
+        for (int i=0; i < root.getChildCount(); i++)
+            checkAll((OverviewTreeNode)root.getChildAt(i), checked);
+    }
+    
+    /**
+     * Gets the list of checked instances.
+     * @param root root node to start.
+     * @return list of checked instances.
+     */
+    public List<DODInstance> getChecked (OverviewTreeNode root) {
+        List<DODInstance> checked = new ArrayList<DODInstance>();
+        if (root.getData() instanceof DODInstance && ((DODInstance)root.getData()).isChecked())
+            checked.add((DODInstance)root.getData());
+        for (int i=0; i < root.getChildCount(); i++)
+            checked.addAll(getChecked((OverviewTreeNode)root.getChildAt(i)));
+        return checked;
     }
 }

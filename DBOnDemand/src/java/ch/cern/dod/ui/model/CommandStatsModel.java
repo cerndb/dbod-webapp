@@ -33,6 +33,11 @@ public class CommandStatsModel extends AbstractListModel implements ListModelExt
     public CommandStatsModel(List<DODCommandStat> commandStats) {
         this.commandStats = commandStats;
     }
+    
+    public void setCommandStats(List<DODCommandStat> commandStats) {
+        this.commandStats = commandStats;
+        sort(comparator, ascending);
+    }
 
     /**
      * Overrides the method to get the size of the model.

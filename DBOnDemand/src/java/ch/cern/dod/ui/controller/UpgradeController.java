@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -193,8 +194,19 @@ public class UpgradeController extends Window {
         if (jobHelper.doUpgrade(instance, username)) {
             //If we are in the overview page
             if (this.getRoot().getFellowIfAny("overviewTree") != null) {
+                //Reload the tree
                 Tree tree = (Tree) this.getRoot().getFellow("overviewTree");
+                int activePage = 0;
+                if (tree.getMold().equals("paging")) {
+                    activePage = tree.getActivePage();
+                }
                 tree.setModel(tree.getModel());
+                try {
+                    if (tree.getMold().equals("paging")) {
+                        tree.setActivePage(activePage);
+                    }
+                }
+                catch (WrongValueException ex) {}
             } //If we are in the instance page
             else if (this.getRoot().getFellowIfAny("controller") != null && this.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) this.getRoot().getFellow("controller");
