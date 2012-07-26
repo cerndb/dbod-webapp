@@ -47,14 +47,16 @@ public class DODConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
-    public static final String[][] MYSQL_OVERVIEW_METRICS = {{"Aborted_connects","Number of aborted connections"},
-                                                                {"Connections","Number of active connections"},
+    public static final String[][] MYSQL_OVERVIEW_METRICS = {{"Threads_connected","Number of currently open connections"},
+                                                                {"Aborted_connects","Number of aborted connections"},
+                                                                {"Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk"},
+                                                                {"Innodb_data_reads","Total number of data reads"},
+                                                                {"Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool"},
+                                                                {"Innodb_data_writes","Total number of data writes"},
+                                                                {"Innodb_data_read","Amount of data read since the server was started"},
                                                                 {"Innodb_data_written","Amount of data written"},
                                                                 {"Qcache_hits","Number of query cache hits"},
-                                                                {"Qcache_not_cached","Number of noncached queries"},
-                                                                {"Queries","Number of statement executed by the query"},
-                                                                {"Slow_queries","Number of queries that have taken more than long_query_time seconds"},
-                                                                {"Threads_connected","Number of currently open connections"}};
+                                                                {"Qcache_not_cached","Number of noncached queries"}};
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
