@@ -39,6 +39,11 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * Items that are closed.
      */
      private List<String> closed;
+     
+     /**
+      * Indicates if ceckboxes should be created or not
+      */
+     private boolean checkboxes;
     
     /**
      * Constructor.
@@ -50,6 +55,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
         this.jobHelper = new JobHelper(adminMode.booleanValue());
         this.closed = new ArrayList<String>();
+        this.checkboxes = checkboxes;
     }
 
     /**
@@ -88,8 +94,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     }
                 });
 
-                //Render check only for admins
-                if (jobHelper.isAdminMode()) {
+                //Render check only in admin page
+                if (checkboxes) {
                     Treecell checkboxCell = new Treecell();
                     Checkbox checkbox = new Checkbox();
                     //Check the instance if it was already checked
