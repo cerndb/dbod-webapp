@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="" privileged="true">
-  <Resource auth="Container" driverClassName="oracle.jdbc.driver.OracleDriver" maxActive="50" maxIdle="10" maxWait="20000" minIdle="1" name="jdbc/dbondemand" password="Sup3rN0va11" testOnBorrow="true" type="javax.sql.DataSource" url="jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oradev11.cern.ch)(PORT=10121))(ENABLE=BROKEN)(CONNECT_DATA= (SID=DEVDB11)))" username="dbondemand" validationQuery="select sysdate from dual"/>
+  <Resource auth="Container" driverClassName="oracle.jdbc.driver.OracleDriver" maxActive="50" maxIdle="10" maxWait="20000" minIdle="1" name="jdbc/dbondemand" password="Sup3rN0va11" testOnBorrow="true" type="javax.sql.DataSource" url="jdbc:oracle:thin:@devdb11" username="dbondemand" validationQuery="select sysdate from dual"/>
   <Parameter name="wsUser" override="false" value="dodws"/>
   <Parameter name="wsPswd" override="false" value="Sup3rN0va11"/>
 </Context>
