@@ -22,7 +22,7 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.ZK_5.0.10_CE.classpath}</file>
+                    <file>${libs.ZK_5.0.11_CE.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
