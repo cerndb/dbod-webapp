@@ -230,12 +230,13 @@ public class FormValidations {
             try {
                 Integer size = Integer.valueOf(dbSize.getText());
                 //Check dbName length
-                if (size <= 0 || size > DODConstants.MAX_DB_SIZE) {
+                if (size < 10 || size > DODConstants.MAX_DB_SIZE) {
                     dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
                     return false;
                 }
             } catch (NumberFormatException ex) {
                 dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                return false;
             }
         }
         else
@@ -264,6 +265,7 @@ public class FormValidations {
                     }
                 } catch (NumberFormatException ex) {
                     noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                    return false;
                 }
             }
         }

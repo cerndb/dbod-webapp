@@ -374,7 +374,7 @@
                                     int size;
                                     try {
                                         size = Integer.valueOf(dbSize.getText()).intValue();
-                                        if (size > 0 && size <= DODConstants.MAX_DB_SIZE)
+                                        if (size >= 10 && size <= DODConstants.MAX_DB_SIZE)
                                             dbSizeSlider.setCurpos(size);
                                         else
                                             dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
