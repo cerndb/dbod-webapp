@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cra="https://cra-ws.cern.ch/cra-ws/cra/"
+           targetNamespace="https://cra-ws.cern.ch/cra-ws/cra/"
+           elementFormDefault="qualified"
+>
+  <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+  <!--++++++++++++++++++++++++++++++++++++++++++ e-groups ++++++++++++++++++++++++++++++++++++++++++++++++++-->
+  <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+  <xs:complexType name="EgroupsType">
+    <xs:sequence>
+      <xs:element name="Egroup" type="cra:EgroupType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="EgroupType">
+    <xs:sequence>
+      <xs:element name="Name"                    type="xs:string"                   minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Aliases"                 type="cra:AliasesType"             minOccurs="0" maxOccurs="1"     />
+      <xs:element name="ID"                      type="xs:long"                     minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Type"                    type="cra:EgroupTypeCode"          minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Status"                  type="cra:StatusCode"              minOccurs="0" maxOccurs="1"     />
+      <xs:element name="BlockingReason"          type="cra:BlockingReasonCode"      minOccurs="0" maxOccurs="1"     />
+      <xs:element name="Usage"                   type="cra:UsageCode"               minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Topic"                   type="xs:string"                   minOccurs="0" maxOccurs="1"     />
+      <xs:element name="Description"             type="xs:string"                   minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Comments"                type="xs:string"                   minOccurs="0" maxOccurs="1"     />
+      <xs:element name="ExpiryDate"              type="xs:date"                     minOccurs="0" maxOccurs="1"     />
+      <xs:element name="Owner"                   type="cra:UserType"                minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Administrator"           type="cra:AdministratorType"       minOccurs="0" maxOccurs="1"     />
+      <xs:element name="Privacy"                 type="cra:PrivacyType"             minOccurs="1" maxOccurs="1"     />
+      <xs:element name="Selfsubscription"        type="cra:SelfsubscriptionType"    minOccurs="1" maxOccurs="1"     />
+      <xs:element name="SelfsubscriptionEgroups" type="cra:SelfsubscriptionEgroupsType" minOccurs="0" maxOccurs="1" />
+      <xs:element name="Members"                 type="cra:MembersType"             minOccurs="0" maxOccurs="1"     />
+      <xs:element name="EmailMembers"            type="cra:EmailMembersType"        minOccurs="0" maxOccurs="1"     />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AdministratorType">
+    <xs:sequence>  
+      <xs:element name="ID"    type="xs:long"                   minOccurs="0" maxOccurs="1" />
+      <xs:element name="Name"  type="xs:string"                 minOccurs="0" maxOccurs="1" />
+      <xs:element name="Type"  type="cra:AdministratorTypeCode" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AliasesType">
+    <xs:sequence>
+      <xs:element name="Alias" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MembersType">
+    <xs:sequence>
+      <xs:element name="Member" type="cra:MemberType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MemberType">
+    <xs:sequence>
+      <xs:element name="ID"             type="xs:string"          minOccurs="1" maxOccurs="1" />
+      <xs:element name="Type"           type="cra:MemberTypeCode" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Name"           type="xs:string"          minOccurs="1" maxOccurs="1" />
+      <xs:element name="Email"          type="xs:string"          minOccurs="0" maxOccurs="1" />
+      <xs:element name="PrimaryAccount" type="xs:string"          minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EmailMembersType">
+    <xs:sequence>
+      <xs:element name="Member" type="cra:EmailMemberType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EmailMemberType">
+    <xs:sequence>
+      <xs:element name="Email" type="xs:string" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="StatusCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Created"   />
+      <xs:enumeration value="Active"    />
+      <xs:enumeration value="Blocked"   />
+      <xs:enumeration value="Deleted"   />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="UsageCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EgroupsOnly"   />
+      <xs:enumeration value="SecurityMailing"    />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="MemberTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="External"        />
+      <xs:enumeration value="Person"          />
+      <xs:enumeration value="ServiceProvider" />
+      <xs:enumeration value="StaticEgroup"    />
+      <xs:enumeration value="DynamicEgroup"   />
+      <xs:enumeration value="Account"         />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrivacyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Members"        />
+      <xs:enumeration value="Open"           />      
+      <xs:enumeration value="Administrators" />
+      <xs:enumeration value="Users"          />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SelfsubscriptionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Closed"                 />
+      <xs:enumeration value="Open"                   />
+      <xs:enumeration value="Members"                />
+      <xs:enumeration value="Users"                  />
+      <xs:enumeration value="OpenWithAdminApproval"  />
+      <xs:enumeration value="UsersWithAdminApproval" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="SelfsubscriptionEgroupsType">
+    <xs:sequence>
+      <xs:element name="Egroup" type="cra:SelfsubscriptionEgroupType" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="SelfsubscriptionEgroupType">
+    <xs:sequence>
+      <xs:element name="Name"           type="xs:string"          minOccurs="1" maxOccurs="1" />
+      <xs:element name="ID"             type="xs:long"            minOccurs="1" maxOccurs="1" />
+      <xs:element name="Type"           type="cra:EgroupTypeCode" minOccurs="1" maxOccurs="1" />
+      <xs:element name="ApprovalNeeded" type="xs:boolean"         minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="EgroupTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="StaticEgroup" />
+      <xs:enumeration value="DynamicEgroup"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AdministratorTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="StaticEgroup" />
+      <xs:enumeration value="DynamicEgroup"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+  <!--++++++++++++++++++++++++++++++++++++++++++  users  +++++++++++++++++++++++++++++++++++++++++++++++++++-->
+  <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+  <xs:complexType name="UserType">
+    <xs:sequence>
+      <xs:element name="CCID"                 type="xs:long"               minOccurs="1" maxOccurs="1" />
+      <xs:element name="Type"                 type="cra:UserTypeCode"      minOccurs="1" maxOccurs="1" />
+      <xs:element name="Name"                 type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="ComputingRulesSigned" type="xs:boolean"            minOccurs="0" maxOccurs="1" />
+      <xs:element name="Pem"                  type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="PrimaryGem"           type="cra:GemType"           minOccurs="0" maxOccurs="1" />
+      <xs:element name="CernUnit"             type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="CernDepartment"       type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="CernGroup"            type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Telephone1"           type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Fax"                  type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Building"             type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Floor"                type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Room"                 type="xs:string"             minOccurs="0" maxOccurs="1" />
+      <xs:element name="Mailbox"              type="xs:string"             minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="UserTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Person"         />
+      <xs:enumeration value="ServiceProvider"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="GemType">
+    <xs:sequence>
+      <xs:element name="EmailAddress"       type="xs:string"  minOccurs="1" maxOccurs="1" />
+      <xs:element name="DisplayInPhonebook" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="BlockingReasonCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Manual"   />
+      <xs:enumeration value="Expired"  />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

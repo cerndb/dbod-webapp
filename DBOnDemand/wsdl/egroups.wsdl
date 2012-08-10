@@ -1,27 +1,15 @@
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
-                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
-                  xmlns:tns="https://cra-ws.cern.ch/cra-ws/"
-                  xmlns:cra="http://cra.web.cern.ch/cra/xml"
-                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
-                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-                  targetNamespace="https://cra-ws.cern.ch/cra-ws/"
-                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-                  xmlns="http://schemas.xmlsoap.org/wsdl/"
->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:cra="https://cra-ws.cern.ch/cra-ws/cra/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="https://cra-ws.cern.ch/cra-ws/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://cra-ws.cern.ch/cra-ws/">
   <wsdl:types>
     <xs:schema elementFormDefault="qualified" targetNamespace="https://cra-ws.cern.ch/cra-ws/">
-      <xs:import namespace="http://cra.web.cern.ch/cra/xml" schemaLocation="http://cra.web.cern.ch/cra/xml/cra.xsd" />
+      <xs:import namespace="https://cra-ws.cern.ch/cra-ws/cra/" schemaLocation="./cra.xsd"/>
       
       <xs:element name="changeExternalEmailAddressRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_oldEmailAddress" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_newEmailAddress" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_oldEmailAddress" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_newEmailAddress" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -29,7 +17,8 @@
       <xs:element name="changeExternalEmailAddressResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -37,9 +26,9 @@
       <xs:element name="findEgroupByIdRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_id" type="xs:long"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_id" type="xs:long"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -47,7 +36,8 @@
       <xs:element name="findEgroupByIdResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -55,9 +45,9 @@
       <xs:element name="findEgroupByNameRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_name" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_name" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -65,7 +55,8 @@
       <xs:element name="findEgroupByNameResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -73,9 +64,9 @@
       <xs:element name="synchronizeEgroupRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroup" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroup" type="cra:EgroupType"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -83,7 +74,8 @@
       <xs:element name="synchronizeEgroupResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -91,9 +83,9 @@
       <xs:element name="deleteEgroupRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -101,7 +93,8 @@
       <xs:element name="deleteEgroupResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -109,11 +102,11 @@
       <xs:element name="addEgroupMembersRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroupName" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_members" type="cra:MembersType"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:MembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -121,7 +114,8 @@
       <xs:element name="addEgroupMembersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -129,11 +123,11 @@
       <xs:element name="addEgroupEmailMembersRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroupName" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_members" type="cra:EmailMembersType"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:EmailMembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -141,7 +135,8 @@
       <xs:element name="addEgroupEmailMembersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -149,10 +144,10 @@
       <xs:element name="removeEgroupMembersRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroupName" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_members" type="cra:MembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:MembersType"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -160,7 +155,8 @@
       <xs:element name="removeEgroupMembersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -168,10 +164,10 @@
       <xs:element name="removeEgroupEmailMembersRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_egroupName" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_members" type="cra:EmailMembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:EmailMembersType"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -179,7 +175,8 @@
       <xs:element name="removeEgroupEmailMembersResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -187,9 +184,9 @@
       <xs:element name="getEgroupsUserOwnOrManageRequest">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_niceUserid" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_password" type="xs:string"/>
-            <xs:element minOccurs="1" maxOccurs="1" name="p_userName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_userName" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -197,7 +194,8 @@
       <xs:element name="getEgroupsUserOwnOrManageResponse">
         <xs:complexType>
           <xs:sequence>
-            <xs:element minOccurs="1" maxOccurs="1" name="result" type="cra:EgroupsType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupsType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
@@ -207,64 +205,64 @@
   </wsdl:types>
 
   <wsdl:message name="changeExternalEmailAddressSoapIn">
-    <wsdl:part name="parameters" element="tns:changeExternalEmailAddressRequest"/>
+    <wsdl:part element="tns:changeExternalEmailAddressRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="changeExternalEmailAddressSoapOut">
-    <wsdl:part name="parameters" element="tns:changeExternalEmailAddressResponse"/>
+    <wsdl:part element="tns:changeExternalEmailAddressResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="findEgroupByIdSoapIn">
-    <wsdl:part name="parameters" element="tns:findEgroupByIdRequest"/>
+    <wsdl:part element="tns:findEgroupByIdRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="findEgroupByIdSoapOut">
-    <wsdl:part name="parameters" element="tns:findEgroupByIdResponse"/>
+    <wsdl:part element="tns:findEgroupByIdResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="findEgroupByNameSoapIn">
-    <wsdl:part name="parameters" element="tns:findEgroupByNameRequest"/>
+    <wsdl:part element="tns:findEgroupByNameRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="findEgroupByNameSoapOut">
-    <wsdl:part name="parameters" element="tns:findEgroupByNameResponse"/>
+    <wsdl:part element="tns:findEgroupByNameResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="synchronizeEgroupSoapIn">
-    <wsdl:part name="parameters" element="tns:synchronizeEgroupRequest"/>
+    <wsdl:part element="tns:synchronizeEgroupRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="synchronizeEgroupSoapOut">
-    <wsdl:part name="parameters" element="tns:synchronizeEgroupResponse"/>
+    <wsdl:part element="tns:synchronizeEgroupResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="deleteEgroupSoapIn">
-    <wsdl:part name="parameters" element="tns:deleteEgroupRequest"/>
+    <wsdl:part element="tns:deleteEgroupRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="deleteEgroupSoapOut">
-    <wsdl:part name="parameters" element="tns:deleteEgroupResponse"/>
+    <wsdl:part element="tns:deleteEgroupResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="addEgroupMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:addEgroupMembersRequest"/>
+    <wsdl:part element="tns:addEgroupMembersRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="addEgroupMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:addEgroupMembersResponse"/>
+    <wsdl:part element="tns:addEgroupMembersResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="addEgroupEmailMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:addEgroupEmailMembersRequest"/>
+    <wsdl:part element="tns:addEgroupEmailMembersRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="addEgroupEmailMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:addEgroupEmailMembersResponse"/>
+    <wsdl:part element="tns:addEgroupEmailMembersResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="removeEgroupMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:removeEgroupMembersRequest"/>
+    <wsdl:part element="tns:removeEgroupMembersRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="removeEgroupMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:removeEgroupMembersResponse"/>
+    <wsdl:part element="tns:removeEgroupMembersResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="removeEgroupEmailMembersSoapIn">
-    <wsdl:part name="parameters" element="tns:removeEgroupEmailMembersRequest"/>
+    <wsdl:part element="tns:removeEgroupEmailMembersRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="removeEgroupEmailMembersSoapOut">
-    <wsdl:part name="parameters" element="tns:removeEgroupEmailMembersResponse"/>
+    <wsdl:part element="tns:removeEgroupEmailMembersResponse" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="getEgroupsUserOwnOrManageSoapIn">
-    <wsdl:part name="parameters" element="tns:getEgroupsUserOwnOrManageRequest"/>
+    <wsdl:part element="tns:getEgroupsUserOwnOrManageRequest" name="parameters"/>
   </wsdl:message>
   <wsdl:message name="getEgroupsUserOwnOrManageSoapOut">
-    <wsdl:part name="parameters" element="tns:getEgroupsUserOwnOrManageResponse"/>
+    <wsdl:part element="tns:getEgroupsUserOwnOrManageResponse" name="parameters"/>
   </wsdl:message>
   
   
@@ -530,17 +528,17 @@
   </wsdl:binding>
 
   <wsdl:service name="CraEgroupsWebService">
-    <wsdl:port name="CraEgroupsWebService" binding="tns:CraEgroupsWebServiceBinding">
-      <soap:address location="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService"/>
+    <wsdl:port binding="tns:CraEgroupsWebServiceBinding" name="CraEgroupsWebService">
+      <soap:address location="https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
     </wsdl:port>
-    <wsdl:port name="CraEgroupsWebServiceSoap12" binding="tns:CraEgroupsWebServiceBindingSoap12">
-      <soap12:address location="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService"/>
+    <wsdl:port binding="tns:CraEgroupsWebServiceBindingSoap12" name="CraEgroupsWebServiceSoap12">
+      <soap12:address location="https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
     </wsdl:port>
-    <wsdl:port name="CraOperationsHttpGet" binding="tns:CraOperationsHttpGet">
-      <http:address location="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService"/>
+    <wsdl:port binding="tns:CraOperationsHttpGet" name="CraOperationsHttpGet">
+      <http:address location="https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
     </wsdl:port>
-    <wsdl:port name="CraOperationsHttpPost" binding="tns:CraOperationsHttpPost">
-      <http:address location="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService"/>
+    <wsdl:port binding="tns:CraOperationsHttpPost" name="CraOperationsHttpPost">
+      <http:address location="https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
