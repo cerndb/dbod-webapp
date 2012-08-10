@@ -10,12 +10,16 @@ package ch.cern.dod.ws.egroups;
 public class RemoveEgroupEmailMembersResponse  implements java.io.Serializable {
     private java.lang.String result;
 
+    private java.lang.String transactionId;
+
     public RemoveEgroupEmailMembersResponse() {
     }
 
     public RemoveEgroupEmailMembersResponse(
-           java.lang.String result) {
+           java.lang.String result,
+           java.lang.String transactionId) {
            this.result = result;
+           this.transactionId = transactionId;
     }
 
 
@@ -38,6 +42,26 @@ public class RemoveEgroupEmailMembersResponse  implements java.io.Serializable {
         this.result = result;
     }
 
+
+    /**
+     * Gets the transactionId value for this RemoveEgroupEmailMembersResponse.
+     * 
+     * @return transactionId
+     */
+    public java.lang.String getTransactionId() {
+        return transactionId;
+    }
+
+
+    /**
+     * Sets the transactionId value for this RemoveEgroupEmailMembersResponse.
+     * 
+     * @param transactionId
+     */
+    public void setTransactionId(java.lang.String transactionId) {
+        this.transactionId = transactionId;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof RemoveEgroupEmailMembersResponse)) return false;
@@ -52,7 +76,10 @@ public class RemoveEgroupEmailMembersResponse  implements java.io.Serializable {
         _equals = true && 
             ((this.result==null && other.getResult()==null) || 
              (this.result!=null &&
-              this.result.equals(other.getResult())));
+              this.result.equals(other.getResult()))) &&
+            ((this.transactionId==null && other.getTransactionId()==null) || 
+             (this.transactionId!=null &&
+              this.transactionId.equals(other.getTransactionId())));
         __equalsCalc = null;
         return _equals;
     }
@@ -67,6 +94,9 @@ public class RemoveEgroupEmailMembersResponse  implements java.io.Serializable {
         if (getResult() != null) {
             _hashCode += getResult().hashCode();
         }
+        if (getTransactionId() != null) {
+            _hashCode += getTransactionId().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -80,6 +110,12 @@ public class RemoveEgroupEmailMembersResponse  implements java.io.Serializable {
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("result");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("transactionId");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

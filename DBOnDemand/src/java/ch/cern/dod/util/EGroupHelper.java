@@ -1,19 +1,7 @@
 package ch.cern.dod.util;
 
-import ch.cern.dod.ws.egroups.CraEgroupsWebServiceBindingStub;
-import ch.cern.dod.ws.egroups.CraEgroupsWebService_ServiceLocator;
-import ch.cern.dod.ws.egroups.EgroupType;
-import ch.cern.dod.ws.egroups.EgroupTypeCode;
-import ch.cern.dod.ws.egroups.FindEgroupByNameRequest;
-import ch.cern.dod.ws.egroups.FindEgroupByNameResponse;
-import ch.cern.dod.ws.egroups.MemberType;
-import ch.cern.dod.ws.egroups.MemberTypeCode;
-import ch.cern.dod.ws.egroups.PrivacyType;
-import ch.cern.dod.ws.egroups.SelfsubscriptionType;
-import ch.cern.dod.ws.egroups.SynchronizeEgroupRequest;
-import ch.cern.dod.ws.egroups.SynchronizeEgroupResponse;
-import ch.cern.dod.ws.egroups.UserType;
-import ch.cern.dod.ws.egroups.UserTypeCode;
+import ch.cern.dod.ws.egroups.*;
+import ch.cern.dod.ws.egroups.cra.*;
 import java.rmi.RemoteException;
 import java.util.StringTokenizer;
 import javax.xml.rpc.ServiceException;
@@ -87,6 +75,8 @@ public class EGroupHelper {
         egroup.setID(0);
         egroup.setType(EgroupTypeCode.StaticEgroup);
         egroup.setDescription("e-group for DBOnDemand instance " + instanceName);
+        egroup.setUsage(UsageCode.EgroupsOnly);
+        egroup.setTopic("DB On Demand");
         //User is owner
         UserType owner = new UserType();
         owner.setCCID(userCCID);

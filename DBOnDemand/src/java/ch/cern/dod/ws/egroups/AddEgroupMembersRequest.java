@@ -14,7 +14,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
 
     private java.lang.String p_egroupName;
 
-    private ch.cern.dod.ws.egroups.MemberType[] p_members;
+    private ch.cern.dod.ws.egroups.cra.MemberType[] p_members;
 
     private boolean p_overwriteMembers;
 
@@ -25,7 +25,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
            java.lang.String p_niceUserid,
            java.lang.String p_password,
            java.lang.String p_egroupName,
-           ch.cern.dod.ws.egroups.MemberType[] p_members,
+           ch.cern.dod.ws.egroups.cra.MemberType[] p_members,
            boolean p_overwriteMembers) {
            this.p_niceUserid = p_niceUserid;
            this.p_password = p_password;
@@ -100,7 +100,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
      * 
      * @return p_members
      */
-    public ch.cern.dod.ws.egroups.MemberType[] getP_members() {
+    public ch.cern.dod.ws.egroups.cra.MemberType[] getP_members() {
         return p_members;
     }
 
@@ -110,7 +110,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
      * 
      * @param p_members
      */
-    public void setP_members(ch.cern.dod.ws.egroups.MemberType[] p_members) {
+    public void setP_members(ch.cern.dod.ws.egroups.cra.MemberType[] p_members) {
         this.p_members = p_members;
     }
 
@@ -222,9 +222,9 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_members");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "p_members"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "MemberType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MemberType"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "Member"));
+        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_overwriteMembers");

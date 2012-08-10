@@ -14,7 +14,7 @@ public class RemoveEgroupEmailMembersRequest  implements java.io.Serializable {
 
     private java.lang.String p_egroupName;
 
-    private ch.cern.dod.ws.egroups.EmailMemberType[] p_members;
+    private ch.cern.dod.ws.egroups.cra.EmailMemberType[] p_members;
 
     public RemoveEgroupEmailMembersRequest() {
     }
@@ -23,7 +23,7 @@ public class RemoveEgroupEmailMembersRequest  implements java.io.Serializable {
            java.lang.String p_niceUserid,
            java.lang.String p_password,
            java.lang.String p_egroupName,
-           ch.cern.dod.ws.egroups.EmailMemberType[] p_members) {
+           ch.cern.dod.ws.egroups.cra.EmailMemberType[] p_members) {
            this.p_niceUserid = p_niceUserid;
            this.p_password = p_password;
            this.p_egroupName = p_egroupName;
@@ -96,7 +96,7 @@ public class RemoveEgroupEmailMembersRequest  implements java.io.Serializable {
      * 
      * @return p_members
      */
-    public ch.cern.dod.ws.egroups.EmailMemberType[] getP_members() {
+    public ch.cern.dod.ws.egroups.cra.EmailMemberType[] getP_members() {
         return p_members;
     }
 
@@ -106,7 +106,7 @@ public class RemoveEgroupEmailMembersRequest  implements java.io.Serializable {
      * 
      * @param p_members
      */
-    public void setP_members(ch.cern.dod.ws.egroups.EmailMemberType[] p_members) {
+    public void setP_members(ch.cern.dod.ws.egroups.cra.EmailMemberType[] p_members) {
         this.p_members = p_members;
     }
 
@@ -196,9 +196,9 @@ public class RemoveEgroupEmailMembersRequest  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_members");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "p_members"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "EmailMemberType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMemberType"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "Member"));
+        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member"));
         typeDesc.addFieldDesc(elemField);
     }
 

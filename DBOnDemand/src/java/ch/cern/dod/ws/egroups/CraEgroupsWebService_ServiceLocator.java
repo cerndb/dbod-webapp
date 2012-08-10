@@ -22,7 +22,7 @@ public class CraEgroupsWebService_ServiceLocator extends org.apache.axis.client.
     }
 
     // Use to get a proxy class for CraEgroupsWebServiceSoap12
-    private java.lang.String CraEgroupsWebServiceSoap12_address = "https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService";
+    private java.lang.String CraEgroupsWebServiceSoap12_address = "https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService";
 
     public java.lang.String getCraEgroupsWebServiceSoap12Address() {
         return CraEgroupsWebServiceSoap12_address;
@@ -67,7 +67,7 @@ public class CraEgroupsWebService_ServiceLocator extends org.apache.axis.client.
 
 
     // Use to get a proxy class for CraEgroupsWebService
-    private java.lang.String CraEgroupsWebService_address = "https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService";
+    private java.lang.String CraEgroupsWebService_address = "https://preprodcra-ws.cern.ch:443/cra-ws/CraEgroupsWebService";
 
     public java.lang.String getCraEgroupsWebServiceAddress() {
         return CraEgroupsWebService_address;

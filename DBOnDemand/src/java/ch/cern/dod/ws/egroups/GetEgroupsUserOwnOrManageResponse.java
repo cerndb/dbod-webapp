@@ -8,14 +8,18 @@
 package ch.cern.dod.ws.egroups;
 
 public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable {
-    private ch.cern.dod.ws.egroups.EgroupType[] result;
+    private ch.cern.dod.ws.egroups.cra.EgroupType[] result;
+
+    private java.lang.String transactionId;
 
     public GetEgroupsUserOwnOrManageResponse() {
     }
 
     public GetEgroupsUserOwnOrManageResponse(
-           ch.cern.dod.ws.egroups.EgroupType[] result) {
+           ch.cern.dod.ws.egroups.cra.EgroupType[] result,
+           java.lang.String transactionId) {
            this.result = result;
+           this.transactionId = transactionId;
     }
 
 
@@ -24,7 +28,7 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
      * 
      * @return result
      */
-    public ch.cern.dod.ws.egroups.EgroupType[] getResult() {
+    public ch.cern.dod.ws.egroups.cra.EgroupType[] getResult() {
         return result;
     }
 
@@ -34,8 +38,28 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
      * 
      * @param result
      */
-    public void setResult(ch.cern.dod.ws.egroups.EgroupType[] result) {
+    public void setResult(ch.cern.dod.ws.egroups.cra.EgroupType[] result) {
         this.result = result;
+    }
+
+
+    /**
+     * Gets the transactionId value for this GetEgroupsUserOwnOrManageResponse.
+     * 
+     * @return transactionId
+     */
+    public java.lang.String getTransactionId() {
+        return transactionId;
+    }
+
+
+    /**
+     * Sets the transactionId value for this GetEgroupsUserOwnOrManageResponse.
+     * 
+     * @param transactionId
+     */
+    public void setTransactionId(java.lang.String transactionId) {
+        this.transactionId = transactionId;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -52,7 +76,10 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
         _equals = true && 
             ((this.result==null && other.getResult()==null) || 
              (this.result!=null &&
-              java.util.Arrays.equals(this.result, other.getResult())));
+              java.util.Arrays.equals(this.result, other.getResult()))) &&
+            ((this.transactionId==null && other.getTransactionId()==null) || 
+             (this.transactionId!=null &&
+              this.transactionId.equals(other.getTransactionId())));
         __equalsCalc = null;
         return _equals;
     }
@@ -75,6 +102,9 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
                 }
             }
         }
+        if (getTransactionId() != null) {
+            _hashCode += getTransactionId().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -88,9 +118,15 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("result");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "EgroupType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupType"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "Egroup"));
+        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Egroup"));
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("transactionId");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
 

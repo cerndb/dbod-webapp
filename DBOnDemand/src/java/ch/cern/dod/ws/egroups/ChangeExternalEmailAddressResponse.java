@@ -10,12 +10,16 @@ package ch.cern.dod.ws.egroups;
 public class ChangeExternalEmailAddressResponse  implements java.io.Serializable {
     private int result;
 
+    private java.lang.String transactionId;
+
     public ChangeExternalEmailAddressResponse() {
     }
 
     public ChangeExternalEmailAddressResponse(
-           int result) {
+           int result,
+           java.lang.String transactionId) {
            this.result = result;
+           this.transactionId = transactionId;
     }
 
 
@@ -38,6 +42,26 @@ public class ChangeExternalEmailAddressResponse  implements java.io.Serializable
         this.result = result;
     }
 
+
+    /**
+     * Gets the transactionId value for this ChangeExternalEmailAddressResponse.
+     * 
+     * @return transactionId
+     */
+    public java.lang.String getTransactionId() {
+        return transactionId;
+    }
+
+
+    /**
+     * Sets the transactionId value for this ChangeExternalEmailAddressResponse.
+     * 
+     * @param transactionId
+     */
+    public void setTransactionId(java.lang.String transactionId) {
+        this.transactionId = transactionId;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof ChangeExternalEmailAddressResponse)) return false;
@@ -50,7 +74,10 @@ public class ChangeExternalEmailAddressResponse  implements java.io.Serializable
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            this.result == other.getResult();
+            this.result == other.getResult() &&
+            ((this.transactionId==null && other.getTransactionId()==null) || 
+             (this.transactionId!=null &&
+              this.transactionId.equals(other.getTransactionId())));
         __equalsCalc = null;
         return _equals;
     }
@@ -63,6 +90,9 @@ public class ChangeExternalEmailAddressResponse  implements java.io.Serializable
         __hashCodeCalc = true;
         int _hashCode = 1;
         _hashCode += getResult();
+        if (getTransactionId() != null) {
+            _hashCode += getTransactionId().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -77,6 +107,12 @@ public class ChangeExternalEmailAddressResponse  implements java.io.Serializable
         elemField.setFieldName("result");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("transactionId");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

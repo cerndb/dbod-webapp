@@ -1,71 +1,71 @@
 /**
- * AddEgroupMembersResponse.java
+ * GemType.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package ch.cern.dod.ws.egroups;
+package ch.cern.dod.ws.egroups.cra;
 
-public class AddEgroupMembersResponse  implements java.io.Serializable {
-    private java.lang.String result;
+public class GemType  implements java.io.Serializable {
+    private java.lang.String emailAddress;
 
-    private java.lang.String transactionId;
+    private boolean displayInPhonebook;
 
-    public AddEgroupMembersResponse() {
+    public GemType() {
     }
 
-    public AddEgroupMembersResponse(
-           java.lang.String result,
-           java.lang.String transactionId) {
-           this.result = result;
-           this.transactionId = transactionId;
-    }
-
-
-    /**
-     * Gets the result value for this AddEgroupMembersResponse.
-     * 
-     * @return result
-     */
-    public java.lang.String getResult() {
-        return result;
+    public GemType(
+           java.lang.String emailAddress,
+           boolean displayInPhonebook) {
+           this.emailAddress = emailAddress;
+           this.displayInPhonebook = displayInPhonebook;
     }
 
 
     /**
-     * Sets the result value for this AddEgroupMembersResponse.
+     * Gets the emailAddress value for this GemType.
      * 
-     * @param result
+     * @return emailAddress
      */
-    public void setResult(java.lang.String result) {
-        this.result = result;
+    public java.lang.String getEmailAddress() {
+        return emailAddress;
     }
 
 
     /**
-     * Gets the transactionId value for this AddEgroupMembersResponse.
+     * Sets the emailAddress value for this GemType.
      * 
-     * @return transactionId
+     * @param emailAddress
      */
-    public java.lang.String getTransactionId() {
-        return transactionId;
+    public void setEmailAddress(java.lang.String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
 
     /**
-     * Sets the transactionId value for this AddEgroupMembersResponse.
+     * Gets the displayInPhonebook value for this GemType.
      * 
-     * @param transactionId
+     * @return displayInPhonebook
      */
-    public void setTransactionId(java.lang.String transactionId) {
-        this.transactionId = transactionId;
+    public boolean isDisplayInPhonebook() {
+        return displayInPhonebook;
+    }
+
+
+    /**
+     * Sets the displayInPhonebook value for this GemType.
+     * 
+     * @param displayInPhonebook
+     */
+    public void setDisplayInPhonebook(boolean displayInPhonebook) {
+        this.displayInPhonebook = displayInPhonebook;
     }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof AddEgroupMembersResponse)) return false;
-        AddEgroupMembersResponse other = (AddEgroupMembersResponse) obj;
+        if (!(obj instanceof GemType)) return false;
+        GemType other = (GemType) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -74,12 +74,10 @@ public class AddEgroupMembersResponse  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            ((this.result==null && other.getResult()==null) || 
-             (this.result!=null &&
-              this.result.equals(other.getResult()))) &&
-            ((this.transactionId==null && other.getTransactionId()==null) || 
-             (this.transactionId!=null &&
-              this.transactionId.equals(other.getTransactionId())));
+            ((this.emailAddress==null && other.getEmailAddress()==null) || 
+             (this.emailAddress!=null &&
+              this.emailAddress.equals(other.getEmailAddress()))) &&
+            this.displayInPhonebook == other.isDisplayInPhonebook();
         __equalsCalc = null;
         return _equals;
     }
@@ -91,32 +89,30 @@ public class AddEgroupMembersResponse  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getResult() != null) {
-            _hashCode += getResult().hashCode();
+        if (getEmailAddress() != null) {
+            _hashCode += getEmailAddress().hashCode();
         }
-        if (getTransactionId() != null) {
-            _hashCode += getTransactionId().hashCode();
-        }
+        _hashCode += (isDisplayInPhonebook() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(AddEgroupMembersResponse.class, true);
+        new org.apache.axis.description.TypeDesc(GemType.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", ">addEgroupMembersResponse"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "GemType"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("result");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
+        elemField.setFieldName("emailAddress");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailAddress"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("transactionId");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setFieldName("displayInPhonebook");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "DisplayInPhonebook"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

@@ -12,7 +12,7 @@ public class SynchronizeEgroupRequest  implements java.io.Serializable {
 
     private java.lang.String p_password;
 
-    private ch.cern.dod.ws.egroups.EgroupType p_egroup;
+    private ch.cern.dod.ws.egroups.cra.EgroupType p_egroup;
 
     public SynchronizeEgroupRequest() {
     }
@@ -20,7 +20,7 @@ public class SynchronizeEgroupRequest  implements java.io.Serializable {
     public SynchronizeEgroupRequest(
            java.lang.String p_niceUserid,
            java.lang.String p_password,
-           ch.cern.dod.ws.egroups.EgroupType p_egroup) {
+           ch.cern.dod.ws.egroups.cra.EgroupType p_egroup) {
            this.p_niceUserid = p_niceUserid;
            this.p_password = p_password;
            this.p_egroup = p_egroup;
@@ -72,7 +72,7 @@ public class SynchronizeEgroupRequest  implements java.io.Serializable {
      * 
      * @return p_egroup
      */
-    public ch.cern.dod.ws.egroups.EgroupType getP_egroup() {
+    public ch.cern.dod.ws.egroups.cra.EgroupType getP_egroup() {
         return p_egroup;
     }
 
@@ -82,7 +82,7 @@ public class SynchronizeEgroupRequest  implements java.io.Serializable {
      * 
      * @param p_egroup
      */
-    public void setP_egroup(ch.cern.dod.ws.egroups.EgroupType p_egroup) {
+    public void setP_egroup(ch.cern.dod.ws.egroups.cra.EgroupType p_egroup) {
         this.p_egroup = p_egroup;
     }
 
@@ -152,7 +152,7 @@ public class SynchronizeEgroupRequest  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_egroup");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "p_egroup"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://cra.web.cern.ch/cra/xml", "EgroupType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupType"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
