@@ -326,7 +326,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only enable button if the instance is stopped or running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
                     filesButton.setDisabled(true);
                     filesButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -439,7 +439,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only disable button if the instance is awaiting approval
-                if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
+                if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
                     monitorBtn.setDisabled(true);
                     monitorBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {

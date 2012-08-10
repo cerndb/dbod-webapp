@@ -1,5 +1,7 @@
 package ch.cern.dod.util;
 
+import ch.cern.dod.db.entity.DODMetric;
+
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
@@ -27,7 +29,10 @@ public class DODConstants {
     public static final String MASTER = "master";
     public static final String SLAVE = "slave";
     public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
-    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?tgtt=M&raw=1";
+    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?raw=1";
+    public static final String MONITORING_TYPE = "tgtt";
+    public static final String MONITORING_TYPE_MYSQL = "M";
+    public static final String MONITORING_TYPE_MACHINE = "N";
     public static final String MONITORING_INSTANCE = "tgt";
     public static final String MONITORING_METRIC = "metric";
     public static final String MONITORING_DAYS = "days";
@@ -47,16 +52,16 @@ public class DODConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
-    public static final String[][] MYSQL_OVERVIEW_METRICS = {{"Threads_connected","Number of currently open connections"},
-                                                                {"Aborted_connects","Number of aborted connections"},
-                                                                {"Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk"},
-                                                                {"Innodb_data_reads","Total number of data reads"},
-                                                                {"Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool"},
-                                                                {"Innodb_data_writes","Total number of data writes"},
-                                                                {"Innodb_data_read","Amount of data read since the server was started"},
-                                                                {"Innodb_data_written","Amount of data written"},
-                                                                {"Qcache_hits","Number of query cache hits"},
-                                                                {"Qcache_not_cached","Number of noncached queries"}};
+    public static final DODMetric[] MYSQL_OVERVIEW_METRICS = {new DODMetric("Threads_connected","Number of currently open connections","M"),
+                                                                new DODMetric("Aborted_connects","Number of aborted connections","M"),
+                                                                new DODMetric("Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk","M"),
+                                                                new DODMetric("Innodb_data_reads","Total number of data reads","M"),
+                                                                new DODMetric("Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool","M"),
+                                                                new DODMetric("Innodb_data_writes","Total number of data writes","M"),
+                                                                new DODMetric("Innodb_data_read","Amount of data read since the server was started","M"),
+                                                                new DODMetric("Innodb_data_written","Amount of data written","M"),
+                                                                new DODMetric("Qcache_hits","Number of query cache hits","M"),
+                                                                new DODMetric("Qcache_not_cached","Number of noncached queries","M")};
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";

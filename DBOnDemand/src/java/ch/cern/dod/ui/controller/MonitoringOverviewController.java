@@ -1,8 +1,13 @@
 package ch.cern.dod.ui.controller;
 
+import ch.cern.dod.db.dao.DODInstanceDAO;
+import ch.cern.dod.db.dao.DODUpgradeDAO;
+import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.MonitoringHelper;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -23,7 +28,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
     /**
      * Instance being managed at the moment
      */
-    private String instance;
+    private DODInstance instance;
     /**
      * Helper to access monitoring
      */
@@ -34,7 +39,11 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
      */
     public void beforeCompose() {
         //Initialize instance and create job helper
-        this.instance = (String) Executions.getCurrent().getParameter(DODConstants.INSTANCE);
+        String dbName = (String) Executions.getCurrent().getParameter(DODConstants.INSTANCE);
+        DODUpgradeDAO upgradeDAO = new DODUpgradeDAO();
+        List<DODUpgrade> upgrades = upgradeDAO.selectAll();
+        DODInstanceDAO instanceDAO = new DODInstanceDAO();
+        this.instance = instanceDAO.selectByDbName(dbName, upgrades);
         helper = new MonitoringHelper();
     }
     
@@ -62,14 +71,14 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             Vbox vboxLeft = new Vbox();
             vboxLeft.setAlign("center");
             vboxLeft.setWidth("600px");
-            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i][1]);
+            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i].getDescription());
             labelLeft.setSclass("titleSmall");
             vboxLeft.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxLeft.appendChild(graphLeft);
             try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i][0], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i][1] +"');";
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[i], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i].getId() +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -79,14 +88,14 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             Vbox vboxRight = new Vbox();
             vboxRight.setAlign("center");
             vboxRight.setWidth("600px");
-            Label labelRight = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1]);
+            Label labelRight = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getDescription());
             labelRight.setSclass("titleSmall");
             vboxRight.appendChild(labelRight);
             Html graphRight = new Html();
-            graphRight.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphRight.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxRight.appendChild(graphRight);
             try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[i+1][0], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1][1] +"');";
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[i+1], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getId() +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -101,15 +110,15 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             Vbox vbox = new Vbox();
             vbox.setAlign("center");
             vbox.setWidth("1200px");
-            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1]);
+            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getDescription());
             labelLeft.setSclass("titleSmall");
             vbox.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vbox.appendChild(graphLeft);
             try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][0], 14)
-                                        + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1][1] +"');";
+                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1], 14)
+                                        + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getId() +"');";
             } catch (IOException ex) {
                 Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                 showError(DODConstants.ERROR_DISPATCHING_JOB);

@@ -70,9 +70,10 @@ public class MonitoringController extends Window {
         String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
         ParamsHelper paramsHelper = new ParamsHelper(wsUser, wsPswd);
 
-        String host = paramsHelper.getParam(instance, DODConstants.PARAM_HOST);
+        String hostname = paramsHelper.getParam(instance, DODConstants.PARAM_HOST);
+        final String host = hostname.substring(0, hostname.indexOf("."));
         if (host != null)
-           lemonURL = DODConstants.LEMON_URL + host.substring(0, host.indexOf("."));
+           lemonURL = DODConstants.LEMON_URL + host;
 
         //Basic window properties
         this.setId("monitoringWindow");
@@ -104,7 +105,7 @@ public class MonitoringController extends Window {
                 if (metrics.getSelectedItem().getValue() != null) {
                     try {
                         Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
-                                + "drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getSelectedItem().getValue(), 30) + ", 'graphDiv');");
+                                + "drawGraph(" + helper.getJSONMetric(instance, host, (DODMetric) metrics.getSelectedItem().getValue(), 30) + ", 'graphDiv');");
                     } catch (IOException ex) {
                         Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
                         showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -119,7 +120,7 @@ public class MonitoringController extends Window {
         graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
         mainBox.appendChild(graphDiv);
         try {
-            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance.getDbName(), (String) metrics.getItemAtIndex(0).getValue(), 30) + ", 'graphDiv');");
+            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, host, (DODMetric) metrics.getItemAtIndex(0).getValue(), 30) + ", 'graphDiv');");
         } catch (IOException ex) {
             Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
             showError(DODConstants.ERROR_DISPATCHING_JOB);
@@ -192,12 +193,12 @@ public class MonitoringController extends Window {
     private void loadMetrics() {
         try {
             //Get available metrics
-            List<DODMetric> metricsList = helper.getAvailableMetrics();
+            List<DODMetric> metricsList = helper.getAvailableMetrics(instance.getDbType());
             //Insert items in combobox
             for (int i = 0; i < metricsList.size(); i++) {
                 DODMetric metric = metricsList.get(i);
                 Comboitem item = new Comboitem();
-                item.setValue(metric.getId());
+                item.setValue(metric);
                 item.setLabel(metric.getDescription());
                 metrics.appendChild(item);
             }
