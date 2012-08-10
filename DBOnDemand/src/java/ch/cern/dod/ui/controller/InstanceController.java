@@ -359,6 +359,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             stateImage.setSrc(DODConstants.IMG_STOPPED);
         } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
             stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
+        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+            stateImage.setSrc(DODConstants.IMG_BUSY);
         }
         
         //If the user is an admin

@@ -69,6 +69,7 @@ public class DODConstants {
     public static final String INSTANCE_STATE_RUNNING = "RUNNING";
     public static final String INSTANCE_STATE_STOPPED = "STOPPED";
     public static final String INSTANCE_STATE_MAINTENANCE = "MAINTENANCE";
+    public static final String INSTANCE_STATE_BUSY = "BUSY";
     public static final String JOB_STATE_PENDING = "PENDING";
     public static final String JOB_STATE_RUNNING = "RUNNING";
     public static final String JOB_STATE_FINISHED_OK = "FINISHED_OK";
@@ -242,6 +243,7 @@ public class DODConstants {
     public static final String IMG_PENDING = "/img/pending.png";
     public static final String IMG_RUNNING = "/img/running.png";
     public static final String IMG_STOPPED = "/img/stopped.png";
+    public static final String IMG_BUSY = "/img/busy.png";
     public static final String IMG_STARTUP = "/img/startup.png";
     public static final String IMG_SHUTDOWN = "/img/shutdown.png";
     public static final String IMG_CONFIG = "/img/config.png";

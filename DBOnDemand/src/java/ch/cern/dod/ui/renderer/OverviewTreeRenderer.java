@@ -234,6 +234,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
                     state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_MAINTENANCE);
+                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
+                    state.setSrc(DODConstants.IMG_BUSY);
                 }
                 Treecell stateCell = new Treecell();
                 stateCell.appendChild(state);
