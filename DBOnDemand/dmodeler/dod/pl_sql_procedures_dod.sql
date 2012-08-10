@@ -555,6 +555,50 @@ BEGIN
 END;
 /
 
+-- Backup warning: emails users when they do not have automatic backups enabled
+CREATE OR REPLACE PROCEDURE backup_warning
+IS
+    -- Users and databases with no bacups activated
+    CURSOR instances IS
+        SELECT db_name, username
+            FROM dod_instances
+            WHERE 0 = (SELECT COUNT(*)
+                        FROM user_scheduler_jobs
+                        WHERE job_name = db_name || '_BACKUP');
+    message VARCHAR2 (2056);
+BEGIN
+    FOR instance IN instances
+    LOOP
+        message := '<html>
+                        <body>
+                            <p>
+                            Dear DB On Demand user,
+                            </p>
+                            <p>
+                            We have detected that your instance ' || instance.db_name || ' is not being automatically backed up. It is strongly recommended to enable automatic backups. In order to do so, open the backup management window from the overview or the instance view page, and check "Perform automatic backups every xx hours". Then click on "Apply changes".
+                            </p>
+                            <p>
+                            For more information visit our <a href="https://j2eeps.cern.ch/DBOnDemand/help.zul">help page</a>.
+                            </p>
+                            <p>
+                            Kind regards,
+                            </p>
+                            <p>
+                            The DBOD team
+                            </p>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => instance.username || '@cern.ch',
+            cc => 'dbondemand-admin@cern.ch',
+            subject => 'Automatic backups not enabled on ' || instance.db_name,
+            message => message,
+            mime_type => 'text/html');   
+    END LOOP;
+END;
+/
+
 -- Clean the jobs table, deleting jobs older than 90 days
 CREATE OR REPLACE PROCEDURE clean_jobs
 IS
@@ -596,6 +640,14 @@ BEGIN
         repeat_interval      => 'FREQ=DAILY;',
         enabled              =>  TRUE,
         comments             => 'Scheduled job to clean jobs table');
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name             => 'DBOD_BACKUP_WARNING',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.backup_warning; END;',
+        repeat_interval      => 'FREQ=MONTHLY; BYMONTHDAY=1;',
+        enabled              =>  TRUE,
+        comments             => 'Warns users when automatic backups are not enabled');
 END;
 /
 
