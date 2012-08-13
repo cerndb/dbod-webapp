@@ -27,14 +27,14 @@
             <error/>
 
             <!-- Groupbox for the  tree -->
-            <groupbox mold="3d" closable="false">
+            <groupbox mold="3d" closable="false" width="1200px">
                 <caption label=" ">
                     <div height="24px">
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
                     </div>
                 </caption>
                 <iframe id="tree" width="300px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemand?template=viewplain"/>
-                <iframe id="content" name="dodhelpcontent" width="900px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemandManifesto?template=viewplain"/>
+                <iframe id="content" name="dodhelpcontent" width="880px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemandManifesto?template=viewplain"/>
             </groupbox>
         </hbox>
     </vbox>
