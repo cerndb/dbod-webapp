@@ -197,6 +197,7 @@ public class BackupController extends Window {
         day.setWidth("90px");
         tapeBox.appendChild(day);
         time = new Timebox();
+        time.setWidth("80px");
         tapeBox.appendChild(time);        
         configContent.appendChild(tapeBox);
         if (prevBackupToTapeEnabled) {

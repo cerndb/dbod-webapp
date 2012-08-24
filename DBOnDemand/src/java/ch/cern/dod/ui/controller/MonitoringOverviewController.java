@@ -49,7 +49,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
     
     public void afterCompose() {
         //Set title
-        ((Label) getFellow("monitoringTitle")).setValue(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_TITLE) + " " + instance);
+        ((Label) getFellow("monitoringTitle")).setValue(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_TITLE) + " " + instance.getDbName());
         ((Groupbox) getFellow("container")).setOpen(true);
         Events.echoEvent("onOpen", (Groupbox) getFellow("container"), null);
     }
