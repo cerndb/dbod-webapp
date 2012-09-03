@@ -8,7 +8,7 @@ function drawGraph (values, divId) {
         var data = new google.visualization.DataTable(values);
         annotatedtimeline.draw(data, {
             colors: ['green','red'], // The colors to be used
-            displayExactValues: true, // Do not truncate values (i.e. using K suffix)
+            displayExactValues: false, // Do not truncate values (i.e. using K suffix)
             displayRangeSelector: true, // Do not sow the range selector
             displayZoomButtons: true, // DO not display the zoom buttons
             fill: 30, // Fill the area below the lines with 30% opacity
