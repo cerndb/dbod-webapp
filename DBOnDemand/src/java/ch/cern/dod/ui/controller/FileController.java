@@ -5,6 +5,7 @@ import ch.cern.dod.exception.ConfigFileSizeException;
 import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,13 +53,13 @@ public class FileController extends Window {
      */
     private Combobox type;
     /**
-     * Combobox with the file name of the slow log to download.
+     * Combobox with the file name of the log to download.
      */
-    private Combobox slowLog;
+    private Combobox logs;
     /**
-     * Array of slow logs.
+     * Array of logs.
      */
-    private String[] slowLogArray;
+    private String[] logArray;
     /**
      * User athenticated in the system at the moment.
      */
@@ -103,164 +104,164 @@ public class FileController extends Window {
         Vbox mainBox = new Vbox();
         mainBox.setStyle("padding-top:5px;padding-left:5px;padding-right:5px");
         this.appendChild(mainBox);
-
         
         //Config files groupbox
-        Groupbox config = new Groupbox();
-        config.setClosable(false);
-        Caption configCap = new Caption();
-        configCap.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG_TITLE));
-        configCap.setImage(DODConstants.IMG_CONFIG);
-        config.appendChild(configCap);
-        //Config files message
-        Label configMessage = new Label(Labels.getLabel(DODConstants.LABEL_CONFIG_MESSAGE));
-        config.appendChild(configMessage);
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
+            Groupbox config = new Groupbox();
+            config.setClosable(false);
+            config.setWidth("390px");
+            Caption configCap = new Caption();
+            configCap.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG_TITLE));
+            configCap.setImage(DODConstants.IMG_CONFIG);
+            config.appendChild(configCap);
+            //Config files message
+            Label configMessage = new Label(Labels.getLabel(DODConstants.LABEL_CONFIG_MESSAGE));
+            config.appendChild(configMessage);
 
-        //Box containing the file selector and buttons
-        Hbox configBox =  new Hbox();
-        configBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
-        configBox.setAlign("bottom");
-        //Create combobox for file selector
-        type = getConfigCombobox(instance.getDbType());
-        configBox.appendChild(type);
-        //Upload config file button
-        Div uploadDiv = new Div();
-        uploadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_UPLOAD));
-        Toolbarbutton uploadBtn = new Toolbarbutton();
-        uploadBtn.setImage(DODConstants.IMG_UPLOAD);
-        uploadBtn.setZclass(DODConstants.STYLE_BUTTON);
-        uploadBtn.setParent(uploadDiv);
-        uploadBtn.setUpload("true");
-        uploadBtn.addEventListener(Events.ON_UPLOAD, new EventListener() {
-            public void onEvent(Event event) {
-                try {
+            //Box containing the file selector and buttons
+            Hbox configBox =  new Hbox();
+            configBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
+            configBox.setAlign("bottom");
+            //Create combobox for file selector
+            type = getConfigCombobox(instance.getDbType());
+            configBox.appendChild(type);
+            //Upload config file button
+            Div uploadDiv = new Div();
+            uploadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_UPLOAD));
+            Toolbarbutton uploadBtn = new Toolbarbutton();
+            uploadBtn.setImage(DODConstants.IMG_UPLOAD);
+            uploadBtn.setZclass(DODConstants.STYLE_BUTTON);
+            uploadBtn.setParent(uploadDiv);
+            uploadBtn.setUpload("true");
+            uploadBtn.addEventListener(Events.ON_UPLOAD, new EventListener() {
+                public void onEvent(Event event) {
+                    try {
+                        //Check config file value
+                        if (isTypeValid()) {
+                            //Create new job and update instance status
+                            String fileType = ((String[])type.getSelectedItem().getValue())[0];
+                            String filePath = ((String[])type.getSelectedItem().getValue())[1];
+                            boolean result = jobHelper.doUpload(instance, username, fileType, filePath, (UploadEvent) event);
+                            //Depending on the result
+                            if (result) {
+                                //If we are in the overview page
+                                if (type.getRoot().getFellowIfAny("overviewTree") != null) {
+                                    //Reload the tree
+                                    Tree tree = (Tree) type.getRoot().getFellow("overviewTree");
+                                    int activePage = 0;
+                                    if (tree.getMold().equals("paging")) {
+                                        activePage = tree.getActivePage();
+                                    }
+                                    tree.setModel(tree.getModel());
+                                    try {
+                                        if (tree.getMold().equals("paging")) {
+                                            tree.setActivePage(activePage);
+                                        }
+                                    }
+                                    catch (WrongValueException ex) {}
+                                } //If we are in the instance page
+                                else if (type.getRoot().getFellowIfAny("controller") != null && type.getRoot().getFellow("controller") instanceof InstanceController) {
+                                    InstanceController controller = (InstanceController) type.getRoot().getFellow("controller");
+                                    controller.afterCompose();
+                                }
+                            }
+                            type.getFellow("filesWindow").detach();
+                        }
+                        else{
+                            type.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CONFIG_TYPE));
+                        }
+                    }
+                    catch (ConfigFileSizeException ex) {
+                        showError(DODConstants.ERROR_UPLOADING_CONFIG_FILE_SIZE, ex);
+                    }
+                    catch (IOException ex) {
+                        showError(DODConstants.ERROR_UPLOADING_CONFIG_FILE, ex);
+                    }
+                }
+            });
+            configBox.appendChild(uploadDiv);
+            //Download config file button
+            Div downloadDiv = new Div();
+            downloadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_DOWNLOAD));
+            Toolbarbutton downloadBtn = new Toolbarbutton();
+            downloadBtn.setZclass(DODConstants.STYLE_BUTTON);
+            downloadBtn.setImage(DODConstants.IMG_DOWNLOAD);
+            downloadBtn.setParent(downloadDiv);
+            downloadBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
                     //Check config file value
                     if (isTypeValid()) {
-                        //Create new job and update instance status
-                        String fileType = ((String[])type.getSelectedItem().getValue())[0];
+                        //Obtain file
                         String filePath = ((String[])type.getSelectedItem().getValue())[1];
-                        boolean result = jobHelper.doUpload(instance, username, fileType, filePath, (UploadEvent) event);
-                        //Depending on the result
-                        if (result) {
-                            //If we are in the overview page
-                            if (type.getRoot().getFellowIfAny("overviewTree") != null) {
-                                //Reload the tree
-                                Tree tree = (Tree) type.getRoot().getFellow("overviewTree");
-                                int activePage = 0;
-                                if (tree.getMold().equals("paging")) {
-                                    activePage = tree.getActivePage();
-                                }
-                                tree.setModel(tree.getModel());
-                                try {
-                                    if (tree.getMold().equals("paging")) {
-                                        tree.setActivePage(activePage);
-                                    }
-                                }
-                                catch (WrongValueException ex) {}
-                            } //If we are in the instance page
-                            else if (type.getRoot().getFellowIfAny("controller") != null && type.getRoot().getFellow("controller") instanceof InstanceController) {
-                                InstanceController controller = (InstanceController) type.getRoot().getFellow("controller");
-                                controller.afterCompose();
-                            }
+                        AMedia file = fileHelper.getFile(instance, filePath);
+                        if (file != null) {
+                            Filedownload.save(file);
+                            type.getFellow("filesWindow").detach();
                         }
-                        type.getFellow("filesWindow").detach();
+                        else {
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING CONFIG FILE: " + filePath);
+                            showError(DODConstants.ERROR_DOWNLOADING_CONFIG_FILE, null);
+                        }
                     }
                     else{
                         type.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CONFIG_TYPE));
                     }
                 }
-                catch (ConfigFileSizeException ex) {
-                    showError(DODConstants.ERROR_UPLOADING_CONFIG_FILE_SIZE, ex);
-                }
-                catch (IOException ex) {
-                    showError(DODConstants.ERROR_UPLOADING_CONFIG_FILE, ex);
-                }
-            }
-        });
-        configBox.appendChild(uploadDiv);
-        //Download config file button
-        Div downloadDiv = new Div();
-        downloadDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_CONFIG_DOWNLOAD));
-        Toolbarbutton downloadBtn = new Toolbarbutton();
-        downloadBtn.setZclass(DODConstants.STYLE_BUTTON);
-        downloadBtn.setImage(DODConstants.IMG_DOWNLOAD);
-        downloadBtn.setParent(downloadDiv);
-        downloadBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            });
+            configBox.appendChild(downloadDiv);
+            config.appendChild(configBox);
+            mainBox.appendChild(config);
+        }
+        
+        //Logs groupbox
+        Groupbox logsGroupbox = new Groupbox();
+        logsGroupbox.setWidth("390px");
+        logsGroupbox.setClosable(false);
+        Caption logsCap = new Caption();
+        logsCap.setLabel(Labels.getLabel(DODConstants.LABEL_LOGS_TITLE));
+        logsCap.setImage(DODConstants.IMG_LOGS);
+        logsGroupbox.appendChild(logsCap);
+        //Logs message
+        Label logsMessage = new Label(Labels.getLabel(DODConstants.LABEL_LOGS_MESSAGE));
+        logsGroupbox.appendChild(logsMessage);
+
+        //Box containing the file selector and buttons
+        Hbox logsBox =  new Hbox();
+        logsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
+        logsBox.setAlign("bottom");
+        //Create combobox for file selector
+        logs = getLogsCombobox();
+        logsBox.appendChild(logs);
+        //Download slow logs file button
+        Div downloadLogDiv = new Div();
+        downloadLogDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_LOGS_DOWNLOAD));
+        Toolbarbutton downloadLogBtn = new Toolbarbutton();
+        downloadLogBtn.setZclass(DODConstants.STYLE_BUTTON);
+        downloadLogBtn.setImage(DODConstants.IMG_DOWNLOAD);
+        downloadLogBtn.setParent(downloadLogDiv);
+        downloadLogBtn.addEventListener(Events.ON_CLICK, new EventListener() {
             public void onEvent(Event event) {
                 //Check config file value
-                if (isTypeValid()) {
+                if (isLogValid()) {
                     //Obtain file
-                    String filePath = ((String[])type.getSelectedItem().getValue())[1];
-                    AMedia file = fileHelper.getFile(instance, filePath);
-                    if (file != null) {
-                        Filedownload.save(file);
-                        type.getFellow("filesWindow").detach();
-                    }
-                    else {
-                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING CONFIG FILE: " + filePath);
-                        showError(DODConstants.ERROR_DOWNLOADING_CONFIG_FILE, null);
+                    String filePath = ((String)logs.getSelectedItem().getValue());
+                    String url = fileHelper.getServedFileURL(instance, filePath);
+                    if (url != null && !url.isEmpty()) {
+                            Executions.sendRedirect(url);
+                            logs.getFellow("filesWindow").detach();
+                    }else {
+                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);
+                        showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
                     }
                 }
                 else{
-                    type.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CONFIG_TYPE));
+                    logs.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
                 }
             }
         });
-        configBox.appendChild(downloadDiv);
-        config.appendChild(configBox);
-        mainBox.appendChild(config);
-        
-        //Slow logs groupbox (only if instance is MySQL)
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
-            Groupbox slowLogs = new Groupbox();
-            slowLogs.setClosable(false);
-            Caption slowLogsCap = new Caption();
-            slowLogsCap.setLabel(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_TITLE));
-            slowLogsCap.setImage(DODConstants.IMG_SLOW_LOGS);
-            slowLogs.appendChild(slowLogsCap);
-            //Slow logs message
-            Label slowLogsMessage = new Label(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_MESSAGE));
-            slowLogs.appendChild(slowLogsMessage);
-
-            //Box containing the file selector and buttons
-            Hbox slowLogsBox =  new Hbox();
-            slowLogsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
-            slowLogsBox.setAlign("bottom");
-            //Create combobox for file selector
-            slowLog = getSlowLogsCombobox();
-            slowLogsBox.appendChild(slowLog);
-            //Download slow logs file button
-            Div downloadSlowDiv = new Div();
-            downloadSlowDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_SLOW_LOGS_DOWNLOAD));
-            Toolbarbutton downloadSlowBtn = new Toolbarbutton();
-            downloadSlowBtn.setZclass(DODConstants.STYLE_BUTTON);
-            downloadSlowBtn.setImage(DODConstants.IMG_DOWNLOAD);
-            downloadSlowBtn.setParent(downloadSlowDiv);
-            downloadSlowBtn.setTarget("slowLogIFrame");
-            downloadSlowBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-                public void onEvent(Event event) {
-                    //Check config file value
-                    if (isSlowLogValid()) {
-                        //Obtain file
-                        String filePath = ((String)slowLog.getSelectedItem().getValue());
-                        String url = fileHelper.getServedFileURL(instance, filePath);
-                        if (url != null && !url.isEmpty()) {
-                                Executions.sendRedirect(url);
-                                slowLog.getFellow("filesWindow").detach();
-                        }else {
-                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING SLOW LOG: " + filePath);
-                            showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
-                        }
-                    }
-                    else{
-                        slowLog.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
-                    }
-                }
-            });
-            slowLogsBox.appendChild(downloadSlowDiv);
-            slowLogs.appendChild(slowLogsBox);
-            mainBox.appendChild(slowLogs);
-        }
+        logsBox.appendChild(downloadLogDiv);
+        logsGroupbox.appendChild(logsBox);
+        mainBox.appendChild(logsGroupbox);
 
         //Div for accept and cancel buttons
         Div buttonsDiv = new Div();
@@ -298,7 +299,7 @@ public class FileController extends Window {
      * Method executed when the user cancels the form. The window is detached from the page.
      */
     private void doCancel() {
-        type.getFellow("filesWindow").detach();
+        this.detach();
     }
 
     /**
@@ -327,25 +328,40 @@ public class FileController extends Window {
     }
     
     /**
-     * Get the slow logs available for this instance.
-     * @return a combobox with the different configuration files, and their paths.
+     * Get the logs available for this instance.
+     * @return a combobox with the different log files, and their paths.
      */
-    private Combobox getSlowLogsCombobox () {
-        slowLogArray = fileHelper.getSlowLogs(instance);
+    private Combobox getLogsCombobox () {
         Combobox toret =  new Combobox();
         toret.setReadonly(true);
         toret.setWidth("300px");
-        if (slowLogArray != null) {
-            for (int i=0; i < slowLogArray.length; i++) {
-                Comboitem item = new Comboitem();
-                item.setLabel(slowLogArray[i].substring(slowLogArray[i].lastIndexOf('/') + 1));
-                item.setValue(slowLogArray[i]);
-                toret.appendChild(item);
+        
+        if (DODConstants.DB_TYPE_MYSQL.equals(instance.getDbType())) {
+            logArray = fileHelper.getSlowLogs(instance);
+            if (logArray != null) {
+                for (int i=0; i < logArray.length; i++) {
+                    Comboitem item = new Comboitem();
+                    item.setLabel(logArray[i].substring(logArray[i].lastIndexOf('/') + 1));
+                    item.setValue(logArray[i]);
+                    toret.appendChild(item);
+                }
             }
         }
-        else {
+        else if (DODConstants.DB_TYPE_ORACLE.equals(instance.getDbType())) {
+            logArray = fileHelper.getOracleLogs(instance);
+            if (logArray != null) {
+                for (int i=0; i < logArray.length; i++) {
+                    File logFile = new File(logArray[i]);
+                    Comboitem item = new Comboitem();
+                    item.setLabel(logFile.getParentFile().getName() + "/" + logFile.getName());
+                    item.setValue(logArray[i]);
+                    toret.appendChild(item);
+                }
+            }
+        }
+        if (logArray == null) {
             Comboitem item = new Comboitem();
-            item.setLabel(Labels.getLabel(DODConstants.LABEL_NO_SLOW_LOGS));
+            item.setLabel(Labels.getLabel(DODConstants.LABEL_NO_LOGS));
             item.setValue(null);
             toret.appendChild(item);
         }
@@ -378,15 +394,15 @@ public class FileController extends Window {
     }
     
     /**
-     * Checks if the selected slow log is valid.
-     * @return true if the selected slow log is valid, false otherwise.
+     * Checks if the selected log is valid.
+     * @return true if the selected log is valid, false otherwise.
      */
-    public boolean isSlowLogValid() {
-        Comboitem item = slowLog.getSelectedItem();
+    public boolean isLogValid() {
+        Comboitem item = logs.getSelectedItem();
         if (item != null && item.getValue() != null && item.getValue() instanceof String) {
             String filePath = (String)item.getValue();
-            for (int i=0; i < slowLogArray.length; i++) {
-                if (slowLogArray[i].equals(filePath))
+            for (int i=0; i < logArray.length; i++) {
+                if (logArray[i].equals(filePath))
                     return true;
             }
             return false;

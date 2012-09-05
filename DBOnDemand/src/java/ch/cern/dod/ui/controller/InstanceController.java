@@ -423,7 +423,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //config files button
         final Toolbarbutton configBtn = (Toolbarbutton) getFellow("config");
         //Only enable button if the instance is stopped or running
-        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
             configBtn.setDisabled(true);
             configBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {

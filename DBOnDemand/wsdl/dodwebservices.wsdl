@@ -23,6 +23,14 @@
     <wsdl:message name="GetSlowLogsResponse">
         <wsdl:part name="slowlogs" type="xsd:string" />
     </wsdl:message>
+    
+    <wsdl:message name="GetOracleLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOracleLogsResponse">
+        <wsdl:part name="logs" type="xsd:string" />
+    </wsdl:message>
 
     <wsdl:message name="GetFileRequest">
         <wsdl:part name="instance" type="xsd:string" />
@@ -60,6 +68,10 @@
             <wsdl:input message="impl:GetSlowLogsRequest" name="GetSlowLogsRequest" />
             <wsdl:output message="impl:GetSlowLogsResponse" name="GetSlowLogsResponse" />
         </wsdl:operation>
+        <wsdl:operation name="GetOracleLogs">
+            <wsdl:input message="impl:GetOracleLogsRequest" name="GetOracleLogsRequest" />
+            <wsdl:output message="impl:GetOracleLogsResponse" name="GetOracleLogsResponse" />
+        </wsdl:operation>
         <wsdl:operation name="GetFile">
             <wsdl:input message="impl:GetFileRequest" name="GetFileRequest" />
             <wsdl:output message="impl:GetFileResponse" name="GetFileResponse" />
@@ -91,6 +103,15 @@
                 <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
             </wsdl:input>
             <wsdl:output name="GetSlowLogsResponse">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOracleLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOracleLogs"/>
+            <wsdl:input name="GetOracleLogsRequest">
+                <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
+            </wsdl:input>
+            <wsdl:output name="GetOracleLogsResponse">
                 <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="https://syscontrol.cern.ch/Dod/" use="encoded" />
             </wsdl:output>
         </wsdl:operation>

@@ -165,10 +165,10 @@ public class DODConstants {
     public static final String LABEL_DELETE_UPGRADE = "deleteUpgrade";
     public static final String LABEL_FILES_TITLE = "filesTitle";
     public static final String LABEL_FILES_POPUP = "filesPopup";
-    public static final String LABEL_SLOW_LOGS_TITLE = "slowLogsTitle";
-    public static final String LABEL_SLOW_LOGS_MESSAGE = "slowLogsMessage";
-    public static final String LABEL_SLOW_LOGS_DOWNLOAD = "slowLogsDownload";
-    public static final String LABEL_NO_SLOW_LOGS = "noSlowLogs";
+    public static final String LABEL_LOGS_TITLE = "logsTitle";
+    public static final String LABEL_LOGS_MESSAGE = "logsMessage";
+    public static final String LABEL_LOGS_DOWNLOAD = "logsDownload";
+    public static final String LABEL_NO_LOGS = "noLogs";
     public static final String LABEL_SHARED_INSTANCE_WARNING = "sharedInstanceWarning";
     public static final String LABEL_UPGRADE_SLAVE_FIRST = "upgradeSlaveFirst";
     public static final String LABEL_MONITORING_OVERVIEW_TITLE = "monitoringOverviewTitle";
@@ -258,7 +258,7 @@ public class DODConstants {
     public static final String IMG_ACCEPT = "/img/accept.png";
     public static final String IMG_WARNING = "/img/warning.png";
     public static final String IMG_FILES = "/img/files.png";
-    public static final String IMG_SLOW_LOGS = "/img/logs.png";
+    public static final String IMG_LOGS = "/img/logs.png";
 
     //Style classes
     public static final String STYLE_BUTTON = "button";

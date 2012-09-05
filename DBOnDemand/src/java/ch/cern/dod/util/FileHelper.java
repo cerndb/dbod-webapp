@@ -53,9 +53,9 @@ public class FileHelper {
             if (content != null)
                 file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "text/plain", content);
         } catch (RemoteException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         } catch (ServiceException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
         return file;
     }
@@ -63,7 +63,7 @@ public class FileHelper {
     /**
      * Gets the slow logs for a specific instance.
      * @param instance instance to get the slow logs of.
-     * @return array of file names corresponding to the slowlong.
+     * @return array of file names corresponding to the slow logs.
      * @throws ServiceException if there is an error executing the web service.
      * @throws RemoteException if there is an error connection to the server.
      */
@@ -75,13 +75,39 @@ public class FileHelper {
             stub.setUsername(wsUser);
             stub.setPassword(wsPassword);
             String slowLogsString = stub.getSlowLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-            slowLogs = slowLogsString.split(":");
+            if (slowLogsString != null && !slowLogsString.isEmpty())
+                slowLogs = slowLogsString.split(":");
         } catch (RemoteException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         } catch (ServiceException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
         return slowLogs;
+    }
+    
+    /**
+     * Gets the logs for a specific Oracle instance.
+     * @param instance instance to get the logs of.
+     * @return array of file names corresponding to the log files.
+     * @throws ServiceException if there is an error executing the web service.
+     * @throws RemoteException if there is an error connection to the server.
+     */
+    public String[] getOracleLogs(DODInstance instance) {
+        String[] logs = null;
+        try {
+            DODWebServiceLocator locator = new DODWebServiceLocator();
+            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
+            stub.setUsername(wsUser);
+            stub.setPassword(wsPassword);
+            String logsString = stub.getOracleLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            if (logsString != null && !logsString.isEmpty())
+                logs = logsString.split(":");
+        } catch (RemoteException ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+        } catch (ServiceException ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
+        return logs;
     }
     
     /**
@@ -101,9 +127,9 @@ public class FileHelper {
             if (uri != null)
                 url = uri.toString();
         } catch (RemoteException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         } catch (ServiceException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
         }
         return url;
     }

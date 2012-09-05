@@ -329,7 +329,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only enable button if the instance is stopped or running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
                     filesButton.setDisabled(true);
                     filesButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
