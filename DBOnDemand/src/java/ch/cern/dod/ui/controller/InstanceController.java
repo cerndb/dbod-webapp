@@ -412,7 +412,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Shutdown button
         final Toolbarbutton shutdownBtn = (Toolbarbutton) getFellow("shutdown");
         //Only enable button if the instance is running
-        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
             shutdownBtn.setDisabled(true);
             shutdownBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -423,7 +424,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //config files button
         final Toolbarbutton configBtn = (Toolbarbutton) getFellow("config");
         //Only enable button if the instance is stopped or running
-        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
             configBtn.setDisabled(true);
             configBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -434,7 +437,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Dispatch a backup button
         final Toolbarbutton backupBtn = (Toolbarbutton) getFellow("backup");
         //Only enable button if the instance is stopped or running
-        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
             backupBtn.setDisabled(true);
             backupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -445,7 +450,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Dispatch a restore button
         final Toolbarbutton restoreBtn = (Toolbarbutton) getFellow("restore");
         //Only enable button if the instance is stopped or running
-        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+        if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
             restoreBtn.setDisabled(true);
             restoreBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -456,7 +463,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
         //Only enable button if the instance is stopped or running (and there is an upgrade available)
-        if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
+        if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
@@ -468,7 +477,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Access monitoring button
         final Toolbarbutton monitorBtn = (Toolbarbutton) getFellow("monitor");
         //Only enable button if the instance is not awaiting approval
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)
+                || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
             monitorBtn.setDisabled(true);
             monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {

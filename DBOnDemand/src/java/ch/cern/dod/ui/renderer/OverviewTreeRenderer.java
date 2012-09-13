@@ -301,7 +301,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     }
                 });
                 //Only enable button if the instance is running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
                     shutdownBtn.setDisabled(true);
                     shutdownBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -329,7 +330,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only enable button if the instance is stopped or running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
                     filesButton.setDisabled(true);
                     filesButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -357,7 +360,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only enable button if the instance is stopped or running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
                     backupBtn.setDisabled(true);
                     backupBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -385,7 +390,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only enable button if the instance is stopped or running
-                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
+                if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
                     restoreBtn.setDisabled(true);
                     restoreBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -413,7 +420,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     }
                 });
                 //Only enable button if the instance is stopped or running (and there is an upgrade available)
-                if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING) && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
+                if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY))
                         || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
                     upgradeBtn.setDisabled(true);
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
@@ -442,7 +451,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
 
                 //Only disable button if the instance is awaiting approval
-                if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+                if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)
+                        || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
                     monitorBtn.setDisabled(true);
                     monitorBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
