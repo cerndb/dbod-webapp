@@ -69,7 +69,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: FAILED job on ' || :NEW.db_name,
+            subject => 'DBOD: CRITICAL: Failed job on ' || :NEW.db_name,
             message => message,
             mime_type => 'text/html');
 
@@ -114,7 +114,7 @@ BEGIN
 
     UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
         recipients => 'dbondemand-admin@cern.ch',
-        subject => 'DBOD: ERROR IN MANAGEMENT DATABASE ',
+        subject => 'DBOD: CRITICAL: Error in management database',
         message => message,
         mime_type => 'text/html');
 END;
@@ -138,7 +138,31 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: ' || :NEW.db_name || ' marked for deletion',
+            subject => 'DBOD: INFO: ' || :NEW.db_name || ' marked for deletion',
+            message => message,
+            mime_type => 'text/html');
+    END IF;
+END;
+/
+
+-- Trigger to send an email when an upgrade is performed.
+CREATE OR REPLACE TRIGGER dod_upgrade_performed
+AFTER UPDATE OF state ON dod_jobs
+FOR EACH ROW
+DECLARE
+    message VARCHAR2 (1024);
+BEGIN
+    IF :NEW.COMMAND_NAME = 'UPGRADE' AND :NEW.state = 'FINISHED_OK'
+    THEN
+        message := '<html>
+                        <body>
+                            Instance ' || :NEW.db_name || ' has been successfully upgraded to the latest version!
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: INFO: ' || :NEW.db_name || ' has been upgraded',
             message => message,
             mime_type => 'text/html');
     END IF;
