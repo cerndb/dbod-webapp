@@ -513,7 +513,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: PENDING job on ' || pending_job.db_name,
+            subject => 'DBOD: WARNING: Pending job on ' || pending_job.db_name,
             message => message,
             mime_type => 'text/html');
 
@@ -543,7 +543,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: RUNNING job on ' || running_job.db_name,
+            subject => 'DBOD: WARNING: Running job on ' || running_job.db_name,
             message => message,
             mime_type => 'text/html');
 
