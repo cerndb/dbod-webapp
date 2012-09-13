@@ -1,7 +1,9 @@
 package ch.cern.dod.ui.renderer;
 
 import ch.cern.dod.db.entity.DODJobStat;
+import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.DateTimeHelper;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.RowRenderer;
@@ -22,7 +24,7 @@ public class JobStatsRenderer implements RowRenderer{
         DODJobStat stat = (DODJobStat) object; 
         // the data append to each row with simple label
         row.appendChild(new Label(stat.getDbName()));
-        row.appendChild(new Label(stat.getCommandName()));
+        row.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName())));
         row.appendChild(new Label(String.valueOf(stat.getCount())));
         row.appendChild(new Label(DateTimeHelper.timeToString(stat.getMeanDuration())));
     }
