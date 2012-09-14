@@ -1,6 +1,7 @@
 package ch.cern.dod.db.dao;
 
 import ch.cern.dod.db.entity.DODCommandStat;
+import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODJobStat;
 import ch.cern.dod.util.DODConstants;
 import java.sql.Connection;
@@ -87,6 +88,73 @@ public class DODStatsDAO {
     }
     
     /**
+     * Selects the command stats available in the database, filtering by instances.
+     * @param instances instances to filter.
+     * @return List of command stats.
+     */
+    public List<DODCommandStat> selectCommandStats(List<DODInstance> instances) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<DODCommandStat> commandStats = new ArrayList<DODCommandStat>();
+        try {
+            //If there are no instances return empty array
+            if (instances == null || instances.isEmpty())
+                return commandStats;
+            
+            //Get connection
+            connection = getConnection();
+
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT command_name, COUNT(*), ROUND(AVG(completion_date - creation_date) * 24*60*60)"
+                            + " FROM dod_jobs WHERE db_name IN (");
+            
+            //Append instances
+            for (int i=0; i < instances.size() - 1; i++)
+                query.append ("?, ");
+            query.append("?) GROUP BY command_name");
+            
+            //Prepare statement
+            statement = connection.prepareStatement(query.toString());
+            
+            //Assign values to variables
+            for (int i=1; i <= instances.size(); i++)
+                statement.setString(i, (instances.get(i - 1)).getDbName());
+
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            while (result.next()) {
+                DODCommandStat commandStat = new DODCommandStat();
+                commandStat.setCommandName(result.getString(1));
+                commandStat.setCount(result.getInt(2));
+                commandStat.setMeanDuration(result.getInt(3));
+                commandStats.add(commandStat);
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {
+            }
+            try {
+                statement.close();
+            } catch (Exception e) {
+            }
+            try {
+                connection.close();
+            } catch (Exception e) {
+            }
+        }
+        return commandStats;
+    }
+    
+    /**
      * Selects the job stats available in the database.
      * @return List of job stats.
      */
@@ -104,6 +172,72 @@ public class DODStatsDAO {
             query.append("SELECT db_name, command_name, count, mean_duration"
                             + " FROM job_stats ORDER BY db_name, command_name");
             statement = connection.prepareStatement(query.toString());
+
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            while (result.next()) {
+                DODJobStat jobStat = new DODJobStat();
+                jobStat.setDbName(result.getString(1));
+                jobStat.setCommandName(result.getString(2));
+                jobStat.setCount(result.getInt(3));
+                jobStat.setMeanDuration(result.getInt(4));
+                jobStats.add(jobStat);
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {
+            }
+            try {
+                statement.close();
+            } catch (Exception e) {
+            }
+            try {
+                connection.close();
+            } catch (Exception e) {
+            }
+        }
+        return jobStats;
+    }
+    
+    /**
+     * Selects the job stats available in the database, filtering by instances.
+     * @param instances instances to filter.
+     * @return List of job stats.
+     */
+    public List<DODJobStat> selectJobStats(List<DODInstance> instances) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<DODJobStat> jobStats = new ArrayList<DODJobStat>();
+        try {
+            //If there are no instances return empty array
+            if (instances == null || instances.isEmpty())
+                return jobStats;
+            //Get connection
+            connection = getConnection();
+
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT db_name, command_name, count, mean_duration"
+                            + " FROM job_stats WHERE db_name IN (");
+            //Append instances
+            for (int i=0; i < instances.size() - 1; i++)
+                query.append ("?, ");
+            query.append("?) ORDER BY db_name, command_name");
+            
+            //Prepare statement
+            statement = connection.prepareStatement(query.toString());
+            
+            //Assign values to variables
+            for (int i=1; i <= instances.size(); i++)
+                statement.setString(i, instances.get(i - 1).getDbName());
 
             //Execute query
             result = statement.executeQuery();

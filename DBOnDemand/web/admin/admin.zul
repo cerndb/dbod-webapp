@@ -195,7 +195,7 @@
                 </vbox>
                 <!--Show a message in case there no upgrades  -->
                 <div id="emptyUpgradesMsg" style="display:none">
-                    <div style="padding-right:500px">
+                    <div style="padding-right:550px">
                         <label value="${c:l('emptyUpgradesList')}"/>
                     </div>
                 </div>
@@ -224,8 +224,8 @@
                             <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
                                 <columns>
                                     <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="280px"/>
-                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="90px"/>
-                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="90px"/>
+                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
+                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
                                 </columns>
                                 <foot id="commandStatsFooter" style="display:none">
                                     <footer span="3">
@@ -239,7 +239,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyCommandStatsMsg" style="display:none">
-                            <div style="padding-right:200px">
+                            <div style="padding-right:130px">
                                 <label value="${c:l('emptyCommandStatsList')}"/>
                             </div>
                         </div>
@@ -273,8 +273,8 @@
                                 <columns>
                                     <column label="${c:l('dbName')}" sort="auto(dbName)" width="240px"/>
                                     <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="240px"/>
-                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="90px"/>
-                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="90px"/>
+                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
+                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
                                 </columns>
                                 <foot id="jobStatsFooter" style="display:none">
                                     <footer span="4">
@@ -288,7 +288,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyJobStatsMsg" style="display:none">
-                            <div style="padding-right:200px">
+                            <div style="padding-right:230px">
                                 <label value="${c:l('emptyJobStatsList')}"/>
                             </div>
                         </div>

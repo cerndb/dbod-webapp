@@ -57,7 +57,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     private List<DODCommandStat> commandStats;
     /**
-     * List of upgrades.
+     * List of job stats.
      */
     private List<DODJobStat> jobStats;
     /**
