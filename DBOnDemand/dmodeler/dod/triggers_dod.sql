@@ -69,7 +69,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: CRITICAL: Failed job on ' || :NEW.db_name,
+            subject => 'DBOD: CRITICAL: Failed job on "' || :NEW.db_name || '"',
             message => message,
             mime_type => 'text/html');
 
@@ -131,14 +131,14 @@ BEGIN
     THEN
         message := '<html>
                         <body>
-                            Instance ' || :NEW.db_name || ' has been removed from FIM and marked for deletion.
+                            Instance <b>' || :NEW.db_name || '</b> has been removed from FIM and marked for deletion.
                             Please take the necessary actions to free the allocated resources.
                         </body>
                     </html>';
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: INFO: ' || :NEW.db_name || ' marked for deletion',
+            subject => 'DBOD: INFO: "' || :NEW.db_name || '" marked for deletion',
             message => message,
             mime_type => 'text/html');
     END IF;
@@ -156,13 +156,13 @@ BEGIN
     THEN
         message := '<html>
                         <body>
-                            Instance ' || :NEW.db_name || ' has been successfully upgraded to the latest version!
+                            Instance <b>' || :NEW.db_name || '</b> has been successfully upgraded to the latest version!
                         </body>
                     </html>';
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: INFO: ' || :NEW.db_name || ' has been upgraded',
+            subject => 'DBOD: INFO: "' || :NEW.db_name || '" has been upgraded',
             message => message,
             mime_type => 'text/html');
     END IF;

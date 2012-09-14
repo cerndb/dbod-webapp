@@ -513,7 +513,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: WARNING: Pending job on ' || pending_job.db_name,
+            subject => 'DBOD: WARNING: Pending job on "' || pending_job.db_name || '"',
             message => message,
             mime_type => 'text/html');
 
@@ -543,7 +543,7 @@ BEGIN
         
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
-            subject => 'DBOD: WARNING: Running job on ' || running_job.db_name,
+            subject => 'DBOD: WARNING: Running job on "' || running_job.db_name || '"',
             message => message,
             mime_type => 'text/html');
 
@@ -575,7 +575,7 @@ BEGIN
                             Dear DB On Demand user,
                             </p>
                             <p>
-                            We have detected that your instance ' || instance.db_name || ' is not being automatically backed up. It is strongly recommended to enable automatic backups. In order to do so, open the backup management window from the overview or the instance view page, and check "Perform automatic backups every xx hours". Then click on "Apply changes".
+                            We have detected that your instance <b>' || instance.db_name || '</b> is not being automatically backed up. It is strongly recommended to enable automatic backups. In order to do so, open the backup management window from the overview or the instance view page, and check "Perform automatic backups every xx hours". Then click on "Apply changes".
                             </p>
                             <p>
                             For more information visit our <a href="https://j2eeps.cern.ch/DBOnDemand/help.zul">help page</a>.
@@ -592,7 +592,7 @@ BEGIN
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
             cc => 'dbondemand-admin@cern.ch',
-            subject => 'Automatic backups not enabled on ' || instance.db_name,
+            subject => 'Automatic backups not enabled on DB On Demand instance "' || instance.db_name || '"',
             message => message,
             mime_type => 'text/html');   
     END LOOP;
@@ -615,7 +615,51 @@ BEGIN
 END;
 /
 
--- Add check_ownership, monitor_jobs and clean_jobs to dbms_scheduler
+-- Checks for expired instances. Updating the status of the instance and sending an email to admins in case an instance is expired
+CREATE OR REPLACE PROCEDURE check_expired
+IS
+    -- Users and databases of expired instances
+    CURSOR instances IS
+        SELECT db_name, username
+            FROM dod_instances
+            WHERE expiry_date < sysdate
+                AND status = '1'
+            FOR UPDATE OF status;
+    message VARCHAR2 (2056);
+BEGIN
+    FOR instance IN instances
+    LOOP
+        message := '<html>
+                        <body>
+                            <p>
+                            Dear DB On Demand user,
+                            </p>
+                            <p>
+                            Your instance <b>' || instance.db_name || '</b> has expired today. The resources used by this instance will be reallocated shortly. If this is an error, and this instance should not be expired, please contact DB On Demand admins immediately.
+                            </p>
+                            <p>
+                            Kind regards,
+                            </p>
+                            <p>
+                            The DBOD team
+                            </p>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => instance.username || '@cern.ch',
+            cc => 'dbondemand-admin@cern.ch',
+            subject => 'DB On Demand instance "' || instance.db_name || '" has expired',
+            message => message,
+            mime_type => 'text/html');
+        
+        UPDATE dod_instances
+            SET status = '0' WHERE db_name = instance.db_name;
+    END LOOP;
+END;
+/
+
+-- Add check_ownership, monitor_jobs, clean_jobs and check_expired to dbms_scheduler
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
         job_name             => 'DBOD_OWNERSHIP_CHECK',
@@ -648,6 +692,14 @@ BEGIN
         repeat_interval      => 'FREQ=MONTHLY; BYMONTHDAY=1;',
         enabled              =>  TRUE,
         comments             => 'Warns users when automatic backups are not enabled');
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name             => 'DBOD_CHECK_EXPIRED',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.check_expired; END;',
+        repeat_interval      => 'FREQ=DAILY;',
+        enabled              =>  TRUE,
+        comments             => 'Checks for expired instances');
 END;
 /
 
