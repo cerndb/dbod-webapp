@@ -86,6 +86,11 @@ DECLARE
    error_msg VARCHAR2(1024) := NULL;
    stmt VARCHAR2(1024) := NULL;
    message VARCHAR2 (3072);
+   os_user VARCHAR2 (32);
+   hostname VARCHAR2 (64);
+   ip VARCHAR2 (32);
+   sid NUMBER;
+   db_name VARCHAR2 (8);
 BEGIN
   FOR depth IN 1 .. ORA_SERVER_ERROR_DEPTH LOOP
     error_msg := error_msg || ORA_SERVER_ERROR_MSG(depth);
@@ -95,26 +100,47 @@ BEGIN
      stmt := stmt || sql_text(i);
   END LOOP;
 
+  SELECT SYS_CONTEXT('USERENV','OS_USER') INTO os_user from DUAL;
+  SELECT SYS_CONTEXT('USERENV','HOST') INTO hostname from DUAL;
+  SELECT SYS_CONTEXT('USERENV','IP_ADDRESS') INTO ip from DUAL;
+  SELECT SYS_CONTEXT('USERENV','SID') INTO sid from DUAL;
+  SELECT SYS_CONTEXT('USERENV','DB_NAME') INTO db_name from DUAL;
+
   message := '<html>
                     <body>
                         <p>
-                        The management database has encountered the following error:
+                        <b>ERROR</b>:
                         </p>
                         <p>
                         '|| error_msg ||'
                         </p>
                         <p>
-                        Caused by the following statement:
+                        <b>STATEMENT</b>:
                         </p>
                         <p>
                         '|| stmt ||'
+                        </p>
+                        <p>
+                        <b>USER</b>: ' || ora_login_user || '
+                        </p>
+                        <p>
+                        <b>OS USER</b>: ' || os_user || '
+                        </p>
+                        <p>
+                        <b>HOST</b>: ' || hostname || '
+                        </p>
+                        <p>
+                        <b>IP</b>: ' || ip || '
+                        </p>
+                        <p>
+                        <b>SID</b>: ' || sid || '
                         </p>
                     </body>
                 </html>';
 
     UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
         recipients => 'dbondemand-admin@cern.ch',
-        subject => 'DBOD: CRITICAL: Error in management database',
+        subject => 'DBOD: CRITICAL: Error in management database ' || db_name,
         message => message,
         mime_type => 'text/html');
 END;
