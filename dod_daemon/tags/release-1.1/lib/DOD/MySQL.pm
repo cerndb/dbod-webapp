@@ -74,8 +74,11 @@ sub state_checker{
     my $entity = DOD::All::get_entity($job);
     my $output = test_instance($entity);
     my $retcode = DOD::All::result_code($output);
-    if ($retcode) {
+    if ($retcode == 1) {
         $instance_state = "STOPPED";
+    }
+    elsif($retcode == 2){
+        $instance_state = "BUSY";
     }
     else{
         $instance_state = "RUNNING";
