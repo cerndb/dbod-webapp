@@ -180,12 +180,10 @@ public class CraEgroupsWebServiceBindingStub extends org.apache.axis.client.Stub
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "AliasesType");
             cachedSerQNames.add(qName);
-            cls = java.lang.String[].class;
+            cls = ch.cern.dod.ws.egroups.cra.AliasesType.class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
-            qName2 = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Alias");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "BlockingReasonCode");
             cachedSerQNames.add(qName);
@@ -196,12 +194,10 @@ public class CraEgroupsWebServiceBindingStub extends org.apache.axis.client.Stub
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupsType");
             cachedSerQNames.add(qName);
-            cls = ch.cern.dod.ws.egroups.cra.EgroupType[].class;
+            cls = ch.cern.dod.ws.egroups.cra.EgroupsType.class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupType");
-            qName2 = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Egroup");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupType");
             cachedSerQNames.add(qName);
@@ -219,12 +215,10 @@ public class CraEgroupsWebServiceBindingStub extends org.apache.axis.client.Stub
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMembersType");
             cachedSerQNames.add(qName);
-            cls = ch.cern.dod.ws.egroups.cra.EmailMemberType[].class;
+            cls = ch.cern.dod.ws.egroups.cra.EmailMembersType.class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMemberType");
-            qName2 = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMemberType");
             cachedSerQNames.add(qName);
@@ -242,12 +236,10 @@ public class CraEgroupsWebServiceBindingStub extends org.apache.axis.client.Stub
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MembersType");
             cachedSerQNames.add(qName);
-            cls = ch.cern.dod.ws.egroups.cra.MemberType[].class;
+            cls = ch.cern.dod.ws.egroups.cra.MembersType.class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MemberType");
-            qName2 = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MemberType");
             cachedSerQNames.add(qName);
@@ -272,12 +264,10 @@ public class CraEgroupsWebServiceBindingStub extends org.apache.axis.client.Stub
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroupsType");
             cachedSerQNames.add(qName);
-            cls = ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupType[].class;
+            cls = ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupsType.class;
             cachedSerClasses.add(cls);
-            qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroupType");
-            qName2 = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Egroup");
-            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
-            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroupType");
             cachedSerQNames.add(qName);

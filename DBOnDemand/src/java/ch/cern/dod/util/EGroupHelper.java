@@ -1,5 +1,6 @@
 package ch.cern.dod.util;
 
+import ch.cern.dod.ws.egroups.CraEgroupsWebServiceBindingStub;
 import ch.cern.dod.ws.egroups.*;
 import ch.cern.dod.ws.egroups.cra.*;
 import java.rmi.RemoteException;
@@ -89,7 +90,7 @@ public class EGroupHelper {
         member.setType(MemberTypeCode.Person);
         member.setName(name);
         members[0] = member;
-        egroup.setMembers(members);
+        egroup.setMembers(new MembersType(members));
         //Group privacy and subscription
         egroup.setPrivacy(PrivacyType.Members);
         egroup.setSelfsubscription(SelfsubscriptionType.UsersWithAdminApproval);

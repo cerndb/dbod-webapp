@@ -8,38 +8,18 @@
 package ch.cern.dod.ws.egroups;
 
 public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable {
-    private ch.cern.dod.ws.egroups.cra.EgroupType[] result;
-
     private java.lang.String transactionId;
+
+    private ch.cern.dod.ws.egroups.cra.EgroupsType result;
 
     public GetEgroupsUserOwnOrManageResponse() {
     }
 
     public GetEgroupsUserOwnOrManageResponse(
-           ch.cern.dod.ws.egroups.cra.EgroupType[] result,
-           java.lang.String transactionId) {
-           this.result = result;
+           java.lang.String transactionId,
+           ch.cern.dod.ws.egroups.cra.EgroupsType result) {
            this.transactionId = transactionId;
-    }
-
-
-    /**
-     * Gets the result value for this GetEgroupsUserOwnOrManageResponse.
-     * 
-     * @return result
-     */
-    public ch.cern.dod.ws.egroups.cra.EgroupType[] getResult() {
-        return result;
-    }
-
-
-    /**
-     * Sets the result value for this GetEgroupsUserOwnOrManageResponse.
-     * 
-     * @param result
-     */
-    public void setResult(ch.cern.dod.ws.egroups.cra.EgroupType[] result) {
-        this.result = result;
+           this.result = result;
     }
 
 
@@ -62,6 +42,26 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
         this.transactionId = transactionId;
     }
 
+
+    /**
+     * Gets the result value for this GetEgroupsUserOwnOrManageResponse.
+     * 
+     * @return result
+     */
+    public ch.cern.dod.ws.egroups.cra.EgroupsType getResult() {
+        return result;
+    }
+
+
+    /**
+     * Sets the result value for this GetEgroupsUserOwnOrManageResponse.
+     * 
+     * @param result
+     */
+    public void setResult(ch.cern.dod.ws.egroups.cra.EgroupsType result) {
+        this.result = result;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof GetEgroupsUserOwnOrManageResponse)) return false;
@@ -74,12 +74,12 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            ((this.result==null && other.getResult()==null) || 
-             (this.result!=null &&
-              java.util.Arrays.equals(this.result, other.getResult()))) &&
             ((this.transactionId==null && other.getTransactionId()==null) || 
              (this.transactionId!=null &&
-              this.transactionId.equals(other.getTransactionId())));
+              this.transactionId.equals(other.getTransactionId()))) &&
+            ((this.result==null && other.getResult()==null) || 
+             (this.result!=null &&
+              this.result.equals(other.getResult())));
         __equalsCalc = null;
         return _equals;
     }
@@ -91,19 +91,11 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getResult() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getResult());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getResult(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
-        }
         if (getTransactionId() != null) {
             _hashCode += getTransactionId().hashCode();
+        }
+        if (getResult() != null) {
+            _hashCode += getResult().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -116,16 +108,15 @@ public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable 
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", ">getEgroupsUserOwnOrManageResponse"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("result");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupType"));
-        elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Egroup"));
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("transactionId");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("result");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupsType"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

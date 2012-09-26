@@ -10,7 +10,7 @@ package ch.cern.dod.ws.egroups.cra;
 public class EgroupType  implements java.io.Serializable {
     private java.lang.String name;
 
-    private java.lang.String[] aliases;
+    private ch.cern.dod.ws.egroups.cra.AliasesType aliases;
 
     private long ID;
 
@@ -38,18 +38,18 @@ public class EgroupType  implements java.io.Serializable {
 
     private ch.cern.dod.ws.egroups.cra.SelfsubscriptionType selfsubscription;
 
-    private ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupType[] selfsubscriptionEgroups;
+    private ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupsType selfsubscriptionEgroups;
 
-    private ch.cern.dod.ws.egroups.cra.MemberType[] members;
+    private ch.cern.dod.ws.egroups.cra.MembersType members;
 
-    private ch.cern.dod.ws.egroups.cra.EmailMemberType[] emailMembers;
+    private ch.cern.dod.ws.egroups.cra.EmailMembersType emailMembers;
 
     public EgroupType() {
     }
 
     public EgroupType(
            java.lang.String name,
-           java.lang.String[] aliases,
+           ch.cern.dod.ws.egroups.cra.AliasesType aliases,
            long ID,
            ch.cern.dod.ws.egroups.cra.EgroupTypeCode type,
            ch.cern.dod.ws.egroups.cra.StatusCode status,
@@ -63,9 +63,9 @@ public class EgroupType  implements java.io.Serializable {
            ch.cern.dod.ws.egroups.cra.AdministratorType administrator,
            ch.cern.dod.ws.egroups.cra.PrivacyType privacy,
            ch.cern.dod.ws.egroups.cra.SelfsubscriptionType selfsubscription,
-           ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupType[] selfsubscriptionEgroups,
-           ch.cern.dod.ws.egroups.cra.MemberType[] members,
-           ch.cern.dod.ws.egroups.cra.EmailMemberType[] emailMembers) {
+           ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupsType selfsubscriptionEgroups,
+           ch.cern.dod.ws.egroups.cra.MembersType members,
+           ch.cern.dod.ws.egroups.cra.EmailMembersType emailMembers) {
            this.name = name;
            this.aliases = aliases;
            this.ID = ID;
@@ -112,7 +112,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @return aliases
      */
-    public java.lang.String[] getAliases() {
+    public ch.cern.dod.ws.egroups.cra.AliasesType getAliases() {
         return aliases;
     }
 
@@ -122,7 +122,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @param aliases
      */
-    public void setAliases(java.lang.String[] aliases) {
+    public void setAliases(ch.cern.dod.ws.egroups.cra.AliasesType aliases) {
         this.aliases = aliases;
     }
 
@@ -392,7 +392,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @return selfsubscriptionEgroups
      */
-    public ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupType[] getSelfsubscriptionEgroups() {
+    public ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupsType getSelfsubscriptionEgroups() {
         return selfsubscriptionEgroups;
     }
 
@@ -402,7 +402,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @param selfsubscriptionEgroups
      */
-    public void setSelfsubscriptionEgroups(ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupType[] selfsubscriptionEgroups) {
+    public void setSelfsubscriptionEgroups(ch.cern.dod.ws.egroups.cra.SelfsubscriptionEgroupsType selfsubscriptionEgroups) {
         this.selfsubscriptionEgroups = selfsubscriptionEgroups;
     }
 
@@ -412,7 +412,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @return members
      */
-    public ch.cern.dod.ws.egroups.cra.MemberType[] getMembers() {
+    public ch.cern.dod.ws.egroups.cra.MembersType getMembers() {
         return members;
     }
 
@@ -422,7 +422,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @param members
      */
-    public void setMembers(ch.cern.dod.ws.egroups.cra.MemberType[] members) {
+    public void setMembers(ch.cern.dod.ws.egroups.cra.MembersType members) {
         this.members = members;
     }
 
@@ -432,7 +432,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @return emailMembers
      */
-    public ch.cern.dod.ws.egroups.cra.EmailMemberType[] getEmailMembers() {
+    public ch.cern.dod.ws.egroups.cra.EmailMembersType getEmailMembers() {
         return emailMembers;
     }
 
@@ -442,7 +442,7 @@ public class EgroupType  implements java.io.Serializable {
      * 
      * @param emailMembers
      */
-    public void setEmailMembers(ch.cern.dod.ws.egroups.cra.EmailMemberType[] emailMembers) {
+    public void setEmailMembers(ch.cern.dod.ws.egroups.cra.EmailMembersType emailMembers) {
         this.emailMembers = emailMembers;
     }
 
@@ -463,7 +463,7 @@ public class EgroupType  implements java.io.Serializable {
               this.name.equals(other.getName()))) &&
             ((this.aliases==null && other.getAliases()==null) || 
              (this.aliases!=null &&
-              java.util.Arrays.equals(this.aliases, other.getAliases()))) &&
+              this.aliases.equals(other.getAliases()))) &&
             this.ID == other.getID() &&
             ((this.type==null && other.getType()==null) || 
              (this.type!=null &&
@@ -503,13 +503,13 @@ public class EgroupType  implements java.io.Serializable {
               this.selfsubscription.equals(other.getSelfsubscription()))) &&
             ((this.selfsubscriptionEgroups==null && other.getSelfsubscriptionEgroups()==null) || 
              (this.selfsubscriptionEgroups!=null &&
-              java.util.Arrays.equals(this.selfsubscriptionEgroups, other.getSelfsubscriptionEgroups()))) &&
+              this.selfsubscriptionEgroups.equals(other.getSelfsubscriptionEgroups()))) &&
             ((this.members==null && other.getMembers()==null) || 
              (this.members!=null &&
-              java.util.Arrays.equals(this.members, other.getMembers()))) &&
+              this.members.equals(other.getMembers()))) &&
             ((this.emailMembers==null && other.getEmailMembers()==null) || 
              (this.emailMembers!=null &&
-              java.util.Arrays.equals(this.emailMembers, other.getEmailMembers())));
+              this.emailMembers.equals(other.getEmailMembers())));
         __equalsCalc = null;
         return _equals;
     }
@@ -525,15 +525,7 @@ public class EgroupType  implements java.io.Serializable {
             _hashCode += getName().hashCode();
         }
         if (getAliases() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getAliases());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getAliases(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getAliases().hashCode();
         }
         _hashCode += new Long(getID()).hashCode();
         if (getType() != null) {
@@ -573,37 +565,13 @@ public class EgroupType  implements java.io.Serializable {
             _hashCode += getSelfsubscription().hashCode();
         }
         if (getSelfsubscriptionEgroups() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getSelfsubscriptionEgroups());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getSelfsubscriptionEgroups(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getSelfsubscriptionEgroups().hashCode();
         }
         if (getMembers() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getMembers());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getMembers(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getMembers().hashCode();
         }
         if (getEmailMembers() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getEmailMembers());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getEmailMembers(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getEmailMembers().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -624,10 +592,9 @@ public class EgroupType  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("aliases");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Aliases"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "AliasesType"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Alias"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("ID");
@@ -716,26 +683,23 @@ public class EgroupType  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("selfsubscriptionEgroups");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroups"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroupType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "SelfsubscriptionEgroupsType"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Egroup"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("members");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Members"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MemberType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MembersType"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("emailMembers");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMembers"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMemberType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EmailMembersType"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member"));
         typeDesc.addFieldDesc(elemField);
     }
 

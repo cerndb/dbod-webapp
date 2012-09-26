@@ -14,7 +14,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
 
     private java.lang.String p_egroupName;
 
-    private ch.cern.dod.ws.egroups.cra.MemberType[] p_members;
+    private ch.cern.dod.ws.egroups.cra.MembersType p_members;
 
     private boolean p_overwriteMembers;
 
@@ -25,7 +25,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
            java.lang.String p_niceUserid,
            java.lang.String p_password,
            java.lang.String p_egroupName,
-           ch.cern.dod.ws.egroups.cra.MemberType[] p_members,
+           ch.cern.dod.ws.egroups.cra.MembersType p_members,
            boolean p_overwriteMembers) {
            this.p_niceUserid = p_niceUserid;
            this.p_password = p_password;
@@ -100,7 +100,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
      * 
      * @return p_members
      */
-    public ch.cern.dod.ws.egroups.cra.MemberType[] getP_members() {
+    public ch.cern.dod.ws.egroups.cra.MembersType getP_members() {
         return p_members;
     }
 
@@ -110,7 +110,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
      * 
      * @param p_members
      */
-    public void setP_members(ch.cern.dod.ws.egroups.cra.MemberType[] p_members) {
+    public void setP_members(ch.cern.dod.ws.egroups.cra.MembersType p_members) {
         this.p_members = p_members;
     }
 
@@ -157,7 +157,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
               this.p_egroupName.equals(other.getP_egroupName()))) &&
             ((this.p_members==null && other.getP_members()==null) || 
              (this.p_members!=null &&
-              java.util.Arrays.equals(this.p_members, other.getP_members()))) &&
+              this.p_members.equals(other.getP_members()))) &&
             this.p_overwriteMembers == other.isP_overwriteMembers();
         __equalsCalc = null;
         return _equals;
@@ -180,15 +180,7 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
             _hashCode += getP_egroupName().hashCode();
         }
         if (getP_members() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getP_members());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getP_members(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
+            _hashCode += getP_members().hashCode();
         }
         _hashCode += (isP_overwriteMembers() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
@@ -222,9 +214,8 @@ public class AddEgroupMembersRequest  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_members");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "p_members"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MemberType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "MembersType"));
         elemField.setNillable(false);
-        elemField.setItemQName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "Member"));
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("p_overwriteMembers");

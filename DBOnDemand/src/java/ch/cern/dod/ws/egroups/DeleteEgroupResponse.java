@@ -8,38 +8,18 @@
 package ch.cern.dod.ws.egroups;
 
 public class DeleteEgroupResponse  implements java.io.Serializable {
-    private boolean result;
-
     private java.lang.String transactionId;
+
+    private boolean result;
 
     public DeleteEgroupResponse() {
     }
 
     public DeleteEgroupResponse(
-           boolean result,
-           java.lang.String transactionId) {
-           this.result = result;
+           java.lang.String transactionId,
+           boolean result) {
            this.transactionId = transactionId;
-    }
-
-
-    /**
-     * Gets the result value for this DeleteEgroupResponse.
-     * 
-     * @return result
-     */
-    public boolean isResult() {
-        return result;
-    }
-
-
-    /**
-     * Sets the result value for this DeleteEgroupResponse.
-     * 
-     * @param result
-     */
-    public void setResult(boolean result) {
-        this.result = result;
+           this.result = result;
     }
 
 
@@ -62,6 +42,26 @@ public class DeleteEgroupResponse  implements java.io.Serializable {
         this.transactionId = transactionId;
     }
 
+
+    /**
+     * Gets the result value for this DeleteEgroupResponse.
+     * 
+     * @return result
+     */
+    public boolean isResult() {
+        return result;
+    }
+
+
+    /**
+     * Sets the result value for this DeleteEgroupResponse.
+     * 
+     * @param result
+     */
+    public void setResult(boolean result) {
+        this.result = result;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof DeleteEgroupResponse)) return false;
@@ -74,10 +74,10 @@ public class DeleteEgroupResponse  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
-            this.result == other.isResult() &&
             ((this.transactionId==null && other.getTransactionId()==null) || 
              (this.transactionId!=null &&
-              this.transactionId.equals(other.getTransactionId())));
+              this.transactionId.equals(other.getTransactionId()))) &&
+            this.result == other.isResult();
         __equalsCalc = null;
         return _equals;
     }
@@ -89,10 +89,10 @@ public class DeleteEgroupResponse  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        _hashCode += (isResult() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         if (getTransactionId() != null) {
             _hashCode += getTransactionId().hashCode();
         }
+        _hashCode += (isResult() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -104,15 +104,15 @@ public class DeleteEgroupResponse  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", ">deleteEgroupResponse"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("result");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("transactionId");
         elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("result");
+        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
