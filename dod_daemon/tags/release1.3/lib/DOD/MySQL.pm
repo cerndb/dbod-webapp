@@ -80,8 +80,11 @@ sub state_checker{
     elsif($retcode == 2){
         $instance_state = "BUSY";
     }
-    else{
+    elsif($retcode == 0){
         $instance_state = "RUNNING";
+    }
+    else{
+        $instance_state = "UNKNOWN";
     }
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
