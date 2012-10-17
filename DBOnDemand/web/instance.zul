@@ -286,7 +286,7 @@
             </groupbox>
              <!-- Confirm window to create e-group -->
             <window id="eGroupConfirm" title="${c:l('eGroupDoesNotExistTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">
-                <hbox width="100%" align="top">
+                <hbox width="100%" align="center">
                     <image src="/img/warning.png" style="margin-right:10px"/>
                     <label value="${c:l('eGroupDoesNotExist')}" />
                 </hbox>
