@@ -113,7 +113,7 @@ public class DODStatsDAO {
             //Append instances
             for (int i=0; i < instances.size() - 1; i++)
                 query.append ("?, ");
-            query.append("?) GROUP BY command_name");
+            query.append("?) GROUP BY command_name ORDER BY command_name");
             
             //Prepare statement
             statement = connection.prepareStatement(query.toString());
