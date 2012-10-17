@@ -1,155 +1,92 @@
-/**
- * GetEgroupsUserOwnOrManageResponse.java
- *
- * This file was auto-generated from WSDL
- * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
- */
 
 package ch.cern.dod.ws.egroups;
 
-public class GetEgroupsUserOwnOrManageResponse  implements java.io.Serializable {
-    private java.lang.String transactionId;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-    private ch.cern.dod.ws.egroups.cra.EgroupsType result;
 
-    public GetEgroupsUserOwnOrManageResponse() {
-    }
+/**
+ * <p>Java class for anonymous complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="result" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupsType"/>
+ *         &lt;element name="transactionId" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "result",
+    "transactionId"
+})
+@XmlRootElement(name = "getEgroupsUserOwnOrManageResponse")
+public class GetEgroupsUserOwnOrManageResponse {
 
-    public GetEgroupsUserOwnOrManageResponse(
-           java.lang.String transactionId,
-           ch.cern.dod.ws.egroups.cra.EgroupsType result) {
-           this.transactionId = transactionId;
-           this.result = result;
-    }
-
+    @XmlElement(required = true)
+    protected EgroupsType result;
+    @XmlElement(required = true)
+    protected String transactionId;
 
     /**
-     * Gets the transactionId value for this GetEgroupsUserOwnOrManageResponse.
+     * Gets the value of the result property.
      * 
-     * @return transactionId
+     * @return
+     *     possible object is
+     *     {@link EgroupsType }
+     *     
      */
-    public java.lang.String getTransactionId() {
-        return transactionId;
-    }
-
-
-    /**
-     * Sets the transactionId value for this GetEgroupsUserOwnOrManageResponse.
-     * 
-     * @param transactionId
-     */
-    public void setTransactionId(java.lang.String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-
-    /**
-     * Gets the result value for this GetEgroupsUserOwnOrManageResponse.
-     * 
-     * @return result
-     */
-    public ch.cern.dod.ws.egroups.cra.EgroupsType getResult() {
+    public EgroupsType getResult() {
         return result;
     }
 
-
     /**
-     * Sets the result value for this GetEgroupsUserOwnOrManageResponse.
+     * Sets the value of the result property.
      * 
-     * @param result
+     * @param value
+     *     allowed object is
+     *     {@link EgroupsType }
+     *     
      */
-    public void setResult(ch.cern.dod.ws.egroups.cra.EgroupsType result) {
-        this.result = result;
-    }
-
-    private java.lang.Object __equalsCalc = null;
-    public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof GetEgroupsUserOwnOrManageResponse)) return false;
-        GetEgroupsUserOwnOrManageResponse other = (GetEgroupsUserOwnOrManageResponse) obj;
-        if (obj == null) return false;
-        if (this == obj) return true;
-        if (__equalsCalc != null) {
-            return (__equalsCalc == obj);
-        }
-        __equalsCalc = obj;
-        boolean _equals;
-        _equals = true && 
-            ((this.transactionId==null && other.getTransactionId()==null) || 
-             (this.transactionId!=null &&
-              this.transactionId.equals(other.getTransactionId()))) &&
-            ((this.result==null && other.getResult()==null) || 
-             (this.result!=null &&
-              this.result.equals(other.getResult())));
-        __equalsCalc = null;
-        return _equals;
-    }
-
-    private boolean __hashCodeCalc = false;
-    public synchronized int hashCode() {
-        if (__hashCodeCalc) {
-            return 0;
-        }
-        __hashCodeCalc = true;
-        int _hashCode = 1;
-        if (getTransactionId() != null) {
-            _hashCode += getTransactionId().hashCode();
-        }
-        if (getResult() != null) {
-            _hashCode += getResult().hashCode();
-        }
-        __hashCodeCalc = false;
-        return _hashCode;
-    }
-
-    // Type metadata
-    private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(GetEgroupsUserOwnOrManageResponse.class, true);
-
-    static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", ">getEgroupsUserOwnOrManageResponse"));
-        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("transactionId");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("result");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
-        elemField.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/cra/", "EgroupsType"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
+    public void setResult(EgroupsType value) {
+        this.result = value;
     }
 
     /**
-     * Return type metadata object
+     * Gets the value of the transactionId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public static org.apache.axis.description.TypeDesc getTypeDesc() {
-        return typeDesc;
+    public String getTransactionId() {
+        return transactionId;
     }
 
     /**
-     * Get Custom Serializer
+     * Sets the value of the transactionId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanSerializer(
-            _javaType, _xmlType, typeDesc);
-    }
-
-    /**
-     * Get Custom Deserializer
-     */
-    public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanDeserializer(
-            _javaType, _xmlType, typeDesc);
+    public void setTransactionId(String value) {
+        this.transactionId = value;
     }
 
 }

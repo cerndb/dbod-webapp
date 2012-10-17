@@ -7,23 +7,16 @@ import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.FormValidations;
 import ch.cern.dod.ws.authentication.UserInfo;
-import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.rpc.ServiceException;
-import org.apache.axis.AxisFault;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Slider;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
 
 /**
  * Controller for the window that creates a new instance in DBOnDemand
@@ -114,18 +107,7 @@ public class NewInstanceController extends Window implements AfterCompose {
             //If there is an egroup
             if(((Textbox) getFellow("eGroup")).getValue() != null && !((Textbox) getFellow("eGroup")).getValue().isEmpty()) {
                 //Check if e-group exists
-                boolean eGroupExists = false;
-                try {
-                    eGroupExists = eGroupHelper.eGroupExists(((Textbox) getFellow("eGroup")).getValue());
-                } catch (AxisFault ex) {
-                    eGroupExists = false;
-                } catch (ServiceException ex) {
-                    ((Textbox) getFellow("eGroup")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_SEARCH));
-                    return;
-                } catch (RemoteException ex) {
-                    ((Textbox) getFellow("eGroup")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_SEARCH));
-                    return;
-                }
+                boolean eGroupExists = eGroupHelper.eGroupExists(((Textbox) getFellow("eGroup")).getValue());
                 //If the egroup does not exist show confimation window and return
                 if (!eGroupExists) {
                     try {
@@ -135,7 +117,6 @@ public class NewInstanceController extends Window implements AfterCompose {
                     } catch (SuspendNotAllowedException ex) {
                         Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     }
-                    return;
                 }
                 //Create instance with this values
                 else
@@ -166,64 +147,54 @@ public class NewInstanceController extends Window implements AfterCompose {
                 & FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnections"))
                 & FormValidations.isProjectValid((Textbox) getFellow("project"))
                 & FormValidations.isDescriptionValid((Textbox) getFellow("description"))) {
-            try {
-                boolean eGroupCreated = false;
-                //If the egroup does not exist create it
-                if (!eGroupExists) {
-                    //If the egroup was successfully created store the instance in the DB
-                    eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroup")).getValue(),
-                            ((Textbox) getFellow("dbName")).getValue(), userCCID, fullName);
-                }
-                //If the egroup exists or it was successfully created
-                if (eGroupExists || eGroupCreated) {
-                    //Create instace object
-                    DODInstance instance = new DODInstance();
-                    instance.setUsername(((Textbox) getFellow("username")).getValue());
-                    instance.setDbName(((Textbox) getFellow("dbName")).getValue());
-                    instance.setEGroup(((Textbox) getFellow("eGroup")).getValue());
-                    instance.setCategory(((String)((Combobox) getFellow("category")).getSelectedItem().getValue()));
-                    instance.setCreationDate(new Date());
-                    instance.setExpiryDate(((Datebox) getFellow("expiryDate")).getValue());
-                    instance.setDbType(((String)((Combobox) getFellow("dbType")).getSelectedItem().getValue()));
-                    instance.setVersion(((Textbox) getFellow("version")).getValue());
-                    instance.setMaster(((Textbox) getFellow("master")).getValue());
-                    instance.setSharedInstance(((Textbox) getFellow("sharedInstance")).getValue());
-                    instance.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSize")).getValue()));
-                    if (!((Textbox) getFellow("noConnections")).getValue().isEmpty())
-                        instance.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnections")).getValue()).intValue());
-                    instance.setProject(((Textbox) getFellow("project")).getValue());
-                    instance.setDescription(((Textbox) getFellow("description")).getValue());
-                    instance.setStatus(true);
-                    instance.setState(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL);
+            boolean eGroupCreated = false;
+            //If the egroup does not exist create it
+            if (!eGroupExists) {
+                //If the egroup was successfully created store the instance in the DB
+                eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroup")).getValue(),
+                        ((Textbox) getFellow("dbName")).getValue(), userCCID, fullName);
+            }
+            //If the egroup exists or it was successfully created
+            if (eGroupExists || eGroupCreated) {
+                //Create instace object
+                DODInstance instance = new DODInstance();
+                instance.setUsername(((Textbox) getFellow("username")).getValue());
+                instance.setDbName(((Textbox) getFellow("dbName")).getValue());
+                instance.setEGroup(((Textbox) getFellow("eGroup")).getValue());
+                instance.setCategory(((String)((Combobox) getFellow("category")).getSelectedItem().getValue()));
+                instance.setCreationDate(new Date());
+                instance.setExpiryDate(((Datebox) getFellow("expiryDate")).getValue());
+                instance.setDbType(((String)((Combobox) getFellow("dbType")).getSelectedItem().getValue()));
+                instance.setVersion(((Textbox) getFellow("version")).getValue());
+                instance.setMaster(((Textbox) getFellow("master")).getValue());
+                instance.setSharedInstance(((Textbox) getFellow("sharedInstance")).getValue());
+                instance.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSize")).getValue()));
+                if (!((Textbox) getFellow("noConnections")).getValue().isEmpty())
+                    instance.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnections")).getValue()).intValue());
+                instance.setProject(((Textbox) getFellow("project")).getValue());
+                instance.setDescription(((Textbox) getFellow("description")).getValue());
+                instance.setStatus(true);
+                instance.setState(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL);
 
-                    //Insert object in DB
-                    int result = instanceDAO.insert(instance);
+                //Insert object in DB
+                int result = instanceDAO.insert(instance);
 
-                    //If the operation was succesful
-                    if (result > 0) {
-                        //Hide window and redirect to the instance page
-                        this.setVisible(false);
-                        Sessions.getCurrent().setAttribute(DODConstants.INSTANCE, instance);
-                        Executions.sendRedirect(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName());
-                    }
-                    else if (result == -1){
-                        ((Textbox) getFellow("dbName")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_INSTANCE_UNIQUE));
-                    }
-                    else{
-                        ((Textbox) getFellow("dbName")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_INSTANCE_CREATION));
-                    }
+                //If the operation was succesful
+                if (result > 0) {
+                    //Hide window and redirect to the instance page
+                    this.setVisible(false);
+                    Sessions.getCurrent().setAttribute(DODConstants.INSTANCE, instance);
+                    Executions.sendRedirect(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName());
                 }
-                else {
-                    ((Textbox) getFellow("eGroup")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
+                else if (result == -1){
+                    ((Textbox) getFellow("dbName")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_INSTANCE_UNIQUE));
+                }
+                else{
+                    ((Textbox) getFellow("dbName")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_INSTANCE_CREATION));
                 }
             }
-            catch (ServiceException ex) {
+            else {
                 ((Textbox) getFellow("eGroup")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
-                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP " + ((Textbox) getFellow("eGroup")).getValue(), ex);
-            }
-            catch (RemoteException ex) {
-                ((Textbox) getFellow("eGroup")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
-                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP " + ((Textbox) getFellow("eGroup")).getValue(), ex);
             }
         }
     }

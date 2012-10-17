@@ -1,0 +1,1167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">&lt;h2&gt;CERN Lightweight Registration - Authentication WebService&lt;/h2&gt;Detailed documentation can be found in this document: &lt;a href="http://cern.ch/CERNAccount/Help/?kbid=011020" target=_blank&gt;http://cern.ch/CERNAccount/Help/?kbid=011020&lt;/a&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&amp;nbsp;&lt;br&gt;</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx">
+      <s:element name="GetUserInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserInfoResult" type="tns:userInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="userInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="auth" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ccid" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="respccid" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="firstname" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="lastname" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="telephonenumber" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="company" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="department" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="shortaffiliation" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserInfoEx">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="GroupName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoExResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserInfoExResult" type="tns:userInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CCIDisNice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CCID" type="s:int"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CCIDisNiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CCIDisNiceResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserIsMemberOfGroup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="GroupName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserIsMemberOfGroupResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UserIsMemberOfGroupResult" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserIsMemberOfList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="ListName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserIsMemberOfListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UserIsMemberOfListResult" type="s:boolean"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGroupsForUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGroupsForUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGroupsForUserResult" type="tns:ArrayOfString"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SearchGroups">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pattern" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchGroupsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchGroupsResult" type="tns:ArrayOfString"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListUsers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListUsersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListUsersResult" type="tns:ArrayOfUserInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUserInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="userInfo" nillable="true" type="tns:userInfo"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserInfoFromLogin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoFromLoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserInfoFromLoginResult" type="tns:userInfo"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRecursiveGroupsForUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRecursiveGroupsForUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRecursiveGroupsForUserResult" type="tns:ArrayOfString"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUPNFromEmail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUPNFromEmailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUPNFromEmailResult" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListMembers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListMembersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetListMembersResult" type="tns:ArrayOfString"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListMembersLogins_CERNAccountOnly">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListName" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetListMembersLogins_CERNAccountOnlyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetListMembersLogins_CERNAccountOnlyResult" type="tns:ArrayOfString"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="userInfo" nillable="true" type="tns:userInfo"/>
+      <s:element name="string" nillable="true" type="s:string"/>
+      <s:element name="boolean" type="s:boolean"/>
+      <s:element name="ArrayOfString" nillable="true" type="tns:ArrayOfString"/>
+      <s:element name="ArrayOfUserInfo" nillable="true" type="tns:ArrayOfUserInfo"/>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetUserInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserInfoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserInfoEx"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserInfoExResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceSoapIn">
+    <wsdl:part name="parameters" element="tns:CCIDisNice"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceSoapOut">
+    <wsdl:part name="parameters" element="tns:CCIDisNiceResponse"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupSoapIn">
+    <wsdl:part name="parameters" element="tns:UserIsMemberOfGroup"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupSoapOut">
+    <wsdl:part name="parameters" element="tns:UserIsMemberOfGroupResponse"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListSoapIn">
+    <wsdl:part name="parameters" element="tns:UserIsMemberOfList"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListSoapOut">
+    <wsdl:part name="parameters" element="tns:UserIsMemberOfListResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGroupsForUser"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGroupsForUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchGroups"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchGroupsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersSoapIn">
+    <wsdl:part name="parameters" element="tns:ListUsers"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersSoapOut">
+    <wsdl:part name="parameters" element="tns:ListUsersResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserInfoFromLogin"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserInfoFromLoginResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRecursiveGroupsForUser"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRecursiveGroupsForUserResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUPNFromEmail"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUPNFromEmailResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetListMembers"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetListMembersResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlySoapIn">
+    <wsdl:part name="parameters" element="tns:GetListMembersLogins_CERNAccountOnly"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlySoapOut">
+    <wsdl:part name="parameters" element="tns:GetListMembersLogins_CERNAccountOnlyResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="Password" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="Password" type="s:string"/>
+    <wsdl:part name="GroupName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExHttpGetOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceHttpGetIn">
+    <wsdl:part name="CCID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="GroupName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsHttpGetIn">
+    <wsdl:part name="pattern" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersHttpGetIn">
+    <wsdl:part name="DisplayName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfUserInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginHttpGetOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserHttpGetIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailHttpGetIn">
+    <wsdl:part name="email" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailHttpGetOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersHttpGetIn">
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlyHttpGetIn">
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlyHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="Password" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="Password" type="s:string"/>
+    <wsdl:part name="GroupName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoExHttpPostOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceHttpPostIn">
+    <wsdl:part name="CCID" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="CCIDisNiceHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="GroupName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfGroupHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="UserIsMemberOfListHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetGroupsForUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsHttpPostIn">
+    <wsdl:part name="pattern" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="SearchGroupsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersHttpPostIn">
+    <wsdl:part name="DisplayName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="ListUsersHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfUserInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoFromLoginHttpPostOut">
+    <wsdl:part name="Body" element="tns:userInfo"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserHttpPostIn">
+    <wsdl:part name="UserName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetRecursiveGroupsForUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailHttpPostIn">
+    <wsdl:part name="email" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetUPNFromEmailHttpPostOut">
+    <wsdl:part name="Body" element="tns:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersHttpPostIn">
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlyHttpPostIn">
+    <wsdl:part name="ListName" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="GetListMembersLogins_CERNAccountOnlyHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString"/>
+  </wsdl:message>
+  <wsdl:portType name="AuthenticationSoap">
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoSoapIn"/>
+      <wsdl:output message="tns:GetUserInfoSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login. Group membership is verified at the same time, multiple groups can be specified, separated with ','.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoExSoapIn"/>
+      <wsdl:output message="tns:GetUserInfoExSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">DEPRECATED - Verify this CCID belongs to a Nice account. Returns login or -1 if not found.</wsdl:documentation>
+      <wsdl:input message="tns:CCIDisNiceSoapIn"/>
+      <wsdl:output message="tns:CCIDisNiceSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified NICE Group. UserName is NICE Login or Email.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfGroupSoapIn"/>
+      <wsdl:output message="tns:UserIsMemberOfGroupSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified simba list. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfListSoapIn"/>
+      <wsdl:output message="tns:UserIsMemberOfListSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a string array containing Groups the specified User is member of. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetGroupsForUserSoapIn"/>
+      <wsdl:output message="tns:GetGroupsForUserSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search for a group, based on given pattern. 3 characters minimum are required. Search is done with: *pattern*.</wsdl:documentation>
+      <wsdl:input message="tns:SearchGroupsSoapIn"/>
+      <wsdl:output message="tns:SearchGroupsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search users with given display name. Display name is firstname + lastname, or email, and can contain *.</wsdl:documentation>
+      <wsdl:input message="tns:ListUsersSoapIn"/>
+      <wsdl:output message="tns:ListUsersSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get user information from login. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoFromLoginSoapIn"/>
+      <wsdl:output message="tns:GetUserInfoFromLoginSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TEST ONLY, DO NOT USE. Returns a string array containing Groups and nested Groups the specified User is member of. This includes mailing lists. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetRecursiveGroupsForUserSoapIn"/>
+      <wsdl:output message="tns:GetRecursiveGroupsForUserSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user UPN or external UPN from the given Email address.</wsdl:documentation>
+      <wsdl:input message="tns:GetUPNFromEmailSoapIn"/>
+      <wsdl:output message="tns:GetUPNFromEmailSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is an email address array.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersSoapIn"/>
+      <wsdl:output message="tns:GetListMembersSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is a login array, and contains only CERN Accounts, NO Externals!!!.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersLogins_CERNAccountOnlySoapIn"/>
+      <wsdl:output message="tns:GetListMembersLogins_CERNAccountOnlySoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AuthenticationHttpGet">
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoHttpGetIn"/>
+      <wsdl:output message="tns:GetUserInfoHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login. Group membership is verified at the same time, multiple groups can be specified, separated with ','.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoExHttpGetIn"/>
+      <wsdl:output message="tns:GetUserInfoExHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">DEPRECATED - Verify this CCID belongs to a Nice account. Returns login or -1 if not found.</wsdl:documentation>
+      <wsdl:input message="tns:CCIDisNiceHttpGetIn"/>
+      <wsdl:output message="tns:CCIDisNiceHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified NICE Group. UserName is NICE Login or Email.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfGroupHttpGetIn"/>
+      <wsdl:output message="tns:UserIsMemberOfGroupHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified simba list. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfListHttpGetIn"/>
+      <wsdl:output message="tns:UserIsMemberOfListHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a string array containing Groups the specified User is member of. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetGroupsForUserHttpGetIn"/>
+      <wsdl:output message="tns:GetGroupsForUserHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search for a group, based on given pattern. 3 characters minimum are required. Search is done with: *pattern*.</wsdl:documentation>
+      <wsdl:input message="tns:SearchGroupsHttpGetIn"/>
+      <wsdl:output message="tns:SearchGroupsHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search users with given display name. Display name is firstname + lastname, or email, and can contain *.</wsdl:documentation>
+      <wsdl:input message="tns:ListUsersHttpGetIn"/>
+      <wsdl:output message="tns:ListUsersHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get user information from login. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoFromLoginHttpGetIn"/>
+      <wsdl:output message="tns:GetUserInfoFromLoginHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TEST ONLY, DO NOT USE. Returns a string array containing Groups and nested Groups the specified User is member of. This includes mailing lists. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetRecursiveGroupsForUserHttpGetIn"/>
+      <wsdl:output message="tns:GetRecursiveGroupsForUserHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user UPN or external UPN from the given Email address.</wsdl:documentation>
+      <wsdl:input message="tns:GetUPNFromEmailHttpGetIn"/>
+      <wsdl:output message="tns:GetUPNFromEmailHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is an email address array.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersHttpGetIn"/>
+      <wsdl:output message="tns:GetListMembersHttpGetOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is a login array, and contains only CERN Accounts, NO Externals!!!.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersLogins_CERNAccountOnlyHttpGetIn"/>
+      <wsdl:output message="tns:GetListMembersLogins_CERNAccountOnlyHttpGetOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="AuthenticationHttpPost">
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoHttpPostIn"/>
+      <wsdl:output message="tns:GetUserInfoHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Authenticates user from login and password. Login can be email address or NICE login. Group membership is verified at the same time, multiple groups can be specified, separated with ','.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoExHttpPostIn"/>
+      <wsdl:output message="tns:GetUserInfoExHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">DEPRECATED - Verify this CCID belongs to a Nice account. Returns login or -1 if not found.</wsdl:documentation>
+      <wsdl:input message="tns:CCIDisNiceHttpPostIn"/>
+      <wsdl:output message="tns:CCIDisNiceHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified NICE Group. UserName is NICE Login or Email.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfGroupHttpPostIn"/>
+      <wsdl:output message="tns:UserIsMemberOfGroupHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Check if one user is member of specified simba list. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:UserIsMemberOfListHttpPostIn"/>
+      <wsdl:output message="tns:UserIsMemberOfListHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a string array containing Groups the specified User is member of. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetGroupsForUserHttpPostIn"/>
+      <wsdl:output message="tns:GetGroupsForUserHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search for a group, based on given pattern. 3 characters minimum are required. Search is done with: *pattern*.</wsdl:documentation>
+      <wsdl:input message="tns:SearchGroupsHttpPostIn"/>
+      <wsdl:output message="tns:SearchGroupsHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search users with given display name. Display name is firstname + lastname, or email, and can contain *.</wsdl:documentation>
+      <wsdl:input message="tns:ListUsersHttpPostIn"/>
+      <wsdl:output message="tns:ListUsersHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get user information from login. Login can be email address or NICE login.</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoFromLoginHttpPostIn"/>
+      <wsdl:output message="tns:GetUserInfoFromLoginHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TEST ONLY, DO NOT USE. Returns a string array containing Groups and nested Groups the specified User is member of. This includes mailing lists. UserName is NICE Login or Email. Listname can be 'listname' or 'listname@cern.ch'.</wsdl:documentation>
+      <wsdl:input message="tns:GetRecursiveGroupsForUserHttpPostIn"/>
+      <wsdl:output message="tns:GetRecursiveGroupsForUserHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the user UPN or external UPN from the given Email address.</wsdl:documentation>
+      <wsdl:input message="tns:GetUPNFromEmailHttpPostIn"/>
+      <wsdl:output message="tns:GetUPNFromEmailHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is an email address array.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersHttpPostIn"/>
+      <wsdl:output message="tns:GetListMembersHttpPostOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the members list of the provided mailinglist (use mailinglist's email address). Returned members list also contains members of nested lists. Result is a login array, and contains only CERN Accounts, NO Externals!!!.</wsdl:documentation>
+      <wsdl:input message="tns:GetListMembersLogins_CERNAccountOnlyHttpPostIn"/>
+      <wsdl:output message="tns:GetListMembersLogins_CERNAccountOnlyHttpPostOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AuthenticationSoap" type="tns:AuthenticationSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetUserInfo">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfo" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfoEx" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/CCIDisNice" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/UserIsMemberOfGroup" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/UserIsMemberOfList" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetGroupsForUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/SearchGroups" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/ListUsers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfoFromLogin" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetRecursiveGroupsForUser" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUPNFromEmail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetListMembers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <soap:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetListMembersLogins_CERNAccountOnly" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenticationSoap12" type="tns:AuthenticationSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetUserInfo">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfo" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfoEx" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/CCIDisNice" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/UserIsMemberOfGroup" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/UserIsMemberOfList" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetGroupsForUser" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/SearchGroups" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/ListUsers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUserInfoFromLogin" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetRecursiveGroupsForUser" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetUPNFromEmail" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetListMembers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <soap12:operation soapAction="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx/GetListMembersLogins_CERNAccountOnly" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenticationHttpGet" type="tns:AuthenticationHttpGet">
+    <http:binding verb="GET"/>
+    <wsdl:operation name="GetUserInfo">
+      <http:operation location="/GetUserInfo"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <http:operation location="/GetUserInfoEx"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <http:operation location="/CCIDisNice"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <http:operation location="/UserIsMemberOfGroup"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <http:operation location="/UserIsMemberOfList"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <http:operation location="/GetGroupsForUser"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <http:operation location="/SearchGroups"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <http:operation location="/ListUsers"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <http:operation location="/GetUserInfoFromLogin"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <http:operation location="/GetRecursiveGroupsForUser"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <http:operation location="/GetUPNFromEmail"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <http:operation location="/GetListMembers"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <http:operation location="/GetListMembersLogins_CERNAccountOnly"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AuthenticationHttpPost" type="tns:AuthenticationHttpPost">
+    <http:binding verb="POST"/>
+    <wsdl:operation name="GetUserInfo">
+      <http:operation location="/GetUserInfo"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoEx">
+      <http:operation location="/GetUserInfoEx"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CCIDisNice">
+      <http:operation location="/CCIDisNice"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfGroup">
+      <http:operation location="/UserIsMemberOfGroup"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserIsMemberOfList">
+      <http:operation location="/UserIsMemberOfList"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGroupsForUser">
+      <http:operation location="/GetGroupsForUser"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchGroups">
+      <http:operation location="/SearchGroups"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListUsers">
+      <http:operation location="/ListUsers"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoFromLogin">
+      <http:operation location="/GetUserInfoFromLogin"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecursiveGroupsForUser">
+      <http:operation location="/GetRecursiveGroupsForUser"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUPNFromEmail">
+      <http:operation location="/GetUPNFromEmail"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembers">
+      <http:operation location="/GetListMembers"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetListMembersLogins_CERNAccountOnly">
+      <http:operation location="/GetListMembersLogins_CERNAccountOnly"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Authentication">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">&lt;h2&gt;CERN Lightweight Registration - Authentication WebService&lt;/h2&gt;Detailed documentation can be found in this document: &lt;a href="http://cern.ch/CERNAccount/Help/?kbid=011020" target=_blank&gt;http://cern.ch/CERNAccount/Help/?kbid=011020&lt;/a&gt;&lt;br&gt;&amp;nbsp;&lt;br&gt;&amp;nbsp;&lt;br&gt;</wsdl:documentation>
+    <wsdl:port name="AuthenticationSoap" binding="tns:AuthenticationSoap">
+      <soap:address location="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="AuthenticationSoap12" binding="tns:AuthenticationSoap12">
+      <soap12:address location="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="AuthenticationHttpGet" binding="tns:AuthenticationHttpGet">
+      <http:address location="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="AuthenticationHttpPost" binding="tns:AuthenticationHttpPost">
+      <http:address location="https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

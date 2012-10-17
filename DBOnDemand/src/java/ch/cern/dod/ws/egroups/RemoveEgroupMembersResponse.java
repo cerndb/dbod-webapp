@@ -1,155 +1,92 @@
-/**
- * RemoveEgroupMembersResponse.java
- *
- * This file was auto-generated from WSDL
- * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
- */
 
 package ch.cern.dod.ws.egroups;
 
-public class RemoveEgroupMembersResponse  implements java.io.Serializable {
-    private java.lang.String result;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
-    private java.lang.String transactionId;
 
-    public RemoveEgroupMembersResponse() {
-    }
+/**
+ * <p>Java class for anonymous complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="result" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="transactionId" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "result",
+    "transactionId"
+})
+@XmlRootElement(name = "removeEgroupMembersResponse")
+public class RemoveEgroupMembersResponse {
 
-    public RemoveEgroupMembersResponse(
-           java.lang.String result,
-           java.lang.String transactionId) {
-           this.result = result;
-           this.transactionId = transactionId;
-    }
-
+    @XmlElement(required = true)
+    protected String result;
+    @XmlElement(required = true)
+    protected String transactionId;
 
     /**
-     * Gets the result value for this RemoveEgroupMembersResponse.
+     * Gets the value of the result property.
      * 
-     * @return result
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getResult() {
+    public String getResult() {
         return result;
     }
 
-
     /**
-     * Sets the result value for this RemoveEgroupMembersResponse.
+     * Sets the value of the result property.
      * 
-     * @param result
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setResult(java.lang.String result) {
-        this.result = result;
+    public void setResult(String value) {
+        this.result = value;
     }
 
-
     /**
-     * Gets the transactionId value for this RemoveEgroupMembersResponse.
+     * Gets the value of the transactionId property.
      * 
-     * @return transactionId
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
-
     /**
-     * Sets the transactionId value for this RemoveEgroupMembersResponse.
+     * Sets the value of the transactionId property.
      * 
-     * @param transactionId
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setTransactionId(java.lang.String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    private java.lang.Object __equalsCalc = null;
-    public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof RemoveEgroupMembersResponse)) return false;
-        RemoveEgroupMembersResponse other = (RemoveEgroupMembersResponse) obj;
-        if (obj == null) return false;
-        if (this == obj) return true;
-        if (__equalsCalc != null) {
-            return (__equalsCalc == obj);
-        }
-        __equalsCalc = obj;
-        boolean _equals;
-        _equals = true && 
-            ((this.result==null && other.getResult()==null) || 
-             (this.result!=null &&
-              this.result.equals(other.getResult()))) &&
-            ((this.transactionId==null && other.getTransactionId()==null) || 
-             (this.transactionId!=null &&
-              this.transactionId.equals(other.getTransactionId())));
-        __equalsCalc = null;
-        return _equals;
-    }
-
-    private boolean __hashCodeCalc = false;
-    public synchronized int hashCode() {
-        if (__hashCodeCalc) {
-            return 0;
-        }
-        __hashCodeCalc = true;
-        int _hashCode = 1;
-        if (getResult() != null) {
-            _hashCode += getResult().hashCode();
-        }
-        if (getTransactionId() != null) {
-            _hashCode += getTransactionId().hashCode();
-        }
-        __hashCodeCalc = false;
-        return _hashCode;
-    }
-
-    // Type metadata
-    private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(RemoveEgroupMembersResponse.class, true);
-
-    static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", ">removeEgroupMembersResponse"));
-        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("result");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "result"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("transactionId");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://cra-ws.cern.ch/cra-ws/", "transactionId"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-    }
-
-    /**
-     * Return type metadata object
-     */
-    public static org.apache.axis.description.TypeDesc getTypeDesc() {
-        return typeDesc;
-    }
-
-    /**
-     * Get Custom Serializer
-     */
-    public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanSerializer(
-            _javaType, _xmlType, typeDesc);
-    }
-
-    /**
-     * Get Custom Deserializer
-     */
-    public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanDeserializer(
-            _javaType, _xmlType, typeDesc);
+    public void setTransactionId(String value) {
+        this.transactionId = value;
     }
 
 }

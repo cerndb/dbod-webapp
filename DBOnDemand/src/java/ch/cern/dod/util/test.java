@@ -5,12 +5,10 @@
 package ch.cern.dod.util;
 
 import ch.cern.dod.db.entity.DODInstance;
-import ch.cern.dod.ws.DODWebServiceLocator;
-import ch.cern.dod.ws.DODWebServiceSoapBindingStub;
+import ch.cern.dod.db.entity.DODSnapshot;
 import java.rmi.RemoteException;
-import javax.xml.rpc.ServiceException;
-import org.apache.axis.wsdl.WSDL2Java;
-import org.zkoss.util.media.AMedia;
+import java.util.List;
+//import javax.xml.rpc.ServiceException;
 
 /**
  *
@@ -18,27 +16,36 @@ import org.zkoss.util.media.AMedia;
  */
 public class test {
 
-    public static void main(String[] args) throws ServiceException, RemoteException {
-//        String[] wsdl = new String[]{"/home/dgomezbl/Documents/DBOnDemand/dodwebservices.wsdl"};
-//        WSDL2Java.main(wsdl);
-//        testGetFile();
+    public static void main(String[] args) throws RemoteException {
         testGetParam();
-    }
-
-    private static void testGetFile() {
-            DODInstance instance = new DODInstance();
-            instance.setDbName("testinstance");
-           String filePath = "/etc/shadow";
-            ConfigFileHelper fileHelper = new ConfigFileHelper("dodws", "Sup3rN0va11");
-            AMedia file = fileHelper.getFile(instance, filePath);
+//        testEgroups();
+//        testAuthentication();
     }
 
     private static void testGetParam() {
             DODInstance instance = new DODInstance();
-            instance.setDbName("ignacio");
+            instance.setDbName("testinstance");
             String param = "host";
-            ParamsHelper paramsHelper = new ParamsHelper("dodws", "Sup3rN0va11");
+            ParamsHelper paramsHelper = new ParamsHelper("", "");
             String value = paramsHelper.getParam(instance, param);
-            System.out.println(value);
+            System.out.println(value.toString());
+    }
+    
+    private static void testGetFile() {
+            DODInstance instance = new DODInstance();
+            instance.setDbName("testinstance");
+            FileHelper fileHelper = new FileHelper("dgomezbl", "AK3422dgb@cern");
+            String[] value = fileHelper.getSlowLogs(instance);
+            System.out.println(value.toString());
+    }
+    
+    private static void testEgroups() {
+        EGroupHelper helper = new EGroupHelper("", "");
+        System.out.println(helper.eGroupExists("-"));
+    }
+    
+    private static void testAuthentication() {
+        AuthenticationHelper helper = new AuthenticationHelper("", "");
+        System.out.println(helper.getUserInfo("dgomezbl").getDepartment());
     }
 }

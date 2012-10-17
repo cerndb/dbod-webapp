@@ -3,12 +3,8 @@ package ch.cern.dod.util;
 import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ws.authentication.UserInfo;
-import java.rmi.RemoteException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.xml.rpc.ServiceException;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Datebox;
@@ -45,23 +41,13 @@ public class FormValidations {
                 username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_CHARS));
                 return null;
             }
-            //Check if the user exists
-            try {              
-                UserInfo info = authenticationHelper.getUserInfo(username.getValue());
-                if (info != null && info.getCcid() > 0) {
-                    return info;
-                }
-                else {
-                    username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_NOT_FOUND));
-                    return null;
-                }
-            } catch (RemoteException ex) {
-                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_WS));
-                Logger.getLogger(FormValidations.class.getName()).log(Level.SEVERE, "ERROR OBTAINING INFO FOR USER " + username.getValue(), ex);
-                return null;
-            } catch (ServiceException ex) {  
-                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_WS));
-                Logger.getLogger(FormValidations.class.getName()).log(Level.SEVERE, "ERROR OBTAINING INFO FOR USER " + username.getValue(), ex);
+            //Check if the user exists      
+            UserInfo info = authenticationHelper.getUserInfo(username.getValue());
+            if (info != null && info.getCcid() > 0) {
+                return info;
+            }
+            else {
+                username.setErrorMessage(Labels.getLabel(DODConstants.ERROR_USERNAME_NOT_FOUND));
                 return null;
             }
         }

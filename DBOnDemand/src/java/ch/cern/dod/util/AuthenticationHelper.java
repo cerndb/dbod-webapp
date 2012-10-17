@@ -1,10 +1,11 @@
 package ch.cern.dod.util;
 
-import ch.cern.dod.ws.authentication.AuthenticationLocator;
-import ch.cern.dod.ws.authentication.AuthenticationSoapStub;
+import ch.cern.dod.ws.authentication.Authentication;
+import ch.cern.dod.ws.authentication.AuthenticationSoap;
 import ch.cern.dod.ws.authentication.UserInfo;
-import java.rmi.RemoteException;
-import javax.xml.rpc.ServiceException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.ws.BindingProvider;
 
 /**
  * Helper to obtain information and manage user accounts.
@@ -34,17 +35,21 @@ public class AuthenticationHelper {
 
     /**
      * 
-     * @param username user to obtain the inforamtion from.
+     * @param username user to obtain the information from.
      * @return information from user passed as parameter.
-     * @throws ServiceException if an exception occurs while locating the webservice.
-     * @throws RemoteException if an exception occurs while calling the webservice.
      */
-    public UserInfo getUserInfo(String username) throws ServiceException, RemoteException {
-        AuthenticationLocator locator = new AuthenticationLocator();
-        AuthenticationSoapStub service = (AuthenticationSoapStub) locator.getAuthenticationSoap();
-        service.setUsername(wsUser);
-        service.setPassword(wsPassword);
-        UserInfo info = service.getUserInfoFromLogin(username);
-        return info;
+    public UserInfo getUserInfo(String username) {
+        try {
+            Authentication service = new Authentication();
+            AuthenticationSoap port = service.getAuthenticationSoap();
+            ((BindingProvider) port).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, wsUser);
+            ((BindingProvider) port).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, wsPassword);
+            UserInfo info = port.getUserInfoFromLogin(username);
+            return info;
+        }
+        catch (Exception ex) {
+            Logger.getLogger(AuthenticationHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING USER " + username, ex);
+        }
+        return null;
     }
 }

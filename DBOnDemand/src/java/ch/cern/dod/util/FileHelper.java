@@ -1,13 +1,10 @@
 package ch.cern.dod.util;
 
 import ch.cern.dod.db.entity.DODInstance;
-import ch.cern.dod.ws.DODWebServiceLocator;
-import ch.cern.dod.ws.DODWebServiceSoapBindingStub;
-import java.rmi.RemoteException;
+import ch.cern.dod.ws.DODWebService;
+import ch.cern.dod.ws.DODWebServicePortType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.rpc.ServiceException;
-import org.apache.axis.types.URI;
 import org.zkoss.util.media.AMedia;
 
 /**
@@ -45,17 +42,14 @@ public class FileHelper {
     public AMedia getFile(DODInstance instance, String filePath) {
         AMedia file = null;
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            String content = stub.getFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), filePath);
-            if (content != null)
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String content = port.getFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), filePath);
+            if (content != null) {
                 file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "text/plain", content);
-        } catch (RemoteException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return file;
     }
@@ -64,23 +58,18 @@ public class FileHelper {
      * Gets the slow logs for a specific instance.
      * @param instance instance to get the slow logs of.
      * @return array of file names corresponding to the slow logs.
-     * @throws ServiceException if there is an error executing the web service.
-     * @throws RemoteException if there is an error connection to the server.
      */
     public String[] getSlowLogs(DODInstance instance) {
         String[] slowLogs = null;
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            String slowLogsString = stub.getSlowLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-            if (slowLogsString != null && !slowLogsString.isEmpty())
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String slowLogsString = port.getSlowLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            if (slowLogsString != null && !slowLogsString.isEmpty()) {
                 slowLogs = slowLogsString.split(":");
-        } catch (RemoteException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING SLOW LOGS ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return slowLogs;
     }
@@ -89,23 +78,18 @@ public class FileHelper {
      * Gets the logs for a specific Oracle instance.
      * @param instance instance to get the logs of.
      * @return array of file names corresponding to the log files.
-     * @throws ServiceException if there is an error executing the web service.
-     * @throws RemoteException if there is an error connection to the server.
      */
     public String[] getOracleLogs(DODInstance instance) {
         String[] logs = null;
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            String logsString = stub.getOracleLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-            if (logsString != null && !logsString.isEmpty())
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String logsString = port.getOracleLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            if (logsString != null && !logsString.isEmpty()) {
                 logs = logsString.split(":");
-        } catch (RemoteException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING LOGS ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return logs;
     }
@@ -119,17 +103,11 @@ public class FileHelper {
     public String getServedFileURL(DODInstance instance, String filePath) {
         String url = null;
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            URI uri = stub.serveFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), filePath);
-            if (uri != null)
-                url = uri.toString();
-        } catch (RemoteException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            url = port.serveFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), filePath);
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR SERVING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return url;
     }

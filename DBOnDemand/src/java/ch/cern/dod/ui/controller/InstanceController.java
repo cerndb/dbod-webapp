@@ -10,7 +10,6 @@ import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.FormValidations;
 import ch.cern.dod.util.JobHelper;
-import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,8 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.rpc.ServiceException;
-import org.apache.axis.AxisFault;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -27,16 +24,7 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Comboitem;
-import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Groupbox;
-import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Image;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
 
 /**
  * Controller for the instance page.
@@ -587,7 +575,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
 
             //Load log
-            DODJobDAO jobDAO = new DODJobDAO();
             ((Textbox) getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
 
             //Update groupbox properties
@@ -769,18 +756,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //If there is an egroup
             if(((Textbox) getFellow("eGroupEdit")).getValue() != null && !((Textbox) getFellow("eGroupEdit")).getValue().isEmpty()) {
                 //Check if e-group exists
-                boolean eGroupExists = false;
-                try {
-                    eGroupExists = eGroupHelper.eGroupExists(((Textbox) getFellow("eGroupEdit")).getValue());
-                } catch (AxisFault ex) {
-                    eGroupExists = false;
-                } catch (ServiceException ex) {
-                    ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_SEARCH));
-                    return;
-                } catch (RemoteException ex) {
-                    ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_SEARCH));
-                    return;
-                }
+                boolean eGroupExists = eGroupHelper.eGroupExists(((Textbox) getFellow("eGroupEdit")).getValue());
                 //If the egroup does not exist show confimation window and return (the creation of e-groups is not allowed when editing)
                 if (!eGroupExists) {
                     try {
@@ -790,7 +766,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     } catch (SuspendNotAllowedException ex) {
                         Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     }
-                    return;
                 }
                 //Create instance with this values
                 else
@@ -809,43 +784,33 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     public void editEGroup(boolean eGroupExists) {
         //Check for errors in form
         if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")))) {
-            try {
-                boolean eGroupCreated = false;
-                //If the egroup does not exist create it
-                if (!eGroupExists) {
-                    //If the egroup was successfully created store the instance in the DB
-                    eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroupEdit")).getValue(),
-                            instance.getDbName(), userCCID, fullName);
-                }
-                //If the egroup exists or it was successfully created
-                if (eGroupExists || eGroupCreated) {
-                    //Clone the instance and override eGroup
-                    DODInstance clone = instance.clone();
-                    clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
-                    if (instanceDAO.update(clone) > 0) {
-                        instance = clone;
-                        if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
-                            ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
-                        else
-                            ((Label) getFellow("eGroup")).setValue("-");
-                        ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
-                        ((Hbox) getFellow("eGroupBox")).setVisible(true);
-                    }
-                    else {
-                        showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
-                    }
+            boolean eGroupCreated = false;
+            //If the egroup does not exist create it
+            if (!eGroupExists) {
+                //If the egroup was successfully created store the instance in the DB
+                eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroupEdit")).getValue(),
+                        instance.getDbName(), userCCID, fullName);
+            }
+            //If the egroup exists or it was successfully created
+            if (eGroupExists || eGroupCreated) {
+                //Clone the instance and override eGroup
+                DODInstance clone = instance.clone();
+                clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
+                if (instanceDAO.update(clone) > 0) {
+                    instance = clone;
+                    if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
+                        ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
+                    else
+                        ((Label) getFellow("eGroup")).setValue("-");
+                    ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
+                    ((Hbox) getFellow("eGroupBox")).setVisible(true);
                 }
                 else {
-                    ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
+                    showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
                 }
             }
-            catch (ServiceException ex) {
+            else {
                 ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
-                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP " + ((Textbox) getFellow("eGroupEdit")).getValue(), ex);
-            }
-            catch (RemoteException ex) {
-                ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CREATION));
-                Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP " + ((Textbox) getFellow("eGroupEdit")).getValue(), ex);
             }
         }
     }

@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:cra="https://cra-ws.cern.ch/cra-ws/cra/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:tns="https://cra-ws.cern.ch/cra-ws/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://cra-ws.cern.ch/cra-ws/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="https://cra-ws.cern.ch/cra-ws/">
+      <xs:import namespace="https://cra-ws.cern.ch/cra-ws/cra/" schemaLocation="./cra.xsd"/>
+      
+      <xs:element name="changeExternalEmailAddressRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_oldEmailAddress" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_newEmailAddress" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="changeExternalEmailAddressResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="findEgroupByIdRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_id" type="xs:long"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="findEgroupByIdResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="findEgroupByNameRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_name" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="findEgroupByNameResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="synchronizeEgroupRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroup" type="cra:EgroupType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="synchronizeEgroupResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="deleteEgroupRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="deleteEgroupResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:boolean"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="addEgroupMembersRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:MembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="addEgroupMembersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="addEgroupEmailMembersRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:EmailMembersType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_overwriteMembers" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="addEgroupEmailMembersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="removeEgroupMembersRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:MembersType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="removeEgroupMembersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="removeEgroupEmailMembersRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_egroupName" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_members" type="cra:EmailMembersType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="removeEgroupEmailMembersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="getEgroupsUserOwnOrManageRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_niceUserid" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_password" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="p_userName" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="getEgroupsUserOwnOrManageResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="result" type="cra:EgroupsType"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+    </xs:schema>
+
+  </wsdl:types>
+
+  <wsdl:message name="changeExternalEmailAddressSoapIn">
+    <wsdl:part element="tns:changeExternalEmailAddressRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="changeExternalEmailAddressSoapOut">
+    <wsdl:part element="tns:changeExternalEmailAddressResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="findEgroupByIdSoapIn">
+    <wsdl:part element="tns:findEgroupByIdRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="findEgroupByIdSoapOut">
+    <wsdl:part element="tns:findEgroupByIdResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="findEgroupByNameSoapIn">
+    <wsdl:part element="tns:findEgroupByNameRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="findEgroupByNameSoapOut">
+    <wsdl:part element="tns:findEgroupByNameResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="synchronizeEgroupSoapIn">
+    <wsdl:part element="tns:synchronizeEgroupRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="synchronizeEgroupSoapOut">
+    <wsdl:part element="tns:synchronizeEgroupResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="deleteEgroupSoapIn">
+    <wsdl:part element="tns:deleteEgroupRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="deleteEgroupSoapOut">
+    <wsdl:part element="tns:deleteEgroupResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="addEgroupMembersSoapIn">
+    <wsdl:part element="tns:addEgroupMembersRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="addEgroupMembersSoapOut">
+    <wsdl:part element="tns:addEgroupMembersResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="addEgroupEmailMembersSoapIn">
+    <wsdl:part element="tns:addEgroupEmailMembersRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="addEgroupEmailMembersSoapOut">
+    <wsdl:part element="tns:addEgroupEmailMembersResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="removeEgroupMembersSoapIn">
+    <wsdl:part element="tns:removeEgroupMembersRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="removeEgroupMembersSoapOut">
+    <wsdl:part element="tns:removeEgroupMembersResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="removeEgroupEmailMembersSoapIn">
+    <wsdl:part element="tns:removeEgroupEmailMembersRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="removeEgroupEmailMembersSoapOut">
+    <wsdl:part element="tns:removeEgroupEmailMembersResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getEgroupsUserOwnOrManageSoapIn">
+    <wsdl:part element="tns:getEgroupsUserOwnOrManageRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getEgroupsUserOwnOrManageSoapOut">
+    <wsdl:part element="tns:getEgroupsUserOwnOrManageResponse" name="parameters"/>
+  </wsdl:message>
+  
+  
+  <wsdl:portType name="CraEgroupsWebService">
+    <wsdl:operation name="changeExternalEmailAddress">
+      <wsdl:documentation>Change External Email Address</wsdl:documentation>
+      <wsdl:input message="tns:changeExternalEmailAddressSoapIn"/>
+      <wsdl:output message="tns:changeExternalEmailAddressSoapOut"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="findEgroupById">
+      <wsdl:documentation>Find Egroup By ID</wsdl:documentation>
+      <wsdl:input message="tns:findEgroupByIdSoapIn"/>
+      <wsdl:output message="tns:findEgroupByIdSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="findEgroupByName">
+      <wsdl:documentation>Find Egroup By Name</wsdl:documentation>
+      <wsdl:input message="tns:findEgroupByNameSoapIn"/>
+      <wsdl:output message="tns:findEgroupByNameSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="synchronizeEgroup">
+      <wsdl:documentation>Create or reload an e-group</wsdl:documentation>
+      <wsdl:input message="tns:synchronizeEgroupSoapIn"/>
+      <wsdl:output message="tns:synchronizeEgroupSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="deleteEgroup">
+      <wsdl:documentation>Delete an e-group</wsdl:documentation>
+      <wsdl:input message="tns:deleteEgroupSoapIn"/>
+      <wsdl:output message="tns:deleteEgroupSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="addEgroupMembers">
+      <wsdl:documentation>Add members to an e-group</wsdl:documentation>
+      <wsdl:input message="tns:addEgroupMembersSoapIn"/>
+      <wsdl:output message="tns:addEgroupMembersSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="addEgroupEmailMembers">
+      <wsdl:documentation>Add email members to an e-group</wsdl:documentation>
+      <wsdl:input message="tns:addEgroupEmailMembersSoapIn"/>
+      <wsdl:output message="tns:addEgroupEmailMembersSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="removeEgroupMembers">
+      <wsdl:documentation>Remove members from an e-group</wsdl:documentation>
+      <wsdl:input message="tns:removeEgroupMembersSoapIn"/>
+      <wsdl:output message="tns:removeEgroupMembersSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="removeEgroupEmailMembers">
+      <wsdl:documentation>Add email members from an e-group</wsdl:documentation>
+      <wsdl:input message="tns:removeEgroupEmailMembersSoapIn"/>
+      <wsdl:output message="tns:removeEgroupEmailMembersSoapOut"/>
+    </wsdl:operation>
+    
+    <wsdl:operation name="getEgroupsUserOwnOrManage">
+      <wsdl:documentation>Get all egroups an user own or manage</wsdl:documentation>
+      <wsdl:input message="tns:getEgroupsUserOwnOrManageSoapIn"/>
+      <wsdl:output message="tns:getEgroupsUserOwnOrManageSoapOut"/>
+    </wsdl:operation>
+    
+  </wsdl:portType>
+
+  <wsdl:portType name="CraOperationsHttpGet"/>
+  <wsdl:portType name="CraOperationsHttpPost"/>
+
+  <wsdl:binding name="CraEgroupsWebServiceBinding" type="tns:CraEgroupsWebService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="changeExternalEmailAddress">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/changeExternalEmailAddress" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findEgroupById">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/findEgroupById" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findEgroupByName">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/findEgroupByName" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="synchronizeEgroup">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/synchronizeEgroup" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteEgroup">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/deleteEgroup" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEgroupMembers">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/addEgroupMembers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEgroupEmailMembers">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/addEgroupEmailMembers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeEgroupMembers">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/removeEgroupMembers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeEgroupEmailMembers">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/removeEgroupEmailMembers" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEgroupsUserOwnOrManage">
+      <soap:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/getEgroupsUserOwnOrManage" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:binding name="CraEgroupsWebServiceBindingSoap12" type="tns:CraEgroupsWebService">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="changeExternalEmailAddress">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-es/CraEgroupsWebService/changeExternalEmailAddress" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findEgroupById">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/findEgroupById" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findEgroupByName">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/findEgroupByName" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="synchronizeEgroup">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/synchronizeEgroup" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteEgroup">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/deleteEgroup" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEgroupMembers">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/addEgroupMembers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEgroupEmailMembers">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/addEgroupEmailMembers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeEgroupMembers">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/removeEgroupMembers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeEgroupEmailMembers">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/removeEgroupEmailMembers" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEgroupsUserOwnOrManage">
+      <soap12:operation soapAction="https://cra-ws.cern.ch/cra-ws/CraEgroupsWebService/getEgroupsUserOwnOrManage" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:binding name="CraOperationsHttpGet" type="tns:CraOperationsHttpGet">
+    <http:binding verb="GET"/>
+  </wsdl:binding>
+  <wsdl:binding name="CraOperationsHttpPost" type="tns:CraOperationsHttpPost">
+    <http:binding verb="POST"/>
+  </wsdl:binding>
+
+  <wsdl:service name="CraEgroupsWebService">
+    <wsdl:port binding="tns:CraEgroupsWebServiceBinding" name="CraEgroupsWebService">
+      <soap:address location="https://cra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
+    </wsdl:port>
+    <wsdl:port binding="tns:CraEgroupsWebServiceBindingSoap12" name="CraEgroupsWebServiceSoap12">
+      <soap12:address location="https://cra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
+    </wsdl:port>
+    <wsdl:port binding="tns:CraOperationsHttpGet" name="CraOperationsHttpGet">
+      <http:address location="https://cra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
+    </wsdl:port>
+    <wsdl:port binding="tns:CraOperationsHttpPost" name="CraOperationsHttpPost">
+      <http:address location="https://cra-ws.cern.ch:443/cra-ws/CraEgroupsWebService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

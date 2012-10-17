@@ -2,16 +2,14 @@ package ch.cern.dod.util;
 
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODSnapshot;
-import ch.cern.dod.ws.DODWebServiceLocator;
-import ch.cern.dod.ws.DODWebServiceSoapBindingStub;
-import java.rmi.RemoteException;
+import ch.cern.dod.ws.DODWebService;
+import ch.cern.dod.ws.DODWebServicePortType;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.xml.rpc.ServiceException;
 
 /**
  * Helper to manage snapshots using web services.
@@ -43,27 +41,22 @@ public class SnapshotHelper {
      * Gets the snapshots for a specific instance.
      * @param instance instance to get the snapshots of.
      * @return list of snapshots.
-     * @throws ServiceException if there is an error executing the web service.
-     * @throws RemoteException if there is an error connection to the server.
      */
     public List<DODSnapshot> getSnapshots(DODInstance instance) {
         ArrayList<DODSnapshot> snapshots = new ArrayList<DODSnapshot>();
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            String snapshotsString = stub.getSnapshots(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String snapshotsString = port.getSnapshots(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
             String[] snapshotArray = snapshotsString.split(":");
             Pattern pattern = Pattern.compile("_");
             for (int i=0; i<snapshotArray.length;i++) {
-                if (snapshotArray[i] != null && !snapshotArray[i].isEmpty())
+                if (snapshotArray[i] != null && !snapshotArray[i].isEmpty()) {
                     snapshots.add(getSnapshotFromString(snapshotArray[i], pattern));
+                }
             }
-        } catch (RemoteException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+        } catch (Exception ex) {
+            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING SNAPSHOTS FOR INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return snapshots;
     }

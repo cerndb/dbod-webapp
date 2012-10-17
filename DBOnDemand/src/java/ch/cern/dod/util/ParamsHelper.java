@@ -1,12 +1,10 @@
 package ch.cern.dod.util;
 
 import ch.cern.dod.db.entity.DODInstance;
-import ch.cern.dod.ws.DODWebServiceLocator;
-import ch.cern.dod.ws.DODWebServiceSoapBindingStub;
-import java.rmi.RemoteException;
+import ch.cern.dod.ws.DODWebService;
+import ch.cern.dod.ws.DODWebServicePortType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.rpc.ServiceException;
 
 /**
  * Helper to get params from instances.
@@ -39,21 +37,15 @@ public class ParamsHelper {
      * @param instance instance to get the snapshots of.
      * @param param param to get.
      * @return param value.
-     * @throws ServiceException if there is an error executing the web service.
-     * @throws RemoteException if there is an error connection to the server.
      */
     public String getParam(DODInstance instance, String param) {
         String paramValue = null;
         try {
-            DODWebServiceLocator locator = new DODWebServiceLocator();
-            DODWebServiceSoapBindingStub stub = (DODWebServiceSoapBindingStub) locator.getDODWebServicePort();
-            stub.setUsername(wsUser);
-            stub.setPassword(wsPassword);
-            paramValue = stub.getParam(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), param);
-        } catch (RemoteException ex) {
-            Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
-        } catch (ServiceException ex) {
-            Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, ex.getMessage());
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            paramValue = port.getParam(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), param);
+        } catch (Exception ex) {
+            Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING PARAM ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return paramValue;
     }

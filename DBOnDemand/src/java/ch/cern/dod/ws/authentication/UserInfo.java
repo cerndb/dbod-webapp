@@ -1,549 +1,362 @@
-/**
- * UserInfo.java
- *
- * This file was auto-generated from WSDL
- * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
- */
 
 package ch.cern.dod.ws.authentication;
 
-public class UserInfo  implements java.io.Serializable {
-    private int auth;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
-    private int ccid;
 
-    private int respccid;
+/**
+ * <p>Java class for userInfo complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="userInfo">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="auth" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="ccid" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="respccid" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="login" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="firstname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="lastname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="telephonenumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="company" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="department" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="shortaffiliation" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="ErrorMessage" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "userInfo", propOrder = {
+    "auth",
+    "ccid",
+    "respccid",
+    "login",
+    "email",
+    "name",
+    "firstname",
+    "lastname",
+    "telephonenumber",
+    "company",
+    "department",
+    "shortaffiliation",
+    "errorMessage"
+})
+public class UserInfo {
 
-    private java.lang.String login;
-
-    private java.lang.String email;
-
-    private java.lang.String name;
-
-    private java.lang.String firstname;
-
-    private java.lang.String lastname;
-
-    private java.lang.String telephonenumber;
-
-    private java.lang.String company;
-
-    private java.lang.String department;
-
-    private java.lang.String shortaffiliation;
-
-    private java.lang.String errorMessage;
-
-    public UserInfo() {
-    }
-
-    public UserInfo(
-           int auth,
-           int ccid,
-           int respccid,
-           java.lang.String login,
-           java.lang.String email,
-           java.lang.String name,
-           java.lang.String firstname,
-           java.lang.String lastname,
-           java.lang.String telephonenumber,
-           java.lang.String company,
-           java.lang.String department,
-           java.lang.String shortaffiliation,
-           java.lang.String errorMessage) {
-           this.auth = auth;
-           this.ccid = ccid;
-           this.respccid = respccid;
-           this.login = login;
-           this.email = email;
-           this.name = name;
-           this.firstname = firstname;
-           this.lastname = lastname;
-           this.telephonenumber = telephonenumber;
-           this.company = company;
-           this.department = department;
-           this.shortaffiliation = shortaffiliation;
-           this.errorMessage = errorMessage;
-    }
-
+    protected int auth;
+    protected int ccid;
+    protected int respccid;
+    protected String login;
+    protected String email;
+    protected String name;
+    protected String firstname;
+    protected String lastname;
+    protected String telephonenumber;
+    protected String company;
+    protected String department;
+    protected String shortaffiliation;
+    @XmlElement(name = "ErrorMessage")
+    protected String errorMessage;
 
     /**
-     * Gets the auth value for this UserInfo.
+     * Gets the value of the auth property.
      * 
-     * @return auth
      */
     public int getAuth() {
         return auth;
     }
 
-
     /**
-     * Sets the auth value for this UserInfo.
+     * Sets the value of the auth property.
      * 
-     * @param auth
      */
-    public void setAuth(int auth) {
-        this.auth = auth;
+    public void setAuth(int value) {
+        this.auth = value;
     }
 
-
     /**
-     * Gets the ccid value for this UserInfo.
+     * Gets the value of the ccid property.
      * 
-     * @return ccid
      */
     public int getCcid() {
         return ccid;
     }
 
-
     /**
-     * Sets the ccid value for this UserInfo.
+     * Sets the value of the ccid property.
      * 
-     * @param ccid
      */
-    public void setCcid(int ccid) {
-        this.ccid = ccid;
+    public void setCcid(int value) {
+        this.ccid = value;
     }
 
-
     /**
-     * Gets the respccid value for this UserInfo.
+     * Gets the value of the respccid property.
      * 
-     * @return respccid
      */
     public int getRespccid() {
         return respccid;
     }
 
-
     /**
-     * Sets the respccid value for this UserInfo.
+     * Sets the value of the respccid property.
      * 
-     * @param respccid
      */
-    public void setRespccid(int respccid) {
-        this.respccid = respccid;
+    public void setRespccid(int value) {
+        this.respccid = value;
     }
 
-
     /**
-     * Gets the login value for this UserInfo.
+     * Gets the value of the login property.
      * 
-     * @return login
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getLogin() {
+    public String getLogin() {
         return login;
     }
 
-
     /**
-     * Sets the login value for this UserInfo.
+     * Sets the value of the login property.
      * 
-     * @param login
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setLogin(java.lang.String login) {
-        this.login = login;
+    public void setLogin(String value) {
+        this.login = value;
     }
 
-
     /**
-     * Gets the email value for this UserInfo.
+     * Gets the value of the email property.
      * 
-     * @return email
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-
     /**
-     * Sets the email value for this UserInfo.
+     * Sets the value of the email property.
      * 
-     * @param email
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setEmail(java.lang.String email) {
-        this.email = email;
+    public void setEmail(String value) {
+        this.email = value;
     }
 
-
     /**
-     * Gets the name value for this UserInfo.
+     * Gets the value of the name property.
      * 
-     * @return name
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getName() {
+    public String getName() {
         return name;
     }
 
-
     /**
-     * Sets the name value for this UserInfo.
+     * Sets the value of the name property.
      * 
-     * @param name
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setName(java.lang.String name) {
-        this.name = name;
+    public void setName(String value) {
+        this.name = value;
     }
 
-
     /**
-     * Gets the firstname value for this UserInfo.
+     * Gets the value of the firstname property.
      * 
-     * @return firstname
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getFirstname() {
+    public String getFirstname() {
         return firstname;
     }
 
-
     /**
-     * Sets the firstname value for this UserInfo.
+     * Sets the value of the firstname property.
      * 
-     * @param firstname
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setFirstname(java.lang.String firstname) {
-        this.firstname = firstname;
+    public void setFirstname(String value) {
+        this.firstname = value;
     }
 
-
     /**
-     * Gets the lastname value for this UserInfo.
+     * Gets the value of the lastname property.
      * 
-     * @return lastname
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getLastname() {
+    public String getLastname() {
         return lastname;
     }
 
-
     /**
-     * Sets the lastname value for this UserInfo.
+     * Sets the value of the lastname property.
      * 
-     * @param lastname
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setLastname(java.lang.String lastname) {
-        this.lastname = lastname;
+    public void setLastname(String value) {
+        this.lastname = value;
     }
 
-
     /**
-     * Gets the telephonenumber value for this UserInfo.
+     * Gets the value of the telephonenumber property.
      * 
-     * @return telephonenumber
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getTelephonenumber() {
+    public String getTelephonenumber() {
         return telephonenumber;
     }
 
-
     /**
-     * Sets the telephonenumber value for this UserInfo.
+     * Sets the value of the telephonenumber property.
      * 
-     * @param telephonenumber
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setTelephonenumber(java.lang.String telephonenumber) {
-        this.telephonenumber = telephonenumber;
+    public void setTelephonenumber(String value) {
+        this.telephonenumber = value;
     }
 
-
     /**
-     * Gets the company value for this UserInfo.
+     * Gets the value of the company property.
      * 
-     * @return company
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getCompany() {
+    public String getCompany() {
         return company;
     }
 
-
     /**
-     * Sets the company value for this UserInfo.
+     * Sets the value of the company property.
      * 
-     * @param company
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setCompany(java.lang.String company) {
-        this.company = company;
+    public void setCompany(String value) {
+        this.company = value;
     }
 
-
     /**
-     * Gets the department value for this UserInfo.
+     * Gets the value of the department property.
      * 
-     * @return department
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-
     /**
-     * Sets the department value for this UserInfo.
+     * Sets the value of the department property.
      * 
-     * @param department
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setDepartment(java.lang.String department) {
-        this.department = department;
+    public void setDepartment(String value) {
+        this.department = value;
     }
 
-
     /**
-     * Gets the shortaffiliation value for this UserInfo.
+     * Gets the value of the shortaffiliation property.
      * 
-     * @return shortaffiliation
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getShortaffiliation() {
+    public String getShortaffiliation() {
         return shortaffiliation;
     }
 
-
     /**
-     * Sets the shortaffiliation value for this UserInfo.
+     * Sets the value of the shortaffiliation property.
      * 
-     * @param shortaffiliation
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setShortaffiliation(java.lang.String shortaffiliation) {
-        this.shortaffiliation = shortaffiliation;
+    public void setShortaffiliation(String value) {
+        this.shortaffiliation = value;
     }
 
-
     /**
-     * Gets the errorMessage value for this UserInfo.
+     * Gets the value of the errorMessage property.
      * 
-     * @return errorMessage
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public java.lang.String getErrorMessage() {
+    public String getErrorMessage() {
         return errorMessage;
     }
 
-
     /**
-     * Sets the errorMessage value for this UserInfo.
+     * Sets the value of the errorMessage property.
      * 
-     * @param errorMessage
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setErrorMessage(java.lang.String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    private java.lang.Object __equalsCalc = null;
-    public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof UserInfo)) return false;
-        UserInfo other = (UserInfo) obj;
-        if (obj == null) return false;
-        if (this == obj) return true;
-        if (__equalsCalc != null) {
-            return (__equalsCalc == obj);
-        }
-        __equalsCalc = obj;
-        boolean _equals;
-        _equals = true && 
-            this.auth == other.getAuth() &&
-            this.ccid == other.getCcid() &&
-            this.respccid == other.getRespccid() &&
-            ((this.login==null && other.getLogin()==null) || 
-             (this.login!=null &&
-              this.login.equals(other.getLogin()))) &&
-            ((this.email==null && other.getEmail()==null) || 
-             (this.email!=null &&
-              this.email.equals(other.getEmail()))) &&
-            ((this.name==null && other.getName()==null) || 
-             (this.name!=null &&
-              this.name.equals(other.getName()))) &&
-            ((this.firstname==null && other.getFirstname()==null) || 
-             (this.firstname!=null &&
-              this.firstname.equals(other.getFirstname()))) &&
-            ((this.lastname==null && other.getLastname()==null) || 
-             (this.lastname!=null &&
-              this.lastname.equals(other.getLastname()))) &&
-            ((this.telephonenumber==null && other.getTelephonenumber()==null) || 
-             (this.telephonenumber!=null &&
-              this.telephonenumber.equals(other.getTelephonenumber()))) &&
-            ((this.company==null && other.getCompany()==null) || 
-             (this.company!=null &&
-              this.company.equals(other.getCompany()))) &&
-            ((this.department==null && other.getDepartment()==null) || 
-             (this.department!=null &&
-              this.department.equals(other.getDepartment()))) &&
-            ((this.shortaffiliation==null && other.getShortaffiliation()==null) || 
-             (this.shortaffiliation!=null &&
-              this.shortaffiliation.equals(other.getShortaffiliation()))) &&
-            ((this.errorMessage==null && other.getErrorMessage()==null) || 
-             (this.errorMessage!=null &&
-              this.errorMessage.equals(other.getErrorMessage())));
-        __equalsCalc = null;
-        return _equals;
-    }
-
-    private boolean __hashCodeCalc = false;
-    public synchronized int hashCode() {
-        if (__hashCodeCalc) {
-            return 0;
-        }
-        __hashCodeCalc = true;
-        int _hashCode = 1;
-        _hashCode += getAuth();
-        _hashCode += getCcid();
-        _hashCode += getRespccid();
-        if (getLogin() != null) {
-            _hashCode += getLogin().hashCode();
-        }
-        if (getEmail() != null) {
-            _hashCode += getEmail().hashCode();
-        }
-        if (getName() != null) {
-            _hashCode += getName().hashCode();
-        }
-        if (getFirstname() != null) {
-            _hashCode += getFirstname().hashCode();
-        }
-        if (getLastname() != null) {
-            _hashCode += getLastname().hashCode();
-        }
-        if (getTelephonenumber() != null) {
-            _hashCode += getTelephonenumber().hashCode();
-        }
-        if (getCompany() != null) {
-            _hashCode += getCompany().hashCode();
-        }
-        if (getDepartment() != null) {
-            _hashCode += getDepartment().hashCode();
-        }
-        if (getShortaffiliation() != null) {
-            _hashCode += getShortaffiliation().hashCode();
-        }
-        if (getErrorMessage() != null) {
-            _hashCode += getErrorMessage().hashCode();
-        }
-        __hashCodeCalc = false;
-        return _hashCode;
-    }
-
-    // Type metadata
-    private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(UserInfo.class, true);
-
-    static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "userInfo"));
-        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("auth");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "auth"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("ccid");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "ccid"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("respccid");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "respccid"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("login");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "login"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("email");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "email"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("name");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "name"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("firstname");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "firstname"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("lastname");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "lastname"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("telephonenumber");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "telephonenumber"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("company");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "company"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("department");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "department"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("shortaffiliation");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "shortaffiliation"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("errorMessage");
-        elemField.setXmlName(new javax.xml.namespace.QName("https://winservices-soap.web.cern.ch/winservices-soap/Generic/Authentication.asmx", "ErrorMessage"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-    }
-
-    /**
-     * Return type metadata object
-     */
-    public static org.apache.axis.description.TypeDesc getTypeDesc() {
-        return typeDesc;
-    }
-
-    /**
-     * Get Custom Serializer
-     */
-    public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanSerializer(
-            _javaType, _xmlType, typeDesc);
-    }
-
-    /**
-     * Get Custom Deserializer
-     */
-    public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType, 
-           java.lang.Class _javaType,  
-           javax.xml.namespace.QName _xmlType) {
-        return 
-          new  org.apache.axis.encoding.ser.BeanDeserializer(
-            _javaType, _xmlType, typeDesc);
+    public void setErrorMessage(String value) {
+        this.errorMessage = value;
     }
 
 }
