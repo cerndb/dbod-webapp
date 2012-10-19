@@ -287,7 +287,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     }
     
     /**
-     * Startup all selected instances. It checks that instances are not awaiting approval or running.
+     * Startup all selected instances. It checks that instances are not awaiting approval or running (busy and unknown included).
      * It does not matter if the instance is pending a job, it will be executed after it.
      */
     public void startupAll() {
@@ -296,7 +296,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
-            if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL) && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
+            if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)
+                    && !instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                    && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                    && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
                 if (!jobHelper.doStartup(instance, username)){
                     error = true;
                 }

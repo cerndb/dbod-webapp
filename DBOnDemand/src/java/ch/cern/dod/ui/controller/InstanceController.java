@@ -349,6 +349,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
         } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
             stateImage.setSrc(DODConstants.IMG_BUSY);
+        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
+            stateImage.setSrc(DODConstants.IMG_UNKNOWN);
         }
         
         //If the user is an admin
@@ -401,7 +403,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         final Toolbarbutton shutdownBtn = (Toolbarbutton) getFellow("shutdown");
         //Only enable button if the instance is running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
-                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
             shutdownBtn.setDisabled(true);
             shutdownBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -414,7 +417,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
             configBtn.setDisabled(true);
             configBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -427,7 +431,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
             backupBtn.setDisabled(true);
             backupBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -440,7 +445,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running
         if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
             restoreBtn.setDisabled(true);
             restoreBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -453,7 +459,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Only enable button if the instance is stopped or running (and there is an upgrade available)
         if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY))
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);

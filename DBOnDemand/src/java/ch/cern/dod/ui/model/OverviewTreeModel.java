@@ -169,7 +169,9 @@ public class OverviewTreeModel extends AbstractTreeModel{
             else {
                 //Check actions (a bit different behaviour)
                 if ((action.equals(DODConstants.JOB_STARTUP) && instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED))
-                        || (action.equals(DODConstants.JOB_SHUTDOWN) && instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING))
+                        || (action.equals(DODConstants.JOB_SHUTDOWN) && (instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
+                                                                        || instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                                                                        || instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)))
                         || (action.equals(DODConstants.JOB_UPGRADE) && instance.getUpgradeTo() != null && !instance.getUpgradeTo().isEmpty()))
                     return true;
             }

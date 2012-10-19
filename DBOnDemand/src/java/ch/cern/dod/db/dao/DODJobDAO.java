@@ -827,12 +827,13 @@ public class DODJobDAO {
                     insertParamsResult = 1;
 
                 //Update all instances in the shared instance if the operation was succesful
+                //The whole insert job process fails if one of the instances is not running or stopped.
                 if (insertParamsResult != PreparedStatement.EXECUTE_FAILED) {
                     //Prepare query for the prepared statement (to avoid SQL injection)
                     String updateQuery = "UPDATE dod_instances a SET a.state = '" + DODConstants.INSTANCE_STATE_JOB_PENDING + "' WHERE (a.db_name = ? "
                                             + "OR a.shared_instance = (SELECT b.shared_instance FROM dod_instances b WHERE b.db_name = ?)) "
                                             + "AND (SELECT COUNT(*) FROM dod_instances c "
-                                            + "WHERE a.shared_instance IS NOT NULL and a.shared_instance <> '' and a.shared_instance = c.shared_instance "
+                                            + "WHERE a.shared_instance IS NOT NULL AND a.shared_instance <> '' AND a.shared_instance = c.shared_instance "
                                             + "AND c.state <> '" + DODConstants.INSTANCE_STATE_RUNNING + "' AND c.state <> '" + DODConstants.INSTANCE_STATE_STOPPED + "') = 0";
                     updateInstanceStatement = connection.prepareStatement(updateQuery);
                     //Assign values to variables
@@ -840,7 +841,8 @@ public class DODJobDAO {
                     updateInstanceStatement.setString(2, job.getDbName());
                     //Execute query
                     updateInstanceResult = updateInstanceStatement.executeUpdate();
-
+                    
+                    //The whole insert job process fails if one of the instances is not running or stopped.
                     if (updateInstanceResult <= 0) {
                         connection.rollback();
                         return 0;

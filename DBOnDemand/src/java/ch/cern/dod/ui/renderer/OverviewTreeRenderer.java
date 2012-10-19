@@ -220,24 +220,21 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 state.setWidth("20px");
                 state.setHeight("20px");
                 if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_PENDING);
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_RUNNING);
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_STOPPED);
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_MAINTENANCE);
                 } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
-                    state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                     state.setSrc(DODConstants.IMG_BUSY);
+                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
+                    state.setSrc(DODConstants.IMG_UNKNOWN);
                 }
+                state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                 Treecell stateCell = new Treecell();
                 stateCell.appendChild(state);
                 row.appendChild(stateCell);
@@ -302,7 +299,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 });
                 //Only enable button if the instance is running
                 if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
-                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
                     shutdownBtn.setDisabled(true);
                     shutdownBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -332,7 +330,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Only enable button if the instance is stopped or running
                 if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
                     filesButton.setDisabled(true);
                     filesButton.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -362,7 +361,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Only enable button if the instance is stopped or running
                 if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
                     backupBtn.setDisabled(true);
                     backupBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -392,7 +392,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Only enable button if the instance is stopped or running
                 if (!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
                     restoreBtn.setDisabled(true);
                     restoreBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -422,7 +423,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Only enable button if the instance is stopped or running (and there is an upgrade available)
                 if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
-                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY))
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
+                        && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
                         || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
                     upgradeBtn.setDisabled(true);
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
