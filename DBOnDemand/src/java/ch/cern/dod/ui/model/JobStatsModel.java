@@ -1,11 +1,13 @@
 package ch.cern.dod.ui.model;
 
 import ch.cern.dod.db.entity.DODJobStat;
+import ch.cern.dod.util.DODConstants;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ListDataEvent;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.AbstractListModel;
 import org.zkoss.zul.ListModelExt;
 
@@ -99,7 +101,8 @@ public class JobStatsModel extends AbstractListModel implements ListModelExt {
         filtered = new ArrayList<DODJobStat>();
         for (int i=0; i< jobStats.size(); i++) {
             DODJobStat stat = jobStats.get(i);
-            if (stat.getDbName().indexOf(dbName.trim()) >= 0 && stat.getCommandName().indexOf(command) >= 0) {
+            if (stat.getDbName().indexOf(dbName.trim()) >= 0
+                    && Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName()).indexOf(command) >= 0) {
                 filtered.add(stat);
             }
         }
