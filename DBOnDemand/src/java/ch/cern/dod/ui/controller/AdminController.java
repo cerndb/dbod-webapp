@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -121,6 +122,20 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         jobStatsGrid.getPagingChild().setMold("os");
         
         displayOrHideAreas();
+        
+        //Get show all from session
+        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
+        if (showAll != null && showAll)
+            showAll();
+        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
+        if (showAllJobStats != null && showAllJobStats)
+            showAllJobStats();
+        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS);
+        if (showAllCommandStats != null && showAllCommandStats)
+            showAllCommandStats();
+        Boolean showAllUpgrades = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_UPGRADES);
+        if (showAllUpgrades != null && showAllUpgrades)
+            showAllUpgrades();
     }
     
     /**
@@ -407,6 +422,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         tree.setMold("default");
         Treefoot footer = (Treefoot) getFellow("footer");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
     }
     
     /**
@@ -417,6 +433,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         grid.setMold("default");
         Foot footer = (Foot) getFellow("footerUpgrades");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_UPGRADES, new Boolean(true));
     }
     
     /**
@@ -427,6 +444,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         grid.setMold("default");
         Foot footer = (Foot) getFellow("commandStatsFooter");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS, new Boolean(true));
     }
     
     /**
@@ -437,6 +455,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         grid.setMold("default");
         Foot footer = (Foot) getFellow("jobStatsFooter");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS, new Boolean(true));
     }
     
     /**

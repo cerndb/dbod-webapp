@@ -9,6 +9,12 @@ import ch.cern.dod.db.entity.DODMetric;
  */
 public class DODConstants {
     
+    //Session attributes
+    public static final String ATTRIBUTE_SHOW_ALL = "showAll";
+    public static final String ATTRIBUTE_SHOW_ALL_UPGRADES = "showAllUpgrades";
+    public static final String ATTRIBUTE_SHOW_ALL_JOB_STATS = "showAllJobStats";
+    public static final String ATTRIBUTE_SHOW_ALL_COMMAND_STATS = "showAllCommandStats";
+    
     //Variables
     public static final String ENVIRONMENT_CONTEXT = "java:/comp/env";
     public static final String DATA_SOURCE = "jdbc/dbondemand";

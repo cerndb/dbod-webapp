@@ -17,6 +17,7 @@ import ch.cern.dod.util.DODConstants;
 import java.util.List;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
@@ -114,6 +115,18 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         jobStatsGrid.getPagingChild().setMold("os");
         
         displayOrHideAreas();
+        
+        //Get show all from session
+        //Get show all from session
+        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
+        if (showAll != null && showAll)
+            showAll();
+        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
+        if (showAllJobStats != null && showAllJobStats)
+            showAllJobStats();
+        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS);
+        if (showAllCommandStats != null && showAllCommandStats)
+            showAllCommandStats();
     }
     
     /**
@@ -216,6 +229,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         tree.setMold("default");
         Treefoot footer = (Treefoot) getFellow("footer");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
     }
     
     /**
@@ -236,6 +250,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         grid.setMold("default");
         Foot footer = (Foot) getFellow("commandStatsFooter");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS, new Boolean(true));
     }
     
     /**
@@ -246,6 +261,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         grid.setMold("default");
         Foot footer = (Foot) getFellow("jobStatsFooter");
         footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS, new Boolean(true));
     }
     
     /**
