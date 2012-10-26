@@ -45,6 +45,7 @@
                             <toolbarbutton id="shutdownAllBtn" tooltiptext="${c:l('collectiveShutdown')}" zclass="buttonDisabled" image="/img/shutdown.png" onClick="controller.shutdownAll();" disabled="true"/>
                             <toolbarbutton id="backupAllBtn" tooltiptext="${c:l('collectiveBackup')}" zclass="buttonDisabled" image="/img/backup.png" onClick="controller.backupAll();" disabled="true"/>
                             <toolbarbutton id="upgradeAllBtn" tooltiptext="${c:l('collectiveUpgrade')}" zclass="buttonDisabled" image="/img/upgrade.png" onClick="controller.upgradeAll();" disabled="true"/>
+                            <toolbarbutton id="maintainAllBtn" tooltiptext="${c:l('collectiveMaintain')}" zclass="buttonDisabled" image="/img/set_maintenance.png" onClick="controller.maintainAll();" disabled="true"/>
                         </hbox>
                     </hbox>
                     <label sclass="title" value="${c:l('refreshInstances')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInstances();"/>

@@ -117,20 +117,24 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setDisabled(true);
+                                ((Toolbarbutton)row.getTree().getFellow("maintainAllBtn")).setDisabled(true);
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setZclass("buttonDisabled");
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setZclass("buttonDisabled");
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
+                                ((Toolbarbutton)row.getTree().getFellow("maintainAllBtn")).setZclass("buttonDisabled");
                             }
                             else {
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setDisabled(false);
+                                ((Toolbarbutton)row.getTree().getFellow("maintainAllBtn")).setDisabled(false);
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setZclass("button");
                                 ((Toolbarbutton)row.getTree().getFellow("shutdownAllBtn")).setZclass("button");
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setZclass("button");
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setZclass("button");
+                                ((Toolbarbutton)row.getTree().getFellow("maintainAllBtn")).setZclass("button");
                             }
                         }
                     });

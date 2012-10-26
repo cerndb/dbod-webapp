@@ -281,20 +281,24 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setZclass("button");
         }
         else {
             ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setZclass("buttonDisabled");
         }
         
         //Re-render the tree
@@ -367,6 +371,29 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             }
         }
 
+        //Re-render the tree
+        tree.setModel(tree.getModel());
+        //Show error if any
+        if (error)
+            showError(DODConstants.ERROR_COLLECTIVE_ACTION);
+    }
+    
+    /**
+     * Set all selected instances in maintenance state.
+     */
+    public void maintainAll() {
+        boolean error = false;
+        Tree tree = (Tree) getFellow("overviewTree");
+        List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
+        for (int i=0; i<checked.size(); i++) {
+            DODInstance instance = checked.get(i);
+            String state = instance.getState();
+            instance.setState(DODConstants.INSTANCE_STATE_MAINTENANCE);
+            if (instanceDAO.update(instance) <= 0) {
+                error = true;
+                instance.setState(state);
+            }
+        }
         //Re-render the tree
         tree.setModel(tree.getModel());
         //Show error if any
@@ -474,20 +501,24 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(false);
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setDisabled(false);
             ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("button");
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("button");
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setZclass("button");
         }
         else {
             ((Toolbarbutton) getFellow("startupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("backupAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setDisabled(true);
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setDisabled(true);
             ((Toolbarbutton) getFellow("startupAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("shutdownAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("backupAllBtn")).setZclass("buttonDisabled");
             ((Toolbarbutton) getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
+            ((Toolbarbutton) getFellow("maintainAllBtn")).setZclass("buttonDisabled");
         }
         
         displayOrHideAreas();
