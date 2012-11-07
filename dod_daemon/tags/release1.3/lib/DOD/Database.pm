@@ -590,7 +590,10 @@ sub prepareCommand {
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
         my $params = getJobParams($job, $dbh);
-        my $nparams = scalar(@{$params});
+        my $nparams = 0;
+	if (defined $params) {
+            $nparams = scalar(@{$params}); 
+        }
         my $expected_nparams = 0;
         my $optional_nparams = 0;
         $expected_nparams++ while ($cmd =~ m/:/g);

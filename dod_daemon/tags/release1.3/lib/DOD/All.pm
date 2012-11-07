@@ -55,7 +55,7 @@ sub get_host_from_entity{
 sub copy_to_entity{
     my ($item, $entity) = @_;
     my $host = get_host_from_entity($entity);
-    system("scp", "-r",  $item, "sysctl\@$host:/tmp");
+    system("scp", "-o StrictHostKeyChecking=no", "-r",  $item, "sysctl\@$host:/tmp");
     return $?;
 }
 
