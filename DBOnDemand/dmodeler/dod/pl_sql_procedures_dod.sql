@@ -659,6 +659,25 @@ BEGIN
 END;
 /
 
+-- Inserts a cleanup job in the database
+CREATE OR REPLACE PROCEDURE insert_cleanup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+						type_param IN VARCHAR2, requester_param IN VARCHAR2)
+IS
+	now DATE;
+BEGIN
+	SELECT sysdate
+		INTO now
+		FROM dual;
+	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
+		VALUES (username_param, db_name_param, 'CLEANUP', type_param, now, requester_param, 2, 'PENDING');
+        INSERT INTO dbondemand.dod_command_params (username, db_name, command_name, type, creation_date, name, value)
+		VALUES (username_param, db_name_param, 'CLEANUP', type_param, now, 'INSTANCE_NAME', 'dod_' || db_name_param);
+        UPDATE dbondemand.dod_instances
+                SET state = 'JOB_PENDING'
+                WHERE username = username_param AND db_name = db_name_param;
+END;
+/
+
 -- Add check_ownership, monitor_jobs, clean_jobs and check_expired to dbms_scheduler
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
