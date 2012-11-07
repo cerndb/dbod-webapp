@@ -85,12 +85,16 @@ public class DODConstants {
     public static final String JOB_SHUTDOWN = "SHUTDOWN";
     public static final String JOB_UPLOAD = "UPLOAD_CONFIG";
     public static final String JOB_BACKUP = "BACKUP";
+    public static final String JOB_BACKUP_TO_TAPE = "BACKUP_TO_TAPE";
+    public static final String JOB_ENABLE_BACKUPS_TO_TAPE = "ENABLE_BACKUPS_TO_TAPE";
+    public static final String JOB_DISABLE_BACKUPS_TO_TAPE = "DISABLE_BACKUPS_TO_TAPE";
     public static final String JOB_DISABLE_BACKUPS = "DISABLE_AUTOMATIC_BACKUPS";
     public static final String JOB_ENABLE_BACKUPS = "ENABLE_AUTOMATIC_BACKUPS";
     public static final String JOB_RESTORE = "RESTORE";
     public static final String JOB_UPGRADE = "UPGRADE";
     public static final String JOB_MONITOR = "MONITOR";
     public static final String JOB_DESTROY = "DESTROY";
+    public static final String JOB_CLEANUP = "CLEANUP";
     public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";
