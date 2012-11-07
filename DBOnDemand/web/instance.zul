@@ -293,7 +293,7 @@
                 <div width="100%">
                     <hbox height="24px" align="bottom" style="float:right">
                         <label sclass="title" value="${c:l('accept')}" style="font-size:10pt !important;cursor:pointer;" onClick="eGroupConfirm.setVisible(false);"/>
-                        <toolbarbutton tooltiptext="${c:l('accept')}" sclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);"/>
+                        <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="eGroupConfirm.setVisible(false);"/>
                     </hbox>
                 </div>
             </window>
