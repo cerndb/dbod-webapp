@@ -2,9 +2,10 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.exception.ConfigFileSizeException;
-import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.DODConstants;
+import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.JobHelper;
+import ch.cern.dod.util.NetworkHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -213,6 +214,7 @@ public class FileController extends Window {
             mainBox.appendChild(config);
         }
         
+        
         //Logs groupbox
         Groupbox logsGroupbox = new Groupbox();
         logsGroupbox.setWidth("390px");
@@ -221,46 +223,55 @@ public class FileController extends Window {
         logsCap.setLabel(Labels.getLabel(DODConstants.LABEL_LOGS_TITLE));
         logsCap.setImage(DODConstants.IMG_LOGS);
         logsGroupbox.appendChild(logsCap);
-        //Logs message
-        Label logsMessage = new Label(Labels.getLabel(DODConstants.LABEL_LOGS_MESSAGE));
-        logsGroupbox.appendChild(logsMessage);
+            
+        //If the user is connecting from CERN
+        if (NetworkHelper.isCernIp(Executions.getCurrent().getRemoteAddr())) {
+            //Logs message
+            Label logsMessage = new Label(Labels.getLabel(DODConstants.LABEL_LOGS_MESSAGE));
+            logsGroupbox.appendChild(logsMessage);
 
-        //Box containing the file selector and buttons
-        Hbox logsBox =  new Hbox();
-        logsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
-        logsBox.setAlign("bottom");
-        //Create combobox for file selector
-        logs = getLogsCombobox();
-        logsBox.appendChild(logs);
-        //Download slow logs file button
-        Div downloadLogDiv = new Div();
-        downloadLogDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_LOGS_DOWNLOAD));
-        Toolbarbutton downloadLogBtn = new Toolbarbutton();
-        downloadLogBtn.setZclass(DODConstants.STYLE_BUTTON);
-        downloadLogBtn.setImage(DODConstants.IMG_DOWNLOAD);
-        downloadLogBtn.setParent(downloadLogDiv);
-        downloadLogBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-            public void onEvent(Event event) {
-                //Check config file value
-                if (isLogValid()) {
-                    //Obtain file
-                    String filePath = ((String)logs.getSelectedItem().getValue());
-                    String url = fileHelper.getServedFileURL(instance, filePath);
-                    if (url != null && !url.isEmpty()) {
-                            Executions.sendRedirect(url);
-                            logs.getFellow("filesWindow").detach();
-                    }else {
-                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);
-                        showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
+            //Box containing the file selector and buttons
+            Hbox logsBox =  new Hbox();
+            logsBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
+            logsBox.setAlign("bottom");
+            //Create combobox for file selector
+            logs = getLogsCombobox();
+            logsBox.appendChild(logs);
+            //Download slow logs file button
+            Div downloadLogDiv = new Div();
+            downloadLogDiv.setTooltiptext(Labels.getLabel(DODConstants.LABEL_LOGS_DOWNLOAD));
+            Toolbarbutton downloadLogBtn = new Toolbarbutton();
+            downloadLogBtn.setZclass(DODConstants.STYLE_BUTTON);
+            downloadLogBtn.setImage(DODConstants.IMG_DOWNLOAD);
+            downloadLogBtn.setParent(downloadLogDiv);
+            downloadLogBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                public void onEvent(Event event) {
+                    //Check config file value
+                    if (isLogValid()) {
+                        //Obtain file
+                        String filePath = ((String)logs.getSelectedItem().getValue());
+                        String url = fileHelper.getServedFileURL(instance, filePath);
+                        if (url != null && !url.isEmpty()) {
+                                Executions.sendRedirect(url);
+                                logs.getFellow("filesWindow").detach();
+                        }else {
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);
+                            showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
+                        }
+                    }
+                    else{
+                        logs.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
                     }
                 }
-                else{
-                    logs.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLOW_LOG_FILE));
-                }
-            }
-        });
-        logsBox.appendChild(downloadLogDiv);
-        logsGroupbox.appendChild(logsBox);
+            });
+            logsBox.appendChild(downloadLogDiv);
+            logsGroupbox.appendChild(logsBox);
+        }
+        else {
+            Label message = new Label(Labels.getLabel(DODConstants.LABEL_MESSAGE_NO_CERN));
+            message.setStyle("color:red");
+            logsGroupbox.appendChild(message);
+        }
         mainBox.appendChild(logsGroupbox);
 
         //Div for accept and cancel buttons

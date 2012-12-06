@@ -188,6 +188,7 @@ public class DODConstants {
     public static final String LABEL_MONITORING_OVERVIEW_WARNING = "monitoringOverviewWarning";
     public static final String LABEL_SHUTDOWN_TITLE = "shutdownTitle";
     public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
+    public static final String LABEL_MESSAGE_NO_CERN = "messageNoCern";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
