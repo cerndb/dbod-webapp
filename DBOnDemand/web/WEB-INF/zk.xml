@@ -7,7 +7,7 @@
     <session-config>
         <device-type>ajax</device-type>
         <automatic-timeout/>
-        <session-timeout>600</session-timeout>
+        <session-timeout>1800</session-timeout>
         <timer-keep-alive>false</timer-keep-alive>
         <max-desktops-per-session>15</max-desktops-per-session>
         <max-requests-per-session>5</max-requests-per-session>
