@@ -3,6 +3,10 @@ package ch.cern.dod.util;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ws.DODWebService;
 import ch.cern.dod.ws.DODWebServicePortType;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.media.AMedia;
@@ -110,5 +114,30 @@ public class FileHelper {
             Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR SERVING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return url;
+    }
+    
+    /**
+     * Connects to a URL to download a file specified by filePath on the given instance.
+     * @param urlString URL to download file from.
+     * @param filePath file path used to name the file.
+     * @param instance instance where this file resides.
+     * @return a file to be downloaded by the user.
+     */
+    public AMedia getHTTPFile(String urlString, String filePath, DODInstance instance) {
+        AMedia file = null;
+        try {
+           URL url = new URL(urlString);
+           BufferedReader rd = new BufferedReader(new InputStreamReader(url.openStream()));
+           String line;
+           String content = "";
+           while ((line = rd.readLine()) != null) {
+              content += line + "\n";
+           }
+           rd.close();
+           file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "text/plain", content);
+        } catch (Exception ex) {
+           Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR SERVING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return file;
     }
 }
