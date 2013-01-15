@@ -15,6 +15,7 @@
             import ch.cern.dod.ui.controller.TopBarController;
             import ch.cern.dod.ui.controller.NewInstanceController;
             import ch.cern.dod.util.DODConstants;
+            import org.zkoss.util.resource.Labels;
         ]]>
     </zscript>
 
@@ -345,8 +346,8 @@
                 <row style="border:none;">
                     <label value="${c:l('dbType')}"/>
                     <combobox id="dbType" width="200px" mold="rounded" readonly="true">
-                        <comboitem label="${c:l('dbTypeORACLE')}" />
                         <comboitem label="${c:l('dbTypeMYSQL')}" />
+                        <comboitem label="${c:l('dbTypeORACLE')}" />
                     </combobox>
                 </row>
                 <!-- Version -->
@@ -372,15 +373,20 @@
                         <textbox id="dbSize" width="200px">
                             <attribute name="onChange">
                                 <![CDATA[
-                                    int size;
-                                    try {
-                                        size = Integer.valueOf(dbSize.getText()).intValue();
-                                        if (size >= 10 && size <= DODConstants.MAX_DB_SIZE)
-                                            dbSizeSlider.setCurpos(size);
-                                        else
-                                            dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
-                                    } catch(java.lang.NumberFormatException ex) {
-                                        dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                    if (!dbSize.getText().isEmpty()) {
+                                        int size;
+                                        try {
+                                            size = Integer.valueOf(dbSize.getText()).intValue();
+                                            if (size >= 10 && size <= DODConstants.MAX_DB_SIZE)
+                                                dbSizeSlider.setCurpos(size);
+                                            else
+                                                dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_SIZE_RANGE));
+                                        } catch(java.lang.NumberFormatException ex) {
+                                            dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                        }
+                                    }
+                                    else {
+                                        dbSizeSlider.setCurpos(0);
                                     }
                                 ]]>
                             </attribute>
@@ -401,15 +407,20 @@
                         <textbox id="noConnections" width="200px" >
                             <attribute name="onChange">
                                 <![CDATA[
-                                    int conn;
-                                    try {
-                                        conn = Integer.valueOf(noConnections.getText()).intValue();
-                                        if (conn > 0 && conn <= DODConstants.MAX_NO_CONNECTIONS)
-                                            noConnectionsSlider.setCurpos(conn);
-                                        else
-                                            noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
-                                    } catch(java.lang.NumberFormatException ex) {
-                                        dbSize.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                    if (!noConnections.getText().isEmpty()) {
+                                        int conn;
+                                        try {
+                                            conn = Integer.valueOf(noConnections.getText()).intValue();
+                                            if (conn > 0 && conn <= DODConstants.MAX_NO_CONNECTIONS)
+                                                noConnectionsSlider.setCurpos(conn);
+                                            else
+                                                noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_NO_CONNECTIONS_RANGE));
+                                        } catch(java.lang.NumberFormatException ex) {
+                                            noConnections.setErrorMessage(Labels.getLabel(DODConstants.ERROR_INTEGER_FORMAT));
+                                        }
+                                    }
+                                    else {
+                                        noConnectionsSlider.setCurpos(0);
                                     }
                                 ]]>
                             </attribute>
