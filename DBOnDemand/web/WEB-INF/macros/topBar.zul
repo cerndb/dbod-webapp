@@ -23,7 +23,8 @@
             </vbox>
             <image src="/img/cernlogo.jpg" style="margin-top:10px;margin-left:10px"/>
             <image src="/img/dblogo.png" style="margin-top:10px;margin-left:10px"/>
-            <label sclass="appTitle" value="${c:l('appTitle')}" />  
+            <image src="/img/logo.png" style="margin-top:10px;margin-left:10px"/>
+            <label sclass="appTitle" value="${c:l('appTitle')}"/> 
     </div>
     <menubar sclass="toolbar" >
         <menuitem label="${c:l('home')}" sclass="title" href="/index.zul" />
