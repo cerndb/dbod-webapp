@@ -249,6 +249,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Load jobs
             loadJobs();
         }
+        //Instance has been marked for deletion
+        else {
+            Executions.sendRedirect(DODConstants.PAGE_INSTANCE_NOT_FOUND);
+        }
     }
 
     /**
