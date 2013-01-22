@@ -693,15 +693,23 @@ END;
 CREATE OR REPLACE PROCEDURE check_expired
 IS
     -- Users and databases of expired instances
-    CURSOR instances IS
+    CURSOR expired_instances IS
         SELECT db_name, username
             FROM dod_instances
             WHERE expiry_date < sysdate
                 AND status = '1'
             FOR UPDATE OF status;
+    -- Users and databases and days of instances to expire in 30, 15 or 1 days
+    CURSOR to_expire_instances IS
+        SELECT db_name, username, TRUNC (expiry_date - SYSDATE) + 1 AS days
+            FROM dod_instances
+            WHERE (TRUNC (expiry_date - SYSDATE) + 1 = 30
+                OR TRUNC (expiry_date - SYSDATE) + 1 = 15
+                OR TRUNC (expiry_date - SYSDATE) + 1= 1)
+                AND status = '1';
     message VARCHAR2 (2056);
 BEGIN
-    FOR instance IN instances
+    FOR instance IN expired_instances
     LOOP
         message := '<html>
                         <body>
@@ -729,6 +737,33 @@ BEGIN
         
         UPDATE dod_instances
             SET status = '0' WHERE db_name = instance.db_name;
+    END LOOP;
+
+    FOR instance IN to_expire_instances
+    LOOP
+        message := '<html>
+                        <body>
+                            <p>
+                            Dear DB On Demand user,
+                            </p>
+                            <p>
+                            Your instance <b>' || instance.db_name || '</b> will expire in ' || instance.days || ' days. If you want to extend the expiry date for your instance, please go to the instance view in our website, where you can modify important information related to your instance.
+                            </p>
+                            <p>
+                            Kind regards,
+                            </p>
+                            <p>
+                            The DBOD team
+                            </p>
+                        </body>
+                    </html>';
+        
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => instance.username || '@cern.ch',
+            cc => 'dbondemand-admin@cern.ch',
+            subject => 'DB On Demand instance "' || instance.db_name || '" will expire in ' || instance.days || ' days',
+            message => message,
+            mime_type => 'text/html');
     END LOOP;
 END;
 /

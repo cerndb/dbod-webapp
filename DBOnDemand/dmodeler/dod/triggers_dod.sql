@@ -157,8 +157,8 @@ BEGIN
     THEN
         message := '<html>
                         <body>
-                            Instance <b>' || :NEW.db_name || '</b> has been removed from FIM and marked for deletion.
-                            Please take the necessary actions to free the allocated resources.
+                            Instance <b>' || :NEW.db_name || '</b> has been removed from FIM, or has expired, and has been marked for deletion.
+                            Please take the necessary actions to free the allocated resources. Remember that expired instances stay in FIM until removed, this step should be done manually.
                         </body>
                     </html>';
         
