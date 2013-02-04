@@ -39,22 +39,19 @@ BEGIN{
 
 # Returns a LDAP server connection object
 sub LDAPconnect {
-    if ($#_) {
-       ($url, $port, $protocol, $userdn, $pass) = @_;
-    }
+    my ($url, $port, $protocol, $userdn, $pass) = @_;
     my $conn = Net::LDAP->new($url, port => $port, scheme => $protocol) or die("$@");
-    $msg = $conn->bind($userdn, password => $pass);
+    my $msg = $conn->bind($userdn, password => $pass);
     if ($msg->code) {
-        $logger->error( "Error connecting to LDAP server: $protocol://$url:$port as $user");
+        $logger->error( "Error connecting to LDAP server: $protocol://$url:$port $userdn");
     }
     return $conn;
 }
 
 # Returns an LDAP entry dump as a hash reference
 sub getEntity {
-    $entity = shift;
-    $conn = LDAPconnect();                                                                      
-
+    my $entity = shift;
+    my $conn = LDAPconnect();                                                                      
     my $filter = "(&(SC-ENTITY=$entity)(SC-DOMAIN=DOD))";
     logger->debug( "Searching LDAP entity with filter: $filter ");
     my $mesg = $conn->search(
@@ -67,7 +64,7 @@ sub getEntity {
     my $entry = $entries[0];
     my %result;
     foreach my $attribute ($entry->attributes){
-        $result{$attribute} = $entry->get_value($attrbute);
+        $result{$attribute} = $entry->get_value($attribute);
     }
     $conn->unbind();
     $conn->disconnect();
@@ -79,7 +76,7 @@ sub getEntity {
 # Updates a list of parameters for a given LDAP entity
 sub updateEntity {
     my ($entity, $params) = @_;
-    my $conn = LDAP_connect($ldap_server, $ldap_port, $ldap_protocol, $userdn, $ldap_password);
+    my $conn = LDAP_connect($ldap_server, $ldap_port, $ldap_protocol, $ldap_userdn, $ldap_password);
     my $entity_base = "SC-ENTITY=$entity, $sc_entities";
     my $mesg;
     foreach my $pair (@{$params}) {
