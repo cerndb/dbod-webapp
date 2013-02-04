@@ -24,7 +24,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $l
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(jobDispatcher $config);
+@EXPORT      = qw(jobDispatcher $config $logger);
 @EXPORT_OK   = ( );
 %EXPORT_TAGS = ( );
 

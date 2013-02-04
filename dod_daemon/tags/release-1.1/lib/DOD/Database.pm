@@ -58,12 +58,10 @@ foreach my $key ( keys(%{$config}) ) {
 
 # DB configuration parameters
 $DSN = $config->{'DB_DSN'} ;
-$DBTAG = $config->{'DB_USER'};
 $DATEFORMAT = $config->{'DB_DATE_FORMAT'};
-my @buf = split( /_/, $DBTAG );
-$user = pop( @buf );
+$DBTAG = $config->{'DB_TAG'};
+$user = $config->{'DB_USER'};
 $password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
-
 $MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
 
 } # BEGIN BLOCK
