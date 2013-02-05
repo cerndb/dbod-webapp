@@ -20,19 +20,20 @@ use DOD::All;
 use POSIX ":sys_wait_h";
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table, %cfg);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(jobDispatcher $config $logger);
-@EXPORT_OK   = ( );
+@EXPORT      = qw(jobDispatcher $logger);
+@EXPORT_OK   = qw($config %cfg);
 %EXPORT_TAGS = ( );
 
 # Load general configuration
 
-BEGIN{
+INIT {
 $config_dir = File::ShareDir::dist_dir(__PACKAGE__);
 $config = LoadFile( "$config_dir/dod.conf" );
+%cfg = %{$config};
 Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
 $logger = Log::Log4perl::get_logger( 'DOD' );
 $logger->debug( "Logger created" );

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Exporter;
 
+use Data::Dumper;
+
 use YAML::Syck;
 use File::ShareDir;
 use Log::Log4perl;
@@ -14,6 +16,7 @@ use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
 use DOD::ConfigParser;
+use DOD::Config qw(%cfg);
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
@@ -26,7 +29,7 @@ $VERSION     = 0.03;
 
 # Load general configuration
 
-BEGIN{
+INIT{
 
 sub getPassword 
 {
@@ -51,6 +54,7 @@ Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
 $logger = Log::Log4perl::get_logger( 'DOD' );
 $logger->debug( "Logger created" );
 $logger->debug( "Loaded configuration from $config_dir" );
+$logger->debug( "cfg: " . Dumper(\%cfg) );
 foreach my $key ( keys(%{$config}) ) {
     my %h = %{$config};
     $logger->debug( "\t$key -> $h{$key}" );
@@ -64,7 +68,7 @@ $user = $config->{'DB_USER'};
 $password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
 $MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
 
-} # BEGIN BLOCK
+} # INIT BLOCK
 
 sub getInstanceList{
     my $dbh;

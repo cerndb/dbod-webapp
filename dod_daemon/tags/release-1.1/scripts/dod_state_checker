@@ -62,7 +62,6 @@ sub Main{
         $logger->debug("Creating lock file: $lock_file");
         open(LOCKF, ">$lock_file");
         close(LOCKF);
-
         $logger->debug("Opening DB connection");
         my $dbh = DOD::Database::getDBH();
         my $rc;
