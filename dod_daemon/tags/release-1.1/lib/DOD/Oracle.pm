@@ -56,14 +56,7 @@ sub state_checker{
 }
 
 sub upgrade_callback{
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        $job = shift;
-        $dbh = DOD::Database::getDBH();
-    }
+    my $job = shift;
     my $entity = DOD::All::get_entity($job);
     eval{
         my $version = get_version($entity);
