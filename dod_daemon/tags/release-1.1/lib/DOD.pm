@@ -12,6 +12,7 @@ use DBI;
 use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
+use DOD::Config qw($config %cfg $logger_cfg);
 use DOD::Database;
 use DOD::MySQL;
 use DOD::Oracle;
@@ -19,30 +20,20 @@ use DOD::All;
 
 use POSIX ":sys_wait_h";
 
-our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table, %cfg);
+our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
 @EXPORT      = qw(jobDispatcher $logger);
-@EXPORT_OK   = qw($config %cfg);
+@EXPORT_OK   = ( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
 
 INIT {
-$config_dir = File::ShareDir::dist_dir(__PACKAGE__);
-$config = LoadFile( "$config_dir/dod.conf" );
-%cfg = %{$config};
-Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
-$logger = Log::Log4perl::get_logger( 'DOD' );
-$logger->debug( "Logger created" );
-$logger->debug( "Loaded configuration from $config_dir" );
-foreach my $key ( keys(%{$config}) ) {
-    my %h = %{$config};
-    $logger->debug( "\t$key -> $h{$key}" );
-    }
-
+    $logger = Log::Log4perl::get_logger( 'DOD' );
+    $logger->debug( "Logger created" );
 } # BEGIN BLOCK
 
 my %command_callback_table = (
@@ -56,7 +47,6 @@ my %state_checker_table = (
 
 sub jobDispatcher {
     # This is neccesary because daemonizing closes all file descriptors
-    Log::Log4perl::init_and_watch( "$config_dir/$config->{'LOGGER_CONFIG'}", 60 );
     my $logger = Log::Log4perl::get_logger( "DOD.jobDispatcher" );
     my $dbh = DOD::Database::getDBH();
     my @tasks;

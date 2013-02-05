@@ -14,6 +14,7 @@ DB_TAG: 'password_db_dod_dbondemand_test'
 DB_USER: 'dbondemand_test'
 DB_DSN: 'dbi:Oracle:devdb11'
 DB_DATE_FORMAT: 'dd-mm-yyyy HH24:MI:SS'
+DB_PASSWORD: 'Wh1t3_Dw4rf'
 
 # LDAP related parameters
 LDAP_SERVER: 'syscontrol-ldap.cern.ch'
