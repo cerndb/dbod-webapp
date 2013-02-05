@@ -15,7 +15,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS,
 
 $VERSION     = 0.01;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(getEntity updateEntity);
+@EXPORT      = ( );
 @EXPORT_OK   = ( );
 %EXPORT_TAGS = ( );
 
@@ -46,7 +46,7 @@ sub LDAPconnect {
 # Returns an LDAP entry dump as a hash reference
 sub getEntity {
     my $entity = shift;
-    my $conn = LDAPconnect();                                                                      
+    my $conn = LDAPconnect($ldap_server, $ldap_port, $ldap_protocol, $ldap_userdn, $ldap_password);
     my $filter = "(&(SC-ENTITY=$entity)(SC-DOMAIN=DOD))";
     logger->debug( "Searching LDAP entity with filter: $filter ");
     my $mesg = $conn->search(
@@ -71,7 +71,7 @@ sub getEntity {
 # Updates a list of parameters for a given LDAP entity
 sub updateEntity {
     my ($entity, $params) = @_;
-    my $conn = LDAP_connect($ldap_server, $ldap_port, $ldap_protocol, $ldap_userdn, $ldap_password);
+    my $conn = LDAPconnect($ldap_server, $ldap_port, $ldap_protocol, $ldap_userdn, $ldap_password);
     my $entity_base = "SC-ENTITY=$entity, $sc_entities";
     my $mesg;
     foreach my $pair (@{$params}) {
