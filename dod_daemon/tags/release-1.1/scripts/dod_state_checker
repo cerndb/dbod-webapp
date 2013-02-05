@@ -10,12 +10,10 @@ use DOD::Database;
 
 our ($logger, $lock_file); 
 
-BEGIN{
-$logger = Log::Log4perl::get_logger("dod_state_checker");
-$logger->debug("Logger created");
-
-$lock_file = $DOD::config->{'SC_LOCK_FILE'};
-
+INIT{
+    $logger = Log::Log4perl::get_logger("DOD.state_checker");
+    $logger->debug("Logger created");
+    $lock_file = $DOD::config->{'SC_LOCK_FILE'};
 }
 
 sub usage() {

@@ -4,11 +4,12 @@ use strict;
 use warnings;
 use Exporter;
 
-use File::Temp;
+use POSIX qw(strftime);
 
-use DOD::Config qw($config %cfg $logger_cfg);
+use DOD::Config qw( $config );
 use DOD::Database;
 use DOD::All;
+use DOD::LDAP;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);
 
@@ -87,8 +88,11 @@ sub upgrade_callback{
     my $entity = DOD::All::get_entity($job);
     eval{
         my $version = get_version($entity);
-        $logger->debug( "Updating $entity version to $version");
+        $logger->debug( "Updating $entity version to $version in DB");
         DOD::Database::updateInstance($job, 'VERSION', $version);
+        $logger->debug( "Updating $entity version to $version in LDAP");
+        my $date = strftime "%H:%M:%S %m/%d/%Y", localtime;
+        DOD::LDAP::updateEntity($entity, [['SC-VERSION', $version],['SC-COMMENT', "Upgraded at $date"]]);
         1;
     } or do {
         $logger->error( "A problem occured when trying to update $entity version");

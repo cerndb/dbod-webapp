@@ -12,8 +12,8 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, %cfg, $logger_c
 
 $VERSION     = 0.01;
 @ISA         = qw(Exporter);
-@EXPORT      = qw($config %cfg $logger_cfg);
-@EXPORT_OK   = qw($config %cfg $logger_cfg);
+@EXPORT      = qw( );
+@EXPORT_OK   = qw( $config );
 %EXPORT_TAGS = ( );
 
 my $config_dir = File::ShareDir::dist_dir('DOD');

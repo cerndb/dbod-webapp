@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use Exporter;
 
-use YAML::Syck;
-use File::ShareDir;
-use Log::Log4perl;
 use File::Temp;
+use POSIX qw(strftime);
+
+use DOD::Config qw( $config );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger);
 
@@ -19,20 +19,10 @@ $VERSION     = 0.03;
 
 # Load general configuration
 
-BEGIN{
-
-$config_dir = File::ShareDir::dist_dir( "DOD" );
-$config = LoadFile( "$config_dir/dod.conf" );
-Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
-$logger = Log::Log4perl::get_logger( 'DOD' );
-$logger->debug( "Logger created" );
-$logger->debug( "Loaded configuration from $config_dir" );
-foreach my $key ( keys(%{$config}) ) {
-    my %h = %{$config};
-    $logger->debug( "\t$key -> $h{$key}" );
-    }
-
-} # BEGIN BLOCK
+INIT{
+    $logger = Log::Log4perl::get_logger( 'DOD.Oracle' );
+    $logger->debug( "Logger created" );
+} # INIT BLOCK
 
 sub test_instance{
     my $entity = shift;
@@ -63,6 +53,30 @@ sub state_checker{
     }
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
+}
+
+sub upgrade_callback{
+    my ($job, $dbh);
+    if ($#_ == 1){
+        ($job, $dbh) = @_;
+    }
+    elsif($#_ == 0){
+        $job = shift;
+        $dbh = DOD::Database::getDBH();
+    }
+    my $entity = DOD::All::get_entity($job);
+    eval{
+        my $version = get_version($entity);
+        $logger->debug( "Updating $entity version to $version in DB");
+        DOD::Database::updateInstance($job, 'VERSION', $version);
+        $logger->debug( "Updating $entity version to $version in LDAP");
+        my $date = strftime "%H:%M:%S %m/%d/%Y", localtime;
+        DOD::LDAP::updateEntity($entity, [['SC-VERSION', $version],['SC-COMMENT', "Upgraded at $date"]]);
+        1;
+    } or do {
+        $logger->error( "A problem occured when trying to update $entity version");
+        return undef;
+    };
 }
 
 1;

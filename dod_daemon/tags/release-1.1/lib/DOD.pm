@@ -4,15 +4,11 @@ use strict;
 use warnings;
 use Exporter;
 
-use YAML::Syck;
-use File::ShareDir;
-use Log::Log4perl;
-
 use DBI;
 use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
-use DOD::Config qw($config %cfg $logger_cfg);
+use DOD::Config qw( $config );
 use DOD::Database;
 use DOD::MySQL;
 use DOD::Oracle;
@@ -37,7 +33,8 @@ INIT {
 } # BEGIN BLOCK
 
 my %command_callback_table = (
-    'UPGRADE' => { 'MYSQL' => \&DOD::MySQL::upgrade_callback , 'ORACLE' => undef }
+    'UPGRADE' => { 'MYSQL' => \&DOD::MySQL::upgrade_callback , 
+                    'ORACLE' => \&DOD::Oracle::upgrade_callback }
 );
 
 my %state_checker_table = (
@@ -53,7 +50,7 @@ sub jobDispatcher {
     my @job_list;
     while (1){
 
-         $logger->debug("Checking status of connection");
+        $logger->debug("Checking status of connection");
         unless(defined($dbh->ping)){
             $logger->error("The connecion to the DB was lost");
             $dbh = undef;

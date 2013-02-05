@@ -13,7 +13,7 @@ use DOD;
 our ($logger, $workdir, $pidfile); 
 
 BEGIN{
-    $logger = Log::Log4perl::get_logger("daemon");
+    $logger = Log::Log4perl::get_logger("DOD.Daemon");
     $logger->debug("Logger created");
     $workdir = $config->{'DAEMON_WORKDIR'};
     $pidfile = $config->{'DAEMON_PIDFILE'}

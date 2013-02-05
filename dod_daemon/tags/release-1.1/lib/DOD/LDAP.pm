@@ -4,11 +4,10 @@ use strict;
 use warnings;
 use Exporter;
 
-use File::ShareDir;
-use Log::Log4perl;
 use Net::LDAP;
 use Net::LDAP::Entry;
-use DOD;
+
+use DOD::Config qw( $config );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, 
     $ldap_server, $ldap_user, $ldap_port, $ldap_protocol, $ldap_password,
@@ -20,21 +19,17 @@ $VERSION     = 0.01;
 @EXPORT_OK   = ( );
 %EXPORT_TAGS = ( );
 
-BEGIN{
-    $ldap_server = $DOD::config->{'LDAP_SERVER'};
-    $ldap_user = $DOD::config->{'LDAP_USER'};
-    $ldap_password = $DOD::config->{'LDAP_PASSWORD'}; # TO BE CHANGED
-    $ldap_port = $DOD::config->{'LDAP_PORT'};
-    $ldap_protocol = $DOD::config->{'LDAP_PROTOCOL'};
-    $ldap_userdn = $DOD::config->{'LDAP_USERDN'};
-    $basedn = $DOD::config->{'LDAP_BASE'};
-    $sc_entities = $DOD::config->{'LDAP_BASE_ENTITIES'};
-
-    my $config_dir = File::ShareDir::dist_dir( "DOD" );
-    Log::Log4perl::init( "$config_dir/$DOD::config->{'LOGGER_CONFIG'}" );
+INIT{
     $logger = Log::Log4perl::get_logger( 'DOD.LDAP' );
     $logger->debug( "Logger created" );
-    
+    $ldap_server = $config->{'LDAP_SERVER'};
+    $ldap_user = $config->{'LDAP_USER'};
+    $ldap_password = $config->{'LDAP_PASSWORD'}; # TO BE CHANGED
+    $ldap_port = $config->{'LDAP_PORT'};
+    $ldap_protocol = $config->{'LDAP_PROTOCOL'};
+    $ldap_userdn = $config->{'LDAP_USERDN'};
+    $basedn = $config->{'LDAP_BASE'};
+    $sc_entities = $config->{'LDAP_BASE_ENTITIES'};
 }
 
 # Returns a LDAP server connection object
@@ -88,4 +83,4 @@ sub updateEntity {
     $conn->disconnect();
 }
 
-
+1;

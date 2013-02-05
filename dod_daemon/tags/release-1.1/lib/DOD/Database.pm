@@ -4,14 +4,12 @@ use strict;
 use warnings;
 use Exporter;
 
-use File::Temp;
-
 use DBI;
 use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
+use DOD::Config qw( $config );
 use DOD::ConfigParser;
-use DOD::Config qw($config %cfg $logger_cfg);
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
