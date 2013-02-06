@@ -150,10 +150,10 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                                     +"\">" + instance.getDbName() + "</a>");
                 dbNameCell.appendChild(dbName);
                 //If instance is master append (M) to name
-                if (instance.getSlave() != null && !instance.getSlave().isEmpty())
+                if (((OverviewTreeNode) data).getChildCount() > 0)
                     dbNameCell.appendChild(new Label(" (M)"));
                 //If instance is slave append (S) to name
-                if (instance.getMaster() != null && !instance.getMaster().isEmpty())
+                if ( ((OverviewTreeNode) data).getParent().getData() instanceof DODInstance)
                     dbNameCell.appendChild(new Label(" (S)"));
                 row.appendChild(dbNameCell);
 

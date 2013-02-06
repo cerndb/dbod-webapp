@@ -12,7 +12,6 @@ import ch.cern.dod.util.FormValidations;
 import ch.cern.dod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -201,12 +200,12 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     private void displayOrHideAreas () {
         //Master area
-        if (instance.getMaster() != null && !instance.getMaster().isEmpty())
+        if (master != null)
             ((Hbox) getFellow("masterArea")).setVisible(true);
         else 
             ((Hbox) getFellow("masterArea")).setVisible(false);
         //Slave area
-        if (instance.getSlave() != null && !instance.getSlave().isEmpty())
+        if (slave != null)
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
@@ -217,8 +216,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Hbox) getFellow("sharedInstanceArea")).setVisible(false);
         
         //If all fields are empty, but user is admin, allow editing shared instance
-        if (admin && (instance.getMaster() == null || instance.getMaster().isEmpty())
-                && (instance.getSlave() == null || instance.getSlave().isEmpty())
+        if (admin && master == null && slave == null
                 && (instance.getSharedInstance() == null || instance.getSharedInstance().isEmpty()))
             ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
     }
@@ -312,12 +310,12 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         }
         
         //Master (if any)
-        if (instance.getMaster() != null && !instance.getMaster().isEmpty()) {
-            ((Label) getFellow("master")).setValue(instance.getMaster());
+        if (master != null) {
+            ((Label) getFellow("master")).setValue(master.getDbName());
         }
         //Slave (if any)
-        if (instance.getSlave() != null && !instance.getSlave().isEmpty()) {
-            ((Label) getFellow("slave")).setValue(instance.getSlave());
+        if (slave != null) {
+            ((Label) getFellow("slave")).setValue(slave.getDbName());
         }
         //Shared instance (if any)
         if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
@@ -1012,26 +1010,15 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void swapMasterSlave() {
         //If instance is a master
-        if (instance.getSlave() != null && !instance.getSlave().isEmpty() && slave != null) {
-            //Clone instance and slave
-            DODInstance clone = instance.clone();
-            DODInstance slaveClone = slave.clone();
-            //Set slave to master of this instance
-            clone.setMaster(slave.getDbName());
-            clone.setSlave(null);
-            //Set this instance as slave of the master
-            slaveClone.setMaster(null);
-            slaveClone.setSlave(instance.getDbName());
-            ArrayList<DODInstance> clones = new ArrayList<DODInstance>();
-            clones.add(clone);
-            clones.add(slaveClone);
-            if (instanceDAO.update(clones) > 0) {
-                instance = clone;
-                master = slaveClone;
+        if (slave != null) {
+            if (instanceDAO.swapMasterSlave(slave.getDbName(), instance.getDbName()) > 0) {
+                master = slave;
                 slave = null;
+                instance.setMaster(master.getDbName());
+                instance.setSlave(null);
                 ((Hbox) getFellow("masterArea")).setVisible(true);
                 ((Hbox) getFellow("slaveArea")).setVisible(false);
-                ((Label) getFellow("master")).setValue(instance.getMaster());
+                ((Label) getFellow("master")).setValue(master.getDbName());
                 ((Label) getFellow("slave")).setValue(null);
             }
             else {
@@ -1039,27 +1026,16 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
         }
         //If instance is a slave
-        else if (instance.getMaster() != null && !instance.getMaster().isEmpty() && master != null) {
-            //Clone instance and slave
-            DODInstance clone = instance.clone();
-            DODInstance masterClone = master.clone();
-            //set master as slave of this instance
-            clone.setSlave(master.getDbName());
-            clone.setMaster(null);
-            //Set this instance as slave of the master
-            masterClone.setSlave(null);
-            masterClone.setMaster(instance.getDbName());
-            ArrayList<DODInstance> clones = new ArrayList<DODInstance>();
-            clones.add(clone);
-            clones.add(masterClone);
-            if (instanceDAO.update(clones) > 0) {
-                instance = clone;
-                slave = masterClone;
+        else if (master != null) {
+            if (instanceDAO.swapMasterSlave(instance.getDbName(), master.getDbName()) > 0) {
+                slave = master;
                 master = null;
+                instance.setMaster(null);
+                instance.setSlave(slave.getDbName());
                 ((Hbox) getFellow("masterArea")).setVisible(false);
                 ((Hbox) getFellow("slaveArea")).setVisible(true);
                 ((Label) getFellow("master")).setValue(null);
-                ((Label) getFellow("slave")).setValue(instance.getSlave());
+                ((Label) getFellow("slave")).setValue(slave.getDbName());
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);

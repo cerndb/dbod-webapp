@@ -428,7 +428,7 @@ public class DODInstanceDAO {
                 //Update master in case the insert was successful
                 if (instanceResult > 0) {
                     //Prepare query for the prepared statement (to avoid SQL injection)
-                    String masterQuery = "UPDATE dod_instances SET slave = ?"
+                    String masterQuery = "UPDATE dod_instances SET slave = ?, master = NULL "
                                             + "WHERE db_name = ?";
                     masterStatement = connection.prepareStatement(masterQuery);
                     //Set values
@@ -573,70 +573,67 @@ public class DODInstanceDAO {
     }
     
     /**
-     * Updates several instances with new values.
+     * Swaps master and slave in the database.
      * @param instances instances with the new values.
      * @return number of updated instances if the operation was successful, 0 otherwise.
      */
-    public int update(List<DODInstance> instances) {
+    public int swapMasterSlave(String newMaster, String newSlave) {
         Connection connection = null;
         PreparedStatement statement = null;
         int result = 0;
         try {
-            if (instances != null) {
+            if (newMaster != null && newSlave != null) {
                 //Get connection
                 connection = getConnection();
+                connection.setAutoCommit(false);
 
                 //Prepare query for the prepared statement (to avoid SQL injection)
-                String query = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, shared_instance = ? WHERE username = ? AND db_name = ?";
+                String query = "UPDATE dod_instances SET master = ?, slave = ? WHERE db_name = ?";
                 statement = connection.prepareStatement(query);
                 
-                //Execute for every instance
-                for (int i = 0; i < instances.size(); i++) {
-                    DODInstance instance = instances.get(i);
-                    //Assign values to variables
-                    statement.setString(1, instance.getEGroup());
-                    if (instance.getExpiryDate() != null)
-                        statement.setDate(2, new java.sql.Date(instance.getExpiryDate().getTime()));
-                    else
-                        statement.setDate(2, null);
-                    statement.setString(3, instance.getProject());
-                    statement.setString(4, instance.getDescription());
-                    statement.setString(5, instance.getCategory());
-                    statement.setInt(6, instance.getNoConnections());
-                    statement.setInt(7, instance.getDbSize());
-                    statement.setString(8, instance.getState());
-                    statement.setString(9, instance.getVersion());
-                    statement.setString(10, instance.getMaster());
-                    statement.setString(11, instance.getSlave());
-                    statement.setString(12, instance.getSharedInstance());
-                    statement.setString(13, instance.getUsername());
-                    statement.setString(14, instance.getDbName());
-                    //Add to batch
-                    statement.addBatch();
-                }
+                //Add master to batch
+                statement.setString(1, null);
+                statement.setString(2, newSlave);
+                statement.setString(3, newMaster);
+                statement.addBatch();
+                
+                //Add slave to batch
+                statement.setString(1, newMaster);
+                statement.setString(2, null);
+                statement.setString(3, newSlave);
+                statement.addBatch();
+                
                 int[] results = statement.executeBatch();
                 result = results.length;
                 for (int i=0; i<results.length; i++){
                     if (results[i] == PreparedStatement.EXECUTE_FAILED) {
                         result = 0;
+                        connection.rollback();                        
                         break;
                     }
                 }
+                connection.commit();
             }
 
         } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCES", ex);
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SWAPPING MASTER/SLAVE", ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCES", ex);
+            try {
+                connection.rollback();
+            } catch (Exception e) {
+                Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK MASTER/SLAVE SWAP", ex);
+            }
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SWAPPING MASTER/SLAVE", ex);
         } finally {
             try {
                 statement.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception e) {}
             try {
                 connection.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
         return result;
     }
