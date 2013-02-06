@@ -9,7 +9,7 @@ use Proc::Daemon;
 # Initializes Logging Settings
 
 use DOD::Config qw($config);
-#use DOD;
+use DOD;
 
 our ($logger, $workdir, $pidfile); 
 
