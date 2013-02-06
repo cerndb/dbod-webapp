@@ -9,7 +9,7 @@ use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
 use DOD::Config qw( $config );
-use DOD::ConfigParser;
+use DOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
@@ -556,7 +556,13 @@ sub prepareCommand {
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
         my $params = getJobParams($job, $dbh);
-        my $nparams = scalar(@{$params});
+        my $nparams;
+        if (defined $params){
+            $nparams = scalar(@{$params});
+            }
+        else{
+            $nparams = 0;
+        }
         my $expected_nparams = 0;
         my $optional_nparams = 0;
         $expected_nparams++ while ($cmd =~ m/:/g);
@@ -570,7 +576,6 @@ sub prepareCommand {
                 }
             return $cmd;
         }
-        
         if ($nparams >= $expected_nparams){
             $logger->debug( "Substituting params");
             foreach my $param (@{$params}){
@@ -578,7 +583,7 @@ sub prepareCommand {
                     my ($pname, $type) = split( /=/, $param->{'NAME'} );
                     $logger->debug("pname: $pname, type: $type");
                     my $clob = $param->{'VALUE'};
-                    my $parser = DOD::ConfigParser::get( $type );
+                    my $parser = DOD::Templates::parser( $type );
                     $logger->debug("parser: $parser");
                     my $filename = $parser->($clob); 
                     $cmd =~ s/:$param->{'NAME'}/$filename/;

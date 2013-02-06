@@ -8,11 +8,12 @@ use Proc::Daemon;
 
 # Initializes Logging Settings
 
-use DOD;
+use DOD::Config qw($config);
+#use DOD;
 
 our ($logger, $workdir, $pidfile); 
 
-BEGIN{
+INIT{
     $logger = Log::Log4perl::get_logger("DOD.Daemon");
     $logger->debug("Logger created");
     $workdir = $config->{'DAEMON_WORKDIR'};
@@ -54,7 +55,14 @@ sub Main{
             my $dispatcher = $daemon->Init();
             unless ($dispatcher){
                 # Daemon process
-                DOD::jobDispatcher();
+                eval{
+                    DOD::jobDispatcher();
+                    1;
+                } or do {
+                    $logger->error( "The daemon process died!" );
+                    unlink($pidfile);
+                    exit -1;
+                }
             }
             $logger->debug( "Job dispatcher PID: $dispatcher" );
             my $status = $daemon->Status($dispatcher);
