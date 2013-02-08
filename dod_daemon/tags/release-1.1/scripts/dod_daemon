@@ -17,7 +17,7 @@ INIT{
     $logger = Log::Log4perl::get_logger("DOD.Daemon");
     $logger->debug("Logger created");
     $workdir = $config->{'DAEMON_WORKDIR'};
-    $pidfile = $config->{'DAEMON_PIDFILE'}
+    $pidfile = "$workdir/$config->{'DAEMON_PIDFILE'}";
 }
 
 sub usage(){
@@ -30,20 +30,24 @@ sub Main{
     my ($start, $stop);
     usage() if (@ARGV != 1 or ! GetOptions('start' => \$start, 'stop' => \$stop));
 
-    my $daemon = Proc::Daemon->new(work_dir => $config->{'DAEMON_WORKDIR'},
+    my $daemon = Proc::Daemon->new(work_dir => $workdir,
                                     child_STDOUT => ">>$config->{'DAEMON_STDOUT'}",
                                     child_STDERR => ">>$config->{'DAEMON_STDERR'}",
-                                    pid_file => $config->{'DAEMON_PIDFILE'});
+                                    pid_file => $pidfile);
+
+    $logger->debug( "Workdir: $workdir, pidfile: $pidfile" );
 
     if (-e $pidfile){
+        my $pid = `cat $pidfile`;
         if ($stop){
-            $logger->debug( "Stopping daemon process" );
-            my $stopped = $daemon->Kill_Daemon( "$config->{'DAEMON_WORKDIR'}/$config->{'DAEMON_PIDFILE'}" );
+            $logger->debug( "Stopping daemon process PID: $pid" );
+            print "Stopping daemon process PID: $pid\n" ;
+            my $stopped = $daemon->Kill_Daemon( $pid );
+            $logger->debug( "Number of processes killed: $stopped ");
             unlink($pidfile);
             exit 0;
         }
         elsif ($start){
-            my $pid = `cat $workdir/$pidfile`;
             chomp $pid;
             print "A daemon is running with PID: $pid\n";
             exit -1;
