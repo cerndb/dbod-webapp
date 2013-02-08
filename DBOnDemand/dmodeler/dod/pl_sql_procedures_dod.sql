@@ -638,7 +638,8 @@ IS
             FROM dod_instances
             WHERE 0 = (SELECT COUNT(*)
                         FROM user_scheduler_jobs
-                        WHERE job_name = db_name || '_BACKUP');
+                        WHERE job_name = db_name || '_BACKUP')
+                AND status = '1';
     message VARCHAR2 (2056);
 BEGIN
     FOR instance IN instances
