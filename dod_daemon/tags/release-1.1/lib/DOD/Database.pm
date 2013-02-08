@@ -343,12 +343,12 @@ sub updateJob{
 }
 
 sub finishJob{
-    my ($job, $resultCode, $log, $dbh);
-    if ($#_ == 3){
-        ($job, $resultCode, $log, $dbh) = @_;
+    my ($job, $resultCode, $log, $dbh, $params);
+    if ($#_ == 4){
+        ($job, $resultCode, $log, $dbh, $params) = @_;
     }
-    elsif($#_ == 2){
-        ($job, $resultCode, $log) = @_;
+    elsif($#_ == 3){
+        ($job, $resultCode, $log, $params) = @_;
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
@@ -376,7 +376,7 @@ sub finishJob{
         my $callback = DOD::get_callback($job);
         if (defined $callback){
             $logger->debug( "Executing callback" );
-            $callback->($job, $dbh);
+            $callback->($job, $params, $dbh);
         }
         if ($#_ == 2){
             $logger->debug( "Disconnecting from database" );

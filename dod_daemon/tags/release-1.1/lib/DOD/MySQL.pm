@@ -77,15 +77,23 @@ sub state_checker{
 }
 
 sub upgrade_callback{
-    my $job = shift;
+    my ($job, $params, $dbh) = @_;
     my $entity = DOD::All::get_entity($job);
     eval{
-        my $version = get_version($entity);
+        my $version;
+        foreach (@{$params}){
+            if ($_->{'NAME'} =~ /VERSION_TO/){
+                $version = $_->{'VALUE'};
+                }
+            }
         $logger->debug( "Updating $entity version to $version in DB");
-        DOD::Database::updateInstance($job, 'VERSION', $version);
+        DOD::Database::updateInstance($job, 'VERSION', $version, $dbh);
         $logger->debug( "Updating $entity version to $version in LDAP");
         my $date = strftime "%H:%M:%S %m/%d/%Y", localtime;
-        DOD::LDAP::updateEntity($entity, [['SC-VERSION', $version],['SC-COMMENT', "Upgraded at $date"]]);
+        DOD::LDAP::updateEntity($entity, [['SC-VERSION', $version],
+                                          ['SC-COMMENT', "Upgraded at $date"],
+                                          ['SC-BINDIR-LOCATION', "/usr/local/mysql/mysql-$version/bin"],
+                                          ['SC-BASEDIR-LOCATION', "/usr/local/mysql/mysql-$version"]]);
         1;
     } or do {
         $logger->error( "A problem occured when trying to update $entity version");

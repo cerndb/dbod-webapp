@@ -104,7 +104,7 @@ sub jobDispatcher {
                     $logger->error( "Not state checker defined for this DB type" );
                 }
                 my ($job_state, $instance_state) = $state_checker->($job, 1);
-                DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh );
+                DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh, undef );
                 DOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh );
                 my $task = $job->{'task'};
                 if (ref $task) {
@@ -165,10 +165,10 @@ sub worker_body {
     my $cmd_line = DOD::Database::prepareCommand($job, $worker_dbh);
     my $log;
     my $retcode;
+    my $params = DOD::Database::getJobParams($job, $worker_dbh);
     if (defined $cmd_line){
-        my $buf = DOD::Database::getJobParams($job, $worker_dbh);
         my $entity;
-        foreach (@{$buf}){
+        foreach (@{$params}){
             if ($_->{'NAME'} =~ /INSTANCE_NAME/){
                 $entity = $_->{'VALUE'};
                 }
@@ -178,12 +178,12 @@ sub worker_body {
         $log = `$cmd`;
         $retcode = DOD::All::result_code($log);
         $logger->debug( "Finishing Job. Return code: $retcode");
-        DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh );
+        DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh, $params );
     }
     else{
         $logger->error( "An error ocurred preparing command execution \n $!" );
         $logger->debug( "Finishing Job.");
-        DOD::Database::finishJob( $job, 1, $!, $worker_dbh );
+        DOD::Database::finishJob( $job, 1, $!, $worker_dbh, $params );
     }
     $logger->debug( "Exiting worker process" );
     $worker_dbh->disconnect();
