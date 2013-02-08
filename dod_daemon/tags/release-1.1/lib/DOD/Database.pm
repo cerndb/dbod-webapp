@@ -376,7 +376,7 @@ sub finishJob{
         my $callback = DOD::get_callback($job);
         if (defined $callback){
             $logger->debug( "Executing callback" );
-            $callback->($job, $params, $dbh);
+            $callback->($job, $dbh);
         }
         if ($#_ == 2){
             $logger->debug( "Disconnecting from database" );
@@ -555,7 +555,7 @@ sub prepareCommand {
         $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . getExecString($job, $dbh);
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
-        my $params = getJobParams($job, $dbh);
+        my $params = $job->{'PARAMS'};
         my $nparams;
         if (defined $params){
             $nparams = scalar(@{$params});

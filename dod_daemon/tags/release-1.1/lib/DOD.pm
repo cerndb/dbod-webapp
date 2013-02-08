@@ -64,6 +64,8 @@ sub jobDispatcher {
         $logger->debug( "Pending jobs: $pendingjobs" );
         if ($pendingjobs > 0){
             foreach my $job (@job_list){
+                $logger->debug( sprintf("Fetching job params" ) );
+                $job->{'PARAMS'} = DOD::Database::getJobParams($job, $dbh);
                 $logger->debug( sprintf("Number of open tasks: %d", $#tasks + 1) );
                 if ($#tasks < 20){
                     my $worker_pid = fork();
@@ -104,7 +106,7 @@ sub jobDispatcher {
                     $logger->error( "Not state checker defined for this DB type" );
                 }
                 my ($job_state, $instance_state) = $state_checker->($job, 1);
-                DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh, undef );
+                DOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh );
                 DOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh );
                 my $task = $job->{'task'};
                 if (ref $task) {
@@ -165,7 +167,7 @@ sub worker_body {
     my $cmd_line = DOD::Database::prepareCommand($job, $worker_dbh);
     my $log;
     my $retcode;
-    my $params = DOD::Database::getJobParams($job, $worker_dbh);
+    my $params = $job->{'PARAMS'};
     if (defined $cmd_line){
         my $entity;
         foreach (@{$params}){
@@ -177,13 +179,13 @@ sub worker_body {
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
         $retcode = DOD::All::result_code($log);
-        $logger->debug( "Finishing Job. Return code: $retcode");
-        DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh, $params );
+        $logger->debug( "Finishing Job. Return code: $retcode" );
+        DOD::Database::finishJob( $job, $retcode, $log, $worker_dbh );
     }
     else{
         $logger->error( "An error ocurred preparing command execution \n $!" );
         $logger->debug( "Finishing Job.");
-        DOD::Database::finishJob( $job, 1, $!, $worker_dbh, $params );
+        DOD::Database::finishJob( $job, 1, $!, $worker_dbh );
     }
     $logger->debug( "Exiting worker process" );
     $worker_dbh->disconnect();

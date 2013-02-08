@@ -77,10 +77,11 @@ sub state_checker{
 }
 
 sub upgrade_callback{
-    my ($job, $params, $dbh) = @_;
+    my ($job, $dbh) = @_;
     my $entity = DOD::All::get_entity($job);
     eval{
         my $version;
+        my $params = $job->{'PARAMS'};
         foreach (@{$params}){
             if ($_->{'NAME'} =~ /VERSION_TO/){
                 $version = $_->{'VALUE'};
