@@ -108,8 +108,8 @@ public class UpgradeController extends Window {
             messageStr = Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_FROM) + " " + instance.getVersion()
                                         + " " + Labels.getLabel(DODConstants.LABEL_UPGRADE_MESSAGE_TO) + " " +instance.getUpgradeTo() + "?";
 
-            //Append warning to message in case of sharedInstance
-            if (sharedInstances != null && sharedInstances.size() > 0) {
+            //Append warning to message in case of sharedInstance (not MYSQL)
+            if (sharedInstances != null && sharedInstances.size() > 0 && !instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
                 messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getSharedInstance() + " (";
                 for (int i = 0; i < sharedInstances.size() - 1; i++) {
                     messageStr += sharedInstances.get(i).getDbName() + ", ";

@@ -79,20 +79,8 @@ public class JobHelper {
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
 
-        //Create param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam instanceName = new DODCommandParam();
-        instanceName.setUsername(instance.getUsername());
-        instanceName.setDbName(instance.getDbName());
-        instanceName.setCommandName(DODConstants.JOB_STARTUP);
-        instanceName.setType(instance.getDbType());
-        instanceName.setCreationDate(now);
-        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-        params.add(instanceName);
-
         //Execute
-        int result = jobDAO.insert(job, params);
+        int result = jobDAO.insert(job, new ArrayList<DODCommandParam>());
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
@@ -125,20 +113,8 @@ public class JobHelper {
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
 
-        //Create param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam instanceName = new DODCommandParam();
-        instanceName.setUsername(instance.getUsername());
-        instanceName.setDbName(instance.getDbName());
-        instanceName.setCommandName(DODConstants.JOB_SHUTDOWN);
-        instanceName.setType(instance.getDbType());
-        instanceName.setCreationDate(now);
-        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-        params.add(instanceName);
-
         //Execute
-        int result = jobDAO.insert(job, params);
+        int result = jobDAO.insert(job, new ArrayList<DODCommandParam>());
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
@@ -184,15 +160,6 @@ public class JobHelper {
 
                 //Create params
                 List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-                DODCommandParam instanceName = new DODCommandParam();
-                instanceName.setUsername(instance.getUsername());
-                instanceName.setDbName(instance.getDbName());
-                instanceName.setCommandName(DODConstants.JOB_UPLOAD);
-                instanceName.setType(instance.getDbType());
-                instanceName.setCreationDate(now);
-                instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-                instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-                params.add(instanceName);
                 DODCommandParam configFile = new DODCommandParam();
                 configFile.setUsername(instance.getUsername());
                 configFile.setDbName(instance.getDbName());
@@ -211,7 +178,6 @@ public class JobHelper {
                 path.setName(DODConstants.PARAM_CONFIG_PATH);
                 path.setValue(filePath);
                 params.add(path);
-
 
                 int result = jobDAO.insert(job, params);
                 //If everything went OK update instance object
@@ -252,18 +218,8 @@ public class JobHelper {
         else
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
-        //Create param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam instanceName = new DODCommandParam();
-        instanceName.setUsername(instance.getUsername());
-        instanceName.setDbName(instance.getDbName());
-        instanceName.setCommandName(DODConstants.JOB_BACKUP);
-        instanceName.setType(instance.getDbType());
-        instanceName.setCreationDate(now);
-        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-        params.add(instanceName);
-        int result = jobDAO.insertAndCreateScheduledBackup(job, hours, params);
+        
+        int result = jobDAO.insertAndCreateScheduledBackup(job, hours, new ArrayList<DODCommandParam>());
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
@@ -303,15 +259,6 @@ public class JobHelper {
         job.setState(DODConstants.JOB_STATE_PENDING);
         //Create param
         List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam instanceName = new DODCommandParam();
-        instanceName.setUsername(instance.getUsername());
-        instanceName.setDbName(instance.getDbName());
-        instanceName.setCommandName(DODConstants.JOB_RESTORE);
-        instanceName.setType(instance.getDbType());
-        instanceName.setCreationDate(now);
-        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-        params.add(instanceName);
         DODCommandParam snapshotFile = new DODCommandParam();
         snapshotFile.setUsername(instance.getUsername());
         snapshotFile.setDbName(instance.getDbName());
@@ -393,15 +340,6 @@ public class JobHelper {
 
         //Create params
         List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam instanceName = new DODCommandParam();
-        instanceName.setUsername(instance.getUsername());
-        instanceName.setDbName(instance.getDbName());
-        instanceName.setCommandName(DODConstants.JOB_UPGRADE);
-        instanceName.setType(instance.getDbType());
-        instanceName.setCreationDate(now);
-        instanceName.setName(DODConstants.PARAM_INSTANCE_NAME);
-        instanceName.setValue(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-        params.add(instanceName);
         DODCommandParam versionFrom = new DODCommandParam();
         versionFrom.setUsername(instance.getUsername());
         versionFrom.setDbName(instance.getDbName());
@@ -422,7 +360,12 @@ public class JobHelper {
         params.add(versionTo);
 
         //Execute
-        int result = jobDAO.insertUpgradeJob(job, params);
+        int result = 0;
+        //If instance is MySQL, upgrade does not depend on shared instances
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL))
+            result = jobDAO.insert(job, params);
+        else
+            result = jobDAO.insertUpgradeJob(job, params);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
