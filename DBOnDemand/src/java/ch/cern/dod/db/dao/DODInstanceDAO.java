@@ -1,6 +1,7 @@
 package ch.cern.dod.db.dao;
 
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODInstanceChange;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
 import java.sql.CallableStatement;
@@ -8,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -520,61 +523,144 @@ public class DODInstanceDAO {
     
     /**
      * Updates an instance with new values.
-     * @param instance instance with the new values.
+     * @param instance instance to update.
+     * @param 
      * @return 1 if the operation was successful, 0 otherwise.
      */
-    public int update(DODInstance instance) {
+    public int update(DODInstance oldInstance, DODInstance newInstance, String requester) {
         Connection connection = null;
-        PreparedStatement statement = null;
-        int result = 0;
+        PreparedStatement updateStatement = null;
+        PreparedStatement insertStatement = null;
+        int updateResult = 0;
         try {
             //Get connection
             connection = getConnection();
-            
+            connection.setAutoCommit(false);
+
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, shared_instance = ? WHERE username = ? AND db_name = ?";
-            statement = connection.prepareStatement(query);
+            String updateQuery = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, shared_instance = ? WHERE username = ? AND db_name = ?";
+            updateStatement = connection.prepareStatement(updateQuery);
             //Assign values to variables
-            statement.setString(1, instance.getEGroup());
-            if (instance.getExpiryDate() != null)
-                statement.setDate(2, new java.sql.Date(instance.getExpiryDate().getTime()));
+            updateStatement.setString(1, newInstance.getEGroup());
+            if (newInstance.getExpiryDate() != null)
+                updateStatement.setDate(2, new java.sql.Date(newInstance.getExpiryDate().getTime()));
             else
-                statement.setDate(2, null);
-            statement.setString(3, instance.getProject());
-            statement.setString(4, instance.getDescription());
-            statement.setString(5, instance.getCategory());
-            statement.setInt(6, instance.getNoConnections());
-            statement.setInt(7, instance.getDbSize());
-            statement.setString(8, instance.getState());
-            statement.setString(9, instance.getVersion());
-            statement.setString(10, instance.getMaster());
-            statement.setString(11, instance.getSlave());
-            statement.setString(12, instance.getSharedInstance());
-            statement.setString(13, instance.getUsername());
-            statement.setString(14, instance.getDbName());
+                updateStatement.setDate(2, null);
+            updateStatement.setString(3, newInstance.getProject());
+            updateStatement.setString(4, newInstance.getDescription());
+            updateStatement.setString(5, newInstance.getCategory());
+            updateStatement.setInt(6, newInstance.getNoConnections());
+            updateStatement.setInt(7, newInstance.getDbSize());
+            updateStatement.setString(8, newInstance.getState());
+            updateStatement.setString(9, newInstance.getVersion());
+            updateStatement.setString(10, newInstance.getMaster());
+            updateStatement.setString(11, newInstance.getSlave());
+            updateStatement.setString(12, newInstance.getSharedInstance());
+            updateStatement.setString(13, newInstance.getUsername());
+            updateStatement.setString(14, newInstance.getDbName());
             //Execute query
-            result = statement.executeUpdate();
+            updateResult = updateStatement.executeUpdate();
+            
+            //If update was successful
+            if (updateResult > 0) {
+                String insertQuery = "INSERT INTO dod_instance_changes (username, db_name, attribute, change_date, requester, old_value, new_value) VALUES (?,?,?,?,?,?,?)";
+                insertStatement = connection.prepareStatement(insertQuery);
+                //Check for changes on fields editable by users
+                if ((oldInstance.getEGroup() == null && newInstance.getEGroup() != null)
+                        || (oldInstance.getEGroup() != null && !oldInstance.getEGroup().equals(newInstance.getEGroup()))) {
+                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(2, newInstance.getDbName());
+                    insertStatement.setString(3, "e-Group");
+                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
+                    insertStatement.setString(5, requester);
+                    insertStatement.setString(6, oldInstance.getEGroup());
+                    insertStatement.setString(7, newInstance.getEGroup());
+                    insertStatement.addBatch();
+                }
+                if ((oldInstance.getExpiryDate() == null && newInstance.getExpiryDate() != null)
+                        || (oldInstance.getExpiryDate() != null && !oldInstance.getExpiryDate().equals(newInstance.getExpiryDate()))) {
+                    DateFormat dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
+                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(2, newInstance.getDbName());
+                    insertStatement.setString(3, "Expiry Date");
+                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
+                    insertStatement.setString(5, requester);
+                    if (oldInstance.getExpiryDate() != null)
+                        insertStatement.setString(6, dateFormatter.format(oldInstance.getExpiryDate()));
+                    else
+                        insertStatement.setString(6, null);
+                    if (newInstance.getExpiryDate() != null)
+                        insertStatement.setString(7, dateFormatter.format(newInstance.getExpiryDate()));
+                    else
+                        insertStatement.setString(7, null);
+                    insertStatement.addBatch();
+                }
+                if ((oldInstance.getProject() == null && newInstance.getProject() != null)
+                        || (oldInstance.getProject() != null && !oldInstance.getProject().equals(newInstance.getProject()))) {
+                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(2, newInstance.getDbName());
+                    insertStatement.setString(3, "Project");
+                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
+                    insertStatement.setString(5, requester);
+                    insertStatement.setString(6, oldInstance.getProject());
+                    insertStatement.setString(7, newInstance.getProject());
+                    insertStatement.addBatch();
+                }
+                if ((oldInstance.getDescription() == null && newInstance.getDescription() != null)
+                        || (oldInstance.getDescription() != null && !oldInstance.getDescription().equals(newInstance.getDescription()))) {
+                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(2, newInstance.getDbName());
+                    insertStatement.setString(3, "Description");
+                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
+                    insertStatement.setString(5, requester);
+                    insertStatement.setString(6, oldInstance.getDescription());
+                    insertStatement.setString(7, newInstance.getDescription());
+                    insertStatement.addBatch();
+                }
+                int[] results = insertStatement.executeBatch();
+                for (int i=0; i<results.length; i++){
+                    if (results[i] == PreparedStatement.EXECUTE_FAILED) {
+                        updateResult = 0;
+                        connection.rollback();                        
+                        break;
+                    }
+                }
+            }
+            
+            //Commit transaction
+            connection.commit();
 
         } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            updateResult = 0;
+            try {
+                connection.rollback();
+            } catch (Exception e) {
+                Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE UPDATE", ex);
+            }
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
         } finally {
             try {
-                statement.close();
-            } catch (Exception e) {
-            }
+                updateStatement.close();
+            } catch (Exception e) {}
+            try {
+                insertStatement.close();
+            } catch (Exception e) {}
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception e) {}
             try {
                 connection.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
-        return result;
+        return updateResult;
     }
     
     /**
      * Swaps master and slave in the database.
-     * @param instances instances with the new values.
+     * @param newMaster new master.
+     * @param newSlave new slave.
      * @return number of updated instances if the operation was successful, 0 otherwise.
      */
     public int swapMasterSlave(String newMaster, String newSlave) {
@@ -636,5 +722,58 @@ public class DODInstanceDAO {
             } catch (Exception e) {}
         }
         return result;
+    }
+    
+    /**
+     * Obtains the list of changes to attributes of an instance.
+     * @param instance DOD instance to get the changes from.
+     * @return list of changes for the specified instance.
+     */
+    public List<DODInstanceChange> selectInstanceChanges(DODInstance instance) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<DODInstanceChange> changes = new ArrayList<DODInstanceChange>();
+        try {
+            //Get connection
+            connection = getConnection();
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            String query = "SELECT username, db_name, attribute, change_date, requester, old_value, new_value"
+                            + " FROM dod_instance_changes WHERE username = ? AND db_name = ? ORDER BY change_date DESC";
+            statement = connection.prepareStatement(query);
+            //Assign values to variables
+            statement.setString(1, instance.getUsername());
+            statement.setString(2, instance.getDbName());
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            while (result.next()) {
+                DODInstanceChange change = new DODInstanceChange();
+                change.setUsername(result.getString(1));
+                change.setDbName(result.getString(2));
+                change.setAttribute(result.getString(3));
+                change.setChangeDate(new java.util.Date(result.getTimestamp(4).getTime()));
+                change.setRequester(result.getString(5));
+                change.setOldValue(result.getString(6));
+                change.setNewValue(result.getString(7));
+                changes.add(change);
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {}
+            try {
+                statement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return changes;
     }
 }

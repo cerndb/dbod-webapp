@@ -244,45 +244,78 @@
                 </hbox>
 
                 <!-- Job info -->
-                <groupbox id="jobInfo" mold="3d" closable="false" open="false" style="margin-top:20px">
-                    <caption label=" ">
-                        <div align="center" style="float:left">
-                            <label value="${c:l('jobInfo')} " sclass="titleSmall"/>
-                            <!-- Job Selector -->
-                            <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
-                        </div>
-                    </caption>
-                    <hbox align="bottom" height="22px">
-                        <!-- State -->
-                        <hbox align="bottom" width="500px">
-                            <label value="${c:l('state')}: " style="font-weight:bold"/>
-                            <label id="jobStateLabel" value="-"/>
-                            <image id="jobStateImage"/>
-                        </hbox>
-                        <!-- Requester -->
-                        <hbox align="bottom" width="500px">
-                            <label value="${c:l('requester')}: " style="font-weight:bold"/>
-                            <label id="jobRequester" value="-"/>
-                        </hbox>
-                    </hbox>
-                    <hbox align="bottom" height="22px">
-                        <!-- Creation date -->
-                        <hbox width="500px">
-                            <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
-                            <label id="jobCreationDate" value="-"/>
-                        </hbox>
-                        <!-- Completion date -->
-                        <hbox width="500px">
-                            <label value="${c:l('completionDate')}: " style="font-weight:bold"/>
-                            <label id="jobCompletionDate" value="-"/>
-                        </hbox>
-                    </hbox>
-                    <!-- Log -->
-                    <vbox  width="1000px" style="margin-top:8px">
-                        <label value="${c:l('log')}:" style="font-weight:bold"/>
-                        <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true"/>
-                    </vbox>
-                </groupbox>
+                <tabbox id="logTab" style="margin-top:20px" width="1030px">
+                    <tabs>
+                        <tab id="jobsTab" label="${c:l('jobLogs')}" />
+                        <tab id="changesTab" label="${c:l('attributesLog')}" />
+                    </tabs>
+                    <tabpanels>
+                        <tabpanel>
+                            <groupbox id="jobInfo" mold="3d" closable="false" open="false" >
+                                <caption label=" ">
+                                    <div align="center" style="float:left">
+                                        <label value="${c:l('jobInfo')} " sclass="titleSmall"/>
+                                        <!-- Job Selector -->
+                                        <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
+                                    </div>
+                                </caption>
+                                <hbox align="bottom" height="22px">
+                                    <!-- State -->
+                                    <hbox align="bottom" width="500px">
+                                        <label value="${c:l('state')}: " style="font-weight:bold"/>
+                                        <label id="jobStateLabel" value="-"/>
+                                        <image id="jobStateImage"/>
+                                    </hbox>
+                                    <!-- Requester -->
+                                    <hbox align="bottom" width="500px">
+                                        <label value="${c:l('requester')}: " style="font-weight:bold"/>
+                                        <label id="jobRequester" value="-"/>
+                                    </hbox>
+                                </hbox>
+                                <hbox align="bottom" height="22px">
+                                    <!-- Creation date -->
+                                    <hbox width="500px">
+                                        <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
+                                        <label id="jobCreationDate" value="-"/>
+                                    </hbox>
+                                    <!-- Completion date -->
+                                    <hbox width="500px">
+                                        <label value="${c:l('completionDate')}: " style="font-weight:bold"/>
+                                        <label id="jobCompletionDate" value="-"/>
+                                    </hbox>
+                                </hbox>
+                                <!-- Log -->
+                                <vbox  width="1000px" style="margin-top:8px">
+                                    <label value="${c:l('log')}:" style="font-weight:bold"/>
+                                    <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true"/>
+                                </vbox>
+                            </groupbox>
+                        </tabpanel>
+                        <tabpanel>
+                            <groupbox id="instanceChanges" mold="3d" closable="false" open="true">
+                                <caption label=" " height="24px">
+                                    <div align="center" style="float:left">
+                                        <label value="${c:l('instanceChanges')} " sclass="titleSmall"/>
+                                    </div>
+                                </caption>
+                                <grid id="changesGrid" style="padding:0px" mold="paging" pageSize="10">
+                                    <columns>
+                                        <column sort="auto(changeDate)" width="150px">${c:l('changeDate')}</column>
+                                        <column sort="auto(attribute)" width="100px">${c:l('changeAttribute')}</column>
+                                        <column sort="auto(requester)" width="100px">${c:l('changeRequester')}</column>
+                                        <column sort="auto(oldValue)">${c:l('changeOldValue')}</column>
+                                        <column sort="auto(newValue)">${c:l('changeNewValue')}</column>
+                                    </columns>
+                                </grid>
+                                <div id="emptyChangesMsg" style="display:none">
+                                    <div style="padding-left:400px">
+                                        <label value="${c:l('emptyChangesList')}"/>
+                                    </div>
+                                </div>
+                            </groupbox>
+                        </tabpanel>
+                    </tabpanels>
+                </tabbox>
             </groupbox>
              <!-- Confirm window to create e-group -->
             <window id="eGroupConfirm" title="${c:l('eGroupDoesNotExistTitle')}" border="normal" mode="overlapped" visible="false" position="center" width="300px" closable="false">

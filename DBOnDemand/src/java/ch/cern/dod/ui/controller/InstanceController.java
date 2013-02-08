@@ -4,8 +4,10 @@ import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.dao.DODJobDAO;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODInstanceChange;
 import ch.cern.dod.db.entity.DODJob;
 import ch.cern.dod.db.entity.DODUpgrade;
+import ch.cern.dod.ui.renderer.InstanceChangesRenderer;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.FormValidations;
@@ -67,6 +69,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * List of jobs performed on this instance.
      */
     List<DODJob> jobs;
+    /**
+     * List of changes.
+     */
+    List<DODInstanceChange> changes;
     /**
      * Helper to execute jobs.
      */
@@ -192,6 +198,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
+            //Load changs
+            loadChanges();
         }
     }
     
@@ -246,6 +254,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
+            //Load changes
+            loadChanges();
         }
         //Instance has been marked for deletion
         else {
@@ -745,11 +755,12 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         else {
             clone.setState(DODConstants.INSTANCE_STATE_RUNNING);
         }
-        if (instanceDAO.update(clone) > 0) {
+        if (instanceDAO.update(instance, clone, username) > 0) {
             instance = clone;
             loadInstanceInfo();
             loadButtons();
             loadJobs();
+            loadChanges();
         }
         else {
             showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -805,7 +816,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 //Clone the instance and override eGroup
                 DODInstance clone = instance.clone();
                 clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
-                if (instanceDAO.update(clone) > 0) {
+                if (instanceDAO.update(instance, clone, username) > 0) {
                     instance = clone;
                     if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
                         ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
@@ -813,6 +824,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                         ((Label) getFellow("eGroup")).setValue("-");
                     ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
                     ((Hbox) getFellow("eGroupBox")).setVisible(true);
+                    //Reload changes
+                    loadChanges();
                 }
                 else {
                     showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -832,7 +845,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override project
             DODInstance clone = instance.clone();
             clone.setProject(((Textbox) getFellow("projectEdit")).getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getProject() != null && !instance.getProject().isEmpty())
                     ((Label) getFellow("project")).setValue(instance.getProject());
@@ -840,6 +853,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("project")).setValue("-");
                 ((Hbox) getFellow("projectEditBox")).setVisible(false);
                 ((Hbox) getFellow("projectBox")).setVisible(true);
+                //Reload changes
+                loadChanges();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -855,7 +870,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override expiry date
             DODInstance clone = instance.clone();
             clone.setExpiryDate(((Datebox) getFellow("expiryDateEdit")).getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getExpiryDate() != null)
                     ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
@@ -863,6 +878,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("expiryDate")).setValue("-");
                 ((Hbox) getFellow("expiryDateEditBox")).setVisible(false);
                 ((Hbox) getFellow("expiryDateBox")).setVisible(true);
+                //Reload changes
+                loadChanges();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -878,7 +895,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override description
             DODInstance clone = instance.clone();
             clone.setDescription(((Textbox) getFellow("descriptionEdit")).getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getDescription() != null && !instance.getDescription().isEmpty())
                     ((Label) getFellow("description")).setValue(instance.getDescription());
@@ -886,6 +903,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("description")).setValue("-");
                 ((Hbox) getFellow("descriptionEditBox")).setVisible(false);
                 ((Hbox) getFellow("descriptionBox")).setVisible(true);
+                //Reload changes
+                loadChanges();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -901,7 +920,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override dbSize
             DODInstance clone = instance.clone();
             clone.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSizeEdit")).getValue()));
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 ((Label) getFellow("dbSize")).setValue(String.valueOf(instance.getDbSize()) + " GB");
                 ((Hbox) getFellow("dbSizeEditBox")).setVisible(false);
@@ -924,7 +943,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 clone.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnectionsEdit")).getValue()));
             else
                 clone.setNoConnections(0);
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getNoConnections() > 0)
                     ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
@@ -947,7 +966,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override dbSize
             DODInstance clone = instance.clone();
             clone.setCategory((String)((Combobox) getFellow("categoryEdit")).getSelectedItem().getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 ((Label) getFellow("category")).setValue(Labels.getLabel(DODConstants.LABEL_CATEGORY + instance.getCategory()));
                 ((Hbox) getFellow("categoryEditBox")).setVisible(false);
@@ -967,7 +986,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override version
             DODInstance clone = instance.clone();
             clone.setVersion(((Textbox) getFellow("versionEdit")).getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getVersion() != null && !instance.getVersion().isEmpty())
                     ((Label) getFellow("version")).setValue(instance.getVersion());
@@ -990,7 +1009,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             //Clone the instance and override sharedInstance
             DODInstance clone = instance.clone();
             clone.setSharedInstance(((Textbox) getFellow("sharedInstanceEdit")).getValue());
-            if (instanceDAO.update(clone) > 0) {
+            if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
                 if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
                     ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
@@ -1040,6 +1059,29 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
             }
+        }
+    }
+    
+    /**
+     * Loads instance changes.
+     */
+    private void loadChanges () {
+        //Get changes
+        changes = instanceDAO.selectInstanceChanges(instance);
+        
+        //Load grid
+        Grid changesGrid = (Grid) getFellow("changesGrid");
+        changesGrid.setModel(new SimpleListModel(changes));
+        changesGrid.setRowRenderer(new InstanceChangesRenderer());
+        
+        //Display or hide aready
+        if (changes != null && changes.size() > 0) {
+            ((Div) getFellow("emptyChangesMsg")).setStyle("display:none");
+            ((Grid) getFellow("changesGrid")).setStyle("display:block");
+        }
+        else {
+            ((Div) getFellow("emptyChangesMsg")).setStyle("display:block");
+            ((Grid) getFellow("changesGrid")).setStyle("display:none");
         }
     }
 

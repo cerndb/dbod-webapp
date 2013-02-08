@@ -387,11 +387,13 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
-            String state = instance.getState();
-            instance.setState(DODConstants.INSTANCE_STATE_MAINTENANCE);
-            if (instanceDAO.update(instance) <= 0) {
+            DODInstance clone = instance.clone();
+            clone.setState(DODConstants.INSTANCE_STATE_MAINTENANCE);
+            if (instanceDAO.update(instance, clone, username) <= 0) {
                 error = true;
-                instance.setState(state);
+            }
+            else {
+                instance.setState(DODConstants.INSTANCE_STATE_MAINTENANCE);
             }
         }
         //Re-render the tree

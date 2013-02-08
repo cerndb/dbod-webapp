@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="dod_jobs_instances" id="7B28F948-B8B2-79AD-59C0-C046F02742AD" directorySegmentName="seg_0">
-<createdBy>rgaspar</createdBy>
-<createdTime>2011-08-28 12:45:59 UTC</createdTime>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="dod_instances_changes" id="246AFFF8-8DEF-CB69-F498-B569DB85B61D" directorySegmentName="seg_0">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:27:46 UTC</createdTime>
 <ownerDesignName>dod</ownerDesignName>
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>
@@ -13,6 +13,6 @@
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>523EA051-C080-603B-E8A7-4FE23691A07D</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
-<targetEntity>6BD31477-31FB-EC7D-0DFE-BFC3D581868E</targetEntity>
+<targetEntity>08C83D8E-6E76-D1E3-C50F-28480BBF5AF2</targetEntity>
 <transferable>true</transferable>
 </Relation>

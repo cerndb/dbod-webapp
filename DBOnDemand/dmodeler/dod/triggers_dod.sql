@@ -19,14 +19,17 @@ BEGIN
 END;
 /
 
--- Trigger to update username on dod_jobs and dod_fim_objects on cascade when updating dod_instances.
+-- Trigger to update username on dod_jobs and dod_instance_changes on cascade when updating dod_instances.
 CREATE OR REPLACE TRIGGER dod_instances_update_username
 AFTER UPDATE OF username, db_name ON dod_instances
 FOR EACH ROW
 BEGIN
     UPDATE dod_jobs
         SET username = :NEW.username, db_name = :NEW.db_name
-        WHERE username = :OLD.username AND db_name = :OLD.db_name; 
+        WHERE username = :OLD.username AND db_name = :OLD.db_name;
+    UPDATE dod_instance_changes
+        SET username = :NEW.username, db_name = :NEW.db_name
+        WHERE username = :OLD.username AND db_name = :OLD.db_name;
 END;
 /
 

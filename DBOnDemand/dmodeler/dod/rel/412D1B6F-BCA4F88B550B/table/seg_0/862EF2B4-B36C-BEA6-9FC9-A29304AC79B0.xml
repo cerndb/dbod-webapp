@@ -1,0 +1,108 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="862EF2B4-B36C-BEA6-9FC9-A29304AC79B0" directorySegmentName="seg_0" name="dod_upgrades">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>7AF06A35-24E6-77B3-6A38-D918431A6B17</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<pkName>pk_dod_upgrades</pkName>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_type" id="C1B37F76-7640-D7B2-2613-82C0A153C47A">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>5ABFAE09-5B74-D3F8-DB8C-BC8103B4D810</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32</dataTypeSize>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="category" id="9D311790-FD33-711C-3A62-74ED3F42822C">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>DBFF2022-31B2-0EC5-FCCF-3D60223F230F</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32</dataTypeSize>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="version_from" id="90C2CDA6-1870-E9D5-8F43-0957BA2E1FDE">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>69779D23-0528-DDAA-310D-2F39AFD1A2D2</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128</dataTypeSize>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="version_to" id="EF72A331-C17F-E25F-85F8-D13202770EBE">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>8F0E53A6-A86C-463E-FAA8-A80CB162E3D4</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128</dataTypeSize>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="17AA68A0-BBC7-3048-0502-E8D537CFEDB5" name="pk_dod_upgrades">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>0EDA9BE3-7A73-968B-5C3D-520291F0F23E</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="C1B37F76-7640-D7B2-2613-82C0A153C47A"/>
+<colUsage columnID="9D311790-FD33-711C-3A62-74ED3F42822C"/>
+<colUsage columnID="90C2CDA6-1870-E9D5-8F43-0957BA2E1FDE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

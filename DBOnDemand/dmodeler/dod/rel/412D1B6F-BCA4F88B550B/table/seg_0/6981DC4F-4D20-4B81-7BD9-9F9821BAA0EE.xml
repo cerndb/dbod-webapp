@@ -1,0 +1,180 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" id="6981DC4F-4D20-4B81-7BD9-9F9821BAA0EE" directorySegmentName="seg_0" name="dod_command_params">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>C228877D-3551-9634-33DA-99DCD4958D4E</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<pkName>pk_dod_command_params</pkName>
+<fonts>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Title</foType>
+<fontStyle>1</fontStyle>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Column</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Datatype</foType>
+<colorRGB>-16744448</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>FK Element</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Not Null</foType>
+<colorRGB>-65536</colorRGB>
+</FontObject>
+<FontObject class="oracle.dbtools.crest.model.design.FontObjectWr">
+<foType>Key</foType>
+<colorRGB>-16777216</colorRGB>
+</FontObject>
+</fonts>
+<columns>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="username" id="1990F91C-9718-E374-06DD-5086B0A89D67">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>596D2905-43A9-84A8-CB19-EEEB165F1FDD</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32</dataTypeSize>
+<delegate>62555421-EC4F-8AED-CC21-48C2546E3E33</delegate>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="701773D4-0EC8-27F5-71AA-88490E2FEF2A" referredColumn="62555421-EC4F-8AED-CC21-48C2546E3E33"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="db_name" id="283905E6-59DC-8B5E-9336-BC81DEBDC823">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>1F856F60-4F7F-1189-D680-E483626826E6</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128</dataTypeSize>
+<delegate>B7CE671A-4D09-CE65-1417-2DB01CF96E7A</delegate>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="701773D4-0EC8-27F5-71AA-88490E2FEF2A" referredColumn="B7CE671A-4D09-CE65-1417-2DB01CF96E7A"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="command_name" id="3CD9100E-9F35-CC68-A4F3-E21FB788227C">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>7BE5B993-72A3-23C0-CE86-CEC643291FB8</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64</dataTypeSize>
+<delegate>D65675D6-A023-6713-A4C8-D37D44C6FBC1</delegate>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="701773D4-0EC8-27F5-71AA-88490E2FEF2A" referredColumn="D65675D6-A023-6713-A4C8-D37D44C6FBC1"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="type" id="65EE93D4-525D-7103-85F8-A281F3CAD061">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>D64D53F8-D4CD-55CA-800E-C0A61B6AA41B</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64</dataTypeSize>
+<delegate>1D80FBF7-5D36-49D2-27ED-B4BA65C4E6C0</delegate>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="701773D4-0EC8-27F5-71AA-88490E2FEF2A" referredColumn="1D80FBF7-5D36-49D2-27ED-B4BA65C4E6C0"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="creation_date" id="FAD9C3E2-919D-E897-8B10-35A709020C61">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>9E4AAD1A-EBD0-99E1-40B5-28B43CEF2FCF</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<delegate>05DB26F2-1EC4-E727-A88B-5FD6B2C2B373</delegate>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="701773D4-0EC8-27F5-71AA-88490E2FEF2A" referredColumn="05DB26F2-1EC4-E727-A88B-5FD6B2C2B373"/>
+</associations>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="name" id="EB1CA7A3-802F-FEE9-ADC9-9B4EF8625999">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>A51DE890-BCC6-757E-7FC5-E0611A773BB4</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64</dataTypeSize>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="value" id="6E2A20E2-13FB-1FDE-5CBB-5E20C72387CB">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>5487A1C6-D987-97DC-B86A-DE97CA6F3756</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="A3311EA4-B43C-3593-3BFA-01BD217FDB97" name="pk_dod_command_params">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>61FDA66E-F579-E8B4-8E17-1C9427F4FBC8</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="1990F91C-9718-E374-06DD-5086B0A89D67"/>
+<colUsage columnID="283905E6-59DC-8B5E-9336-BC81DEBDC823"/>
+<colUsage columnID="3CD9100E-9F35-CC68-A4F3-E21FB788227C"/>
+<colUsage columnID="65EE93D4-525D-7103-85F8-A281F3CAD061"/>
+<colUsage columnID="FAD9C3E2-919D-E897-8B10-35A709020C61"/>
+<colUsage columnID="EB1CA7A3-802F-FEE9-ADC9-9B4EF8625999"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK class="oracle.dbtools.crest.model.design.relational.Index" id="D741C830-4A95-3218-37C1-B1793436AA4D" name="dod_params_jobs">
+<createdBy>dgomezbl</createdBy>
+<createdTime>2013-02-06 10:50:12 UTC</createdTime>
+<generatorID>526A5B98-C374-9F84-CEF6-685516A781CB</generatorID>
+<ownerDesignName>dod</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<indexColumnUsage>
+<colUsage columnID="1990F91C-9718-E374-06DD-5086B0A89D67"/>
+<colUsage columnID="283905E6-59DC-8B5E-9336-BC81DEBDC823"/>
+<colUsage columnID="3CD9100E-9F35-CC68-A4F3-E21FB788227C"/>
+<colUsage columnID="65EE93D4-525D-7103-85F8-A281F3CAD061"/>
+<colUsage columnID="FAD9C3E2-919D-E897-8B10-35A709020C61"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
