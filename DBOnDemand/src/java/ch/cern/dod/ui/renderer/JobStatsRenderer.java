@@ -22,6 +22,8 @@ public class JobStatsRenderer implements RowRenderer{
      */
     public void render(Row row, Object object) throws Exception {
         DODJobStat stat = (DODJobStat) object; 
+        row.setStyle("padding-top: 0px; padding-bottom: 0px");
+        row.setHeight("24px");
         // the data append to each row with simple label
         row.appendChild(new Label(stat.getDbName()));
         row.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName())));

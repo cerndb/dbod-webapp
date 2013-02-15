@@ -15,7 +15,9 @@ import org.zkoss.zul.RowRenderer;
 public class CommandStatsRenderer implements RowRenderer{
 
     public void render(Row row, Object object) throws Exception {
-        DODCommandStat stat = (DODCommandStat) object; 
+        DODCommandStat stat = (DODCommandStat) object;
+        row.setStyle("padding-top: 0px; padding-bottom: 0px");
+        row.setHeight("24px");
         // the data append to each row with simple label
         row.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName())));
         row.appendChild(new Label(String.valueOf(stat.getCount())));

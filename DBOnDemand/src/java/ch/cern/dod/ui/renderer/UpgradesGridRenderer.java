@@ -45,6 +45,7 @@ public class UpgradesGridRenderer implements RowRenderer {
     public void render(final Row row, Object data) {
         //Cast upgrade object
         final DODUpgrade upgrade = (DODUpgrade) data;
+        row.setStyle("padding-top: 0px; padding-bottom: 0px");
         
         //Info
         row.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_DB_TYPE + upgrade.getDbType())));
@@ -55,7 +56,7 @@ public class UpgradesGridRenderer implements RowRenderer {
         //Delete button
         Vbox box = new Vbox();
         box.setWidth("100%");
-        box.setHeight("24px");
+        box.setHeight("20px");
         box.setAlign("center");
         final Toolbarbutton deleteBtn = new Toolbarbutton();
         deleteBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_DELETE_UPGRADE));
