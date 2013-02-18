@@ -5,7 +5,6 @@ import ch.cern.dod.exception.ConfigFileSizeException;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.JobHelper;
-import ch.cern.dod.util.NetworkHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -13,7 +12,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.WrongValueException;
@@ -194,7 +192,7 @@ public class FileController extends Window {
                     if (isTypeValid()) {
                         //Obtain file
                         String filePath = ((String[])type.getSelectedItem().getValue())[1];
-                        AMedia file = fileHelper.getFile(instance, filePath);
+                        AMedia file = fileHelper.getMySQLConfigFile(instance);
                         if (file != null) {
                             Filedownload.save(file);
                             type.getFellow("filesWindow").detach();
@@ -254,7 +252,7 @@ public class FileController extends Window {
                         AMedia file = fileHelper.getHTTPFile(url, filePath, instance);
                         if (file != null) {
                             Filedownload.save(file);
-                            type.getFellow("filesWindow").detach();
+                            logs.getFellow("filesWindow").detach();
                         }
                         else {
                             Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);

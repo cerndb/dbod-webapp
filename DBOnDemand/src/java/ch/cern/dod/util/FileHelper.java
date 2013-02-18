@@ -40,17 +40,16 @@ public class FileHelper {
     /**
      * Gets a configuration file from a specific instance.
      * @param instance instance to get the snapshots of.
-     * @param file path of the file to get.
      * @return configuration file.
      */
-    public AMedia getFile(DODInstance instance, String filePath) {
+    public AMedia getMySQLConfigFile(DODInstance instance) {
         AMedia file = null;
         try {
             DODWebService service = new DODWebService();
             DODWebServicePortType port = service.getDODWebServicePort();
-            String content = port.getFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), filePath);
+            String content = port.getMySQLConfigFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
             if (content != null) {
-                file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "text/plain", content);
+                file = new AMedia(DODConstants.CONFIG_PATH_MY_CNF, null, "text/plain", content);
             }
         } catch (Exception ex) {
             Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());

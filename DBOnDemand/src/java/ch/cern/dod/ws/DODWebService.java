@@ -1,7 +1,6 @@
 
 package ch.cern.dod.ws;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 import javax.xml.namespace.QName;
@@ -27,7 +26,7 @@ public class DODWebService
 
     static {
         DODWEBSERVICE_WSDL_LOCATION = ch.cern.dod.ws.DODWebService.class.getResource("/WEB-INF/wsdl/dodwebservices.wsdl");
-    }
+        }
 
     public DODWebService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);

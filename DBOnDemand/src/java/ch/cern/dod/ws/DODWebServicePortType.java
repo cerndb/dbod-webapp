@@ -57,18 +57,15 @@ public interface DODWebServicePortType {
 
     /**
      * 
-     * @param filePath
      * @param instance
      * @return
      *     returns java.lang.String
      */
-    @WebMethod(operationName = "GetFile", action = "https://syscontrol.cern.ch/Dod/#GetFile")
+    @WebMethod(operationName = "GetMySQLConfigFile", action = "https://syscontrol.cern.ch/Dod/#GetMySQLConfigFile")
     @WebResult(name = "file", partName = "file")
-    public String getFile(
+    public String getMySQLConfigFile(
         @WebParam(name = "instance", partName = "instance")
-        String instance,
-        @WebParam(name = "filePath", partName = "filePath")
-        String filePath);
+        String instance);
 
     /**
      * 
