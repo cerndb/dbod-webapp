@@ -9,8 +9,6 @@ BEGIN
 		FROM dual;
 	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
 		VALUES (username_param, db_name_param, 'BACKUP', type_param, now, requester_param, 2, 'PENDING');
-	INSERT INTO dbondemand.dod_command_params (username, db_name, command_name, type, creation_date, name, value)
-		VALUES (username_param, db_name_param, 'BACKUP', type_param, now, 'INSTANCE_NAME', 'dod_' || db_name_param);
         UPDATE dbondemand.dod_instances
                 SET state = 'JOB_PENDING'
                 WHERE username = username_param AND db_name = db_name_param;
@@ -129,8 +127,6 @@ BEGIN
 		FROM dual;
 	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
 		VALUES (username_param, db_name_param, 'BACKUP_TO_TAPE', type_param, now, requester_param, 2, 'PENDING');
-	INSERT INTO dbondemand.dod_command_params (username, db_name, command_name, type, creation_date, name, value)
-		VALUES (username_param, db_name_param, 'BACKUP_TO_TAPE', type_param, now, 'INSTANCE_NAME', 'dod_' || db_name_param);
         UPDATE dbondemand.dod_instances
                 SET state = 'JOB_PENDING'
                 WHERE username = username_param AND db_name = db_name_param;
