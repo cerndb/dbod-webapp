@@ -552,7 +552,13 @@ sub prepareCommand {
     my $cmd;
     eval{
         $logger->debug( "Fetching execution string" );
-        $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . getExecString($job, $dbh);
+        my $exe_string = getExecString($job, $dbh);
+        if (defined $exe_string){
+            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+        }
+        else{
+            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'});
+        }
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
         my $params = $job->{'PARAMS'};
@@ -574,6 +580,7 @@ sub prepareCommand {
                 $logger->debug("Disconnecting from database");
                 $dbh->disconnect();
                 }
+            $logger->debug("No parameters, returning cmd: $cmd " );
             return $cmd;
         }
         if ($nparams >= $expected_nparams){

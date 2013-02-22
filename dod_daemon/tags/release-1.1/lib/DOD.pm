@@ -165,16 +165,12 @@ sub worker_body {
     }
 
     my $cmd_line = DOD::Database::prepareCommand($job, $worker_dbh);
+    $logger->debug( "Received cmd_line: $cmd_line ");
     my $log;
     my $retcode;
     my $params = $job->{'PARAMS'};
     if (defined $cmd_line){
-        my $entity;
-        foreach (@{$params}){
-            if ($_->{'NAME'} =~ /INSTANCE_NAME/){
-                $entity = $_->{'VALUE'};
-                }
-            }
+        my $entity = DOD::All::get_entity($job);
         my $cmd =  "/etc/init.d/syscontrol -i $entity $cmd_line";
         $logger->debug( "Executing $cmd" );
         $log = `$cmd`;
