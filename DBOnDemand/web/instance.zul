@@ -104,7 +104,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="eGroupBox.setVisible(false);eGroupEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="eGroupEditBox" visible="false" align="bottom">
-                            <textbox id="eGroupEdit" width="219px"/>
+                            <textbox id="eGroupEdit" width="219px" onOK="controller.checkAndEditEGroup();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.checkAndEditEGroup();"/>
                         </hbox>
                     </hbox>
@@ -123,7 +123,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="expiryDateBox.setVisible(false);expiryDateEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="expiryDateEditBox" visible="false" align="bottom">
-                            <datebox id="expiryDateEdit" width="200px" />
+                            <datebox id="expiryDateEdit" width="200px" onOK="controller.editExpiryDate();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
                         </hbox>
                     </hbox>
@@ -137,7 +137,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="categoryBox.setVisible(false);categoryEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="categoryEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <combobox id="categoryEdit" width="200px" mold="rounded" readonly="true">
+                            <combobox id="categoryEdit" width="200px" mold="rounded" readonly="true" onOK="controller.editCategory();" >
                                 <comboitem label="${c:l('categoryOFFICIAL')}" />
                                 <comboitem label="${c:l('categoryPERSONAL')}" />
                                 <comboitem label="${c:l('categoryTEST')}" />
@@ -153,7 +153,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="projectBox.setVisible(false);projectEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="projectEditBox" visible="false" align="bottom">
-                            <textbox id="projectEdit" width="224px"/>
+                            <textbox id="projectEdit" width="224px" onOK="controller.editProject();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
                         </hbox>
                     </hbox>
@@ -167,7 +167,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="noConnectionsBox.setVisible(false);noConnectionsEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="noConnectionsEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="noConnectionsEdit" width="224px"/>
+                            <textbox id="noConnectionsEdit" width="224px" onOK="controller.editNoConnections();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editNoConnections();"/>
                         </hbox>
                     </hbox>
@@ -179,7 +179,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="dbSizeEdit" width="224px"/>
+                            <textbox id="dbSizeEdit" width="224px" onOK="controller.editDbSize();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
                         </hbox>
                     </hbox>
@@ -193,7 +193,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="versionBox.setVisible(false);versionEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="versionEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="versionEdit" width="224px"/>
+                            <textbox id="versionEdit" width="224px" onOK="controller.editVersion();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editVersion();"/>
                         </hbox>
                     </hbox>
@@ -219,7 +219,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="sharedInstanceBox.setVisible(false);sharedInstanceEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="sharedInstanceEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="sharedInstanceEdit" width="224px"/>
+                            <textbox id="sharedInstanceEdit" width="224px" onOK="controller.editSharedInstance();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editSharedInstance();"/>
                         </hbox>
                     </hbox>
@@ -237,7 +237,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="descriptionBox.setVisible(false);descriptionEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="descriptionEditBox" visible="false" align="bottom">
-                            <textbox id="descriptionEdit" width="900px" multiline="true" style="margin-top:8px"/>
+                            <textbox id="descriptionEdit" width="900px" multiline="true" style="margin-top:8px" onOK="controller.editDescription();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDescription();"/>
                         </hbox>
                     </hbox>
