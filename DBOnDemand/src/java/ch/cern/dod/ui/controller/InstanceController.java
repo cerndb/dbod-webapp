@@ -825,6 +825,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
                     ((Hbox) getFellow("eGroupBox")).setVisible(true);
                     //Reload changes
+                    refreshInfo();
                     loadChanges();
                 }
                 else {
@@ -854,6 +855,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Hbox) getFellow("projectEditBox")).setVisible(false);
                 ((Hbox) getFellow("projectBox")).setVisible(true);
                 //Reload changes
+                refreshInfo();
                 loadChanges();
             }
             else {
@@ -879,6 +881,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Hbox) getFellow("expiryDateEditBox")).setVisible(false);
                 ((Hbox) getFellow("expiryDateBox")).setVisible(true);
                 //Reload changes
+                refreshInfo();
                 loadChanges();
             }
             else {
@@ -904,6 +907,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Hbox) getFellow("descriptionEditBox")).setVisible(false);
                 ((Hbox) getFellow("descriptionBox")).setVisible(true);
                 //Reload changes
+                refreshInfo();
                 loadChanges();
             }
             else {
@@ -925,6 +929,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Label) getFellow("dbSize")).setValue(String.valueOf(instance.getDbSize()) + " GB");
                 ((Hbox) getFellow("dbSizeEditBox")).setVisible(false);
                 ((Hbox) getFellow("dbSizeBox")).setVisible(true);
+                refreshInfo();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -951,6 +956,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("noConnections")).setValue("-");
                 ((Hbox) getFellow("noConnectionsEditBox")).setVisible(false);
                 ((Hbox) getFellow("noConnectionsBox")).setVisible(true);
+                refreshInfo();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -971,6 +977,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Label) getFellow("category")).setValue(Labels.getLabel(DODConstants.LABEL_CATEGORY + instance.getCategory()));
                 ((Hbox) getFellow("categoryEditBox")).setVisible(false);
                 ((Hbox) getFellow("categoryBox")).setVisible(true);
+                refreshInfo();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -994,6 +1001,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("version")).setValue("-");
                 ((Hbox) getFellow("versionEditBox")).setVisible(false);
                 ((Hbox) getFellow("versionBox")).setVisible(true);
+                refreshInfo();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
@@ -1017,6 +1025,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("sharedInstance")).setValue("-");
                 ((Hbox) getFellow("sharedInstanceEditBox")).setVisible(false);
                 ((Hbox) getFellow("sharedInstanceBox")).setVisible(true);
+                refreshInfo();
             }
             else {
                 showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
