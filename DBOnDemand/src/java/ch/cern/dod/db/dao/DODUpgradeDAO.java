@@ -54,7 +54,7 @@ public class DODUpgradeDAO {
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
             query.append("SELECT db_type, category, version_from, version_to"
-                            + " FROM dod_upgrades ORDER BY db_type, category, version_from");
+                            + " FROM dod_upgrades ORDER BY db_type, version_from, version_to");
             statement = connection.prepareStatement(query.toString());
 
             //Execute query
