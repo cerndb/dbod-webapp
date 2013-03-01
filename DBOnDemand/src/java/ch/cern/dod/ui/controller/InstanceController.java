@@ -531,9 +531,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     item.setImage(DODConstants.IMG_PENDING);
                 } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_FAIL)) {
                     item.setImage(DODConstants.IMG_STOPPED);
+                } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_WARNING)) {
+                    item.setImage(DODConstants.IMG_BUSY);
                 } else if (job.getState().equals(DODConstants.JOB_STATE_PENDING)) {
                     item.setImage(DODConstants.IMG_AWAITING_APPROVAL);
-                }
+                } 
                 jobSelector.appendChild(item);
                 //If it was the selected one, select it again
                 if (selected != null && job.getUsername().equals(selected.getUsername()) && job.getDbName().equals(selected.getDbName())
@@ -585,6 +587,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 stateImage.setSrc(DODConstants.IMG_RUNNING);
             } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_FAIL)) {
                 stateImage.setSrc(DODConstants.IMG_STOPPED);
+            } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_WARNING)) {
+                stateImage.setSrc(DODConstants.IMG_BUSY);
             }
             ((Label) getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
             if (job.getCompletionDate() != null) {

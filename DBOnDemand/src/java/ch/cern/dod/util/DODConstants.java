@@ -81,6 +81,7 @@ public class DODConstants {
     public static final String JOB_STATE_RUNNING = "RUNNING";
     public static final String JOB_STATE_FINISHED_OK = "FINISHED_OK";
     public static final String JOB_STATE_FINISHED_FAIL = "FINISHED_FAIL";
+    public static final String JOB_STATE_FINISHED_WARNING = "FINISHED_WARNING";
     public static final String JOB_STARTUP = "STARTUP";
     public static final String JOB_SHUTDOWN = "SHUTDOWN";
     public static final String JOB_UPLOAD = "UPLOAD_CONFIG";
