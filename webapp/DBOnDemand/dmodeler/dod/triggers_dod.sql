@@ -51,11 +51,11 @@ FOR EACH ROW
 DECLARE
     message VARCHAR2 (1024);
 BEGIN
-    IF :NEW.state = 'FINISHED_FAIL'
+    IF :NEW.state = 'FINISHED_FAIL' OR :NEW.state = 'FINISHED_WARNING'
     THEN
         message := '<html>
                         <body>
-                            The execution of the following job has failed:
+                            The execution of the following job has failed or finished with errors:
                             <ul>
                                 <li><b>Username</b>: ' || :NEW.username || '</li>
                                 <li><b>DB Name</b>: ' || :NEW.db_name || '</li>
