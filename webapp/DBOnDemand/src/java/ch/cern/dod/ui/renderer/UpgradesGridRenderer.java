@@ -7,7 +7,6 @@ import ch.cern.dod.util.DODConstants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -95,9 +94,9 @@ public class UpgradesGridRenderer implements RowRenderer {
         try {
             errorWindow.doModal();
         } catch (InterruptedException ex) {
-            Logger.getLogger(OverviewGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
+            Logger.getLogger(UpgradesGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
-            Logger.getLogger(OverviewGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
+            Logger.getLogger(UpgradesGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
     }
 }

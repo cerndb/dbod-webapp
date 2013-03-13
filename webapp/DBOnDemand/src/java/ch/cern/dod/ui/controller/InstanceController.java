@@ -713,23 +713,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
         }
     }
-
-    /**
-     * Creates a job to destroy this instance.
-     * @deprecated Instances are destroyed through FIM.
-     */
-    public void doDestroy() {
-        try {
-            DestroyController destroyController = new DestroyController(instance, jobHelper);
-            //Only show window if it is not already being diplayed
-            if (this.getRoot().getFellowIfAny(destroyController.getId()) == null) {
-                destroyController.setParent(this.getRoot());
-                destroyController.doModal();
-            }
-        } catch (InterruptedException ex) {
-            showError(ex, DODConstants.ERROR_DISPATCHING_JOB);
-        }
-    }
     
     /**
      * Creates a job to upgrade this instance.
