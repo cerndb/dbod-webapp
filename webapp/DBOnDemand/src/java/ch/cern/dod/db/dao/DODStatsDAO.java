@@ -32,7 +32,7 @@ public class DODStatsDAO {
     private Connection getConnection() throws NamingException, SQLException {
         Context initContext = new InitialContext();
         Context envContext = (Context) initContext.lookup(DODConstants.ENVIRONMENT_CONTEXT);
-        DataSource dataSource = (DataSource) envContext.lookup(DODConstants.DATA_SOURCE);
+        DataSource dataSource = (DataSource) envContext.lookup(DODConstants.DATA_SOURCE_DBOD);
         return dataSource.getConnection();
     }
     

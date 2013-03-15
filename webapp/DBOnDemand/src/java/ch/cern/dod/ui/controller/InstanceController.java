@@ -484,8 +484,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Access monitoring button
         final Toolbarbutton monitorBtn = (Toolbarbutton) getFellow("monitor");
         //Only enable button if the instance is not awaiting approval
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)
-                || instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
             monitorBtn.setDisabled(true);
             monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {

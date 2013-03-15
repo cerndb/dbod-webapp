@@ -5,43 +5,32 @@ package ch.cern.dod.db.entity;
  * @author Daniel Gomez Blanco
  * @version 22/11/2011
  */
-public class DODMetric implements Comparable {
-    /**
-     * Id of the metric
-     */
-    private String id;
-    /**
-     * Description of the metric
-     */
-    private String description;
+public class DODMetric {
     /**
      * Type of metric
      */
     private String type;
+    /**
+     * Id of the metric
+     */
+    private String code;
+    /**
+     * Description of the metric
+     */
+    private String name;
+    /**
+     * Unit (if any)
+     */
+    private String unit;
 
     public DODMetric() {
     }
 
-    public DODMetric(String id, String description, String type) {
-        this.id = id;
-        this.description = description;
+    public DODMetric(String code, String name, String type, String unit) {
         this.type = type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        this.code = code;
+        this.name = name;
+        this.unit = unit;
     }
 
     public String getType() {
@@ -52,7 +41,27 @@ public class DODMetric implements Comparable {
         this.type = type;
     }
 
-    public int compareTo(Object o) {
-        return this.description.compareTo(((DODMetric)o).description);
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

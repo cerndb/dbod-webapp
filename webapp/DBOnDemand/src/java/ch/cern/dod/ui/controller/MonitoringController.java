@@ -1,12 +1,10 @@
 package ch.cern.dod.ui.controller;
 
+import ch.cern.dod.db.dao.DODMonitoringDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODMetric;
 import ch.cern.dod.util.DODConstants;
-import ch.cern.dod.util.MonitoringHelper;
 import ch.cern.dod.util.ParamsHelper;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +40,7 @@ public class MonitoringController extends Window {
     /**
      * Helper to access monitoring
      */
-    private MonitoringHelper helper;
+    private DODMonitoringDAO dao;
     /**
      * Available metrics for this instance
      */
@@ -62,7 +60,7 @@ public class MonitoringController extends Window {
 
         //Initialize instance and create job helper
         this.instance = inst;
-        helper = new MonitoringHelper();
+        dao = new DODMonitoringDAO();
 
         //Create params helper to get the host name for the link to Lemon
         //Get user and password for the web services account
@@ -105,13 +103,8 @@ public class MonitoringController extends Window {
         metrics.addEventListener(Events.ON_SELECT, new EventListener() {
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
-                    try {
-                        Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
-                                + "drawGraph(" + helper.getJSONMetric(instance, host, (DODMetric) metrics.getSelectedItem().getValue(), 30) + ", 'graphDiv');");
-                    } catch (IOException ex) {
-                        Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
-                        showError(DODConstants.ERROR_DISPATCHING_JOB);
-                    }
+                    Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
+                                + "drawGraph(" + dao.selectJSONData(instance, host, (DODMetric) metrics.getSelectedItem().getValue(), DODConstants.MONITORING_DAYS) + ", 'graphDiv');");
                 }
             }
         });
@@ -121,12 +114,7 @@ public class MonitoringController extends Window {
         Html graphDiv = new Html();
         graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
         mainBox.appendChild(graphDiv);
-        try {
-            Clients.evalJavaScript("drawGraph(" + helper.getJSONMetric(instance, host, (DODMetric) metrics.getItemAtIndex(0).getValue(), 30) + ", 'graphDiv');");
-        } catch (IOException ex) {
-            Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
-            showError(DODConstants.ERROR_DISPATCHING_JOB);
-        }
+        Clients.evalJavaScript("drawGraph(" + dao.selectJSONData(instance, host, (DODMetric) metrics.getItemAtIndex(1).getValue(), DODConstants.MONITORING_DAYS) + ", 'graphDiv');");
         
         //Link to monitoring overview
         Hbox overviewBox = new Hbox();
@@ -193,25 +181,32 @@ public class MonitoringController extends Window {
      * Loads the combobox with the available metrics
      */
     private void loadMetrics() {
-        try {
-            //Get available metrics
-            List<DODMetric> metricsList = helper.getAvailableMetrics(instance.getDbType());
-            //Insert items in combobox
-            for (int i = 0; i < metricsList.size(); i++) {
-                DODMetric metric = metricsList.get(i);
-                Comboitem item = new Comboitem();
-                item.setValue(metric);
-                item.setLabel(metric.getDescription());
-                metrics.appendChild(item);
+        //Get available metrics
+        List<DODMetric> metricsList = dao.selectAvailableMetrics(instance);
+        //Insert items in combobox
+        for (int i = 0; i < metricsList.size(); i++) {
+            DODMetric metric = metricsList.get(i);
+            //Add title
+            if (i == 0 || !metric.getType().equals(metricsList.get(i - 1).getType())) {
+                Comboitem title = new Comboitem();
+                title.setLabel(Labels.getLabel(DODConstants.LABEL_METRICS + metric.getType()));
+                title.setSclass("metricGroup");
+                title.setDisabled(true);
+                metrics.appendChild(title);
             }
-            //Selects first element
-            metrics.setSelectedIndex(0);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR OBTAINING AVAILABLE METRICS", ex);
-            showError(DODConstants.ERROR_OBTAINING_METRICS);
-        } catch (IOException ex) {
-            Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR OBTAINING AVAILABLE METRICS", ex);
-            showError(DODConstants.ERROR_OBTAINING_METRICS);
+            Comboitem item = new Comboitem();
+            item.setValue(metric);
+            if (metric.getUnit() != null) {
+                item.setLabel("\t" + metric.getName() + " [" + metric.getUnit() + " ]");
+            }
+            else {
+                item.setLabel("\t" + metric.getName());
+            }
+            metrics.appendChild(item);
+        }
+        //Selects first element
+        if (metricsList.size() > 0) {
+            metrics.setSelectedIndex(1);
         }
     }
 

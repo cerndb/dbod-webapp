@@ -123,3 +123,7 @@ color: blue;
     height:350px;
     background:url(../img/loading.gif) center center no-repeat;
 }
+
+.metricGroup td{
+    color: green !important;
+}

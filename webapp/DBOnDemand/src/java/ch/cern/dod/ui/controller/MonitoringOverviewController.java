@@ -1,12 +1,12 @@
 package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODInstanceDAO;
+import ch.cern.dod.db.dao.DODMonitoringDAO;
 import ch.cern.dod.db.dao.DODUpgradeDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.db.entity.DODMetric;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
-import ch.cern.dod.util.MonitoringHelper;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +30,9 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
      */
     private DODInstance instance;
     /**
-     * Helper to access monitoring
+     * DAO to access monitoring
      */
-    private MonitoringHelper helper;
+    private DODMonitoringDAO dao;
     
     /**
      * Method called before composing the page, it instantiates variables.
@@ -44,7 +44,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
         List<DODUpgrade> upgrades = upgradeDAO.selectAll();
         DODInstanceDAO instanceDAO = new DODInstanceDAO();
         this.instance = instanceDAO.selectByDbName(dbName, upgrades);
-        helper = new MonitoringHelper();
+        dao = new DODMonitoringDAO();
     }
     
     public void afterCompose() {
@@ -62,7 +62,18 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
         ((Image) getFellow("loading")).detach();
         String javascript = "";
         //Compose graphs
-        for (int i=0; i+1 < DODConstants.MYSQL_OVERVIEW_METRICS.length; i = i+2) {
+        DODMetric[] metrics;
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
+             metrics = DODConstants.MYSQL_OVERVIEW_METRICS;
+        }
+        else if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+            metrics = DODConstants.ORACLE_OVERVIEW_METRICS;
+        }
+        else {
+            metrics = new DODMetric[0];
+        }
+        
+        for (int i=0; i+1 < metrics.length; i = i+2) {
             //Hbox for two graphs
             Hbox hbox = new Hbox();
             hbox.setWidth("1200px");
@@ -71,58 +82,61 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             Vbox vboxLeft = new Vbox();
             vboxLeft.setAlign("center");
             vboxLeft.setWidth("600px");
-            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i].getDescription());
+            Label labelLeft = new Label();
+            if (metrics[i].getUnit() != null) {
+                labelLeft.setValue(metrics[i].getName() + " [" + metrics[i].getUnit() + "]");
+            }
+            else {
+                labelLeft.setValue(metrics[i].getName());
+            }
             labelLeft.setSclass("titleSmall");
             vboxLeft.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + metrics[i].getCode() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxLeft.appendChild(graphLeft);
-            try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[i], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i].getId() +"');";
-            } catch (IOException ex) {
-                Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
-                showError(DODConstants.ERROR_DISPATCHING_JOB);
-            }
+            javascript += "drawGraph(" + dao.selectJSONData(instance, "", metrics[i], 14) + ", 'graphDiv" + metrics[i].getCode() +"');";
             hbox.appendChild(vboxLeft);
             //Vbox for second graph
             Vbox vboxRight = new Vbox();
             vboxRight.setAlign("center");
             vboxRight.setWidth("600px");
-            Label labelRight = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getDescription());
+            Label labelRight = new Label();
+            if (metrics[i+1].getUnit() != null) {
+                labelRight.setValue(metrics[i+1].getName() + " [" + metrics[i+1].getUnit() + "]");
+            }
+            else {
+                labelRight.setValue(metrics[i+1].getName());
+            }
             labelRight.setSclass("titleSmall");
             vboxRight.appendChild(labelRight);
             Html graphRight = new Html();
-            graphRight.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphRight.setContent("<div id=\"graphDiv" + metrics[i+1].getCode() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vboxRight.appendChild(graphRight);
-            try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[i+1], 14) + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[i+1].getId() +"');";
-            } catch (IOException ex) {
-                Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
-                showError(DODConstants.ERROR_DISPATCHING_JOB);
-            }
+            javascript += "drawGraph(" + dao.selectJSONData(instance, "", metrics[i+1], 14) + ", 'graphDiv" + metrics[i+1].getCode() +"');";
             hbox.appendChild(vboxRight);
             //Add to container
             ((Vbox) getFellow("chartContainer")).appendChild(hbox);
         }
         //If array has an odd number of elements add one more in the center
-        if  (DODConstants.MYSQL_OVERVIEW_METRICS.length % 2 == 1) {
+        if  (metrics.length % 2 == 1) {
             //Vbox for firsst graph
             Vbox vbox = new Vbox();
             vbox.setAlign("center");
             vbox.setWidth("1200px");
-            Label labelLeft = new Label(DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getDescription());
+            Label labelLeft = new Label();
+            if (metrics[metrics.length - 1].getUnit() != null) {
+                labelLeft.setValue(metrics[metrics.length - 1].getName() + " [" + metrics[metrics.length - 1].getUnit() + "]");
+            }
+            else {
+                labelLeft.setValue(metrics[metrics.length - 1].getName());
+            }
             labelLeft.setSclass("titleSmall");
             vbox.appendChild(labelLeft);
             Html graphLeft = new Html();
-            graphLeft.setContent("<div id=\"graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getId() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
+            graphLeft.setContent("<div id=\"graphDiv" + metrics[metrics.length - 1].getCode() +"\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
             vbox.appendChild(graphLeft);
-            try {
-                javascript += "drawGraph(" + helper.getJSONMetric(instance, "", DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1], 14)
-                                        + ", 'graphDiv" + DODConstants.MYSQL_OVERVIEW_METRICS[DODConstants.MYSQL_OVERVIEW_METRICS.length - 1].getId() +"');";
-            } catch (IOException ex) {
-                Logger.getLogger(MonitoringController.class.getName()).log(Level.SEVERE, "ERROR DISPLAYING METRIC", ex);
-                showError(DODConstants.ERROR_DISPATCHING_JOB);
-            }
+            javascript += "drawGraph(" + dao.selectJSONData(instance, "", metrics[metrics.length - 1], 14)
+                                        + ", 'graphDiv" + metrics[metrics.length - 1].getCode() +"');";
             ((Vbox) getFellow("chartContainer")).appendChild(vbox);
         }
         //Eval javascript

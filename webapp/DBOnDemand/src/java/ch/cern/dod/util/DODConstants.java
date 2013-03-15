@@ -17,7 +17,8 @@ public class DODConstants {
     
     //Variables
     public static final String ENVIRONMENT_CONTEXT = "java:/comp/env";
-    public static final String DATA_SOURCE = "jdbc/dbondemand";
+    public static final String DATA_SOURCE_DBOD = "jdbc/dbondemand";
+    public static final String DATA_SOURCE_MONITORING = "jdbc/monitoring";
     public static final String WS_USER_PSWD = "wsUserPswd";
     public static final String WS_USER = "wsUser";
     public static final String WS_PSWD = "wsPswd";
@@ -35,15 +36,10 @@ public class DODConstants {
     public static final String MASTER = "master";
     public static final String SLAVE = "slave";
     public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
-    public static final String MONITORING_URL = "http://phydb.web.cern.ch/phydb/racmon/conf/upl/plot_metric.php?raw=1";
     public static final String MONITORING_TYPE = "tgtt";
     public static final String MONITORING_TYPE_MYSQL = "M";
-    public static final String MONITORING_TYPE_MACHINE = "N";
-    public static final String MONITORING_INSTANCE = "tgt";
-    public static final String MONITORING_METRIC = "metric";
-    public static final String MONITORING_DAYS = "days";
-    public static final String HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/user_help_html/";
-    public static final String ADMIN_HELP_DIR = "/afs/cern.ch/project/jps/reps/DBOnDemand/admin_help_html/";
+    public static final String MONITORING_TYPE_NODE = "N";
+    public static final String MONITORING_TYPE_ORACLE = "C";
     public static final String LEMON_URL = "http://lemonweb.cern.ch/lemon-web/info.php?entity=";
     public static final String PARAM_HOST = "host";
     public static final int MAX_SIZE_CONFIG_FILE = 512;
@@ -58,16 +54,28 @@ public class DODConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
-    public static final DODMetric[] MYSQL_OVERVIEW_METRICS = {new DODMetric("Threads_connected","Number of currently open connections","M"),
-                                                                new DODMetric("Aborted_connects","Number of aborted connections","M"),
-                                                                new DODMetric("Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk","M"),
-                                                                new DODMetric("Innodb_data_reads","Total number of data reads","M"),
-                                                                new DODMetric("Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool","M"),
-                                                                new DODMetric("Innodb_data_writes","Total number of data writes","M"),
-                                                                new DODMetric("Innodb_data_read","Amount of data read since the server was started","M"),
-                                                                new DODMetric("Innodb_data_written","Amount of data written","M"),
-                                                                new DODMetric("Qcache_hits","Number of query cache hits","M"),
-                                                                new DODMetric("Qcache_not_cached","Number of noncached queries","M")};
+    public static final DODMetric[] MYSQL_OVERVIEW_METRICS = {new DODMetric("Threads_connected","Number of currently open connections","M",""),
+                                                                new DODMetric("Aborted_connects","Number of aborted connections","M",""),
+                                                                new DODMetric("Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk","M",""),
+                                                                new DODMetric("Innodb_data_reads","Total number of data reads","M",""),
+                                                                new DODMetric("Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool","M",""),
+                                                                new DODMetric("Innodb_data_writes","Total number of data writes","M",""),
+                                                                new DODMetric("Innodb_data_read","Amount of data read since the server was started","M",""),
+                                                                new DODMetric("Innodb_data_written","Amount of data written","M",""),
+                                                                new DODMetric("Qcache_hits","Number of query cache hits","M",""),
+                                                                new DODMetric("Qcache_not_cached","Number of noncached queries","M","")};
+    public static final DODMetric[] ORACLE_OVERVIEW_METRICS = {new DODMetric("2147","Average Active Sessions","C","Active Sessions"),
+                                                                new DODMetric("2003","User Transaction Per Sec","C","Transactions Per Second"),
+                                                                new DODMetric("2093","Physical Read Total Bytes Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2092","Physical Read Total IO Requests Per Sec","C","Requests Per Second"),
+                                                                new DODMetric("2124","Physical Write Total Bytes Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2100","Physical Write Total IO Requests Per Sec","C","Requests Per Second"),
+                                                                new DODMetric("2106","SQL Service Response Time","C","CentiSeconds Per Call"),
+                                                                new DODMetric("2144","Average Synchronous Single-Block Read Latency","C","Milliseconds"),
+                                                                new DODMetric("2016","Redo Generated Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2034","Redo Writes Per Sec","C","Writes Per Second")};
+    public static final int MONITORING_DAYS = 15;
+    public static final int MONITORING_OVERVIEW_DAYS = 7;
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
@@ -190,6 +198,7 @@ public class DODConstants {
     public static final String LABEL_SHUTDOWN_TITLE = "shutdownTitle";
     public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
     public static final String LABEL_MESSAGE_NO_CERN = "messageNoCern";
+    public static final String LABEL_METRICS = "metrics";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
