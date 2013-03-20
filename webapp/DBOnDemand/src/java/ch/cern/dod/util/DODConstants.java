@@ -71,7 +71,7 @@ public class DODConstants {
                                                                 new DODMetric("2124","Physical Write Total Bytes Per Sec","C","Bytes Per Second"),
                                                                 new DODMetric("2100","Physical Write Total IO Requests Per Sec","C","Requests Per Second"),
                                                                 new DODMetric("2106","SQL Service Response Time","C","CentiSeconds Per Call"),
-                                                                new DODMetric("2144","Average Synchronous Single-Block Read Latency","C","Milliseconds"),
+                                                                new DODMetric("2057","Host CPU Utilization (%)","C","% Busy/(Idle+Busy)"),
                                                                 new DODMetric("2016","Redo Generated Per Sec","C","Bytes Per Second"),
                                                                 new DODMetric("2034","Redo Writes Per Sec","C","Writes Per Second")};
     public static final int MONITORING_DAYS = 15;

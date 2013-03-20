@@ -65,6 +65,7 @@ public class DODMonitoringDAO {
             else if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
                 query.append("SELECT ?, metric_id, metric_name, metric_unit"
                                 + " FROM pdb_monitoring.rmon_metrics"
+                                + " WHERE metric_id <> 2144" //Exclude Average Synchronous Single-Block Read Latency
                                 + " ORDER BY metric_name");
                 statement = connection.prepareStatement(query.toString());
                 statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
