@@ -55,7 +55,7 @@ public class DODMonitoringDAO {
             StringBuilder query = new StringBuilder();
             if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
                 query.append("SELECT target_type, parameter_code, parameter_name, unit"
-                                + " FROM target_params_defs"
+                                + " FROM pdb_monitoring.target_params_defs"
                                 + " WHERE target_type = ? OR target_type = ?"
                                 + " ORDER BY target_type, parameter_name");
                 statement = connection.prepareStatement(query.toString());
@@ -64,7 +64,7 @@ public class DODMonitoringDAO {
             }
             else if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
                 query.append("SELECT ?, metric_id, metric_name, metric_unit"
-                                + " FROM rmon_metrics"
+                                + " FROM pdb_monitoring.rmon_metrics"
                                 + " ORDER BY metric_name");
                 statement = connection.prepareStatement(query.toString());
                 statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
@@ -127,7 +127,7 @@ public class DODMonitoringDAO {
             //If the metric is MySQL
             if (metric.getType().equals(DODConstants.MONITORING_TYPE_MYSQL)) {
                 query.append("SELECT p.valid_from, p.valid_to, p.value"
-                                + " FROM targets t, target_params p"
+                                + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
                                 + " WHERE t.target_name = ?"
                                 + " AND p.target_id = t.target_id"
                                 + " AND p.target_type = ?"
@@ -142,7 +142,7 @@ public class DODMonitoringDAO {
             }
             else if (metric.getType().equals(DODConstants.MONITORING_TYPE_NODE)) {
                 query.append("SELECT p.valid_from, p.valid_to, p.value"
-                                + " FROM targets t, target_params p"
+                                + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
                                 + " WHERE t.target_name = ?"
                                 + " AND p.target_id = t.target_id"
                                 + " AND p.target_type = ?"
@@ -157,7 +157,7 @@ public class DODMonitoringDAO {
             }
             else if (metric.getType().equals(DODConstants.MONITORING_TYPE_ORACLE)) {
                 query.append("SELECT begin_time, end_time, average"
-                                + " FROM rmon_data"
+                                + " FROM pdb_monitoring.rmon_data"
                                 + " WHERE cluster_name = ?"
                                 + " AND metric_id = ?"
                                 + " AND (end_time >= ? OR end_time IS NULL)"
@@ -173,42 +173,51 @@ public class DODMonitoringDAO {
 
             //Build JSON object
             if (result.next()) {
+                //If there is no end date use now
+                Timestamp end = result.getTimestamp(2);
+                if (end == null) {
+                    end = new Timestamp(now.getTime());
+                }
+                
                 //Store value to build delta
                 Float value1 = Float.parseFloat(result.getString(3));
+                
                 //Initialise object
                 json.append("{cols: [{id: 'date', label: 'Date', type: 'datetime'}, {id: 'value', label: 'Cumulative', type: 'number'}, {id: 'value', label: 'Delta', type: 'number'}], rows: [");
+                
                 //Start date (with delta 0)
                 json.append("{c: [{v: new Date(");
                 json.append(start.getTime());
                 json.append(")}, {v: ");
                 json.append(value1);
                 json.append("}, {v: 0}]}");
-                //If there is an end date, there is another row
-                if (result.getTimestamp(2) != null) {
+                
+                //End date (no delta)
+                json.append(", {c: [{v: new Date(");
+                json.append(end.getTime());
+                json.append(")}, {v: ");
+                json.append(value1);
+                json.append("}]}");
+                
+                //If the next point is after more than 7 minutes add delta 0 (not for Oracle)
+                if (!instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
+                        && start.getTime() + 420000 < end.getTime()) {
                     json.append(", {c: [{v: new Date(");
-                    json.append(result.getTimestamp(2).getTime());
-                    json.append(")}, {v: ");
-                    json.append(value1);
-                    json.append("}]}");
-                    //If the next point is after more than 7 minutes add delta 0
-                    if (start.getTime() + 420000 < result.getTimestamp(2).getTime()) {
-                        json.append(", {c: [{v: new Date(");
-                        json.append(result.getTimestamp(2).getTime() - 360000);
-                        json.append(")}, {}, {v:0}]}");
-                    }
+                    json.append(end.getTime() - 360000);
+                    json.append(")}, {}, {v:0}]}");
                 }
-                //If there is no end date, use now as a time and add delta 0
-                else {
-                    json.append(", {c: [{v: new Date(");
-                    json.append(now.getTime());
-                    json.append(")}, {v: ");
-                    json.append(value1);
-                    json.append("}, {v: 0}]}");
-                }
-            
+
+                //Fetch rest of rows
                 while (result.next()) {
+                    //If there is no end date use now
+                    end = result.getTimestamp(2);
+                    if (end == null) {
+                        end = new Timestamp(now.getTime());
+                    }
+                    
                     //Store new value to build delta
                     Float value2 = Float.parseFloat(result.getString(3));
+                    
                     //Start date
                     json.append(", {c: [{v: new Date(");
                     json.append(result.getTimestamp(1).getTime());
@@ -217,39 +226,35 @@ public class DODMonitoringDAO {
                     json.append("}, {v: ");
                     json.append(value2 - value1);
                     json.append("}]}");
-                    //If there is an end date, there is another row
-                    if (result.getTimestamp(2) != null) {
+                    
+                    //End date (no delta)
+                    json.append(", {c: [{v: new Date(");
+                    json.append(end.getTime());
+                    json.append(")}, {v: ");
+                    json.append(value2);
+                    json.append("}]}");
+                    
+                    //If the next point is after more than 7 minutes add delta 0
+                    if (!instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
+                            && result.getTimestamp(1).getTime() + 420000 < end.getTime()) {
                         json.append(", {c: [{v: new Date(");
-                        json.append(result.getTimestamp(2).getTime());
-                        json.append(")}, {v: ");
-                        json.append(value2);
-                        json.append("}]}");
-                        //If the next point is after more than 7 minutes add delta 0
-                        if (result.getTimestamp(1).getTime() + 420000 < result.getTimestamp(2).getTime()) {
-                            json.append(", {c: [{v: new Date(");
-                            json.append(result.getTimestamp(1).getTime() + 360000);
-                            json.append(")}, {}, {v:0}]}");
-                            json.append(", {c: [{v: new Date(");
-                            json.append(result.getTimestamp(2).getTime() - 360000);
-                            json.append(")}, {}, {v:0}]}");
-                        }
-                    }
-                    //If there is no end date, use now as a time and add delta 0
-                    else {
-                        //If the next point is after more than 7 minutes add delta 0
-                        if (result.getTimestamp(1).getTime() + 420000 < now.getTime()) {
-                            json.append(", {c: [{v: new Date(");
-                            json.append(result.getTimestamp(1).getTime() + 360000);
-                            json.append(")}, {}, {v:0}]}");
-                        }
+                        json.append(result.getTimestamp(1).getTime() + 360000);
+                        json.append(")}, {}, {v:0}]}");
                         json.append(", {c: [{v: new Date(");
-                        json.append(now.getTime());
-                        json.append(")}, {v: ");
-                        json.append(value2);
-                        json.append("}, {v: 0}]}");
+                        json.append(end.getTime() - 360000);
+                        json.append(")}, {}, {v:0}]}");
                     }
+                    
+                    //Resest first value
                     value1 = value2;
                 }
+                
+                //Add delta 0 for the end point
+                json.append(", {c: [{v: new Date(");
+                json.append(end.getTime());
+                json.append(")}, {}, {v: 0}]}");
+                
+                //Close object
                 json.append("]}");
             }
         } catch (NamingException ex) {

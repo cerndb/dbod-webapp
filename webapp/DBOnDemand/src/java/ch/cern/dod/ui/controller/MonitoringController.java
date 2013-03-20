@@ -114,7 +114,9 @@ public class MonitoringController extends Window {
         Html graphDiv = new Html();
         graphDiv.setContent("<div id=\"graphDiv\" style=\"width:560px; height:300px\" class=\"preloader\"></div>");
         mainBox.appendChild(graphDiv);
-        Clients.evalJavaScript("drawGraph(" + dao.selectJSONData(instance, host, (DODMetric) metrics.getItemAtIndex(1).getValue(), DODConstants.MONITORING_DAYS) + ", 'graphDiv');");
+        if (metrics.getItemCount() > 0) {
+            Clients.evalJavaScript("drawGraph(" + dao.selectJSONData(instance, host, (DODMetric) metrics.getItemAtIndex(1).getValue(), DODConstants.MONITORING_DAYS) + ", 'graphDiv');");
+        }
         
         //Link to monitoring overview
         Hbox overviewBox = new Hbox();
