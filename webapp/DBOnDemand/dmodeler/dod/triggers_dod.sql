@@ -160,10 +160,13 @@ BEGIN
     THEN
         message := '<html>
                         <body>
-                            Instance <b>' || :NEW.db_name || '</b> has been removed from FIM, or has expired, and has been marked for deletion.
-                            The database will still be running until manually stopped. Please take the necessary actions to free the allocated resources.
-                            Remember that expired instances stay in FIM until removed. This means that scheduled backups and clean-ups will still be running.
-                            Please go to FIM admin page to remove the instance, that will disable all automatic actions.
+                            <p>
+                                Instance <b>' || :NEW.db_name || '</b> has been removed from FIM, or has expired, and has been marked for deletion.
+                            </p>
+                            <p>
+                                The database will still be running until manually stopped. Please take the necessary actions to free the allocated resources
+                                as documented in the corresponding <a href="https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandDeletion">TWiki article</a>.
+                            </p>
                         </body>
                     </html>';
         
