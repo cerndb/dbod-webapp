@@ -169,45 +169,80 @@
             </vbox>
         </groupbox>
         
-         <!-- Groupbox for the upgrades -->
-        <groupbox width="1200px" mold="3d" closable="false" style="margin-top:20px">
-            <caption label=" ">
-                <label value="${c:l('availableUpgrades')}" sclass="title" style="float:left;"/>
-            </caption>
-            <vbox width="100%" align="right">
-                <vbox width="100%" align="left">
-                    <!-- Upgrades grid (only shown when there are upgrades) -->
-                    <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none">
-                        <columns>
-                            <column label="${c:l('dbType')}" sort="auto(dbName)" width="250px"/>
-                            <column label="${c:l('category')}" sort="auto(category)" width="250px"/>
-                            <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" width="322px"/>
-                            <column label="${c:l('versionTo')}" sort="auto(versionTo)" width="322px"/>
-                            <column label="" width="40px"/>
-                        </columns>
-                        <foot id="footerUpgrades" style="display:none">
-                            <footer span="5">
-                                 <hbox height="24px" align="bottom">
-                                    <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
-                                    <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
-                                </hbox>
-                            </footer>
-                        </foot>
-                    </grid>
-                </vbox>
-                <!--Show a message in case there no upgrades  -->
-                <div id="emptyUpgradesMsg" style="display:none">
-                    <div style="padding-right:550px">
-                        <label value="${c:l('emptyUpgradesList')}"/>
+        <!-- Hbox for upgades and instances to destroy -->
+        <hbox>
+            <!-- Groupbox for instances to destroy -->
+            <groupbox width="595px" mold="3d" closable="false" style="margin-top:20px">
+                <caption label=" ">
+                    <label value="${c:l('toDestroy')}" sclass="title" style="float:left;"/>
+                </caption>
+                <vbox width="100%" align="right">
+                    <vbox width="100%" align="left">
+                        <!-- Destroy grid (only shown when there are instances to destroy) -->
+                        <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none">
+                            <columns>
+                                <column label="${c:l('dbName')}" sort="auto(dbName)" width="520px"/>
+                                <column label="" width="60px"/>
+                            </columns>
+                            <foot id="footerDestroy" style="display:none">
+                                <footer span="5">
+                                     <hbox height="24px" align="bottom" width="300px">
+                                        <toolbarbutton tooltiptext="${c:l('showAllToDestroy')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllToDestroy();"/>
+                                        <label value="${c:l('showAllToDestroy')}" style="!important;cursor:pointer;" onClick="controller.showAllToDestroy();"/>                               
+                                    </hbox>
+                                </footer>
+                            </foot>
+                        </grid>
+                    </vbox>
+                    <!--Show a message in case there no instances to destroy  -->
+                    <div id="emptyDestroyMsg" style="display:none">
+                        <div style="padding-right:200px">
+                            <label value="${c:l('emptyToDestroyList')}"/>
+                        </div>
                     </div>
-                </div>
-                <!--Button to add new upgrade  -->
-                <hbox height="24px" align="bottom">
-                    <label sclass="title" value="${c:l('addUpgradeTitle')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.openAddUpgrade();"/>
-                    <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" zclass="button" image="/img/add_upgrade.png" onClick="controller.openAddUpgrade();"/>
-                </hbox>
-            </vbox>
-        </groupbox>
+                </vbox>
+            </groupbox>
+            
+            <!-- Groupbox for upgrades -->
+            <groupbox width="595px" mold="3d" closable="false" style="margin-top:20px;margin-left:10px">
+                <caption label=" ">
+                    <label value="${c:l('availableUpgrades')}" sclass="title" style="float:left;"/>
+                </caption>
+                <vbox width="100%" align="right">
+                    <vbox width="100%" align="left">
+                        <!-- Upgrades grid (only shown when there are upgrades) -->
+                        <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none">
+                            <columns>
+                                <column label="${c:l('dbType')}" sort="auto(dbName)" width="100px"/>
+                                <column label="${c:l('category')}" sort="auto(category)" width="100px"/>
+                                <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" width="170px"/>
+                                <column label="${c:l('versionTo')}" sort="auto(versionTo)" width="170px"/>
+                                <column label="" width="40px"/>
+                            </columns>
+                            <foot id="footerUpgrades" style="display:none">
+                                <footer span="5">
+                                     <hbox height="24px" align="bottom" width="300px">
+                                        <toolbarbutton tooltiptext="${c:l('showAllUpgrades')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllUpgrades();"/>
+                                        <label value="${c:l('showAllUpgrades')}" style="!important;cursor:pointer;" onClick="controller.showAllUpgrades();"/>                               
+                                    </hbox>
+                                </footer>
+                            </foot>
+                        </grid>
+                    </vbox>
+                    <!--Show a message in case there no upgrades  -->
+                    <div id="emptyUpgradesMsg" style="display:none">
+                        <div style="padding-right:200px">
+                            <label value="${c:l('emptyUpgradesList')}"/>
+                        </div>
+                    </div>
+                    <!--Button to add new upgrade  -->
+                    <hbox height="24px" align="bottom">
+                        <label sclass="title" value="${c:l('addUpgradeTitle')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.openAddUpgrade();"/>
+                        <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" zclass="button" image="/img/add_upgrade.png" onClick="controller.openAddUpgrade();"/>
+                    </hbox>
+                </vbox>
+            </groupbox>
+        </hbox>
         
         <!-- Groupbox for stats -->
         <groupbox width="1200px" mold="3d" closable="false" style="margin-top:20px">
@@ -216,7 +251,7 @@
             </caption>
             <hbox>
                 <!-- Groupbox for command stats -->
-                <groupbox width="480px" mold="3d" closable="false" style="margin-right:5px">
+                <groupbox width="580px" mold="3d" closable="false" style="margin-right:5px">
                     <caption label=" ">
                         <label value="${c:l('commandStats')}" sclass="title" style="float:left;"/>
                     </caption>
@@ -225,9 +260,9 @@
                             <!-- Commmand stats grid (only shown when there are stats) -->
                             <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
                                 <columns>
-                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="280px"/>
-                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
-                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
+                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="330px"/>
+                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="80px"/>
+                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="150px"/>
                                 </columns>
                                 <foot id="commandStatsFooter" style="display:none">
                                     <footer span="3">
@@ -248,7 +283,7 @@
                     </vbox>
                 </groupbox>
                 <!-- Groupbox for job stats -->
-                <groupbox width="680px" mold="3d" closable="false" style="margin-left:5px">
+                <groupbox width="580px" mold="3d" closable="false" style="margin-left:5px">
                     <caption label=" ">
                         <label value="${c:l('jobStats')}" sclass="title" style="float:left;"/>
                     </caption>
@@ -260,21 +295,21 @@
                                     <auxheader colspan="1">
                                         <hbox align="bottom">
                                             <image src="/img/filter.png" width="18px" height="18px"/>
-                                            <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                            <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
                                         </hbox>
                                     </auxheader>
                                     <auxheader colspan="1">
                                         <hbox align="bottom">
                                             <image src="/img/filter.png" width="18px" height="18px"/>
-                                            <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                            <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
                                         </hbox>
                                     </auxheader>
                                     <auxheader colspan="2">
                                     </auxheader>
                                 </auxhead>
                                 <columns>
-                                    <column label="${c:l('dbName')}" sort="auto(dbName)" width="240px"/>
-                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="240px"/>
+                                    <column label="${c:l('dbName')}" sort="auto(dbName)" width="170px"/>
+                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="215px"/>
                                     <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
                                     <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
                                 </columns>

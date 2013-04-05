@@ -95,12 +95,79 @@ public class DODInstanceDAO {
                             instance.setUpgradeTo(upgrade.getVersionTo());
                     }
                 }
-               instances.add(instance);
+                instances.add(instance);
             }
         } catch (NamingException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
         } catch (SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {
+            }
+            try {
+                statement.close();
+            } catch (Exception e) {
+            }
+            try {
+                connection.close();
+            } catch (Exception e) {
+            }
+        }
+        return instances;
+    }
+    
+    /**
+     * Selects all the instances to be destroyed.
+     * @return List of all the instances to be destroyed.
+     */
+    public List<DODInstance> selectToDestroy() {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<DODInstance> instances = new ArrayList<DODInstance>();
+        try {
+            //Get connection
+            connection = getConnection();
+
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
+                            + " FROM dod_instances WHERE status = '0'"
+                            + " ORDER BY db_name");
+            statement = connection.prepareStatement(query.toString());
+
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            while (result.next()) {
+                DODInstance instance = new DODInstance();
+                instance.setUsername(result.getString(1));
+                instance.setDbName(result.getString(2));
+                instance.setEGroup(result.getString(3));
+                instance.setCategory(result.getString(4));
+                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
+                if (result.getDate(6) != null)
+                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
+                instance.setDbType(result.getString(7));
+                instance.setDbSize(result.getInt(8));
+                instance.setNoConnections(result.getInt(9));
+                instance.setProject(result.getString(10));
+                instance.setDescription(result.getString(11));
+                instance.setVersion(result.getString(12));
+                instance.setState(result.getString(13));
+                instance.setStatus(result.getBoolean(14));
+                instance.setMaster(result.getString(15));
+                instance.setSlave(result.getString(16));
+                instance.setSharedInstance(result.getString(17));
+                instances.add(instance);
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES TO DESTROY",ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES TO DESTROY",ex);
         } finally {
             try {
                 result.close();
@@ -483,40 +550,36 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Deletes an instance from the database. It does not delete it physically, but logically,
-     * setting the status field to 0.
+     * Deletes an instance from the database.
      * @param instance instance to be deleted.
      * @return 1 if the operation was successful, 0 otherwise.
-     * @deprecated instances are destroyed via FIM now
      */
     public int delete(DODInstance instance) {
         Connection connection = null;
-        CallableStatement destroyStatement = null;
+        PreparedStatement deleteStatement = null;
         int deleteResult = 0;
         try {
             //Get connection
             connection = getConnection();
-            //Create call destroy_instance(username IN VARCHAR2, db_name IN VARCHAR2)
-            String destroyCall = "{ call destroy_instance(?, ?) }";
-            destroyStatement = connection.prepareCall(destroyCall);
+            //Create statement
+            String deleteQuery = "DELETE FROM dod_instances WHERE db_name = ? AND username = ?";
+            deleteStatement = connection.prepareStatement(deleteQuery);
             //Set values
-            destroyStatement.setString(1, instance.getUsername());
-            destroyStatement.setString(2, instance.getDbName());
+            deleteStatement.setString(1, instance.getDbName());
+            deleteStatement.setString(2, instance.getUsername());
 
-            deleteResult = destroyStatement.executeUpdate();
+            deleteResult = deleteStatement.executeUpdate();
         } catch (NamingException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } catch (SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
-                destroyStatement.close();
-            } catch (Exception e) {
-            }
+                deleteStatement.close();
+            } catch (Exception e) {}
             try {
                 connection.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
         return deleteResult;
     }
@@ -775,5 +838,92 @@ public class DODInstanceDAO {
             } catch (Exception e) {}
         }
         return changes;
+    }
+    
+    /**
+     * Rescues an instance and enables it back again.
+     * @param instance instance to be deleted.
+     * @return 1 if the operation was successful, 0 otherwise.
+     */
+    public int rescue(DODInstance instance) {
+        Connection connection = null;
+        PreparedStatement rescueStatement = null;
+        int rescueResult = 0;
+        try {
+            //Get connection
+            connection = getConnection();
+            //Create statement
+            String rescueQuery = "UPDATE dod_instances SET status = '1' WHERE db_name = ? AND username = ?";
+            rescueStatement = connection.prepareStatement(rescueQuery);
+            //Set values
+            rescueStatement.setString(1, instance.getDbName());
+            rescueStatement.setString(2, instance.getUsername());
+
+            rescueResult = rescueStatement.executeUpdate();
+        } catch (NamingException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+        } finally {
+            try {
+                rescueStatement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return rescueResult;
+    }
+    
+    /**
+     * Checks if an instance is on FIM.
+     * @param instance instance to check.
+     * @return true if the instance is on FIM, false otherwise.
+     */
+    public boolean isInstanceOnFIM(DODInstance instance) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        try {
+            //Get connection
+            connection = getConnection();
+
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT *"
+                            + " FROM fim_ora_ma.dod_fim_objects WHERE db_name = ?");
+            statement = connection.prepareStatement(query.toString());
+
+            //Assign values to variables
+            statement.setString(1, instance.getDbName());
+
+            //Execute query
+            result = statement.executeQuery();
+
+            //If there is no result return false
+            if (!result.next()) {
+                return false;
+            }
+        } catch (NamingException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING FIM OBJECT FOR DB NAME " + instance.getDbName() ,ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING FIM OBJECT FOR DB NAME " + instance.getDbName() ,ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {
+            }
+            try {
+                statement.close();
+            } catch (Exception e) {
+            }
+            try {
+                connection.close();
+            } catch (Exception e) {
+            }
+        }
+        
+        //Return true in any other case
+        return true;
     }
 }

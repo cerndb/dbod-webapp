@@ -11,6 +11,7 @@ public class DODConstants {
     
     //Session attributes
     public static final String ATTRIBUTE_SHOW_ALL = "showAll";
+    public static final String ATTRIBUTE_SHOW_ALL_TO_DESTROY = "showAllToDestroy";
     public static final String ATTRIBUTE_SHOW_ALL_UPGRADES = "showAllUpgrades";
     public static final String ATTRIBUTE_SHOW_ALL_JOB_STATS = "showAllJobStats";
     public static final String ATTRIBUTE_SHOW_ALL_COMMAND_STATS = "showAllCommandStats";
@@ -102,7 +103,6 @@ public class DODConstants {
     public static final String JOB_RESTORE = "RESTORE";
     public static final String JOB_UPGRADE = "UPGRADE";
     public static final String JOB_MONITOR = "MONITOR";
-    public static final String JOB_DESTROY = "DESTROY";
     public static final String JOB_CLEANUP = "CLEANUP";
     public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
@@ -199,6 +199,8 @@ public class DODConstants {
     public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
     public static final String LABEL_MESSAGE_NO_CERN = "messageNoCern";
     public static final String LABEL_METRICS = "metrics";
+    public static final String LABEL_RESCUE_TITLE = "rescueTitle";
+    public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -258,6 +260,9 @@ public class DODConstants {
     public static final String ERROR_MASTER_SHARED_INSTANCE = "errorMasterSharedInstance";
     public static final String ERROR_SLAVE_SHARED_INSTANCE = "errorSlaveSharedInstance";
     public static final String ERROR_PIT_ONE_MINUTE = "errorPITOneMinute";
+    public static final String ERROR_DESTROYING_INSTANCE = "errorDestroyingInstance";
+    public static final String ERROR_RESCUING_INSTANCE = "errorRescuingInstance";
+    public static final String ERROR_INSTANCE_ON_FIM = "errorInstanceOnFIM";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";
@@ -282,6 +287,7 @@ public class DODConstants {
     public static final String IMG_WARNING = "/img/warning.png";
     public static final String IMG_FILES = "/img/files.png";
     public static final String IMG_LOGS = "/img/logs.png";
+    public static final String IMG_RESCUE = "/img/rescue.png";
 
     //Style classes
     public static final String STYLE_BUTTON = "button";

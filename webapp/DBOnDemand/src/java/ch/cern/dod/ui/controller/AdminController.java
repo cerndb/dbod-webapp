@@ -9,6 +9,7 @@ import ch.cern.dod.db.entity.DODJobStat;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.ui.model.*;
 import ch.cern.dod.ui.renderer.CommandStatsRenderer;
+import ch.cern.dod.ui.renderer.DestroyGridRenderer;
 import ch.cern.dod.ui.renderer.JobStatsRenderer;
 import ch.cern.dod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dod.ui.renderer.UpgradesGridRenderer;
@@ -62,6 +63,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     private List<DODJobStat> jobStats;
     /**
+     * List of instances to be destroyed.
+     */
+    private List<DODInstance> toDestroy;
+    /**
      * Job helper to perform admin actions.
      */
     private JobHelper jobHelper;
@@ -85,6 +90,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Select instances
         instanceDAO = new DODInstanceDAO();
         instances = instanceDAO.selectAll(upgrades);
+        toDestroy = instanceDAO.selectToDestroy();
         
         //Select stats
         statsDAO = new DODStatsDAO();
@@ -109,6 +115,12 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
         upgradesGrid.getPagingChild().setMold("os");
         
+        //Destroy grid
+        Grid destroyGrid = (Grid) getFellow("destroyGrid");
+        destroyGrid.setModel(new DestroyListModel(toDestroy));
+        destroyGrid.setRowRenderer(new DestroyGridRenderer(instanceDAO));
+        destroyGrid.getPagingChild().setMold("os");
+        
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
         commandStatsGrid.setModel(new CommandStatsModel(commandStats));
@@ -127,6 +139,9 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
         if (showAll != null && showAll)
             showAll();
+        Boolean showAllToDestroy = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_TO_DESTROY);
+        if (showAllToDestroy != null && showAllToDestroy)
+            showAllToDestroy();
         Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
         if (showAllJobStats != null && showAllJobStats)
             showAllJobStats();
@@ -174,6 +189,22 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Grid) getFellow("upgradesGrid")).setStyle("display:none");
             ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:block");
             ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
+        }
+        
+        if (toDestroy != null && toDestroy.size() > 0) {
+            ((Grid) getFellow("destroyGrid")).setStyle("display:block");
+            ((Div) getFellow("emptyDestroyMsg")).setStyle("display:none");
+            if (toDestroy.size() > 10 && ((Grid) getFellow("destroyGrid")).getMold().equals("paging")) {
+                ((Foot) getFellow("footerDestroy")).setStyle("display:block");
+            }
+            else {
+                ((Foot) getFellow("footerDestroy")).setStyle("display:none");
+            }
+        }
+        else {
+            ((Grid) getFellow("destroyGrid")).setStyle("display:none");
+            ((Div) getFellow("emptyDestroyMsg")).setStyle("display:block");
+            ((Foot) getFellow("footerDestroy")).setStyle("display:none");
         }
         
         if (commandStats != null && commandStats.size() > 0) {
@@ -231,6 +262,9 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         instances = newInstances;
         
+        //Get instances to destroy
+        toDestroy = instanceDAO.selectToDestroy();
+        
         //Get command stats
         commandStats = statsDAO.selectCommandStats();
         
@@ -252,17 +286,57 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         catch (WrongValueException ex) {}
         
+        //Set the new instances to be destroyed
+        Grid destroyGrid = (Grid) getFellow("destroyGrid");
+        if (destroyGrid.getMold().equals("paging")) {
+            activePage = destroyGrid.getActivePage();
+        }
+        ((DestroyListModel)destroyGrid.getModel()).setInstances(toDestroy);
+        try {
+            if (destroyGrid.getMold().equals("paging")) {
+                destroyGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
+        
         //Set the new upgrades
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
+        if (upgradesGrid.getMold().equals("paging")) {
+            activePage = upgradesGrid.getActivePage();
+        }
         ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
+        try {
+            if (upgradesGrid.getMold().equals("paging")) {
+                upgradesGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
         
         //Set the new command stats
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
+        if (commandStatsGrid.getMold().equals("paging")) {
+            activePage = commandStatsGrid.getActivePage();
+        }
         ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
+        try {
+            if (commandStatsGrid.getMold().equals("paging")) {
+                commandStatsGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
         
         //Set the new job stats
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
+        if (jobStatsGrid.getMold().equals("paging")) {
+            activePage = jobStatsGrid.getActivePage();
+        }
         ((JobStatsModel)jobStatsGrid.getModel()).setJobStats(jobStats);
+        try {
+            if (jobStatsGrid.getMold().equals("paging")) {
+                jobStatsGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
 
         displayOrHideAreas();
     }
@@ -452,6 +526,17 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Treefoot footer = (Treefoot) getFellow("footer");
         footer.setStyle("display:none");
         Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
+    }
+    
+    /**
+     * Displays all instances to destroy
+     */
+    public void showAllToDestroy() {
+        Grid grid = (Grid) getFellow("destroyGrid");
+        grid.setMold("default");
+        Foot footer = (Foot) getFellow("footerDestroy");
+        footer.setStyle("display:none");
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_TO_DESTROY, new Boolean(true));
     }
     
     /**
