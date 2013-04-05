@@ -101,8 +101,8 @@ public class JobStatsModel extends AbstractListModel implements ListModelExt {
         filtered = new ArrayList<DODJobStat>();
         for (int i=0; i< jobStats.size(); i++) {
             DODJobStat stat = jobStats.get(i);
-            if (stat.getDbName().indexOf(dbName.trim()) >= 0
-                    && Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName()).indexOf(command) >= 0) {
+            if (stat.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0
+                    && Labels.getLabel(DODConstants.LABEL_JOB + stat.getCommandName()).toLowerCase().indexOf(command.trim().toLowerCase()) >= 0) {
                 filtered.add(stat);
             }
         }

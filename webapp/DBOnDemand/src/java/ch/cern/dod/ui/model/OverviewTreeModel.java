@@ -158,9 +158,10 @@ public class OverviewTreeModel extends AbstractTreeModel{
         if (((Combobox) tree.getFellow("actionFilter")).getSelectedItem() != null)
             action = ((String)((Combobox) tree.getFellow("actionFilter")).getSelectedItem().getValue()).trim();
         
-        if (instance.getDbName().indexOf(dbName.trim()) >= 0 && instance.getUsername().indexOf(user) >= 0
-                && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().indexOf(eGroup.trim()) >= 0))
-                && (project.isEmpty() || (instance.getProject() != null && instance.getProject().indexOf(project.trim()) >= 0))
+        if (instance.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0
+                && instance.getUsername().toLowerCase().indexOf(user.trim().toLowerCase()) >= 0
+                && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().toLowerCase().indexOf(eGroup.trim().toLowerCase()) >= 0))
+                && (project.isEmpty() || (instance.getProject() != null && instance.getProject().toLowerCase().indexOf(project.trim().toLowerCase()) >= 0))
                 && (category.isEmpty() || instance.getCategory().equals(category))
                 && (dbType.isEmpty() || instance.getDbType().equals(dbType))) {
             if (action.isEmpty()) {
