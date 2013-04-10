@@ -291,30 +291,6 @@ public class JobHelper {
             return false;
         }
     }
-
-    /**
-     * Destroy an instance.
-     * @param instance instance to destroy.
-     * @param username requester of this job.
-     * @return true if the creation of this job was successful, false otherwise.
-     * @deprecated instances are destroyed via FIM now
-     */
-    public boolean doDestroy(DODInstance instance) {
-        Date now = new Date();
-        int result = 0;
-        //Insert job
-        if (adminMode)
-            result = instanceDAO.delete(instance);
-        else
-            result = instanceDAO.delete(instance);
-        //If everything went OK update instance object
-        if (result > 0) {
-            instance.setStatus(false);
-            return true;
-        } else {
-            return false;
-        }
-    }
     
     /**
      * Upgrades a database to a newer version.
@@ -340,15 +316,19 @@ public class JobHelper {
 
         //Create params
         List<DODCommandParam> params = new ArrayList<DODCommandParam>();
-        DODCommandParam versionFrom = new DODCommandParam();
-        versionFrom.setUsername(instance.getUsername());
-        versionFrom.setDbName(instance.getDbName());
-        versionFrom.setCommandName(DODConstants.JOB_UPGRADE);
-        versionFrom.setType(instance.getDbType());
-        versionFrom.setCreationDate(now);
-        versionFrom.setName(DODConstants.PARAM_VERSION_FROM);
-        versionFrom.setValue(instance.getVersion());
-        params.add(versionFrom);
+        
+        //If the database is Oracle add version from
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+            DODCommandParam versionFrom = new DODCommandParam();
+            versionFrom.setUsername(instance.getUsername());
+            versionFrom.setDbName(instance.getDbName());
+            versionFrom.setCommandName(DODConstants.JOB_UPGRADE);
+            versionFrom.setType(instance.getDbType());
+            versionFrom.setCreationDate(now);
+            versionFrom.setName(DODConstants.PARAM_VERSION_FROM);
+            versionFrom.setValue(instance.getVersion());
+            params.add(versionFrom);
+        }
         DODCommandParam versionTo = new DODCommandParam();
         versionTo.setUsername(instance.getUsername());
         versionTo.setDbName(instance.getDbName());
