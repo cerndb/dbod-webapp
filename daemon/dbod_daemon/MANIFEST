@@ -25,4 +25,4 @@ scripts/dbod_state_checker
 share/dbod_daemon.conf
 share/dbod_daemon_logger.conf
 share/templates/MY_CNF
-t/BDOD.t
+t/DBOD.t
