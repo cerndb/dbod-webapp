@@ -3,11 +3,11 @@
 #
 Summary: DB On Demand spec file
 Name: dbod_daemon
-Version: 1
-Release: 5
+Version: 1.5
+Release: 0
 Copyright: GPL
-Group: Applications/Sound
-Source: https://git.cern.ch/reps/DBOnDemand 
+Group: Databases
+Source: dbod_daemon-1.5.tar.gz
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
 Vendor: CERN
@@ -17,15 +17,16 @@ Packager: Ignacio Coterillo Coz <icoteril@cern.ch>
 DBOD job dispatching daemon
 
 %prep
-#rm -rf $RPM_BUILD_DIR/dbod_daemon
-#zcat $RPM_SOURCE_DIR/dbod_daemon-1.5.tgz | tar -xvf -
-%setup
+%setup -c
 
 %build
+# This wouldn't be needed if the tar file didn't contain an extra folder
+cd $(basename $PWD)
 perl Makefile.PL
 make
 
 %install
+cd $(basename $PWD) 
 make install
 
 %files
