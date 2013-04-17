@@ -3,17 +3,17 @@
 package dod_state_checker;
 
 use strict;
-use DOD;
-use DOD::Database;
+use DBOD;
+use DBOD::Database;
 
 # Initializes Logging Settings
 
 our ($logger, $lock_file); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger("DOD.state_checker");
+    $logger = Log::Log4perl::get_logger("DBOD.state_checker");
     $logger->debug("Logger created");
-    $lock_file = $DOD::config->{'SC_LOCK_FILE'};
+    $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
 }
 
 sub usage() {
@@ -28,7 +28,7 @@ sub worker {
     my $instance_name = "dod_$db_name";
     $logger->debug( "Checking $instance_name" );
     
-    my $state_checker = DOD::get_state_checker($instance);
+    my $state_checker = DBOD::get_state_checker($instance);
     if (!defined $state_checker){
         $logger->error( "Not state checker defined for this DB type" );
         return 1;
@@ -40,7 +40,7 @@ sub worker {
         my ($buf, $instance_state) = $state_checker->($instance, 0);
         if (($instance->{'STATE'} ne $instance_state)) {
             $logger->debug( "Updating $instance_name STATE to $instance_state");
-            DOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
+            DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
             $logger->debug( "$instance_name state update successfully");
         }
     }
@@ -61,11 +61,11 @@ sub Main{
         open(LOCKF, ">$lock_file");
         close(LOCKF);
         $logger->debug("Opening DB connection");
-        my $dbh = DOD::Database::getDBH();
+        my $dbh = DBOD::Database::getDBH();
         my $rc;
 
         if (defined($dbh)){
-            my @instances = DOD::Database::getInstanceList($dbh);
+            my @instances = DBOD::Database::getInstanceList($dbh);
             foreach my $instance (@instances){
                 $logger->debug( "Checking state for instance: $instance" );
                 worker($instance, $dbh);
@@ -95,7 +95,7 @@ END{}
 
 =head1 NAME
 
-dod_state_checker - State checker for DOD instances
+dod_state_checker - State checker for DBOD instances
 
 =cut
 
@@ -117,7 +117,7 @@ This is the script in charge of checking maintaining an updated
 state for the DB instances in the DBOD application database.
 
 Configuration and additional support files (i.e. templates for DBMS configuration files)
-can be found at: <PATH_TO_PERL_SHARE>/DOD/. Expected files are:
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
 
 - dod.conf : General configuration file. YAML format
 

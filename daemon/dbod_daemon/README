@@ -1,4 +1,4 @@
-DOD version 1.2
+DBOD version 1.2
 
 Freezing version for upgrade of production system.
 
@@ -13,7 +13,7 @@ Freezing version for upgrade of production system.
         b) hold the main loop locked
 
 
-DOD version 0.01
+DBOD version 0.01
 ================
 
 The README is used to introduce the module and provide instructions on
