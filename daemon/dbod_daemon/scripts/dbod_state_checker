@@ -1,6 +1,6 @@
-#!/usr/bin/perl -w
+/#!/usr/bin/perl -w
 
-package dod_state_checker;
+package dbod_state_checker;
 
 use strict;
 use DBOD;
@@ -84,7 +84,7 @@ sub Main{
         exit $rc;
     }
     else{
-        $logger->debug("Another instance of dod_state_checker is running.\n Skipping execution");
+        $logger->debug("Another instance of dbod_state_checker is running.\n Skipping execution");
     }
 
 }
@@ -95,7 +95,7 @@ END{}
 
 =head1 NAME
 
-dod_state_checker - State checker for DBOD instances
+dbod_state_checker - State checker for DBOD instances
 
 =cut
 
@@ -105,7 +105,7 @@ dod_state_checker - State checker for DBOD instances
 
 =item * 
 
-dod_state_checker
+dbod_state_checker
 
 =back
 
@@ -119,9 +119,9 @@ state for the DB instances in the DBOD application database.
 Configuration and additional support files (i.e. templates for DBMS configuration files)
 can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
 
-- dod.conf : General configuration file. YAML format
+- dbod_daemon.conf : General configuration file. YAML format
 
-- dod_daemon_logger.conf : Logger configuration file
+- dbod_daemon_logger.conf : Logger configuration file
 
 =head1 AUTHOR
 

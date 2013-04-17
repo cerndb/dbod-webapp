@@ -1,33 +1,33 @@
 #!/bin/bash
 
-# /etc/init.d/dod_daemon startup script
+# /etc/init.d/dbod_daemon startup script
 #
 # Created: icoteril 10/01/2013
 
 
 status(){
-    if [ -e "/tmp/dod_daemon.pid" ]; then
-        pid=`cat /tmp/dod_daemon.pid`
+    if [ -e "/tmp/dbod_daemon.pid" ]; then
+        pid=`cat /tmp/dbod_daemon.pid`
         echo "Expected PID: $pid" 
     fi
-    pids=`ps ax|grep "perl -w /usr/bin/dod_daemon" |grep -v grep`
+    pids=`ps ax|grep "perl -w /usr/bin/dbod_daemon" |grep -v grep`
     echo "Found : $pids"
 }
 
 start(){
-    if [ -e "/tmp/dod_daemon.pid" ]; then
-        pid=`cat /tmp/dod_daemon.pid`
-        echo "dod_daemon already running with PID: $pid"
+    if [ -e "/tmp/dbod_daemon.pid" ]; then
+        pid=`cat /tmp/dbod_daemon.pid`
+        echo "dbod_daemon already running with PID: $pid"
     else
-        su - dbod -c "/usr/bin/dod_daemon --start"
+        su - dbod -c "/usr/bin/dbod_daemon --start"
     fi
 }
 
 stop(){
-    if [ -e "/tmp/dod_daemon.pid" ]; then
-        rm /tmp/dod_daemon.pid
+    if [ -e "/tmp/dbod_daemon.pid" ]; then
+        rm /tmp/dbod_daemon.pid
     fi
-    pkill -9 dod_daemon
+    pkill -9 dbod_daemon
 }
 
 case "$1" in

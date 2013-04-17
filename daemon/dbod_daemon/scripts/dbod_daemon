@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-package dod_daemon;
+package dbod_daemon;
 
 use strict;
 use Getopt::Long;
@@ -87,7 +87,7 @@ END{}
 
 =head1 NAME
 
-dod_daemon - Launch DB on Demand daemon
+dbod_daemon - Launch DB on Demand daemon
 
 =cut
 
@@ -97,12 +97,12 @@ dod_daemon - Launch DB on Demand daemon
 
 =item * 
 
-dod_daemon --start
+dbod_daemon --start
 
 
 =item *
 
-dod_daemon --stop
+dbod_daemon --stop
 
 =back
 
@@ -115,9 +115,9 @@ This is the launching script for the DB on Demand job dispatching daemon.
 Configuration and additional support files (i.e. templates for DBMS configuration files)
 can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
 
-- dod.conf : General configuration file. YAML format
+- dbod_daemon.conf : General configuration file. YAML format
 
-- dod_daemon_logger.conf : Logger configuration file
+- dbod_daemon_logger.conf : Logger configuration file
 
 - templates/MY_CNF : MySQL parameter template. YAML format
 

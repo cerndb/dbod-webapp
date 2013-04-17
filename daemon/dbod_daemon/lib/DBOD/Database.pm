@@ -649,7 +649,7 @@ sub prepareCommand {
 sub getDBH{
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dod_daemon', ora_verbose => 0 });
+        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
         if (1){ # call to $dbh->ora_can_taf() causes error
             $logger->debug( "Enabling Oracle TAF");
             $dbh->{ora_taf} = 1;
