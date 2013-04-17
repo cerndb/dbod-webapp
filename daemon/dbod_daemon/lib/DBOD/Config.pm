@@ -16,7 +16,7 @@ $VERSION     = 0.01;
 @EXPORT_OK   = qw( $config );
 %EXPORT_TAGS = ( );
 
-my $config_dir = File::ShareDir::dist_dir('DBOD');
+my $config_dir = File::ShareDir::dist_dir('dbod_daemon');
 $config = LoadFile( "$config_dir/dod.conf" );
 $logger_cfg = "$config_dir/$config->{'LOGGER_CONFIG'}";
 

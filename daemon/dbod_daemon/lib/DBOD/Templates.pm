@@ -88,7 +88,7 @@ sub MYSQL_writeFile{
 sub MYSQL_enforce{
     my ($new_config, $filename) = @_;
     my $template;
-    my $config_dir = File::ShareDir::dist_dir( "DBOD" );
+    my $config_dir = File::ShareDir::dist_dir( "dbod_daemon" );
     my $template_ref = YAML::Syck::LoadFile( "$config_dir/templates/$filename" );
     my $res = {};
     my %template = %{$template_ref};
