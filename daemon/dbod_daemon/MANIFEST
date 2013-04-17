@@ -22,6 +22,7 @@ META.yml
 README
 scripts/dbod_daemon
 scripts/dbod_state_checker
+scripts/dbod_daemon_init
 share/dbod_daemon.conf
 share/dbod_daemon_logger.conf
 share/templates/MY_CNF
