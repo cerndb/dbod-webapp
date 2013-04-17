@@ -8,13 +8,13 @@ use Proc::Daemon;
 
 # Initializes Logging Settings
 
-use DOD::Config qw($config);
-use DOD;
+use DBOD::Config qw($config);
+use DBOD;
 
 our ($logger, $workdir, $pidfile); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger("DOD.Daemon");
+    $logger = Log::Log4perl::get_logger("DBOD.Daemon");
     $logger->debug("Logger created");
     $workdir = $config->{'DAEMON_WORKDIR'};
     $pidfile = "$workdir/$config->{'DAEMON_PIDFILE'}";
@@ -55,12 +55,12 @@ sub Main{
     }
     else{
         if ($start){
-            $logger->debug( "Starting DOD daemon" );
+            $logger->debug( "Starting DBOD daemon" );
             my $dispatcher = $daemon->Init();
             unless ($dispatcher){
                 # Daemon process
                 eval{
-                    DOD::jobDispatcher();
+                    DBOD::jobDispatcher();
                     1;
                 } or do {
                     $logger->error( "The daemon process died!" );
@@ -113,7 +113,7 @@ dod_daemon --stop
 This is the launching script for the DB on Demand job dispatching daemon.
 
 Configuration and additional support files (i.e. templates for DBMS configuration files)
-can be found at: <PATH_TO_PERL_SHARE>/DOD/. Expected files are:
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
 
 - dod.conf : General configuration file. YAML format
 

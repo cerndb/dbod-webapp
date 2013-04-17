@@ -1,5 +1,5 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl DOD.t'
+# `make test'. After `make install' it should work as `perl DBOD.t'
 
 #########################
 
@@ -7,12 +7,12 @@
 
 use Test::More tests => 6;
 
-use_ok('DOD');
+use_ok('DBOD');
 
-ok('DOD::getJobList()');
-ok('DOD::updateJobState()');
-ok('DOD::updateJobCompletionDate()');
-ok('DOD::updateJobLogPath()');
+ok('DBOD::getJobList()');
+ok('DBOD::updateJobState()');
+ok('DBOD::updateJobCompletionDate()');
+ok('DBOD::updateJobLogPath()');
 
 #########################
 
