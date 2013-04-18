@@ -259,7 +259,7 @@ sub updateInstance{
         return undef;
     }
     eval {
-        my $sql = "update DBOD_INSTANCES set $col_name = ?
+        my $sql = "update DOD_INSTANCES set $col_name = ?
         where username = ? and db_name = ?";
         $logger->debug( "Preparing statement: \n\t$sql" );
         my $sth = $dbh->prepare( $sql );
@@ -303,7 +303,7 @@ sub updateJob{
     eval {
         my $sth;
         if ($col_name eq 'COMPLETION_DATE'){
-            my $sql = "update DBOD_JOBS set $col_name = sysdate
+            my $sql = "update DOD_JOBS set $col_name = sysdate
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
             $logger->debug( "Preparing statement: \n\t$sql" );
             $sth = $dbh->prepare( $sql );
@@ -315,7 +315,7 @@ sub updateJob{
             $sth->bind_param(5, $job->{'CREATION_DATE'});
         }
         else{
-            my $sql = "update DBOD_JOBS set $col_name = ?
+            my $sql = "update DOD_JOBS set $col_name = ?
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
             $logger->debug( "Preparing statement: \n\t$sql" );
             $sth = $dbh->prepare( $sql );
@@ -409,7 +409,7 @@ sub getJobParams{
     my $res;
     eval{
         $dbh->{LongReadLen} = 32768; 
-        my $sql = "select NAME, VALUE from DBOD_COMMAND_PARAMS
+        my $sql = "select NAME, VALUE from DOD_COMMAND_PARAMS
         where USERNAME = ? and DB_NAME = ? and COMMAND_NAME = ? and TYPE = ? and CREATION_DATE = ?";
         $logger->debug( "Preparing statement: \n\t$sql" );
         my $sth = $dbh->prepare( $sql, { ora_pers_lob => 1 } );
@@ -462,7 +462,7 @@ sub getExecString{
     }
     my $ref;
     eval {
-        my $sql = "select EXEC from DBOD_COMMAND_DEFINITION
+        my $sql = "select EXEC from DOD_COMMAND_DEFINITION
         where COMMAND_NAME = ? and TYPE = ?";
         $logger->debug( "Preparing statement: \n\t$sql" );
         my $sth = $dbh->prepare( $sql );
@@ -506,7 +506,7 @@ sub getConfigFile{
     my $result;
     eval {
         $dbh->{LongReadLen} = 32768; 
-        my $sql = "select CONFIG_FILE from DBOD_CONFIG_FILES
+        my $sql = "select CONFIG_FILE from DOD_CONFIG_FILES
         where DB_NAME = ? and USERNAME = ? and FILE_TYPE = ?";
         $logger->debug( "Preparing statement: \n\t$sql" );
         my $sth = $dbh->prepare( $sql, { ora_pers_lob => 1 } );
