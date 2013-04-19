@@ -1,4 +1,19 @@
-DOD version 0.01
+DBOD version 1.2
+
+Freezing version for upgrade of production system.
+
+- Added support for ORACLE instances
+- 
+
+- TODO:
+    * Complete complex workflows for Shared Instances and Replication pairs
+    * Implement upgrade functionaliy for ORACLE type
+    * Fix the bug that causes a ping to
+        a) be lockable
+        b) hold the main loop locked
+
+
+DBOD version 0.01
 ================
 
 The README is used to introduce the module and provide instructions on

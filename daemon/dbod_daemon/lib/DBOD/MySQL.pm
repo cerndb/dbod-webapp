@@ -1,40 +1,29 @@
-package DOD::MySQL;
+package DBOD::MySQL;
 
 use strict;
 use warnings;
 use Exporter;
 
-use YAML::Syck;
-use File::ShareDir;
-use Log::Log4perl;
-use File::Temp;
+use POSIX qw(strftime);
 
-use DOD::Database;
-use DOD::All;
+use DBOD::Config qw( $config );
+use DBOD::Database;
+use DBOD::All;
+use DBOD::LDAP;
 
-our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,);
+our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(test_instance get_variable get_version state_checker upgrade_callback);
+@EXPORT      = qw();
 @EXPORT_OK   = qw();
 %EXPORT_TAGS = ( );
 
 # Load general configuration
 
 BEGIN{
-
-$config_dir = File::ShareDir::dist_dir( "DOD" );
-$config = LoadFile( "$config_dir/dod.conf" );
-Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
-$logger = Log::Log4perl::get_logger( 'DOD' );
-$logger->debug( "Logger created" );
-$logger->debug( "Loaded configuration from $config_dir" );
-foreach my $key ( keys(%{$config}) ) {
-    my %h = %{$config};
-    $logger->debug( "\t$key -> $h{$key}" );
-    }
-
+    $logger = Log::Log4perl::get_logger( 'DBOD.MySQL' );
+    $logger->debug( "Logger created" );
 } # BEGIN BLOCK
 
 sub test_instance{
@@ -71,11 +60,14 @@ sub state_checker{
     else{
         $job_state = "FINISHED_OK";
     }
-    my $entity = DOD::All::get_entity($job);
+    my $entity = DBOD::All::get_entity($job);
     my $output = test_instance($entity);
-    my $retcode = DOD::All::result_code($output);
-    if ($retcode) {
+    my $retcode = DBOD::All::result_code($output);
+    if ($retcode == 1) {
         $instance_state = "STOPPED";
+    }
+    elsif($retcode == 2){
+        $instance_state = "BUSY";
     }
     else{
         $instance_state = "RUNNING";
@@ -85,19 +77,24 @@ sub state_checker{
 }
 
 sub upgrade_callback{
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        $job = shift;
-        $dbh = DOD::Database::getDBH();
-    }
-    my $entity = DOD::All::get_entity($job);
+    my ($job, $dbh) = @_;
+    my $entity = DBOD::All::get_entity($job);
     eval{
-        my $version = get_version($entity);
-        $logger->debug( "Updating $entity version to $version");
-        DOD::Database::updateInstance($job, 'VERSION', $version);
+        my $version;
+        my $params = $job->{'PARAMS'};
+        foreach (@{$params}){
+            if ($_->{'NAME'} =~ /VERSION_TO/){
+                $version = $_->{'VALUE'};
+                }
+            }
+        $logger->debug( "Updating $entity version to $version in DB");
+        DBOD::Database::updateInstance($job, 'VERSION', $version, $dbh);
+        $logger->debug( "Updating $entity version to $version in LDAP");
+        my $date = strftime "%H:%M:%S %m/%d/%Y", localtime;
+        DBOD::LDAP::updateEntity($entity, [['SC-VERSION', $version],
+                                          ['SC-COMMENT', "Upgraded at $date"],
+                                          ['SC-BINDIR-LOCATION', "/usr/local/mysql/mysql-$version/bin"],
+                                          ['SC-BASEDIR-LOCATION', "/usr/local/mysql/mysql-$version"]]);
         1;
     } or do {
         $logger->error( "A problem occured when trying to update $entity version");

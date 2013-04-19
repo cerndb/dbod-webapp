@@ -1,21 +1,19 @@
 #!/usr/bin/perl -w
 
-package dod_state_checker;
+package dbod_state_checker;
 
 use strict;
-use DOD;
-use DOD::Database;
+use DBOD;
+use DBOD::Database;
 
 # Initializes Logging Settings
 
 our ($logger, $lock_file); 
 
-BEGIN{
-$logger = Log::Log4perl::get_logger("dod_state_checker");
-$logger->debug("Logger created");
-
-$lock_file = $DOD::config->{'SC_LOCK_FILE'};
-
+INIT{
+    $logger = Log::Log4perl::get_logger("DBOD.state_checker");
+    $logger->debug("Logger created");
+    $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
 }
 
 sub usage() {
@@ -24,27 +22,32 @@ sub usage() {
 }
 
 sub worker {
+    
     my ($instance, $dbh) = @_;
     my $db_name = $instance->{'DB_NAME'};
     my $instance_name = "dod_$db_name";
     $logger->debug( "Checking $instance_name" );
-    my $state_checker = DOD::get_state_checker($instance);
+    
+    my $state_checker = DBOD::get_state_checker($instance);
     if (!defined $state_checker){
         $logger->error( "Not state checker defined for this DB type" );
         return 1;
     }
-    my ($buf, $instance_state) = $state_checker->($instance, 0);
     
-    if ((($instance->{'STATE'} eq 'RUNNING') || ($instance->{'STATE'} eq 'STOPPED')) &&
-        ($instance->{'STATE'} ne $instance_state)) {
-        $logger->debug( "Updating $instance_name STATE to $instance_state");
-        DOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
-        $logger->debug( "$instance_name state update successfully");
+    if (($instance->{'STATE'} ne 'JOB_PENDING') && 
+        ($instance->{'STATE'} ne 'AWAITING_APPROVAL') &&
+        ($instance->{'STATE'} ne 'MAINTENANCE')) {
+        my ($buf, $instance_state) = $state_checker->($instance, 0);
+        if (($instance->{'STATE'} ne $instance_state)) {
+            $logger->debug( "Updating $instance_name STATE to $instance_state");
+            DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
+            $logger->debug( "$instance_name state update successfully");
+        }
     }
     else{
-        $instance_state = $instance->{'STATE'};
-        $logger->debug( "State untouched for $instance_name: $instance_state" );
+        $logger->debug( "State untouched for $instance_name: " . $instance->{'STATE'} );
     }
+    
     return 0;
 }
 
@@ -54,16 +57,15 @@ sub Main{
 
     unless (-e $lock_file){
 
-        $logger->debug("Creating lock file");
+        $logger->debug("Creating lock file: $lock_file");
         open(LOCKF, ">$lock_file");
         close(LOCKF);
-
         $logger->debug("Opening DB connection");
-        my $dbh = DOD::Database::getDBH();
+        my $dbh = DBOD::Database::getDBH();
         my $rc;
 
         if (defined($dbh)){
-            my @instances = DOD::Database::getInstanceList($dbh);
+            my @instances = DBOD::Database::getInstanceList($dbh);
             foreach my $instance (@instances){
                 $logger->debug( "Checking state for instance: $instance" );
                 worker($instance, $dbh);
@@ -82,7 +84,7 @@ sub Main{
         exit $rc;
     }
     else{
-        $logger->debug("Another instance of dod_state_checker is running.\n Skipping execution");
+        $logger->debug("Another instance of dbod_state_checker is running.\n Skipping execution");
     }
 
 }
@@ -93,7 +95,7 @@ END{}
 
 =head1 NAME
 
-dod_state_checker - State checker for DOD instances
+dbod_state_checker - State checker for DBOD instances
 
 =cut
 
@@ -103,7 +105,7 @@ dod_state_checker - State checker for DOD instances
 
 =item * 
 
-dod_state_checker
+dbod_state_checker
 
 =back
 
@@ -115,11 +117,11 @@ This is the script in charge of checking maintaining an updated
 state for the DB instances in the DBOD application database.
 
 Configuration and additional support files (i.e. templates for DBMS configuration files)
-can be found at: <PATH_TO_PERL_SHARE>/DOD/. Expected files are:
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
 
-- dod.conf : General configuration file. YAML format
+- dbod_daemon.conf : General configuration file. YAML format
 
-- dod_daemon_logger.conf : Logger configuration file
+- dbod_daemon_logger.conf : Logger configuration file
 
 =head1 AUTHOR
 

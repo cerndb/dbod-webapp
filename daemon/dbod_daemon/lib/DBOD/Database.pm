@@ -1,22 +1,18 @@
-package DOD::Database;
+package DBOD::Database;
 
 use strict;
 use warnings;
 use Exporter;
 
-use YAML::Syck;
-use File::ShareDir;
-use Log::Log4perl;
-use File::Temp;
-
 use DBI;
 use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
-use DOD::ConfigParser;
+use DBOD::Config qw( $config );
+use DBOD::Templates;
 
-our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password);
+our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -26,45 +22,17 @@ $VERSION     = 0.03;
 
 # Load general configuration
 
-BEGIN{
-
-sub getPassword 
-{
-    my ($tag, $password_file) = @_;
-    my @passwd_lines;
-    $logger->debug("password_file = $password_file, tag= $tag");
-    open (PASS, $password_file) && (defined $tag) or return;
-    @passwd_lines = <PASS>;
-    close PASS;
-
-    my @line = grep(/^\s*TAG\s+$tag=/, @passwd_lines);
-    if ((defined $line[0]) && ($line[0] =~ m/^\s*TAG\s+$tag=(.*)/))
-    {
-        return $1;
-    }
-    return undef;
-}
-    
-$config_dir = File::ShareDir::dist_dir( "DOD" );
-$config = LoadFile( "$config_dir/dod.conf" );
-Log::Log4perl::init( "$config_dir/$config->{'LOGGER_CONFIG'}" );
-$logger = Log::Log4perl::get_logger( 'DOD' );
-$logger->debug( "Logger created" );
-$logger->debug( "Loaded configuration from $config_dir" );
-foreach my $key ( keys(%{$config}) ) {
-    my %h = %{$config};
-    $logger->debug( "\t$key -> $h{$key}" );
-    }
-
-# DB configuration parameters
-$DSN = $config->{'DB_DSN'} ;
-$DBTAG = $config->{'DB_USER'};
-$DATEFORMAT = $config->{'DB_DATE_FORMAT'};
-my @buf = split( /_/, $DBTAG );
-$user = pop( @buf );
-$password = getPassword( $DBTAG, $config->{'PASSWORD_FILE'} );
-
-} # BEGIN BLOCK
+INIT{
+    $logger = Log::Log4perl::get_logger( 'DBOD.Database' );
+    $logger->debug( "Logger created" );
+    # DB configuration parameters
+    $DSN = $config->{'DB_DSN'} ;
+    $DATEFORMAT = $config->{'DB_DATE_FORMAT'};
+    $DBTAG = $config->{'DB_TAG'};
+    $user = $config->{'DB_USER'};
+    $password = $config->{'DB_PASSWORD'};
+    $MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
+} # INIT BLOCK
 
 sub getInstanceList{
     my $dbh;
@@ -106,6 +74,79 @@ sub getInstanceList{
     };
     return @result;
 }   
+
+sub isShared{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select db_name from dod_instances 
+        where shared_instance in 
+        (select shared_instance 
+            from dod_instances 
+            where db_name= ?) 
+        and db_name <> ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $sth->bind_param(2, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is shared with " . $ref->{'DB_NAME'});
+            return $ref->{'DB_NAME'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
+sub isMaster{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select slave from dod_instances where db_name = ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is slave to " . $ref->{'SLAVE'});
+            return $ref->{'SLAVE'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
+sub isSlave{
+    my ($dbh, $db_name) = @_;
+    eval{
+        my $sql = "select master from dod_instances where db_name = ?";
+        my $sth = $dbh->prepare( $sql );
+        $sth->bind_param(1, $db_name);
+        $logger->debug("Executing statement");
+        $sth->execute();
+        my $ref = $sth->fetchrow_hashref();
+        $logger->debug( "Finishing statement" );
+        $sth->finish();
+        if (defined $ref){
+            $logger->debug( "$db_name is slave to " . $ref->{'MASTER'});
+            return $ref->{'MASTER'};
+        }
+        1;
+    } or do {
+        $logger->error( "Unable to connect to database !!!\n $!" );
+        return undef;
+    }
+}
+
 
 sub getJobList{
     my $dbh;
@@ -173,7 +214,7 @@ sub getTimedOutJobs{
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual) - 6/24"; 
+            and creation_date < (select sysdate from dual) -$MAX_JOB_TIMEOUT/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
@@ -302,12 +343,12 @@ sub updateJob{
 }
 
 sub finishJob{
-    my ($job, $resultCode, $log, $dbh);
-    if ($#_ == 3){
-        ($job, $resultCode, $log, $dbh) = @_;
+    my ($job, $resultCode, $log, $dbh, $params);
+    if ($#_ == 4){
+        ($job, $resultCode, $log, $dbh, $params) = @_;
     }
-    elsif($#_ == 2){
-        ($job, $resultCode, $log) = @_;
+    elsif($#_ == 3){
+        ($job, $resultCode, $log, $params) = @_;
         $dbh = getDBH();
         unless(defined($dbh)){
             $logger->error( "Unable to get DB handler" );
@@ -319,7 +360,7 @@ sub finishJob{
         return undef;
     }
     eval{
-        my $state_checker = DOD::get_state_checker($job);
+        my $state_checker = DBOD::get_state_checker($job);
         if (!defined $state_checker){
             $logger->error( "Not state checker defined for this DB type" );
         }
@@ -332,7 +373,7 @@ sub finishJob{
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
         updateInstance($job, 'STATE', $instance_state, $dbh); 
-        my $callback = DOD::get_callback($job);
+        my $callback = DBOD::get_callback($job);
         if (defined $callback){
             $logger->debug( "Executing callback" );
             $callback->($job, $dbh);
@@ -511,11 +552,23 @@ sub prepareCommand {
     my $cmd;
     eval{
         $logger->debug( "Fetching execution string" );
-        $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . getExecString($job, $dbh);
+        my $exe_string = getExecString($job, $dbh);
+        if (defined $exe_string){
+            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+        }
+        else{
+            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'});
+        }
         $logger->debug( " $cmd " );
         $logger->debug( "Fetching Job params" );
-        my $params = getJobParams($job, $dbh);
-        my $nparams = scalar(@{$params});
+        my $params = $job->{'PARAMS'};
+        my $nparams;
+        if (defined $params){
+            $nparams = scalar(@{$params});
+            }
+        else{
+            $nparams = 0;
+        }
         my $expected_nparams = 0;
         my $optional_nparams = 0;
         $expected_nparams++ while ($cmd =~ m/:/g);
@@ -527,9 +580,9 @@ sub prepareCommand {
                 $logger->debug("Disconnecting from database");
                 $dbh->disconnect();
                 }
+            $logger->debug("No parameters, returning cmd: $cmd " );
             return $cmd;
         }
-        
         if ($nparams >= $expected_nparams){
             $logger->debug( "Substituting params");
             foreach my $param (@{$params}){
@@ -537,15 +590,16 @@ sub prepareCommand {
                     my ($pname, $type) = split( /=/, $param->{'NAME'} );
                     $logger->debug("pname: $pname, type: $type");
                     my $clob = $param->{'VALUE'};
-                    my $parser = DOD::ConfigParser::get( $type );
+                    my $parser = DBOD::Templates::parser( $type );
                     $logger->debug("parser: $parser");
                     my $filename = $parser->($clob); 
                     $cmd =~ s/:$param->{'NAME'}/$filename/;
                     $logger->debug( "cmd: $cmd" );
-                    # Distribute required files 
-                    my $entity = DOD::entityName($job);
+                    # Distribute required files
+                    $logger->debug("Fetching entity name");
+                    my $entity = DBOD::All::get_entity($job);
                     $logger->debug( "Copying files to $entity" );
-                    DOD::copyToEntity( $filename, $entity );
+                    DBOD::All::copy_to_entity( $filename, $entity );
                     $logger->debug( "Deleting temporal files");
                     system("rm -fr $filename");
                     }
@@ -595,7 +649,7 @@ sub prepareCommand {
 sub getDBH{
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dod_daemon', ora_verbose => 0 });
+        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
         if (1){ # call to $dbh->ora_can_taf() causes error
             $logger->debug( "Enabling Oracle TAF");
             $dbh->{ora_taf} = 1;
