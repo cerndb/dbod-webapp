@@ -4,7 +4,6 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODInstanceChange;
 import ch.cern.dod.db.entity.DODUpgrade;
 import ch.cern.dod.util.DODConstants;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +56,7 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '1'"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
@@ -85,7 +84,7 @@ public class DODInstanceDAO {
                 instance.setStatus(result.getBoolean(14));
                 instance.setMaster(result.getString(15));
                 instance.setSlave(result.getString(16));
-                instance.setSharedInstance(result.getString(17));
+                instance.setHost(result.getString(17));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int i=0; i < upgrades.size(); i++) {
@@ -133,7 +132,7 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '0'"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
@@ -161,7 +160,7 @@ public class DODInstanceDAO {
                 instance.setStatus(result.getBoolean(14));
                 instance.setMaster(result.getString(15));
                 instance.setSlave(result.getString(16));
-                instance.setSharedInstance(result.getString(17));
+                instance.setHost(result.getString(17));
                 instances.add(instance);
             }
         } catch (NamingException ex) {
@@ -203,7 +202,7 @@ public class DODInstanceDAO {
             
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '1' ");
             //Append egroups (if any)
             StringTokenizer tokenizer = new StringTokenizer("");
@@ -256,7 +255,7 @@ public class DODInstanceDAO {
                 instance.setStatus(result.getBoolean(14));
                 instance.setMaster(result.getString(15));
                 instance.setSlave(result.getString(16));
-                instance.setSharedInstance(result.getString(17));
+                instance.setHost(result.getString(17));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int j=0; j < upgrades.size(); j++) {
@@ -290,12 +289,12 @@ public class DODInstanceDAO {
     }
     
     /**
-     * Selects the instances in the database for the specified sharedInstance.
-     * @param sharedInstance name of the shared instance.
+     * Selects the instances in the database for the specified host.
+     * @param host name of the host.
      * @param upgrades upgrades available.
-     * @return List of the instances in the shared instance.
+     * @return List of the instances in the host.
      */
-    public List<DODInstance> selectSharedInstances(String sharedInstance, List<DODUpgrade> upgrades) {
+    public List<DODInstance> selectInstancesPerHost(String host, List<DODUpgrade> upgrades) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -306,13 +305,13 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
-                            + " FROM dod_instances WHERE status = '1' AND shared_instance = ?"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
+                            + " FROM dod_instances WHERE status = '1' AND host = ?"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
             
             //Assign values to variables
-            statement.setString(1, sharedInstance);
+            statement.setString(1, host);
 
             //Execute query
             result = statement.executeQuery();
@@ -337,7 +336,7 @@ public class DODInstanceDAO {
                 instance.setStatus(result.getBoolean(14));
                 instance.setMaster(result.getString(15));
                 instance.setSlave(result.getString(16));
-                instance.setSharedInstance(result.getString(17));
+                instance.setHost(result.getString(17));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int i=0; i < upgrades.size(); i++) {
@@ -387,7 +386,7 @@ public class DODInstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance"
+            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE db_name = ? AND status = '1'");
             statement = connection.prepareStatement(query.toString());
 
@@ -417,7 +416,7 @@ public class DODInstanceDAO {
                 instance.setStatus(result.getBoolean(14));
                 instance.setMaster(result.getString(15));
                 instance.setSlave(result.getString(16));
-                instance.setSharedInstance(result.getString(17));
+                instance.setHost(result.getString(17));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int i=0; i < upgrades.size(); i++) {
@@ -467,7 +466,7 @@ public class DODInstanceDAO {
             connection.setAutoCommit(false);
             
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String instanceQuery = "INSERT INTO dod_instances (username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, shared_instance)"
+            String instanceQuery = "INSERT INTO dod_instances (username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host)"
                             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             instanceStatement = connection.prepareStatement(instanceQuery);
             //Assign values to variables
@@ -490,7 +489,7 @@ public class DODInstanceDAO {
             instanceStatement.setBoolean(14, instance.getStatus());
             instanceStatement.setString(15, instance.getMaster());
             instanceStatement.setString(16, instance.getSlave());
-            instanceStatement.setString(17, instance.getSharedInstance());
+            instanceStatement.setString(17, instance.getHost());
             //Execute query
             instanceResult = instanceStatement.executeUpdate();
             
@@ -601,7 +600,7 @@ public class DODInstanceDAO {
             connection.setAutoCommit(false);
 
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String updateQuery = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, shared_instance = ? WHERE username = ? AND db_name = ?";
+            String updateQuery = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, host = ? WHERE username = ? AND db_name = ?";
             updateStatement = connection.prepareStatement(updateQuery);
             //Assign values to variables
             updateStatement.setString(1, newInstance.getEGroup());
@@ -618,7 +617,7 @@ public class DODInstanceDAO {
             updateStatement.setString(9, newInstance.getVersion());
             updateStatement.setString(10, newInstance.getMaster());
             updateStatement.setString(11, newInstance.getSlave());
-            updateStatement.setString(12, newInstance.getSharedInstance());
+            updateStatement.setString(12, newInstance.getHost());
             updateStatement.setString(13, newInstance.getUsername());
             updateStatement.setString(14, newInstance.getDbName());
             //Execute query

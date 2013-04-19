@@ -112,9 +112,33 @@ public class JobHelper {
         else
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
+        
+        //Param
+        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        
+        //Do not stop listener if instance is Oracle in a shared machine
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+            List <DODInstance> instancesPerHost = instanceDAO.selectInstancesPerHost(instance.getHost(), null);
+            
+            DODCommandParam listener = new DODCommandParam();
+            listener.setUsername(instance.getUsername());
+            listener.setDbName(instance.getDbName());
+            listener.setCommandName(DODConstants.JOB_SHUTDOWN);
+            listener.setType(instance.getDbType());
+            listener.setCreationDate(now);
+            listener.setName(DODConstants.PARAM_LISTENER_BOOLEAN);
+            
+            if (instancesPerHost.size() > 1) {
+                listener.setValue("false");
+            }
+            else {
+                listener.setValue("true");
+            }
+            params.add(listener);
+        }
 
         //Execute
-        int result = jobDAO.insert(job, new ArrayList<DODCommandParam>());
+        int result = jobDAO.insert(job, params);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
@@ -340,12 +364,7 @@ public class JobHelper {
         params.add(versionTo);
 
         //Execute
-        int result = 0;
-        //If instance is MySQL, upgrade does not depend on shared instances
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL))
-            result = jobDAO.insert(job, params);
-        else
-            result = jobDAO.insertUpgradeJob(job, params);
+        int result = jobDAO.insert(job, params);
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);

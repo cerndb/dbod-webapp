@@ -54,13 +54,19 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
+                                    <textbox id="hostFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
+                                </hbox>
+                            </auxheader>
+                            <auxheader colspan="1">
+                                <hbox align="bottom">
+                                    <image src="/img/filter.png" width="18px" height="18px"/>
                                     <textbox id="usernameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="50px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="eGroupFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="110px" />
+                                    <textbox id="eGroupFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="125px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -80,10 +86,9 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="125px" />
                                 </hbox>
                             </auxheader>
-                            <auxheader colspan="2" />
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
@@ -115,12 +120,11 @@
                         </auxhead>
                         <treecols>
                             <treecol label="${c:l('dbName')}" width="120px"/>
+                            <treecol label="${c:l('host')}" width="120px"/>
                             <treecol label="${c:l('username')}" width="90px"/>
-                            <treecol label="${c:l('eGroup')}"  width="150px"/>
+                            <treecol label="${c:l('eGroup')}"  width="165px"/>
                             <treecol label="${c:l('category')}" width="75px"/>
-                            <treecol label="${c:l('project')}" width="120px"/>
-                            <treecol label="${c:l('creationDate')}" width="90px"/>
-                            <treecol label="${c:l('expiryDate')}" width="90px"/>
+                            <treecol label="${c:l('project')}" width="165px"/>
                             <treecol label="${c:l('dbType')}" width="70px"/>
                             <treecol label="${c:l('dbSize')}" width="65px"/>
                             <treecol label="${c:l('noConn')}" width="70px"/>
@@ -153,7 +157,7 @@
             </caption>
             <hbox>
                 <!-- Groupbox for command stats -->
-                <groupbox width="480px" mold="3d" closable="false" style="margin-right:5px">
+                <groupbox width="580px" mold="3d" closable="false" style="margin-right:5px">
                     <caption label=" ">
                         <label value="${c:l('commandStats')}" sclass="title" style="float:left;"/>
                     </caption>
@@ -162,9 +166,9 @@
                             <!-- Commmand stats grid (only shown when there are stats) -->
                             <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
                                 <columns>
-                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="280px"/>
-                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
-                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
+                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="330px"/>
+                                    <column label="${c:l('statsCount')}" sort="auto(count)" width="80px"/>
+                                    <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="150px"/>
                                 </columns>
                                 <foot id="commandStatsFooter" style="display:none">
                                     <footer span="3">
@@ -185,7 +189,7 @@
                     </vbox>
                 </groupbox>
                 <!-- Groupbox for job stats -->
-                <groupbox width="680px" mold="3d" closable="false" style="margin-left:5px">
+                <groupbox width="580px" mold="3d" closable="false" style="margin-left:5px">
                     <caption label=" ">
                         <label value="${c:l('jobStats')}" sclass="title" style="float:left;"/>
                     </caption>
@@ -197,21 +201,21 @@
                                     <auxheader colspan="1">
                                         <hbox align="bottom">
                                             <image src="/img/filter.png" width="18px" height="18px"/>
-                                            <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                            <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
                                         </hbox>
                                     </auxheader>
                                     <auxheader colspan="1">
                                         <hbox align="bottom">
                                             <image src="/img/filter.png" width="18px" height="18px"/>
-                                            <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="200px" />
+                                            <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
                                         </hbox>
                                     </auxheader>
                                     <auxheader colspan="2">
                                     </auxheader>
                                 </auxhead>
                                 <columns>
-                                    <column label="${c:l('dbName')}" sort="auto(dbName)" width="240px"/>
-                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="240px"/>
+                                    <column label="${c:l('dbName')}" sort="auto(dbName)" width="170px"/>
+                                    <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="215px"/>
                                     <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
                                     <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
                                 </columns>

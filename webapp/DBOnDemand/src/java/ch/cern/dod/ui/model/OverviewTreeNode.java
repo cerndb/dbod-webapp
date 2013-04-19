@@ -16,7 +16,7 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
             
     /**
      * Constructor of this class.
-     * @param data Data associated with this node, in this case a DODInstance or a String in case of shared instances.
+     * @param data Data associated with this node.
      * @param children List of children belonging to this node.
      */
     public OverviewTreeNode(Object data, ArrayList<OverviewTreeNode> children) {
@@ -25,7 +25,7 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
  
     /**
      * Constructor without children.
-     * @param data Data associated with this node, in this case a DODInstance or a String in case of shared instances.
+     * @param data Data associated with this node.
      */
     public OverviewTreeNode(DODInstance data) {
         super(data);

@@ -89,9 +89,9 @@ public class DODInstance implements Comparable, Cloneable{
     private String slave;
     
     /**
-     * Virtual machine where instance is stored (if shared)
+     * Host where instance is running
      */
-    private String sharedInstance;
+    private String host;
 
     /**
      * State (On Creation, Running, Stopped, etc)
@@ -242,12 +242,12 @@ public class DODInstance implements Comparable, Cloneable{
         this.slave = slave;
     }
 
-    public String getSharedInstance() {
-        return sharedInstance;
+    public String getHost() {
+        return host;
     }
 
-    public void setSharedInstance(String sharedInstance) {
-        this.sharedInstance = sharedInstance;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public boolean isChecked() {
@@ -291,8 +291,8 @@ public class DODInstance implements Comparable, Cloneable{
             clone.setMaster(new String(master));
         if (slave != null)
             clone.setSlave(new String(slave));
-        if (sharedInstance != null)
-            clone.setSharedInstance(new String(sharedInstance));
+        if (host != null)
+            clone.setHost(new String(host));
         return clone;
     }
     

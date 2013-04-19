@@ -1,5 +1,6 @@
 package ch.cern.dod.ui.renderer;
 
+import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ui.controller.*;
 import ch.cern.dod.ui.model.OverviewTreeModel;
@@ -31,6 +32,10 @@ import org.zkoss.zul.*;
 public class OverviewTreeRenderer implements TreeitemRenderer{
     
     /**
+     * Instance DAO
+     */
+    private DODInstanceDAO instanceDAO;
+    /**
      * Helper to create jobs
      */
     private JobHelper jobHelper;
@@ -53,6 +58,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         Execution execution = Executions.getCurrent();
         String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
+        this.instanceDAO = new DODInstanceDAO();
         this.jobHelper = new JobHelper(adminMode.booleanValue());
         this.closed = new ArrayList<String>();
         this.checkboxes = checkboxes;
@@ -156,6 +162,11 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 if ( ((OverviewTreeNode) data).getParent().getData() instanceof DODInstance)
                     dbNameCell.appendChild(new Label(" (S)"));
                 row.appendChild(dbNameCell);
+                
+                //Render host
+                Treecell hostCell = new Treecell();
+                hostCell.appendChild(getFormattedLabel(instance.getHost(), 15));
+                row.appendChild(hostCell);
 
                 //Render username
                 Treecell usernameCell = new Treecell();
@@ -179,26 +190,11 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Render project (if any)
                 Treecell projectCell = new Treecell();
                 if (instance.getProject() != null && !instance.getProject().isEmpty()) {
-                    projectCell.appendChild(getFormattedLabel(instance.getProject(), 6));
+                    projectCell.appendChild(getFormattedLabel(instance.getProject(), 20));
                 } else {
                     projectCell.appendChild(new Label("-"));
                 }
                 row.appendChild(projectCell);
-
-                //Render creation date(if any)
-                Treecell creationCell = new Treecell();
-                creationCell.appendChild(new Label(dateFormatter.format(instance.getCreationDate())));
-                row.appendChild(creationCell);
-
-
-                //Render expiry date(if any)
-                Treecell expiryCell = new Treecell();
-                if (instance.getExpiryDate() != null) {
-                    expiryCell.appendChild(new Label(dateFormatter.format(instance.getExpiryDate())));
-                } else {
-                    expiryCell.appendChild(new Label("-"));
-                }
-                row.appendChild(expiryCell);
 
                 //Render db type
                 Treecell dbTypeCell = new Treecell();
@@ -424,12 +420,19 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         }
                     }
                 });
-                //Only enable button if the instance is stopped or running (and there is an upgrade available)
+                
+                //Find out if instance is Oracle shared or not
+                boolean shared = false;
+                if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
+                        && instanceDAO.selectInstancesPerHost(instance.getHost(), null).size() > 1) {
+                    shared = true;
+                }
+                //Only enable button if the instance is not shared stopped or running (and there is an upgrade available)
                 if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
-                        || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
+                        || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
                     upgradeBtn.setDisabled(true);
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
                 } else {
@@ -474,34 +477,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 
                 //Open item if it's not the closed items list
                 item.setOpen(!closed.contains(instance.getDbName()));
-            }
-
-            //Render shared instance
-            else if (((OverviewTreeNode) data).getData() instanceof String) {
-                //Get data
-                final String shared = (String)((OverviewTreeNode) data).getData();
-                
-                //Remove or add item to closed items list if opened
-                item.addEventListener(Events.ON_OPEN, new EventListener() {
-                    public void onEvent(Event event) {
-                        //Remove or add item to closed list
-                        if (item.isOpen())
-                            closed.remove(shared);
-                        else
-                            closed.add(shared);
-                    }
-                });
-                
-                //Render row
-                final Treerow row = new Treerow();
-                Treecell cell = new Treecell();
-                cell.setSpan(12);
-                cell.appendChild(new Label(shared));
-                row.appendChild(cell);
-                item.appendChild(row);
-                
-                //Open item if it's not the closed items list
-                item.setOpen(!closed.contains(shared));
             }
         }
     }

@@ -50,7 +50,7 @@ public class DODConstants {
     public static final int MAX_DB_NAME_LENGTH = 8;
     public static final int MAX_E_GROUP_LENGTH = 256;
     public static final int MAX_PROJECT_LENGTH = 128;
-    public static final int MAX_SHARED_INSTANCE_LENGTH = 128;
+    public static final int MAX_HOST_LENGTH = 128;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
@@ -120,6 +120,7 @@ public class DODConstants {
     public static final String CATEGORY_TEST = "TEST";
     public static final String PARAM_VERSION_FROM = "VERSION_FROM";
     public static final String PARAM_VERSION_TO = "VERSION_TO";
+    public static final String PARAM_LISTENER_BOOLEAN = "LISTENER_BOOLEAN";
 
     //Pages
     public static final String PAGE_INSTANCE = "/instance.zul";
@@ -255,10 +256,10 @@ public class DODConstants {
     public static final String ERROR_OPENING_ADD_UPGRADE = "errorOpeningAddUpgrade";
     public static final String ERROR_SLOW_LOG_FILE = "errorSlowLogFile";
     public static final String ERROR_DOWNLOADING_SLOW_LOG_FILE = "errorDownloadingSlowLogFile";
-    public static final String ERROR_SHARED_INSTANCE_LENGTH = "errorSharedInstanceLength";
+    public static final String ERROR_HOST_LENGTH = "errorHostLength";
+    public static final String ERROR_HOST_EMPTY = "errorHostEmpty";
+    public static final String ERROR_HOST_CHARS = "errorHostChars";
     public static final String ERROR_MASTER_DOES_NOT_EXIST = "errorMasterDoesNotExist";
-    public static final String ERROR_MASTER_SHARED_INSTANCE = "errorMasterSharedInstance";
-    public static final String ERROR_SLAVE_SHARED_INSTANCE = "errorSlaveSharedInstance";
     public static final String ERROR_PIT_ONE_MINUTE = "errorPITOneMinute";
     public static final String ERROR_DESTROYING_INSTANCE = "errorDestroyingInstance";
     public static final String ERROR_RESCUING_INSTANCE = "errorRescuingInstance";

@@ -185,7 +185,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Textbox) getFellow("noConnectionsEdit")).setMaxlength(String.valueOf(DODConstants.MAX_NO_CONNECTIONS).length());
             ((Textbox) getFellow("dbSizeEdit")).setMaxlength(String.valueOf(DODConstants.MAX_DB_SIZE).length());
             ((Textbox) getFellow("versionEdit")).setMaxlength(DODConstants.MAX_VERSION_LENGTH);
-            ((Textbox) getFellow("sharedInstanceEdit")).setMaxlength(DODConstants.MAX_SHARED_INSTANCE_LENGTH);
+            ((Textbox) getFellow("hostEdit")).setMaxlength(DODConstants.MAX_HOST_LENGTH);
         }
 
         //Load instance info if necessary
@@ -217,16 +217,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
-        //Shared instance area
-        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
-            ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
-        else
-            ((Hbox) getFellow("sharedInstanceArea")).setVisible(false);
-        
-        //If all fields are empty, but user is admin, allow editing shared instance
-        if (admin && master == null && slave == null
-                && (instance.getSharedInstance() == null || instance.getSharedInstance().isEmpty()))
-            ((Hbox) getFellow("sharedInstanceArea")).setVisible(true);
     }
     
     /**
@@ -327,13 +317,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         if (slave != null) {
             ((Label) getFellow("slave")).setValue(slave.getDbName());
         }
-        //Shared instance (if any)
-        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
-            ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
-        } else {
-            ((Label) getFellow("sharedInstance")).setValue("-");
-        }
-
+        
+        //Host
+        ((Label) getFellow("host")).setValue(instance.getHost());
+            
         //Description (if any)
         if (instance.getDescription() != null && !instance.getDescription().isEmpty()) {
             ((Label) getFellow("description")).setValue(instance.getDescription());
@@ -391,8 +378,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 ((Textbox) getFellow("noConnectionsEdit")).setValue(String.valueOf(instance.getNoConnections()));
             if (instance.getVersion() != null && !instance.getVersion().isEmpty())
                 ((Textbox) getFellow("versionEdit")).setValue(String.valueOf(instance.getVersion()));
-            if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
-                ((Textbox) getFellow("sharedInstanceEdit")).setValue(String.valueOf(instance.getSharedInstance()));
+            ((Textbox) getFellow("hostEdit")).setValue(String.valueOf(instance.getHost()));
         }
     }
 
@@ -468,12 +454,18 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
-        //Only enable button if the instance is stopped or running (and there is an upgrade available)
+        //Find out if insance is shared or not
+        boolean shared = false;
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
+                && instanceDAO.selectInstancesPerHost(instance.getHost(), null).size() > 1) {
+            shared = true;
+        }
+        //Only enable button if the instance is not shared and is stopped or running (and there is an upgrade available)
         if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
-                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
+                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
         } else {
@@ -996,21 +988,18 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     }
     
     /**
-     * Edits the shared instance.
+     * Edits the host.
      */
-    public void editSharedInstance() {
-        if (FormValidations.isSharedInstanceValid((Textbox) getFellow("sharedInstanceEdit"), null)) {
-            //Clone the instance and override sharedInstance
+    public void editHost() {
+        if (FormValidations.isHostValid((Textbox) getFellow("hostEdit"))) {
+            //Clone the instance and override host
             DODInstance clone = instance.clone();
-            clone.setSharedInstance(((Textbox) getFellow("sharedInstanceEdit")).getValue());
+            clone.setHost(((Textbox) getFellow("hostEdit")).getValue());
             if (instanceDAO.update(instance, clone, username) > 0) {
                 instance = clone;
-                if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty())
-                    ((Label) getFellow("sharedInstance")).setValue(instance.getSharedInstance());
-                else
-                    ((Label) getFellow("sharedInstance")).setValue("-");
-                ((Hbox) getFellow("sharedInstanceEditBox")).setVisible(false);
-                ((Hbox) getFellow("sharedInstanceBox")).setVisible(true);
+                ((Label) getFellow("host")).setValue(instance.getHost());
+                ((Hbox) getFellow("hostEditBox")).setVisible(false);
+                ((Hbox) getFellow("hostBox")).setVisible(true);
                 refreshInfo();
             }
             else {

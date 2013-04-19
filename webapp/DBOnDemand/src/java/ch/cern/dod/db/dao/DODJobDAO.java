@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +24,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Clob;
-import java.util.Calendar;
 
 /**
  * DAO for DODJob entity.
@@ -759,135 +759,5 @@ public class DODJobDAO {
         return date;
     }
 
-    /**
-     * Inserts an upgrade job in the database.
-     * @param job job to be inserted.
-     * @param params params to be inserted with the job.
-     * @return 1 if the operation was succesful, 0 otherwise.
-     */
-    public int insertUpgradeJob(DODJob job, List<DODCommandParam> params) {
-        Connection connection = null;
-        PreparedStatement insertJobStatement = null;
-        PreparedStatement insertParamsStatement = null;
-        PreparedStatement updateInstanceStatement = null;
-        int insertJobResult = 0;
-        int insertParamsResult = 0;
-        int updateInstanceResult = 0;
-        try {
-            //Get connection
-            connection = getConnection();
-            //Set autocommit to false to execute multiple queries and rollback in case something goes wrong
-            connection.setAutoCommit(false);
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            insertJobStatement = connection.prepareStatement(insertQuery);
-            //Assign values to variables
-            insertJobStatement.setString(1, job.getUsername());
-            insertJobStatement.setString(2, job.getDbName());
-            insertJobStatement.setString(3, job.getCommandName());
-            insertJobStatement.setString(4, job.getType());
-            insertJobStatement.setTimestamp(5, new java.sql.Timestamp(job.getCreationDate().getTime()));
-            insertJobStatement.setString(6, job.getRequester());
-            insertJobStatement.setInt(7, job.getAdminAction());
-            insertJobStatement.setString(8, job.getState());
-
-            //Execute query
-            insertJobResult = insertJobStatement.executeUpdate();
-
-            //If the insert operation was successful, insert params (if any) and update intance
-            if (insertJobResult != PreparedStatement.EXECUTE_FAILED) {
-                if (params != null && !params.isEmpty()) {
-                    //Prepare query for the prepared statement (to avoid SQL injection)
-                    String paramsQuery = "INSERT INTO dod_command_params (username, db_name, command_name, type, creation_date, name, value) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                    insertParamsStatement = connection.prepareStatement(paramsQuery);
-                    //If there are parameters
-                    for (int i=0; i<params.size(); i++) {
-                        DODCommandParam commandParam = params.get(i);
-                        //Assign values to variables
-                        insertParamsStatement.setString(1, commandParam.getUsername());
-                        insertParamsStatement.setString(2, commandParam.getDbName());
-                        insertParamsStatement.setString(3, commandParam.getCommandName());
-                        insertParamsStatement.setString(4, commandParam.getType());
-                        insertParamsStatement.setTimestamp(5, new java.sql.Timestamp(commandParam.getCreationDate().getTime()));
-                        insertParamsStatement.setString(6, commandParam.getName());
-                        insertParamsStatement.setString(7, commandParam.getValue());
-                        insertParamsStatement.addBatch();
-                    }
-                    int[] results = insertParamsStatement.executeBatch();
-                    insertParamsResult = results.length;
-                    for (int i=0; i<results.length; i++){
-                        if (results[i] == PreparedStatement.EXECUTE_FAILED) {
-                            insertParamsResult = 0;
-                            break;
-                        }
-                    }
-                }
-                else
-                    insertParamsResult = 1;
-
-                //Update all instances in the shared instance if the operation was succesful
-                //The whole insert job process fails if one of the instances is not running or stopped.
-                if (insertParamsResult != PreparedStatement.EXECUTE_FAILED) {
-                    //Prepare query for the prepared statement (to avoid SQL injection)
-                    String updateQuery = "UPDATE dod_instances a SET a.state = '" + DODConstants.INSTANCE_STATE_JOB_PENDING + "' WHERE (a.db_name = ? "
-                                            + "OR a.shared_instance = (SELECT b.shared_instance FROM dod_instances b WHERE b.db_name = ?)) "
-                                            + "AND (SELECT COUNT(*) FROM dod_instances c "
-                                            + "WHERE a.shared_instance IS NOT NULL AND a.shared_instance <> '' AND a.shared_instance = c.shared_instance "
-                                            + "AND c.state <> '" + DODConstants.INSTANCE_STATE_RUNNING + "' AND c.state <> '" + DODConstants.INSTANCE_STATE_STOPPED + "') = 0";
-                    updateInstanceStatement = connection.prepareStatement(updateQuery);
-                    //Assign values to variables
-                    updateInstanceStatement.setString(1, job.getDbName());
-                    updateInstanceStatement.setString(2, job.getDbName());
-                    //Execute query
-                    updateInstanceResult = updateInstanceStatement.executeUpdate();
-                    
-                    //The whole insert job process fails if one of the instances is not running or stopped.
-                    if (updateInstanceResult <= 0) {
-                        connection.rollback();
-                        return 0;
-                    }
-                }
-                else {
-                    connection.rollback();
-                    return 0;
-                }
-            }
-            
-            //Commit queries
-            connection.commit();
-        }
-        catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        }
-        catch (SQLException ex) {
-            try {
-                //Rollback updates
-                connection.rollback();
-            }
-            catch (SQLException ex1) {
-                Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex1);
-            }
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING UPGRADE JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        }
-
-        finally {
-            try {
-                insertJobStatement.close();
-            } catch (Exception e) {}
-            try {
-                updateInstanceStatement.close();
-            } catch (Exception e) {}
-            try {
-                insertParamsStatement.close();
-            } catch (Exception e) {}
-            try {
-                connection.setAutoCommit(true);
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
-        }
-        return updateInstanceResult;
-    }
+    
 }

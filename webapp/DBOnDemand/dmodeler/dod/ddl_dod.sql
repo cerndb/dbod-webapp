@@ -74,7 +74,7 @@ CREATE TABLE dod_instances
      version VARCHAR2 (128) , 
      master VARCHAR2 (32) , 
      slave VARCHAR2 (32) , 
-     shared_instance VARCHAR2 (32) , 
+     host VARCHAR2 (128) NOT NULL , 
      state VARCHAR2 (32) , 
      status CHAR (1) 
     ) 

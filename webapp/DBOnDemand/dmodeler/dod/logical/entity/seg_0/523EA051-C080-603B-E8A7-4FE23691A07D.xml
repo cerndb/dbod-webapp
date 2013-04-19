@@ -240,7 +240,7 @@
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32</dataTypeSize>
 </Attribute>
-<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="shared_instance" id="7EF47321-20E0-17D1-15DE-6C5A16C7C70A">
+<Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="host" id="7EF47321-20E0-17D1-15DE-6C5A16C7C70A">
 <createdBy>dgomezbl</createdBy>
 <createdTime>2012-06-11 09:13:38 UTC</createdTime>
 <ownerDesignName>dod</ownerDesignName>
@@ -248,11 +248,10 @@
 <engineerTo>
 <item key="412D1B6F-4F6D-4D47-C541-BCA4F88B550B" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32</dataTypeSize>
+<dataTypeSize>128</dataTypeSize>
 </Attribute>
 <Attribute class="oracle.dbtools.crest.model.design.logical.Attribute" name="state" id="3074074B-4719-EB2E-23A4-B09AB115A8B0">
 <createdBy>rgaspar</createdBy>

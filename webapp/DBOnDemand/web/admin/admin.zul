@@ -69,6 +69,12 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
+                                    <textbox id="hostFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="80px" />
+                                </hbox>
+                            </auxheader>
+                            <auxheader colspan="1">
+                                <hbox align="bottom">
+                                    <image src="/img/filter.png" width="18px" height="18px"/>
                                     <textbox id="usernameFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="50px" />
                                 </hbox>
                             </auxheader>
@@ -95,10 +101,9 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="45px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="95px" />
                                 </hbox>
                             </auxheader>
-                            <auxheader colspan="2" />
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
@@ -133,12 +138,11 @@
                                 <checkbox id="checkAll" onCheck="controller.checkAll()" style="margin-left:15px"/>
                             </treecol>
                             <treecol label="${c:l('dbName')}" width="120px"/>
+                            <treecol label="${c:l('host')}" width="120px"/>
                             <treecol label="${c:l('username')}" width="90px"/>
                             <treecol label="${c:l('eGroup')}"  width="150px"/>
                             <treecol label="${c:l('category')}" width="65px"/>
-                            <treecol label="${c:l('project')}" width="85px"/>
-                            <treecol label="${c:l('creationDate')}" width="90px"/>
-                            <treecol label="${c:l('expiryDate')}" width="80px"/>
+                            <treecol label="${c:l('project')}" width="135px"/>
                             <treecol label="${c:l('dbType')}" width="65px"/>
                             <treecol label="${c:l('dbSize')}" width="60px"/>
                             <treecol label="${c:l('noConn')}" width="65px"/>
@@ -395,10 +399,10 @@
                     <label value="${c:l('master')}" />
                     <textbox id="master" width="200px"/>
                 </row>
-                <!-- Shared instance -->
+                <!-- Host -->
                 <row style="border:none;">
-                    <label value="${c:l('sharedInstance')}" />
-                    <textbox id="sharedInstance" width="200px"/>
+                    <label value="${c:l('host')}" />
+                    <textbox id="host" width="200px"/>
                 </row>
                 <!-- DB size -->
                 <row style="border:none;">

@@ -77,10 +77,8 @@ public class UpgradeController extends Window {
         }
         
         //Get shared instances
-        if (instance.getSharedInstance() != null && !instance.getSharedInstance().isEmpty()) {
-            sharedInstances = instanceDAO.selectSharedInstances(instance.getSharedInstance(), upgrades);
-            sharedInstances.remove(instance);
-        }
+        sharedInstances = instanceDAO.selectInstancesPerHost(instance.getHost(), upgrades);
+        sharedInstances.remove(instance);
 
         //Basic window properties
         this.setId("upgradeWindow");
@@ -110,7 +108,7 @@ public class UpgradeController extends Window {
 
             //Append warning to message in case of sharedInstance (not MYSQL)
             if (sharedInstances != null && sharedInstances.size() > 0 && !instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
-                messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getSharedInstance() + " (";
+                messageStr += " " + Labels.getLabel(DODConstants.LABEL_SHARED_INSTANCE_WARNING) + " " + instance.getHost() + " (";
                 for (int i = 0; i < sharedInstances.size() - 1; i++) {
                     messageStr += sharedInstances.get(i).getDbName() + ", ";
                 }

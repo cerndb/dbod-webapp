@@ -329,7 +329,7 @@ public class FormValidations {
     }
     
     /**
-     * Validates DB name.
+     * Validates master.
      * @param master Textbox with the master to validate.
      * @param instanceDAO DAO to use in order to obtain the master with the given name.
      * @return true if DB name is valid, false otherwise
@@ -358,11 +358,6 @@ public class FormValidations {
                 master.setErrorMessage(Labels.getLabel(DODConstants.ERROR_MASTER_DOES_NOT_EXIST));
                 return false;
             }
-            //Check that master is not a shared instance
-            if (masterInstance.getSharedInstance() != null && !masterInstance.getSharedInstance().isEmpty()){
-                master.setErrorMessage(Labels.getLabel(DODConstants.ERROR_MASTER_SHARED_INSTANCE));
-                return false;
-            }
         }
         else
             return false;
@@ -370,25 +365,28 @@ public class FormValidations {
     }
     
     /**
-     * Validates shared instance
-     * @param sharedInstance Textbox with the shared instance to validate.
-     * @param master Textbox with the master indicated by the user (shared instance is not permitted in master/slave).
+     * Validates host
+     * @param host Textbox with the host to validate.
      * @return true if shared instance is valid, false otherwise.
      */
-    public static boolean isSharedInstanceValid(Textbox sharedInstance, Textbox master) {
+    public static boolean isHostValid(Textbox host) {
         //If there are no previous errors
-        if (sharedInstance.getErrorMessage() == null || sharedInstance.getErrorMessage().isEmpty()) {
+        if (host.getErrorMessage() == null || host.getErrorMessage().isEmpty()) {
             //Trim
-            sharedInstance.setValue(sharedInstance.getValue().trim());
-            //Check shared instance length
-            if (sharedInstance.getValue().length() > DODConstants.MAX_SHARED_INSTANCE_LENGTH) {
-                sharedInstance.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SHARED_INSTANCE_LENGTH));
+            host.setValue(host.getValue().trim());
+            //Check if user has entered a value
+            if (host.getValue().isEmpty()) {
+                host.setErrorMessage(Labels.getLabel(DODConstants.ERROR_HOST_EMPTY));
                 return false;
             }
-            //Check that theres is no master in case there is something in the field (slave can't be a shared instance)
-            if (sharedInstance.getValue() != null && !sharedInstance.getValue().isEmpty()
-                    && master != null && master.getValue() != null && !master.getValue().trim().isEmpty()) {
-                sharedInstance.setErrorMessage(Labels.getLabel(DODConstants.ERROR_SLAVE_SHARED_INSTANCE));
+            //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
+                if (!Pattern.matches("[\\da-z\\.\\-_]*", host.getValue())) {
+                    host.setErrorMessage(Labels.getLabel(DODConstants.ERROR_HOST_CHARS));
+                    return false;
+                }
+            //Check shared instance length
+            if (host.getValue().length() > DODConstants.MAX_HOST_LENGTH) {
+                host.setErrorMessage(Labels.getLabel(DODConstants.ERROR_HOST_LENGTH));
                 return false;
             }
         }

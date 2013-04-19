@@ -83,7 +83,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Textbox) getFellow("description")).setMaxlength(DODConstants.MAX_DESCRIPTION_LENGTH);
         ((Textbox) getFellow("version")).setMaxlength(DODConstants.MAX_VERSION_LENGTH);
         ((Textbox) getFellow("master")).setMaxlength(DODConstants.MAX_DB_NAME_LENGTH);
-        ((Textbox) getFellow("sharedInstance")).setMaxlength(DODConstants.MAX_SHARED_INSTANCE_LENGTH);
+        ((Textbox) getFellow("host")).setMaxlength(DODConstants.MAX_HOST_LENGTH);
     }
 
     /**
@@ -99,7 +99,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))
                 & FormValidations.isVersionValid((Textbox) getFellow("version"))
                 & FormValidations.isMasterValid((Textbox) getFellow("master"), instanceDAO)
-                & FormValidations.isSharedInstanceValid((Textbox) getFellow("sharedInstance"), (Textbox) getFellow("master"))
+                & FormValidations.isHostValid((Textbox) getFellow("host"))
                 & FormValidations.isDbSizeValid((Textbox) getFellow("dbSize"))
                 & FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnections"))
                 & FormValidations.isProjectValid((Textbox) getFellow("project"))
@@ -142,7 +142,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))
                 & FormValidations.isVersionValid((Textbox) getFellow("version"))
                 & FormValidations.isMasterValid((Textbox) getFellow("master"), instanceDAO)
-                & FormValidations.isSharedInstanceValid((Textbox) getFellow("sharedInstance"), (Textbox) getFellow("master"))
+                & FormValidations.isHostValid((Textbox) getFellow("host"))
                 & FormValidations.isDbSizeValid((Textbox) getFellow("dbSize"))
                 & FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnections"))
                 & FormValidations.isProjectValid((Textbox) getFellow("project"))
@@ -167,7 +167,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 instance.setDbType(((String)((Combobox) getFellow("dbType")).getSelectedItem().getValue()));
                 instance.setVersion(((Textbox) getFellow("version")).getValue());
                 instance.setMaster(((Textbox) getFellow("master")).getValue());
-                instance.setSharedInstance(((Textbox) getFellow("sharedInstance")).getValue());
+                instance.setHost(((Textbox) getFellow("host")).getValue());
                 instance.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSize")).getValue()));
                 if (!((Textbox) getFellow("noConnections")).getValue().isEmpty())
                     instance.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnections")).getValue()).intValue());

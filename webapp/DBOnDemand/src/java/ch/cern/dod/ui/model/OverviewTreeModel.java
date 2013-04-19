@@ -33,7 +33,6 @@ public class OverviewTreeModel extends AbstractTreeModel{
         ArrayList<OverviewTreeNode> mainList = new ArrayList<OverviewTreeNode>();
         ArrayList<DODInstance> masters = new ArrayList<DODInstance>();
         ArrayList<DODInstance> slaves = new ArrayList<DODInstance>();
-        ArrayList<OverviewTreeNode> sharedInstances = new ArrayList<OverviewTreeNode>();
         
         //Separate masters and slaves and create single and shared isntances
         for (int i=0; i < instances.size(); i++) {
@@ -48,32 +47,10 @@ public class OverviewTreeModel extends AbstractTreeModel{
             else {
                 //Only add instance to tree if it is filtered
                 if (filterInstance(instance, tree)) {
-                    //If instance is shared then create node or add instance to existing node
-                    if (instance.getSharedInstance() != null) {
-                        boolean found = false;
-                        for (int j=0; j < sharedInstances.size(); j++) {
-                            OverviewTreeNode node = sharedInstances.get(j);
-                            if (((String)node.getData()).equals(instance.getSharedInstance())) {
-                                node.add(new OverviewTreeNode(instance));
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            ArrayList<OverviewTreeNode> sharedList =  new ArrayList<OverviewTreeNode>();
-                            sharedList.add(new OverviewTreeNode(instance));
-                            sharedInstances.add(new OverviewTreeNode(instance.getSharedInstance(), sharedList));
-                        }
-                    }
-                    //If it's a single instance create leaf node
-                    else {
-                        mainList.add(new OverviewTreeNode(instance));
-                    }
+                    mainList.add(new OverviewTreeNode(instance));
                 }
             }
         }
-        //Add all shared instances to list
-        mainList.addAll(sharedInstances);
         
         //Merge masters and slaves
         for (int i=0; i < masters.size(); i++) {
@@ -145,6 +122,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
     private static boolean filterInstance (DODInstance instance, Tree tree) {
         //Get field values
         String dbName = ((Textbox) tree.getFellow("dbNameFilter")).getValue().trim();
+        String host = ((Textbox) tree.getFellow("hostFilter")).getValue().trim();
         String user = ((Textbox) tree.getFellow("usernameFilter")).getValue().trim();
         String eGroup = ((Textbox) tree.getFellow("eGroupFilter")).getValue().trim();
         String category = "";
@@ -159,6 +137,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
             action = ((String)((Combobox) tree.getFellow("actionFilter")).getSelectedItem().getValue()).trim();
         
         if (instance.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0
+                && instance.getHost().toLowerCase().indexOf(host.trim().toLowerCase()) >= 0
                 && instance.getUsername().toLowerCase().indexOf(user.trim().toLowerCase()) >= 0
                 && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().toLowerCase().indexOf(eGroup.trim().toLowerCase()) >= 0))
                 && (project.isEmpty() || (instance.getProject() != null && instance.getProject().toLowerCase().indexOf(project.trim().toLowerCase()) >= 0))

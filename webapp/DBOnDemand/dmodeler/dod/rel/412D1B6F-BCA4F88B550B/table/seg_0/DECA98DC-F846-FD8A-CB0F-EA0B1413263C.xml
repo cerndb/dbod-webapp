@@ -215,16 +215,15 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column class="oracle.dbtools.crest.model.design.relational.Column" name="shared_instance" id="DAE1B031-DFB3-41B3-37E2-6510E8E71D7D">
+<Column class="oracle.dbtools.crest.model.design.relational.Column" name="host" id="DAE1B031-DFB3-41B3-37E2-6510E8E71D7D">
 <createdBy>dgomezbl</createdBy>
 <createdTime>2013-02-06 10:50:12 UTC</createdTime>
 <generatorID>7EF47321-20E0-17D1-15DE-6C5A16C7C70A</generatorID>
 <ownerDesignName>dod</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32</dataTypeSize>
+<dataTypeSize>128</dataTypeSize>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
