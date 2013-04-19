@@ -1,0 +1,133 @@
+#!/usr/bin/perl -w
+
+package dbod_state_checker;
+
+use strict;
+use DBOD;
+use DBOD::Database;
+
+# Initializes Logging Settings
+
+our ($logger, $lock_file); 
+
+INIT{
+    $logger = Log::Log4perl::get_logger("DBOD.state_checker");
+    $logger->debug("Logger created");
+    $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
+}
+
+sub usage() {
+    print "USAGE:\n\tcommand\n";
+    exit -1;
+}
+
+sub worker {
+    
+    my ($instance, $dbh) = @_;
+    my $db_name = $instance->{'DB_NAME'};
+    my $instance_name = "dod_$db_name";
+    $logger->debug( "Checking $instance_name" );
+    
+    my $state_checker = DBOD::get_state_checker($instance);
+    if (!defined $state_checker){
+        $logger->error( "Not state checker defined for this DB type" );
+        return 1;
+    }
+    
+    if (($instance->{'STATE'} ne 'JOB_PENDING') && 
+        ($instance->{'STATE'} ne 'AWAITING_APPROVAL') &&
+        ($instance->{'STATE'} ne 'MAINTENANCE')) {
+        my ($buf, $instance_state) = $state_checker->($instance, 0);
+        if (($instance->{'STATE'} ne $instance_state)) {
+            $logger->debug( "Updating $instance_name STATE to $instance_state");
+            DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
+            $logger->debug( "$instance_name state update successfully");
+        }
+    }
+    else{
+        $logger->debug( "State untouched for $instance_name: " . $instance->{'STATE'} );
+    }
+    
+    return 0;
+}
+
+sub Main{
+
+    usage() if (@ARGV != 0);
+
+    unless (-e $lock_file){
+
+        $logger->debug("Creating lock file: $lock_file");
+        open(LOCKF, ">$lock_file");
+        close(LOCKF);
+        $logger->debug("Opening DB connection");
+        my $dbh = DBOD::Database::getDBH();
+        my $rc;
+
+        if (defined($dbh)){
+            my @instances = DBOD::Database::getInstanceList($dbh);
+            foreach my $instance (@instances){
+                $logger->debug( "Checking state for instance: $instance" );
+                worker($instance, $dbh);
+            }
+            $logger->debug("Closing DB connection");
+            $rc = 0;
+        }
+        else{
+            $logger->error("Unable to get DB connection");
+            $rc = -1;
+        }
+
+        $logger->debug("Deleting lock file");
+        unlink($lock_file);
+
+        exit $rc;
+    }
+    else{
+        $logger->debug("Another instance of dbod_state_checker is running.\n Skipping execution");
+    }
+
+}
+
+&Main();
+
+END{}
+
+=head1 NAME
+
+dbod_state_checker - State checker for DBOD instances
+
+=cut
+
+=head1 USE
+
+=over
+
+=item * 
+
+dbod_state_checker
+
+=back
+
+=cut
+
+=head1 COMMENTS
+
+This is the script in charge of checking maintaining an updated
+state for the DB instances in the DBOD application database.
+
+Configuration and additional support files (i.e. templates for DBMS configuration files)
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
+
+- dbod_daemon.conf : General configuration file. YAML format
+
+- dbod_daemon_logger.conf : Logger configuration file
+
+=head1 AUTHOR
+
+Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+
+IT-DB-DBB
+
+
+=cut
