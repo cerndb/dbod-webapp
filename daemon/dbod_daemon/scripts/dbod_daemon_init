@@ -4,19 +4,23 @@
 #
 # Created: icoteril 10/01/2013
 
+PIDFILE="/var/run/dbod_daemon/dbod_daemon.pid"
+if [ -e "$PIDFILE" ] 
+then
+    pid=`cat $PIDFILE`
+else
+    pid=
+fi
 
 status(){
-    if [ -e "/tmp/dbod_daemon.pid" ]; then
-        pid=`cat /tmp/dbod_daemon.pid`
-        echo "Expected PID: $pid" 
-    fi
+    echo "Expected PID: $pid" 
     pids=`ps ax|grep "perl -w /usr/bin/dbod_daemon" |grep -v grep`
     echo "Found : $pids"
 }
 
 start(){
-    if [ -e "/tmp/dbod_daemon.pid" ]; then
-        pid=`cat /tmp/dbod_daemon.pid`
+    if [[ -n "$pid" ]] 
+    then
         echo "dbod_daemon already running with PID: $pid"
     else
         su - dbod -c "/usr/bin/dbod_daemon --start"
@@ -24,15 +28,17 @@ start(){
 }
 
 stop(){
-    if [ -e "/tmp/dbod_daemon.pid" ]; then
-        rm /tmp/dbod_daemon.pid
+    # Attempts to exit gracefully
+    su - dbod -c "/usr/bin/dbod_daemon --stop"
+    # Cleans
+    if [ -e "$PIDFILE" ]; then
+        rm $PIDFILE
     fi
     pkill -9 dbod_daemon
 }
 
 case "$1" in
     start)
-        stop
         start
         ;;
     stop)
