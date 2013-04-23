@@ -18,7 +18,7 @@ $VERSION     = 0.03;
 
 # Load general configuration
 
-INI{
+INIT{
     $logger = Log::Log4perl::get_logger( 'DBOD.Templates' );
     $logger->debug( "Logger created" );
 } # INIT BLOCK
