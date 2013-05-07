@@ -37,17 +37,7 @@ INIT{
 } # INIT BLOCK
 
 sub getInstanceList{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select username, db_name, db_type as type, state from dod_instances";
@@ -151,17 +141,7 @@ sub isSlave{
 
 
 sub getJobList{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select a.username, a.db_name, a.command_name, a.type, a.creation_date
@@ -201,17 +181,7 @@ sub getJobList{
 }   
 
 sub getTimedOutJobs{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
