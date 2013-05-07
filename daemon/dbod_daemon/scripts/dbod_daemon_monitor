@@ -11,7 +11,7 @@ use DBOD::Database;
 our ($logger, $lock_file); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger("DBOD.daemon_monitor");
+    $logger = Log::Log4perl::get_logger("DBOD.DaemonMonitor");
     $logger->debug("Logger created");
 }
 
