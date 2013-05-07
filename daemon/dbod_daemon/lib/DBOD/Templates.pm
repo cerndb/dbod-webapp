@@ -13,13 +13,13 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger, %processors);
 $VERSION     = 0.03;
 @ISA         = qw( Exporter );
 @EXPORT      = ();
-@EXPORT_OK   = qw( get );
+@EXPORT_OK   = qw( parser );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
 
 INIT{
-    $logger = Log::Log4perl::get_logger( 'DBOD.ConfigParser' );
+    $logger = Log::Log4perl::get_logger( 'DBOD.Templates' );
     $logger->debug( "Logger created" );
 } # INIT BLOCK
 
@@ -188,7 +188,7 @@ sub MYSQL_process {
     return $filename;
 }
 
-sub get{
+sub parser{
     my $type = shift;
     $logger->debug( "Returning parser for $type");
     return $processors{$type};
