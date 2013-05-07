@@ -380,7 +380,7 @@ public class FormValidations {
                 return false;
             }
             //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
-                if (!Pattern.matches("[\\da-z\\.\\-_]*", host.getValue())) {
+                if (!Pattern.matches("[\\da-z\\.\\-_,]*", host.getValue())) {
                     host.setErrorMessage(Labels.getLabel(DODConstants.ERROR_HOST_CHARS));
                     return false;
                 }
