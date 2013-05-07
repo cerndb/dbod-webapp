@@ -12,7 +12,8 @@ use DBOD::Config qw( $config );
 use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_RUNNING,
+    $JOB_MAX_PENDING);
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
@@ -31,7 +32,8 @@ INIT{
     $DBTAG = $config->{'DB_TAG'};
     $user = $config->{'DB_USER'};
     $password = $config->{'DB_PASSWORD'};
-    $MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
+    $JOB_MAX_RUNNING = $config->{'JOB_MAX_RUNNING'};
+    $JOB_MAX_PENDING = $config->{'JOB_MAX_PENDING'};
 } # INIT BLOCK
 
 sub getInstanceList{
@@ -214,7 +216,7 @@ sub getTimedOutJobs{
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual) -$MAX_JOB_TIMEOUT/24"; 
+            and creation_date < (select sysdate from dual) -$JOB_MAX_RUNNING/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
@@ -240,6 +242,13 @@ sub getTimedOutJobs{
     };
     return @result;
 }   
+
+sub getPendingJobs {
+    my $dbh = shift;
+    my $sql = "select count(*) from dod_jobs where sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )"
+    return $dbh->selectrow_array($sql);
+}
+
 
 sub updateInstance{
     my ($job, $col_name, $col_value, $dbh);
