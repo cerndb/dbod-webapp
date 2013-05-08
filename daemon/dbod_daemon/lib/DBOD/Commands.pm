@@ -11,7 +11,7 @@ use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw();
 @EXPORT_OK   = qw();
