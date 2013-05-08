@@ -77,9 +77,6 @@
                                         <comboitem label="${c:l('categoryOFFICIAL')}" value="OFFICIAL"/>
                                         <comboitem label="${c:l('categoryPERSONAL')}" value="PERSONAL"/>
                                         <comboitem label="${c:l('categoryTEST')}" value="TEST"/>
-                                        <attribute name="onCreate">
-                                            categoryFilter.setSelectedIndex(0);
-                                        </attribute>
                                     </combobox>
                                 </hbox>
                             </auxheader>
@@ -96,9 +93,6 @@
                                         <comboitem label="${c:l('all')}" value=""/>
                                         <comboitem label="${c:l('dbTypeORACLE')}" value="ORACLE"/>
                                         <comboitem label="${c:l('dbTypeMYSQL')}" value="MYSQL"/>
-                                        <attribute name="onCreate">
-                                            dbTypeFilter.setSelectedIndex(0);
-                                        </attribute>
                                     </combobox>
                                 </hbox>
                             </auxheader>
@@ -111,9 +105,6 @@
                                         <comboitem label="${c:l('toBeStartedUp')}" value="STARTUP" image="/img/startup.png"/>
                                         <comboitem label="${c:l('toBeShutDown')}" value="SHUTDOWN" image="/img/shutdown.png"/>
                                         <comboitem label="${c:l('toBeUpgraded')}" value="UPGRADE" image="/img/upgrade.png"/>
-                                        <attribute name="onCreate">
-                                            actionFilter.setSelectedIndex(0);
-                                        </attribute>
                                     </combobox>
                                 </hbox>
                             </auxheader>
