@@ -8,12 +8,12 @@ use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
 use DBOD::Database;
-use DBOD::All;
+use DBOD::All qw( %job_status_table %instance_status_table );
 use DBOD::LDAP;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw();
 @EXPORT_OK   = qw();
@@ -53,25 +53,11 @@ sub get_version{
 
 sub state_checker{
     my ($job, $code) = @_;
-    my ($job_state, $instance_state);
-    if ($code){
-        $job_state = "FINISHED_FAIL";
-    }
-    else{
-        $job_state = "FINISHED_OK";
-    }
     my $entity = DBOD::All::get_entity($job);
     my $output = test_instance($entity);
     my $retcode = DBOD::All::result_code($output);
-    if ($retcode == 1) {
-        $instance_state = "STOPPED";
-    }
-    elsif($retcode == 2){
-        $instance_state = "BUSY";
-    }
-    else{
-        $instance_state = "RUNNING";
-    }
+    my $job_state = job_status_table{$job_state};
+    my $instance_state = instance_status_table{$retcode};
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
 }
