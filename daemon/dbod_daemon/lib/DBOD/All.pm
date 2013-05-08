@@ -22,6 +22,20 @@ INIT{
 } # INIT BLOCK
 
 
+my %job_status_table = (
+    0 => 'FINISHED_OK',
+    1 => 'FINISHED_FAIL',
+    2 => 'TIMED_OUT',
+    3 => 'FINISHED_WARNING'
+);
+
+my %instance_status_table = (
+    0 => 'RUNNING',
+    1 => 'STOPPED',
+    2 => 'BUSY',
+    3 => 'WARNING'
+);
+
 sub get_entity {
     my $job = shift;
     return join('_', 'dod', $job->{'DB_NAME'});
