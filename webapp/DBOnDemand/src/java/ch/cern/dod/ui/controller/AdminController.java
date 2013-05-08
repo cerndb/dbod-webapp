@@ -103,6 +103,59 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * with the instances obtained before composing.
      */
     public void afterCompose() {
+        //Get filters for instances from session
+        String filterDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME);
+        if (filterDbName != null && !filterDbName.isEmpty()) {
+            ((Textbox) getFellow("dbNameFilter")).setValue(filterDbName);
+        }
+        String filterHost = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_HOST);
+        if (filterHost != null && !filterHost.isEmpty()) {
+            ((Textbox) getFellow("hostFilter")).setValue(filterHost);
+        }
+        String filterUsername = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_USERNAME);
+        if (filterUsername != null && !filterUsername.isEmpty()) {
+            ((Textbox) getFellow("usernameFilter")).setValue(filterUsername);
+        }
+        String filterEGroup = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_E_GROUP);
+        if (filterEGroup != null && !filterEGroup.isEmpty()) {
+            ((Textbox) getFellow("eGroupFilter")).setValue(filterEGroup);
+        }
+        Integer filterCategory = (Integer) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_CATEGORY);
+        if (filterCategory != null) {
+            ((Combobox) getFellow("categoryFilter")).setSelectedIndex(filterCategory.intValue());
+        }
+        else {
+            ((Combobox) getFellow("categoryFilter")).setSelectedIndex(0);
+        }
+        String filterProject = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_PROJECT);
+        if (filterProject != null && !filterProject.isEmpty()) {
+            ((Textbox) getFellow("projectFilter")).setValue(filterProject);
+        }
+        Integer filterDbType = (Integer) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_TYPE);
+        if (filterDbType != null) {
+            ((Combobox) getFellow("dbTypeFilter")).setSelectedIndex(filterDbType.intValue());
+        }
+        else{
+            ((Combobox) getFellow("dbTypeFilter")).setSelectedIndex(0);
+        }
+        Integer filterActions = (Integer) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_ACTIONS);
+        if (filterActions != null) {
+            ((Combobox) getFellow("actionFilter")).setSelectedIndex(filterActions.intValue());
+        }
+        else {
+            ((Combobox) getFellow("actionFilter")).setSelectedIndex(0);
+        }
+        
+        //Filters for jobs
+        String filterJobDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_JOB_DB_NAME);
+        if (filterJobDbName != null && !filterJobDbName.isEmpty()) {
+            ((Textbox) getFellow("jobStatsDBNameFilter")).setValue(filterJobDbName);
+        }
+        String filterJobCommandName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_JOB_COMMAND_NAME);
+        if (filterJobCommandName != null && !filterJobCommandName.isEmpty()) {
+            ((Textbox) getFellow("jobStatsCommandFilter")).setValue(filterJobCommandName);
+        }
+        
         //Instances tree
         Tree overviewTree = (Tree) getFellow("overviewTree");
         overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
@@ -132,6 +185,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
         jobStatsGrid.getPagingChild().setMold("os");
+        filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();
         
@@ -609,6 +663,16 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         
         displayOrHideAreas();
+        
+        //Set filters on session
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_ACTIONS, new Integer(((Combobox) getFellow("actionFilter")).getSelectedIndex()));
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_CATEGORY, new Integer(((Combobox) getFellow("categoryFilter")).getSelectedIndex()));
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME, ((Textbox) getFellow("dbNameFilter")).getValue());
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_TYPE, new Integer(((Combobox) getFellow("dbTypeFilter")).getSelectedIndex()));
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_E_GROUP, ((Textbox) getFellow("eGroupFilter")).getValue());
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_HOST, ((Textbox) getFellow("hostFilter")).getValue());
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_PROJECT, ((Textbox) getFellow("projectFilter")).getValue());
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_USERNAME, ((Textbox) getFellow("usernameFilter")).getValue());
     }
     
     /**
@@ -621,6 +685,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
                                                             ((Textbox) getFellow("jobStatsCommandFilter")).getValue());
         
         displayOrHideAreas();
+        
+        //Set filters on session
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_JOB_COMMAND_NAME, ((Textbox) getFellow("jobStatsCommandFilter")).getValue());
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_JOB_DB_NAME, ((Textbox) getFellow("jobStatsDBNameFilter")).getValue());
     }
     
     /**
