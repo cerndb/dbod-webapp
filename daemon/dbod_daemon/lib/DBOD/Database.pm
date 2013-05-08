@@ -15,7 +15,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_RUNNING,
     $JOB_MAX_PENDING);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw(getJobList updateJobState updateJobCompletionDate updateJobLog finishJob getDBH);
 @EXPORT_OK   = qw(getDBH);
@@ -430,7 +430,8 @@ sub getConfigFile{
 sub getDBH{
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
+        $dbh = DBI->connect( $DSN, $user, $password, 
+            { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
         if (1){ # call to $dbh->ora_can_taf() causes error
             $logger->debug( "Enabling Oracle TAF");
             $dbh->{ora_taf} = 1;
