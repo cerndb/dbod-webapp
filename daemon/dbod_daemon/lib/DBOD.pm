@@ -13,13 +13,14 @@ use DBOD::Database;
 use DBOD::MySQL;
 use DBOD::Oracle;
 use DBOD::All;
+use DBOD::Commands;
 
 use POSIX ":sys_wait_h";
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw(jobDispatcher $logger);
 @EXPORT_OK   = ( );
@@ -164,7 +165,7 @@ sub worker_body {
         $worker_dbh = DBOD::Database::getDBH();
     }
 
-    my $cmd_line = DBOD::Database::prepareCommand($job, $worker_dbh);
+    my $cmd_line = DBOD::Commands::prepareCommand($job, $worker_dbh);
     $logger->debug( "Received cmd_line: $cmd_line ");
     my $log;
     my $retcode;

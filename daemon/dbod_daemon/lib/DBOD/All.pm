@@ -8,10 +8,10 @@ use DBOD::Config qw( $config );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(get_host_from_entity copy_to_entity);
-@EXPORT_OK   = qw();
+@EXPORT      = qw( );
+@EXPORT_OK   = qw( %job_status_table %instance_status_table );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
@@ -21,6 +21,19 @@ INIT{
     $logger->debug( "Logger created" );
 } # INIT BLOCK
 
+
+my %job_status_table = (
+    0 => 'FINISHED_OK',
+    1 => 'FINISHED_FAIL',
+    2 => 'TIMED_OUT',
+    3 => 'FINISHED_WARNING'
+);
+
+my %instance_status_table = (
+    0 => 'RUNNING',
+    1 => 'STOPPED',
+    2 => 'BUSY',
+);
 
 sub get_entity {
     my $job = shift;

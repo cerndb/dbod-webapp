@@ -12,9 +12,10 @@ use DBOD::Config qw( $config );
 use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $MAX_JOB_TIMEOUT);
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_RUNNING,
+    $JOB_MAX_PENDING);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw(getJobList updateJobState updateJobCompletionDate updateJobLog finishJob getDBH);
 @EXPORT_OK   = qw(getDBH);
@@ -31,21 +32,12 @@ INIT{
     $DBTAG = $config->{'DB_TAG'};
     $user = $config->{'DB_USER'};
     $password = $config->{'DB_PASSWORD'};
-    $MAX_JOB_TIMEOUT = $config->{'MAX_JOB_TIMEOUT'};
+    $JOB_MAX_RUNNING = $config->{'JOB_MAX_RUNNING'};
+    $JOB_MAX_PENDING = $config->{'JOB_MAX_PENDING'};
 } # INIT BLOCK
 
 sub getInstanceList{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select username, db_name, db_type as type, state from dod_instances";
@@ -69,7 +61,7 @@ sub getInstanceList{
         }
         1;
     } or do{
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Error fetching instances List : $!" );
         return ();
     };
     return @result;
@@ -98,7 +90,7 @@ sub isShared{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Error fetching shared state for $db_name : $!" );
         return undef;
     }
 }
@@ -120,7 +112,7 @@ sub isMaster{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Error fetching master status for $db_name : $!" );
         return undef;
     }
 }
@@ -142,24 +134,14 @@ sub isSlave{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Error fetching slave status for $db_name : $!" );
         return undef;
     }
 }
 
 
 sub getJobList{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select a.username, a.db_name, a.command_name, a.type, a.creation_date
@@ -192,29 +174,19 @@ sub getJobList{
         }
         1;
     } or do{
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Error fetching job list : $!" );
         return ();
     };
     return @result;
 }   
 
 sub getTimedOutJobs{
-    my $dbh;
-    if ($#_ == 0){
-        ($dbh) = @_;
-    }
-    else{
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return ();
-        }
-    }
+    my $dbh = shift;
     my @result;
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual) -$MAX_JOB_TIMEOUT/24"; 
+            and creation_date < (select sysdate from dual) -$JOB_MAX_RUNNING/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
@@ -235,29 +207,27 @@ sub getTimedOutJobs{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Unable to check for TIMED OUT jobs : $!" );
         return (); # Returns an empty array in an attempt to fail smoothly
     };
     return @result;
 }   
 
-sub updateInstance{
-    my ($job, $col_name, $col_value, $dbh);
-    if ($#_ == 2){
-        ($job, $col_name, $col_value) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    elsif($#_ == 3){
-        ($job, $col_name, $col_value, $dbh) = @_;
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
+sub getPendingJobs {
+    my $dbh = shift;
+    my $sql = "select count(*) from dod_jobs where sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )";
+    my $count
+    eval{
+        $count = $dbh->selectrow_array($sql);
+    } or do {
+        $logger->error( "Unable to check for PENDING jobs : $!" );
         return undef;
     }
+    return $count;
+}
+
+sub updateInstance{
+    my ($job, $col_name, $col_value, $dbh) = @_; 
     eval {
         my $sql = "update DOD_INSTANCES set $col_name = ?
         where username = ? and db_name = ?";
@@ -277,29 +247,14 @@ sub updateInstance{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database\n $!" );
+        $logger->error( "Unable update instance status : $!" );
         return undef;
     };
 }
 
 
 sub updateJob{
-    my ($job, $col_name, $col_value, $dbh);
-    if ($#_ == 2){
-        ($job, $col_name, $col_value) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    elsif ($#_ == 3){
-        ($job, $col_name, $col_value, $dbh) = @_;
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
+    my ($job, $col_name, $col_value, $dbh) = @_;
     eval {
         my $sth;
         if ($col_name eq 'COMPLETION_DATE'){
@@ -337,28 +292,13 @@ sub updateJob{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Unable to update job status : $!" );
         return undef;
     };
 }
 
 sub finishJob{
-    my ($job, $resultCode, $log, $dbh, $params);
-    if ($#_ == 4){
-        ($job, $resultCode, $log, $dbh, $params) = @_;
-    }
-    elsif($#_ == 3){
-        ($job, $resultCode, $log, $params) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
+    my ($job, $resultCode, $log, $dbh, $params) = @_;
     eval{
         my $state_checker = DBOD::get_state_checker($job);
         if (!defined $state_checker){
@@ -384,28 +324,13 @@ sub finishJob{
         }
         1;
     } or do {
-        $logger->error( "An error occured trying to finish the job.\n $!");
+        $logger->error( "An error occured trying to finish the job : $!");
         return undef;
     };
 }
 
 sub getJobParams{
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        ($job) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
+    my ($job, $dbh) = @_;
     my $res;
     eval{
         $dbh->{LongReadLen} = 32768; 
@@ -437,29 +362,14 @@ sub getJobParams{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database\n $!" );
+        $logger->error( "Unable to fetch job parameters : $!" );
         return undef;
     };
     return $res; 
 }
 
 sub getExecString{
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        ($job) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
+    my ($job, $dbh ) = @_;
     my $ref;
     eval {
         my $sql = "select EXEC from DOD_COMMAND_DEFINITION
@@ -480,29 +390,14 @@ sub getExecString{
         }
         1;
     } or do {
-        $logger->error( "Unable to connect to database !!!\n $!" );
+        $logger->error( "Unable to fetch command execution string : $!" );
         return undef;
     };
     return $ref->{'EXEC'}; 
 }
 
 sub getConfigFile{
-    my ($job, $file_type, $dbh);
-    if ($#_ == 2){
-        ($job, $file_type, $dbh) = @_;
-    }
-    elsif($#_ == 1){
-        ($job, $file_type) = @_;
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
+    my ($job, $file_type, $dbh) = @_;
     my $result;
     eval {
         $dbh->{LongReadLen} = 32768; 
@@ -526,130 +421,17 @@ sub getConfigFile{
         }
         1;
     } or do {
-        $logger->debug( "Unable to connect to database !!!");
+        $logger->error( "Unable to fetch config file : $!" );
         return undef;
     };
     return $result;
 }
 
-sub prepareCommand {
-    my ($job, $dbh);
-    if ($#_ == 1){
-        ($job, $dbh) = @_;
-    }
-    elsif($#_ == 0){
-        ($job) = @_; 
-        $dbh = getDBH();
-        unless(defined($dbh)){
-            $logger->error( "Unable to get DB handler" );
-            return undef;
-        }
-    }
-    else{
-        $logger->error( "Wrong number of parameters\n $!" );
-        return undef;
-    }
-    my $cmd;
-    eval{
-        $logger->debug( "Fetching execution string" );
-        my $exe_string = getExecString($job, $dbh);
-        if (defined $exe_string){
-            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
-        }
-        else{
-            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'});
-        }
-        $logger->debug( " $cmd " );
-        $logger->debug( "Fetching Job params" );
-        my $params = $job->{'PARAMS'};
-        my $nparams;
-        if (defined $params){
-            $nparams = scalar(@{$params});
-            }
-        else{
-            $nparams = 0;
-        }
-        my $expected_nparams = 0;
-        my $optional_nparams = 0;
-        $expected_nparams++ while ($cmd =~ m/:/g);
-        $optional_nparams++ while ($cmd =~ m/#/g);
-        $logger->debug("Expected: $expected_nparams, Optional: $optional_nparams");
-
-        if ($expected_nparams == 0){
-            if ($#_ == 0){
-                $logger->debug("Disconnecting from database");
-                $dbh->disconnect();
-                }
-            $logger->debug("No parameters, returning cmd: $cmd " );
-            return $cmd;
-        }
-        if ($nparams >= $expected_nparams){
-            $logger->debug( "Substituting params");
-            foreach my $param (@{$params}){
-                if ($param->{'NAME'} =~ /FILE/){
-                    my ($pname, $type) = split( /=/, $param->{'NAME'} );
-                    $logger->debug("pname: $pname, type: $type");
-                    my $clob = $param->{'VALUE'};
-                    my $parser = DBOD::Templates::parser( $type );
-                    $logger->debug("parser: $parser");
-                    my $filename = $parser->($clob); 
-                    $cmd =~ s/:$param->{'NAME'}/$filename/;
-                    $logger->debug( "cmd: $cmd" );
-                    # Distribute required files
-                    $logger->debug("Fetching entity name");
-                    my $entity = DBOD::All::get_entity($job);
-                    $logger->debug( "Copying files to $entity" );
-                    DBOD::All::copy_to_entity( $filename, $entity );
-                    $logger->debug( "Deleting temporal files");
-                    system("rm -fr $filename");
-                    }
-                else{
-                    $cmd =~ s/:$param->{'NAME'}=/$param->{'VALUE'}/;
-                    $cmd =~ s/#$param->{'NAME'}=/$param->{'VALUE'}/;
-                    }
-                }
-            my $buf = 0;
-            $buf++ while ($cmd =~ m/:(.*)+=/g);
-            if ($buf) {
-                $logger->error( "Some of the command parameters could not be parsed\n $!" );
-                }
-            $buf = 0;
-            $buf++ while ($cmd =~ m/#(.*)+=/g);
-            if ($buf>0) {
-                $logger->debug( "Some of the Optional command parameters could not be parsed" );
-                $logger->debug( "Buf: $buf, cmd: $cmd" );
-                my @items = split( /-/, $cmd);
-                my @result;
-                for my $item (@items){
-                    if ($item !~ m/#(.*)+=/){
-                        $logger->debug("Item: $item");
-                        push(@result, $item);
-                    }
-                }
-                $cmd = join('-', @result);
-                $logger->debug( "Num. optional params: $buf, \ncmd: $cmd" );
-                }
-        }
-        else {
-            $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained.\n $!" );
-            $cmd = undef;
-        }
-        1;
-    } or do {
-        $logger->error( "Unable to prepare command\n $!" );
-        $cmd = undef;
-    };
-    if ($#_ == 0){
-        $logger->debug("Disconnecting from database");
-        $dbh->disconnect();
-        }
-    return $cmd;
-}
-
 sub getDBH{
     my $dbh;
     eval {
-        $dbh = DBI->connect( $DSN, $user, $password, { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
+        $dbh = DBI->connect( $DSN, $user, $password, 
+            { AutoCommit => 1, ora_client_info => 'dbod_daemon', ora_verbose => 0 });
         if (1){ # call to $dbh->ora_can_taf() causes error
             $logger->debug( "Enabling Oracle TAF");
             $dbh->{ora_taf} = 1;

@@ -1,0 +1,94 @@
+#!/usr/bin/perl -w
+
+package dbod_daemon_monitor;
+
+use strict;
+use DBOD;
+use DBOD::Database;
+
+# Initializes Logging Settings
+
+our ($logger, $lock_file); 
+
+INIT{
+    $logger = Log::Log4perl::get_logger("DBOD.DaemonMonitor");
+    $logger->debug("Logger created");
+}
+
+sub usage() {
+    print "USAGE:\n\tcommand\n";
+    exit -1;
+}
+
+sub Main{
+
+    usage() if (@ARGV != 0);
+
+    $logger->debug("Opening database connection");
+    my $dbh = DBOD::Database::getDBH();
+
+    if (defined($dbh)){
+        my $pending_jobs = DBOD::Database::getPendingJobs($dbh);
+        if ((defined $pending_jobs) && ($pending_jobs > 0)) {
+            $logger->debug( "Found $pending_jobs stalled jobs" );
+            $logger->debug( "Re-starting DBOD Daemon" );
+            # Restart daemon
+        }
+        else{
+            $logger->debug( "Found 0 stalled jobs");
+        }
+        $logger->debug( "Closing DB connection" );
+        $dbh->disconect();
+        $rc = 0;
+    }
+    else{
+        $logger->error( "Unable to connect to database" );
+        $rc = -1;
+    }
+    exit $rc;
+}
+
+&Main();
+
+END{}
+
+=head1 NAME
+
+dbod_daemon_monitor - Status monitor for the DBOD Daemon
+
+=cut
+
+=head1 USE
+
+=over
+
+=item * 
+
+dbod_daemon_monitor
+
+=back
+
+=cut
+
+=head1 COMMENTS
+
+This program is in charge of checking the current execution status of the DBOD daemon.
+It will poll the service database in order to check that no jobs have been in the PENDING
+state more than a certain number of seconds (set in JOB_MAX_PENDING_TIME).
+If this situation occurs if will restart the daemon in order clean the DB connection.
+
+Configuration and additional support files (i.e. templates for DBMS configuration files)
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
+
+- dbod_daemon.conf : General configuration file. YAML format
+
+- dbod_daemon_logger.conf : Logger configuration file
+
+=head1 AUTHOR
+
+Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+
+IT-DB-DBB
+
+
+=cut
