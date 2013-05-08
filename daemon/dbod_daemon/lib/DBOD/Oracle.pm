@@ -8,10 +8,11 @@ use File::Temp;
 use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
+use DBOD::All qw( %job_status_table %instance_status_table );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger);
 
-$VERSION     = 0.03;
+$VERSION     = 1.7;
 @ISA         = qw(Exporter);
 @EXPORT      = qw();
 @EXPORT_OK   = qw();
@@ -35,22 +36,11 @@ sub test_instance{
 
 sub state_checker{
     my ($job, $code) = @_;
-    my ($job_state, $instance_state);
-    if ($code){
-        $job_state = "FINISHED_FAIL";
-    }   
-    else{
-        $job_state = "FINISHED_OK";
-    }
     my $entity = DBOD::All::get_entity($job);
     my $output = test_instance($entity);
     my $retcode = DBOD::All::result_code($output);
-    if ($retcode) {
-        $instance_state = "STOPPED";
-    }   
-    else{
-        $instance_state = "RUNNING";
-    }
+    my $job_state = job_status_table{$job_state};
+    my $instance_state = instance_status_table{$retcode};
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
 }

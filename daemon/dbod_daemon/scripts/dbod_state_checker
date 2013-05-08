@@ -11,7 +11,7 @@ use DBOD::Database;
 our ($logger, $lock_file); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger("DBOD.state_checker");
+    $logger = Log::Log4perl::get_logger("DBOD.StateChecker");
     $logger->debug("Logger created");
     $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
 }
