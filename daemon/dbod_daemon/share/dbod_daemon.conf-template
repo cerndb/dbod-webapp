@@ -1,7 +1,7 @@
 ---
 # Behaviour parameters
 JOB_MAX_DURATION: 6 # HOURS
-JOB_MAX_PENDING_TIME: 30 # SECONDS
+JOB_MAX_PENDING: 30 # SECONDS
 
 # Logging configuration
 LOGGER_CONFIG: 'dbod_daemon_logger.conf'
