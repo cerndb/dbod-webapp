@@ -13,7 +13,7 @@ use DBOD::Database;
 use DBOD::MySQL;
 use DBOD::Oracle;
 use DBOD::All;
-use DBOD::Commands;
+use DBOD::Command;
 
 use POSIX ":sys_wait_h";
 
@@ -165,7 +165,7 @@ sub worker_body {
         $worker_dbh = DBOD::Database::getDBH();
     }
 
-    my $cmd_line = DBOD::Commands::prepareCommand($job, $worker_dbh);
+    my $cmd_line = DBOD::Command::prepareCommand($job, $worker_dbh);
     $logger->debug( "Received cmd_line: $cmd_line ");
     my $log;
     my $retcode;

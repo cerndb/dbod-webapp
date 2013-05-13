@@ -55,10 +55,6 @@ sub getInstanceList{
             }
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == -1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do{
         $logger->error( "Error fetching instances List : $!" );
@@ -168,10 +164,6 @@ sub getJobList{
             }
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == -1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do{
         $logger->error( "Error fetching job list : $!" );
@@ -201,10 +193,6 @@ sub getTimedOutJobs{
             }
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == -1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable to check for TIMED OUT jobs : $!" );
@@ -216,13 +204,13 @@ sub getTimedOutJobs{
 sub getPendingJobs {
     my $dbh = shift;
     my $sql = "select count(*) from dod_jobs where sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )";
-    my $count
+    my $count;
     eval{
         $count = $dbh->selectrow_array($sql);
     } or do {
         $logger->error( "Unable to check for PENDING jobs : $!" );
         return undef;
-    }
+    };
     return $count;
 }
 
@@ -241,10 +229,6 @@ sub updateInstance{
         $sth->execute();
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == 2){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable update instance status : $!" );
@@ -257,8 +241,9 @@ sub updateJob{
     my ($job, $col_name, $col_value, $dbh) = @_;
     eval {
         my $sth;
+        my $sql;
         if ($col_name eq 'COMPLETION_DATE'){
-            my $sql = "update DOD_JOBS set $col_name = sysdate
+            $sql = "update DOD_JOBS set $col_name = sysdate
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
             $logger->debug( "Preparing statement: \n\t$sql" );
             $sth = $dbh->prepare( $sql );
@@ -270,7 +255,7 @@ sub updateJob{
             $sth->bind_param(5, $job->{'CREATION_DATE'});
         }
         else{
-            my $sql = "update DOD_JOBS set $col_name = ?
+            $sql = "update DOD_JOBS set $col_name = ?
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
             $logger->debug( "Preparing statement: \n\t$sql" );
             $sth = $dbh->prepare( $sql );
@@ -286,10 +271,6 @@ sub updateJob{
         $sth->execute();
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == 1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable to update job status : $!" );
@@ -317,10 +298,6 @@ sub finishJob{
         if (defined $callback){
             $logger->debug( "Executing callback" );
             $callback->($job, $dbh);
-        }
-        if ($#_ == 2){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
         }
         1;
     } or do {
@@ -356,10 +333,6 @@ sub getJobParams{
         }
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == 0){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable to fetch job parameters : $!" );
@@ -384,10 +357,6 @@ sub getExecString{
         $ref = $sth->fetchrow_hashref();
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == 0){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable to fetch command execution string : $!" );
@@ -412,13 +381,9 @@ sub getConfigFile{
         $logger->debug("Executing statement");
         $sth->execute();
         my $ref = $sth->fetchrow_hashref(); 
-        my $result = $ref->{'CONFIG_FILE'}; 
+        $result = $ref->{'CONFIG_FILE'}; 
         $logger->debug( "Finishing statement" );
         $sth->finish();
-        if ($#_ == 1){
-            $logger->debug( "Disconnecting from database" );
-            $dbh->disconnect();
-        }
         1;
     } or do {
         $logger->error( "Unable to fetch config file : $!" );

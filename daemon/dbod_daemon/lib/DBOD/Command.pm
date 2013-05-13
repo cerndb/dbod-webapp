@@ -1,4 +1,4 @@
-package DBOD::Commands;
+package DBOD::Command;
 
 use strict;
 use warnings;
@@ -20,7 +20,7 @@ $VERSION     = 1.7;
 # Load general configuration
 
 INIT{
-    $logger = Log::Log4perl::get_logger( 'DBOD.Commands' );
+    $logger = Log::Log4perl::get_logger( 'DBOD.Command' );
     $logger->debug( "Logger created" );
 } # INIT BLOCK
 
@@ -114,3 +114,10 @@ sub prepareCommand {
     };
     return $cmd;
 }
+
+
+END{
+
+}
+
+1;

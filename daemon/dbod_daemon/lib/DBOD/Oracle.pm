@@ -39,7 +39,7 @@ sub state_checker{
     my $entity = DBOD::All::get_entity($job);
     my $output = test_instance($entity);
     my $retcode = DBOD::All::result_code($output);
-    my $job_state = job_status_table{$job_state};
+    my $job_state = job_status_table{$retcode};
     my $instance_state = instance_status_table{$retcode};
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
