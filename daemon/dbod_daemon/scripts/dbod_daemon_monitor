@@ -33,7 +33,11 @@ sub Main{
         if ((defined $pending_jobs) && ($pending_jobs > 0)) {
             $logger->debug( "Found $pending_jobs stalled jobs" );
             $logger->debug( "Re-starting DBOD Daemon" );
-            # Restart daemon
+            # Stops daemon
+            my $output = `/etc/init.d/dbod_daemon stop`;
+            $logger->debug( "Stopping DBOD Daemon: \n $output");
+            $output = `/etc/init.d/dbod_daemon start`;
+            $logger->debug( "Starting DBOD Daemon: \n $output");
         }
         else{
             $logger->debug( "Found 0 stalled jobs");
