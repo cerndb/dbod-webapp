@@ -26,6 +26,7 @@ sub Main{
 
     $logger->debug("Opening database connection");
     my $dbh = DBOD::Database::getDBH();
+    my $rc;
 
     if (defined($dbh)){
         my $pending_jobs = DBOD::Database::getPendingJobs($dbh);
