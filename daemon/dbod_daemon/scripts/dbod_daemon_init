@@ -34,7 +34,7 @@ stop(){
     if [ -e "$PIDFILE" ]; then
         rm $PIDFILE
     fi
-    pkill -9 dbod_daemon
+    pkill -9 -U dbod dbod_daemon
 }
 
 case "$1" in
