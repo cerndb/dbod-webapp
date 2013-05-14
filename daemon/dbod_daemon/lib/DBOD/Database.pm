@@ -203,7 +203,7 @@ sub getTimedOutJobs{
 
 sub getPendingJobs {
     my $dbh = shift;
-    my $sql = "select count(*) from dod_jobs where sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )";
+    my $sql = "select count(*) from dod_jobs where state='PENDING' and sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )";
     my $count;
     eval{
         $count = $dbh->selectrow_array($sql);
