@@ -33,7 +33,7 @@ sub worker {
         $logger->error( "Not state checker defined for this DB type" );
         return 1;
     }
-    
+
     if (($instance->{'STATE'} ne 'JOB_PENDING') && 
         ($instance->{'STATE'} ne 'AWAITING_APPROVAL') &&
         ($instance->{'STATE'} ne 'MAINTENANCE')) {
@@ -67,7 +67,7 @@ sub Main{
         if (defined($dbh)){
             my @instances = DBOD::Database::getInstanceList($dbh);
             foreach my $instance (@instances){
-                $logger->debug( "Checking state for instance: $instance" );
+                $logger->debug( "Checking state for instance: " . $instance->{'DB_NAME'} );
                 worker($instance, $dbh);
             }
             $logger->debug("Closing DB connection");
