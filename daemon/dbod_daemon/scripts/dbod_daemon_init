@@ -15,7 +15,7 @@ fi
 status(){
     echo "PIDFILE: $pid" 
     pids=`pgrep -u dbod dbod_daemon`
-    echo "PID:: $pids"
+    echo "PID: $pids"
 }
 
 start(){
