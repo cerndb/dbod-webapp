@@ -8,7 +8,7 @@ use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
 use DBOD::Database;
-use DBOD::All qw( %job_status_table %instance_status_table );
+use DBOD::All qw( $job_status_table $instance_status_table );
 use DBOD::LDAP;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);
@@ -56,8 +56,8 @@ sub state_checker{
     my $entity = DBOD::All::get_entity($job);
     my $output = test_instance($entity);
     my $retcode = DBOD::All::result_code($output);
-    my $job_state = job_status_table{$retcode};
-    my $instance_state = instance_status_table{$retcode};
+    my $job_state = $job_status_table->{$code};
+    my $instance_state = $instance_status_table->{$retcode};
     $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
     return ($job_state, $instance_state);
 }
