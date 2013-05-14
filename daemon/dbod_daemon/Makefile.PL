@@ -15,6 +15,7 @@ requires      'Net::LDAP' => 0;
 
 install_script 'scripts/dbod_daemon';
 install_script 'scripts/dbod_state_checker';
+install_script 'scripts/dbod_daemon_monitor';
 install_share 'share';
 
 WriteAll;
