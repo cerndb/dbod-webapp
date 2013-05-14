@@ -13,9 +13,9 @@ else
 fi
 
 status(){
-    echo "Expected PID: $pid" 
-    pids=`ps ax|grep "perl -w /usr/bin/dbod_daemon" |grep -v grep`
-    echo "Found : $pids"
+    echo "PIDFILE: $pid" 
+    pids=`pgrep -u dbod dbod_daemon`
+    echo "PID:: $pids"
 }
 
 start(){
