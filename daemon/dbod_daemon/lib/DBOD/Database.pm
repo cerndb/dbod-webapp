@@ -206,7 +206,7 @@ sub getPendingJobs {
     my $sql = "select count(*) from dod_jobs where state='PENDING' and sysdate - creation_date > ( $JOB_MAX_PENDING /86400 )";
     my $count;
     eval{
-        $count = $dbh->selectrow_array($sql);
+        ($count) = $dbh->selectrow_array($sql);
     } or do {
         $logger->error( "Unable to check for PENDING jobs : $!" );
         return undef;
