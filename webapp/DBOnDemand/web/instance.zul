@@ -32,39 +32,61 @@
             <!-- Scripts for monitoring -->
             <script src="https://www.google.com/jsapi"/>
             <script src="/scripts/graph.js"/>
-
-            <!-- Groupbox for the actions -->
-            <groupbox width="100px" mold="3d" closable="false">
-                <caption label=" ">
-                    <div height="24px">
-                        <label value="${c:l('actions')}" sclass="title" style="float:left;"/>
-                    </div>
-                </caption>
-                <vbox width="100%" align="center">
-                    <!-- Buttons -->
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="startup" image="/img/startup_big.png" onClick="controller.doStartup();" tooltiptext="${c:l('jobActionSTARTUP')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="shutdown" image="/img/shutdown_big.png" onClick="controller.doShutdown();" tooltiptext="${c:l('jobActionSHUTDOWN')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="config" image="/img/files_big.png" onClick="controller.doFiles();"  tooltiptext="${c:l('filesPopup')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="backup" image="/img/backup_big.png" onClick="controller.doBackup();" tooltiptext="${c:l('backupPopup')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="restore" image="/img/restore_big.png" onClick="controller.doRestore();" tooltiptext="${c:l('jobActionRESTORE')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="upgrade" image="/img/upgrade_big.png" onClick="controller.doUpgrade();" tooltiptext="${c:l('jobActionUPGRADE')}"/>
-                    </div>
-                    <div width="52px" height="52px">
-                        <toolbarbutton id="monitor" image="/img/monitor_big.png" onClick="controller.doMonitor();" tooltiptext="${c:l('jobActionMONITOR')}"/>
-                    </div>
-                </vbox>
-            </groupbox>
+            
+            <!-- Box for actions and instance selection -->
+            <vbox>
+                <!-- Groupbox for actions -->
+                <groupbox width="100px" mold="3d" closable="false">
+                    <caption label=" ">
+                        <div height="24px">
+                            <label value="${c:l('actions')}" sclass="title" style="float:left; text-align:center; width:90px" />
+                        </div>
+                    </caption>
+                    <vbox width="100%" align="center">
+                        <!-- Buttons -->
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="startup" image="/img/startup_big.png" onClick="controller.doStartup();" tooltiptext="${c:l('jobActionSTARTUP')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="shutdown" image="/img/shutdown_big.png" onClick="controller.doShutdown();" tooltiptext="${c:l('jobActionSHUTDOWN')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="config" image="/img/files_big.png" onClick="controller.doFiles();"  tooltiptext="${c:l('filesPopup')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="backup" image="/img/backup_big.png" onClick="controller.doBackup();" tooltiptext="${c:l('backupPopup')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="restore" image="/img/restore_big.png" onClick="controller.doRestore();" tooltiptext="${c:l('jobActionRESTORE')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="upgrade" image="/img/upgrade_big.png" onClick="controller.doUpgrade();" tooltiptext="${c:l('jobActionUPGRADE')}"/>
+                        </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="monitor" image="/img/monitor_big.png" onClick="controller.doMonitor();" tooltiptext="${c:l('jobActionMONITOR')}"/>
+                        </div>
+                    </vbox>
+                </groupbox>
+                <!-- Groupbox for instance selection (only displayed when user can manage other instances)-->
+                <groupbox id="otherInstancesBox" width="100px" contentStyle="overflow:auto" mold="3d" closable="false" visible="false">
+                    <caption label=" ">
+                        <label value="${c:l('otherInstances')}" sclass="title" style="float:left; text-align:center" />
+                    </caption>
+                    <grid id="otherInstances" style="border:0px; margin:-5px;" height="300px">
+                        <auxhead sclass="category-center">
+                            <auxheader colspan="1">
+                                <hbox align="bottom">
+                                    <image src="/img/filter.png" width="18px" height="18px"/>
+                                    <textbox id="otherInstancesFilter" onChanging="self.value = event.value; controller.filterOtherInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="53px" />
+                                </hbox>
+                            </auxheader>
+                        </auxhead>
+                        <columns style="display: none;">
+                            <column width="100%"/>
+                        </columns>
+                    </grid>
+                </groupbox>
+            </vbox>
 
             <!-- Instance info -->
             <groupbox mold="3d" style="min-width:1040px;" closable="false">

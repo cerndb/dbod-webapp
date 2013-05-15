@@ -7,7 +7,10 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODInstanceChange;
 import ch.cern.dod.db.entity.DODJob;
 import ch.cern.dod.db.entity.DODUpgrade;
+import ch.cern.dod.ui.model.JobStatsModel;
+import ch.cern.dod.ui.model.OtherInstancesModel;
 import ch.cern.dod.ui.renderer.InstanceChangesRenderer;
+import ch.cern.dod.ui.renderer.OtherInstancesRenderer;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.FormValidations;
@@ -102,6 +105,10 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Indicates if the user is admin
      */
     private boolean admin;
+    /**
+     * List of instances the user is authorise to manage
+     */
+    private List<DODInstance> otherInstances;
     
     /**
      * Method executed before composing the page. It instantiates the necessary attributes.
@@ -121,7 +128,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
                 Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
                 admin = adminMode.booleanValue();
-
+                
                 //Get user and password for the web services account
                 String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
                 String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
@@ -156,6 +163,19 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         
         //Load master and slave
         if (instance != null) {
+            //Get list of other instances
+            if (admin) {
+                otherInstances = instanceDAO.selectAll(upgrades);
+            }
+            else {
+                Execution execution = Executions.getCurrent();
+                String eGroups = execution.getHeader(DODConstants.ADFS_GROUP);
+                otherInstances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
+            }
+            if (otherInstances != null) {
+                otherInstances.remove(instance);
+            }
+            
             if (instance.getMaster() != null && !instance.getMaster().isEmpty())
                 master = instanceDAO.selectByDbName(instance.getMaster(), upgrades);
             else
@@ -187,7 +207,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Textbox) getFellow("versionEdit")).setMaxlength(DODConstants.MAX_VERSION_LENGTH);
             ((Textbox) getFellow("hostEdit")).setMaxlength(DODConstants.MAX_HOST_LENGTH);
         }
-
+        
         //Load instance info if necessary
         if (instance != null) {
             //Display or hide areas
@@ -198,7 +218,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
-            //Load changs
+            //Load other isntances
+            loadOtherInstances();
+            //Load changes
             loadChanges();
         }
     }
@@ -217,6 +239,13 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
+        //Other instances
+        if (otherInstances != null && !otherInstances.isEmpty()) {
+            ((Groupbox) getFellow("otherInstancesBox")).setVisible(true);
+        }
+        else {
+            ((Groupbox) getFellow("otherInstancesBox")).setVisible(false);
+        }
     }
     
     /**
@@ -244,6 +273,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
+            //Load other instances
+            loadOtherInstances();
             //Load changes
             loadChanges();
         }
@@ -551,7 +582,29 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Load information for the selected item
         loadJob();
     }
-
+    
+    /**
+     * Load the instances the user is allowed to manage
+     */
+    private void loadOtherInstances() {
+        Grid grid = (Grid) getFellow("otherInstances");
+        if (grid != null && grid.getModel() == null) {
+            grid.setModel(new OtherInstancesModel(otherInstances));
+            grid.setRowRenderer(new OtherInstancesRenderer());
+        }
+        else if (grid != null) {
+            ((OtherInstancesModel) grid.getModel()).setInstances(otherInstances);
+        }
+    }
+    
+    /**
+     * Filters the instances the user is allowed to manage
+     */
+    public void filterOtherInstances () {
+        Grid grid = (Grid) getFellow("otherInstances");
+        ((OtherInstancesModel) grid.getModel()).filterInstances(((Textbox) getFellow("otherInstancesFilter")).getValue());
+    }
+    
     /**
      * Loads the information for the selected job
      */
@@ -738,6 +791,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadInstanceInfo();
             loadButtons();
             loadJobs();
+            loadOtherInstances();
             loadChanges();
         }
         else {
