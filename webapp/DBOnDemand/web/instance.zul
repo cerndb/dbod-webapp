@@ -72,7 +72,7 @@
                     <caption label=" ">
                         <label value="${c:l('otherInstances')}" sclass="title" style="float:left; text-align:center" />
                     </caption>
-                    <grid id="otherInstances" style="border:0px; margin:-5px;" height="300px">
+                    <grid id="otherInstances" style="border:0px; margin:-5px;" height="387px">
                         <auxhead sclass="category-center">
                             <auxheader colspan="1">
                                 <hbox align="bottom">
