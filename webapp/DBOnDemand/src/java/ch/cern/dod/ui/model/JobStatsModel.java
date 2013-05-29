@@ -9,13 +9,13 @@ import java.util.List;
 import javax.swing.event.ListDataEvent;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.AbstractListModel;
-import org.zkoss.zul.ListModelExt;
+import org.zkoss.zul.ext.Sortable;
 
 /**
  * Represents a list of job stats. It implements sorting to save it from query to query.
  * @author Daniel Gomez Blanco
  */
-public class JobStatsModel extends AbstractListModel implements ListModelExt {
+public class JobStatsModel extends AbstractListModel implements Sortable {
     /**
      * Job stats in the model.
      */
@@ -108,5 +108,12 @@ public class JobStatsModel extends AbstractListModel implements ListModelExt {
         }
         //Sort again
         sort(comparator, ascending);
+    }
+    
+    public String getSortDirection(Comparator cmprtr) {
+        if (ascending)
+            return "ascending";
+        else
+            return "descending";
     }
 }

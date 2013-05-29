@@ -6,13 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ListDataEvent;
 import org.zkoss.zul.AbstractListModel;
-import org.zkoss.zul.ListModelExt;
+import org.zkoss.zul.ext.Sortable;
 
 /**
  * Represents a list of upgrades. It implements sorting to save it from query to query.
  * @author Daniel Gomez Blanco
  */
-public class UpgradesListModel extends AbstractListModel implements ListModelExt {
+public class UpgradesListModel extends AbstractListModel implements Sortable {
     /**
      * Instances in the model.
      */
@@ -70,5 +70,12 @@ public class UpgradesListModel extends AbstractListModel implements ListModelExt
         this.comparator = comparator;
         Collections.sort(upgrades, comparator);
         fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);
+    }
+    
+    public String getSortDirection(Comparator cmprtr) {
+        if (ascending)
+            return "ascending";
+        else
+            return "descending";
     }
 }

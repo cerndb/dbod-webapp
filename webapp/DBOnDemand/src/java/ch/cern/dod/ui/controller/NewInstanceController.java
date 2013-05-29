@@ -54,8 +54,8 @@ public class NewInstanceController extends Window implements AfterCompose {
      */
     public void afterCompose() {
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
+        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
         eGroupHelper = new EGroupHelper(wsUser, wsPswd);
         authenticationHelper = new AuthenticationHelper(wsUser, wsPswd);
 
@@ -112,8 +112,6 @@ public class NewInstanceController extends Window implements AfterCompose {
                 if (!eGroupExists) {
                     try {
                         ((Window) getFellow("eGroupConfirm")).doModal();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     } catch (SuspendNotAllowedException ex) {
                         Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     }

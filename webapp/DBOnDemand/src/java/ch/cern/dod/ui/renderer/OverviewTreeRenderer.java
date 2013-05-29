@@ -70,7 +70,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * @param data Tree node with the instance to render.
      * @throws Exception In case instance cannot be rendered.
      */
-    public void render(final Treeitem item, final Object data) throws Exception {
+    public void render(final Treeitem item, final Object data, int i) throws Exception {
         //Only render instance if it's filtered
         if (data != null) {
             
@@ -105,8 +105,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     Treecell checkboxCell = new Treecell();
                     Checkbox checkbox = new Checkbox();
                     //Check the instance if it was already checked
-                    if (instance.isChecked())
+                    if (instance.isChecked()) {
                         checkbox.setChecked(true);
+                    }
                     checkbox.addEventListener(Events.ON_CHECK, new EventListener() {
                         public void onEvent(Event event) {
                             //Update arraylist
@@ -129,6 +130,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                                 ((Toolbarbutton)row.getTree().getFellow("backupAllBtn")).setZclass("buttonDisabled");
                                 ((Toolbarbutton)row.getTree().getFellow("upgradeAllBtn")).setZclass("buttonDisabled");
                                 ((Toolbarbutton)row.getTree().getFellow("maintainAllBtn")).setZclass("buttonDisabled");
+                                ((Checkbox)row.getTree().getFellow("checkAll")).setChecked(false);
                             }
                             else {
                                 ((Toolbarbutton)row.getTree().getFellow("startupAllBtn")).setDisabled(false);
@@ -476,7 +478,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 item.appendChild(row);
                 
                 //Open item if it's not the closed items list
-                item.setOpen(!closed.contains(instance.getDbName()));
+//                item.setOpen(!closed.contains(instance.getDbName()));
+                item.setOpen(true);
             }
         }
     }
@@ -510,8 +513,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(OverviewTreeRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(OverviewTreeRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }

@@ -158,7 +158,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         
         //Instances tree
         Tree overviewTree = (Tree) getFellow("overviewTree");
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+        overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
         overviewTree.getPagingChild().setMold("os");
         
@@ -215,7 +215,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Hbox) getFellow("collectiveBtns")).setStyle("display:block");
             ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+            if (instances.size() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
                 ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
@@ -332,7 +332,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             activePage = tree.getActivePage();
         }
         //Set the new instances
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         try {
             if (tree.getMold().equals("paging")) {
                 tree.setActivePage(activePage);
@@ -633,7 +634,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
         //Set the new instances
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         //Update group actions
         List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         
@@ -701,9 +703,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
-        } catch (SuspendNotAllowedException ex) {
+        }
+        catch (SuspendNotAllowedException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
     }

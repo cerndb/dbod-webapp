@@ -151,22 +151,19 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         //Overview tree
         if (instances != null && instances.size() > 0) {
             Tree overviewTree = (Tree) getFellow("overviewTree");
-            overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+            overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
             overviewTree.setItemRenderer(new OverviewTreeRenderer(false));
-            overviewTree.getPagingChild().setMold("os");
         }
         
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
         commandStatsGrid.setModel(new CommandStatsModel(commandStats));
         commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
-        commandStatsGrid.getPagingChild().setMold("os");
         
         //Job stats grid
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
-        jobStatsGrid.getPagingChild().setMold("os");
         filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();
@@ -191,7 +188,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (instances != null && instances.size() > 0) {
             ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+            if (instances.size() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
                 ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
@@ -252,15 +249,17 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         jobStats = statsDAO.selectJobStats(instances);
 
         //Set the new instances
-        Tree overviewTree = (Tree) getFellow("overviewTree");
+        Tree tree = (Tree) getFellow("overviewTree");
         int activePage = 0;
-        if (overviewTree.getMold().equals("paging")) {
-             activePage = overviewTree.getActivePage();
+        if (tree.getMold().equals("paging")) {
+             activePage = tree.getActivePage();
         }
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+        //Set the new instances
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         try {
-            if (overviewTree.getMold().equals("paging")) {
-                overviewTree.setActivePage(activePage);
+            if (tree.getMold().equals("paging")) {
+                tree.setActivePage(activePage);
             }
         }
         catch (WrongValueException ex) {}
@@ -293,7 +292,10 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     public void filterInstances () {
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        //Set the new instances
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
+        //Hide fields
         displayOrHideAreas();
         
         //Set filters on session

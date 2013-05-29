@@ -83,7 +83,7 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="125px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="120px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -115,11 +115,11 @@
                             <treecol label="${c:l('username')}" width="90px"/>
                             <treecol label="${c:l('eGroup')}"  width="165px"/>
                             <treecol label="${c:l('category')}" width="75px"/>
-                            <treecol label="${c:l('project')}" width="165px"/>
+                            <treecol label="${c:l('project')}" width="160px"/>
                             <treecol label="${c:l('dbType')}" width="70px"/>
                             <treecol label="${c:l('dbSize')}" width="65px"/>
                             <treecol label="${c:l('noConn')}" width="70px"/>
-                            <treecol label="${c:l('state')}" width="40px" align="center"/>
+                            <treecol label="${c:l('state')}" width="45px" align="center"/>
                             <treecol label="${c:l('actions')}" align="center"/>
                         </treecols>
                         <treefoot id="footer" style="display:none">

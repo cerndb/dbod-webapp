@@ -130,8 +130,8 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 admin = adminMode.booleanValue();
                 
                 //Get user and password for the web services account
-                String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-                String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+                String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
+                String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
                 fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
                 String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
                 if (userCCIDText != null && !userCCIDText.isEmpty())
@@ -813,8 +813,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 if (!eGroupExists) {
                     try {
                         ((Window) getFellow("eGroupConfirm")).doModal();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     } catch (SuspendNotAllowedException ex) {
                         Logger.getLogger(NewInstanceController.class.getName()).log(Level.SEVERE, "ERROR OPENING EGROUP CONFIRM WINDOW", ex);
                     }
@@ -1137,8 +1135,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(InstanceController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(InstanceController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }

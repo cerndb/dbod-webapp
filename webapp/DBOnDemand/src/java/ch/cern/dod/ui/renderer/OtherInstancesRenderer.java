@@ -19,7 +19,7 @@ public class OtherInstancesRenderer implements RowRenderer{
      * @param object instance to render.
      * @throws Exception 
      */
-    public void render(Row row, Object object) throws Exception {
+    public void render(Row row, Object object, int i) throws Exception {
         DODInstance instance = (DODInstance) object;
         row.setStyle("padding-top: 0px; padding-bottom: 0px");
         row.setHeight("24px");

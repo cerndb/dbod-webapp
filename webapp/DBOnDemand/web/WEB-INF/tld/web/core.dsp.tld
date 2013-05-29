@@ -231,14 +231,6 @@ Copyright (C) 2005 Potix Corporation. All Rights Reserved.
 	Returns the library property.
 		</description>
 	</function>
-	<function><!-- backward compatible -->
-		<name>getProperty</name>
-		<function-class>org.zkoss.lang.Library</function-class>
-		<function-signature>java.lang.String getProperty(java.lang.String)</function-signature>
-		<description>
-	Returns the library property.
-		</description>
-	</function>
 
 	<!--                  -->
 	<!-- String Utilities -->
@@ -424,6 +416,46 @@ Copyright (C) 2005 Potix Corporation. All Rights Reserved.
 	</function>
 
 	<!--                    -->
+	<!-- Date Utilities     -->
+	<!--                    -->
+	<function>
+		<name>formatDate</name>
+		<function-class>org.zkoss.xel.fn.CommonFns</function-class>
+		<function-signature>java.lang.String formatDate(java.util.Date, java.lang.String)</function-signature>
+		<description>
+		Returns the formatted time string.
+		</description>
+	</function>
+	<function>
+		<name>parseDate</name>
+		<function-class>org.zkoss.xel.fn.CommonFns</function-class>
+		<function-signature>java.util.Date parseDate(java.lang.String, java.lang.String)</function-signature>
+		<description>
+		Returns A Date parsed from the string.
+		</description>
+	</function>
+
+	<!--                    -->
+	<!-- Number Utilities   -->
+	<!--                    -->
+	<function>
+		<name>formatNumber</name>
+		<function-class>org.zkoss.xel.fn.CommonFns</function-class>
+		<function-signature>java.lang.String formatNumber(java.lang.Object, java.lang.String)</function-signature>
+		<description>
+		Returns the formatted number string.
+		</description>
+	</function>
+	<function>
+		<name>parseNumber</name>
+		<function-class>org.zkoss.xel.fn.CommonFns</function-class>
+		<function-signature>java.lang.Number parseNumber(java.lang.String, java.lang.String)</function-signature>
+		<description>
+		Returns A Number parsed from the string.
+		</description>
+	</function>
+	
+	<!--                    -->
 	<!-- XML/HTML Utilities -->
 	<!--                    -->
 	<function>
@@ -464,6 +496,29 @@ Copyright (C) 2005 Potix Corporation. All Rights Reserved.
 	Encoding a string to be used as a query name or value.
 		</description>
 	</function>
+	<function>
+		<name>encodeThemeURL</name>
+		<function-class>org.zkoss.web.fn.ServletFns</function-class>
+		<function-signature>
+	java.lang.String encodeThemeURL(java.lang.String)
+		</function-signature>
+		<description>
+	Encoding URL to theme specific prefix the context path and to provide 
+	session info, if necessary
+	If URL contains "*", it is resolved to the current Locale and
+	the browser code.
+		</description>
+	</function>
+	<function>
+		<name>resolveThemeURL</name>
+		<function-class>org.zkoss.web.fn.ServletFns</function-class>
+		<function-signature>
+	java.lang.String resolveThemeURL(java.lang.String)
+		</function-signature>
+		<description>
+		Resolves a URL to point to resource served by the current theme.
+		</description>
+	</function>
 
 	<function>
 		<name>escapeXML</name>
@@ -483,17 +538,15 @@ Copyright (C) 2005 Potix Corporation. All Rights Reserved.
 		<function-signature>
 	boolean isBrowser(java.lang.String)
 		</function-signature>
-		<description>
+		<description><![CDATA[
 	Whether the current request is coming from the browser of the specified
 	type.
-	@param type the type of the browser.
-		Allowed values include "robot", "ie", "ie6", "ie6-", "ie7", "ie8",
-		"ie7-", "gecko", "gecko2", "gecko3", "gecko2-",
-		"opara", "safari",
-		"mil", "hil", "mil-".<br/>
-		Note: "ie6-" means Internet Explorer 6 only; not Internet Explorer 7
-		or other.
-		</description>
+	 @param type the type of the browser.
+	 The syntax: <code>&lt;browser-name&gt;[&lt;version-number&gt;];[-]</code>.<br/>
+	 For example, ie9, ios and ie6-.
+	 And, <code>ie9</code> means Internet Explorer 9 and later, while
+	 <code>ie6-</code> means Internet Explorer 6 (not prior, nor later).
+		]]></description>
 	</function>
 	<function>
 		<name>isExplorer</name>

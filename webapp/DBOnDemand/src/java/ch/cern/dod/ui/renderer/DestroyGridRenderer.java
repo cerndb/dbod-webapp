@@ -42,7 +42,7 @@ public class DestroyGridRenderer implements RowRenderer {
      * @param row row to render
      * @param data DODUpgrade object to render
      */
-    public void render(final Row row, Object data) {
+    public void render(final Row row, Object data, int i) {
         //Cast upgrade object
         final DODInstance instance = (DODInstance) data;
         row.setStyle("padding-top: 0px; padding-bottom: 0px");
@@ -115,8 +115,6 @@ public class DestroyGridRenderer implements RowRenderer {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DestroyGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(DestroyGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
