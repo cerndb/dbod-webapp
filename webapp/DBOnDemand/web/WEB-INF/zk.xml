@@ -19,4 +19,29 @@
     <listener>
 	<listener-class>ch.cern.dod.util.LocaleProvider</listener-class>
     </listener>
+    
+    <library-property>
+        <name>org.zkoss.zul.theme.fontFamilyT</name>
+        <value>'PT Sans', 'Trebuchet MS', Tahoma, sans-serif</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontFamilyC</name>
+        <value>'PT Sans', 'Trebuchet MS', Tahoma, sans-serif</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeM</name>
+        <value>13px</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeS</name>
+        <value>11px</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeXS</name>
+        <value>10px</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeXS</name>
+        <value>10px</value>
+    </library-property>
 </zk>

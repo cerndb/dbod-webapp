@@ -3,6 +3,7 @@
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?link href='https://fonts.googleapis.com/css?family=PT+Sans:400' rel='stylesheet' type='text/css'?>
 <?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
 <?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
@@ -20,19 +21,9 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
+    <vbox style="margin-top:30px;padding-bottom:10px;" align="center" width="100%">
         <!-- Main container for the databases overview (calls init method when created)-->
         <hbox use="InstanceController" id="controller" align="top">
-            <!-- Error window -->
-            <error/>
-            <!-- Timer to update the instances every minute -->
-            <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInfo();"/>
-            <!-- Script to mark the snapshot days in the calendar -->
-            <script src="/scripts/markSnapshots.js"/>
-            <!-- Scripts for monitoring -->
-            <script src="https://www.google.com/jsapi"/>
-            <script src="/scripts/graph.js"/>
-            
             <!-- Box for actions and instance selection -->
             <vbox>
                 <!-- Groupbox for actions -->
@@ -68,11 +59,11 @@
                     </vbox>
                 </groupbox>
                 <!-- Groupbox for instance selection (only displayed when user can manage other instances)-->
-                <groupbox id="otherInstancesBox" width="100px" contentStyle="overflow:auto" mold="3d" closable="false" visible="false">
+                <groupbox id="otherInstancesBox" width="100px" contentStyle="overflow:auto;" mold="3d" closable="false" visible="false" >
                     <caption label=" ">
                         <label value="${c:l('otherInstances')}" sclass="title" style="float:left; text-align:center" />
                     </caption>
-                    <grid id="otherInstances" style="border:0px; margin:-5px;" height="387px">
+                    <grid id="otherInstances" style="border:0px; margin:-5px;" height="404px">
                         <auxhead sclass="category-center">
                             <auxheader colspan="1">
                                 <hbox align="bottom">
@@ -97,7 +88,7 @@
                         <toolbarbutton tooltiptext="${c:l('refreshInstance')}" zclass="button" image="/img/refresh.png" onClick="controller.refreshInfo();"/>
                     </hbox>
                 </caption>
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- State -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('state')}: " style="font-weight:bold"/>
@@ -112,7 +103,7 @@
                         <label id="username"/>
                     </hbox>
                 </hbox>  
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- DB type -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('dbType')}: " style="font-weight:bold"/>
@@ -131,7 +122,7 @@
                         </hbox>
                     </hbox>
                 </hbox>
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- Creation date -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
@@ -145,12 +136,12 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="expiryDateBox.setVisible(false);expiryDateEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="expiryDateEditBox" visible="false" align="bottom">
-                            <datebox id="expiryDateEdit" width="200px" onOK="controller.editExpiryDate();"/>
+                            <datebox id="expiryDateEdit" width="203px" onOK="controller.editExpiryDate();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
                         </hbox>
                     </hbox>
                 </hbox>
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- Category -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('category')}: " style="font-weight:bold"/>
@@ -159,7 +150,7 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="categoryBox.setVisible(false);categoryEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="categoryEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <combobox id="categoryEdit" width="200px" mold="rounded" readonly="true" onOK="controller.editCategory();" >
+                            <combobox id="categoryEdit" width="275px" mold="rounded" readonly="true" onOK="controller.editCategory();" >
                                 <comboitem label="${c:l('categoryOFFICIAL')}" />
                                 <comboitem label="${c:l('categoryPERSONAL')}" />
                                 <comboitem label="${c:l('categoryTEST')}" />
@@ -175,12 +166,12 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="projectBox.setVisible(false);projectEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="projectEditBox" visible="false" align="bottom">
-                            <textbox id="projectEdit" width="224px" onOK="controller.editProject();"/>
+                            <textbox id="projectEdit" width="226px" onOK="controller.editProject();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
                         </hbox>
                     </hbox>
                 </hbox>
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- Number of connections -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
@@ -201,12 +192,12 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="dbSizeEdit" width="224px" onOK="controller.editDbSize();"/>
+                            <textbox id="dbSizeEdit" width="221px" onOK="controller.editDbSize();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
                         </hbox>
                     </hbox>
                 </hbox>
-                <hbox align="bottom" height="22px">
+                <hbox align="bottom" height="24px">
                     <!-- Version -->
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('version')}: " style="font-weight:bold"/>
@@ -215,30 +206,30 @@
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="versionBox.setVisible(false);versionEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="versionEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="versionEdit" width="224px" onOK="controller.editVersion();"/>
+                            <textbox id="versionEdit" width="278px" onOK="controller.editVersion();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editVersion();"/>
                         </hbox>
                     </hbox>
                     <!-- Host and Master/slave -->
-                    <hbox width="250px" align="bottom" id="hostArea">
+                    <hbox width="350px" align="bottom" id="hostArea">
                         <label value="${c:l('host')}: " style="font-weight:bold"/>
                         <hbox id="hostBox" align="bottom">
                             <label id="host"/>
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">
-                            <textbox id="hostEdit" width="224px" onOK="controller.editHost();"/>
+                            <textbox id="hostEdit" width="242px" onOK="controller.editHost();"/>
                             <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
                         </hbox>
                     </hbox>
-                    <hbox width="250px" align="bottom" id="masterArea" visible="false">
+                    <hbox width="150px" align="bottom" id="masterArea" visible="false">
                         <label value="${c:l('master')}: " style="font-weight:bold"/>
                         <hbox id="masterBox" align="bottom">
                             <label id="master"/>
                             <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
                         </hbox>
                     </hbox>
-                    <hbox width="250px" align="bottom" id="slaveArea" visible="false">
+                    <hbox width="150px" align="bottom" id="slaveArea" visible="false">
                         <label value="${c:l('slave')}: " style="font-weight:bold"/>
                         <hbox id="slaveBox" align="bottom">
                             <label id="slave"/>
@@ -282,7 +273,7 @@
                                         <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
                                     </div>
                                 </caption>
-                                <hbox align="bottom" height="22px">
+                                <hbox align="bottom" height="24px">
                                     <!-- State -->
                                     <hbox align="bottom" width="500px">
                                         <label value="${c:l('state')}: " style="font-weight:bold"/>
@@ -295,7 +286,7 @@
                                         <label id="jobRequester" value="-"/>
                                     </hbox>
                                 </hbox>
-                                <hbox align="bottom" height="22px">
+                                <hbox align="bottom" height="24px">
                                     <!-- Creation date -->
                                     <hbox width="500px">
                                         <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
@@ -310,7 +301,7 @@
                                 <!-- Log -->
                                 <vbox  width="1000px" style="margin-top:8px">
                                     <label value="${c:l('log')}:" style="font-weight:bold"/>
-                                    <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true"/>
+                                    <textbox id="log" width="1000px" height="500px" multiline="true" readonly="true" style="font-family: 'Lucida Console', Monaco, monospace; font-size: 9pt"/>
                                 </vbox>
                             </groupbox>
                         </tabpanel>
@@ -353,6 +344,16 @@
                     </hbox>
                 </div>
             </window>
+            
+            <!-- Error window -->
+            <error/>
+            <!-- Timer to update the instances every minute -->
+            <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInfo();"/>
+            <!-- Script to mark the snapshot days in the calendar -->
+            <script src="/scripts/markSnapshots.js"/>
+            <!-- Scripts for monitoring -->
+            <script src="https://www.google.com/jsapi"/>
+            <script src="/scripts/graph.js"/>
         </hbox>
     </vbox>
 </zk>

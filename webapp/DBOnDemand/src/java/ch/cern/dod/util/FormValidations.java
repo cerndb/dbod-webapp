@@ -128,7 +128,7 @@ public class FormValidations {
         //If there are no previous errors
         if (category.getErrorMessage() == null || category.getErrorMessage().isEmpty()) {
             //Check if user has selected a value
-            if (category.getSelectedItem() == null) {
+            if (category.getSelectedItem() == null || category.getSelectedItem().getValue() == null) {
                 category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_EMPTY));
                 return false;
             }
@@ -182,7 +182,7 @@ public class FormValidations {
         //If there are no previous errors
         if (dbType.getErrorMessage() == null || dbType.getErrorMessage().isEmpty()) {
             //Check if user has selected a value
-            if (dbType.getSelectedItem() == null) {
+            if (dbType.getSelectedItem() == null || dbType.getSelectedItem().getValue() == null) {
                 dbType.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_TYPE_EMPTY));
                 return false;
             }

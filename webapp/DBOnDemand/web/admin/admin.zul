@@ -3,6 +3,7 @@
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?link href='https://fonts.googleapis.com/css?family=PT+Sans:400' rel='stylesheet' type='text/css'?>
 <?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
 <?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
@@ -23,16 +24,7 @@
     <topBar/>
 
     <!-- Main container for the databases overview (calls init method when created)-->
-    <vbox use="AdminController" id="controller" style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
-        <!-- Error window -->
-        <error/>
-        <!-- Timer to update the instances every minute -->
-        <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
-        <!-- Script to mark the snapshot days in the calendar -->
-        <script src="/scripts/markSnapshots.js"/>
-        <!-- Scripts for monitoring -->
-        <script src="https://www.google.com/jsapi"/>
-        <script src="/scripts/graph.js"/>
+    <vbox use="AdminController" id="controller" style="margin-top:30px;margin-bottom:10px;" align="center" width="100%">
         
         <!-- Groupbox for the instances overview -->
         <groupbox width="1200px" mold="3d" closable="false">
@@ -98,7 +90,7 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="95px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="90px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -133,11 +125,11 @@
                             <treecol label="${c:l('username')}" width="90px"/>
                             <treecol label="${c:l('eGroup')}"  width="150px"/>
                             <treecol label="${c:l('category')}" width="65px"/>
-                            <treecol label="${c:l('project')}" width="135px"/>
+                            <treecol label="${c:l('project')}" width="130px"/>
                             <treecol label="${c:l('dbType')}" width="65px"/>
                             <treecol label="${c:l('dbSize')}" width="60px"/>
                             <treecol label="${c:l('noConn')}" width="65px"/>
-                            <treecol label="${c:l('state')}" width="40px"/>
+                            <treecol label="${c:l('state')}" width="45px"/>
                             <treecol label="${c:l('actions')}" align="center"/>
                         </treecols>
                         <treefoot id="footer" style="display:none">
@@ -328,6 +320,17 @@
                 </groupbox>
             </hbox>
         </groupbox>
+        
+        <!-- Error window -->
+        <error/>
+        <!-- Timer to update the instances every minute -->
+        <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
+        <!-- Script to mark the snapshot days in the calendar -->
+        <script src="/scripts/markSnapshots.js"/>
+        <!-- Scripts for monitoring -->
+        <script src="https://www.google.com/jsapi"/>
+        <script src="/scripts/graph.js"/>
+        
     </vbox>
     
     <!-- Popup to create a new request -->

@@ -153,7 +153,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Render DB name as a link
                 Treecell dbNameCell = new Treecell();
                 Html dbName = new Html();
-                dbName.setContent("<a style=\"text-decoration:underline;color:blue\" class=\"z-label\" href=\""
+                dbName.setContent("<a style=\"text-decoration:none;color:blue\" class=\"z-label\" href=\""
                                     + Executions.encodeURL(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName()) 
                                     +"\">" + instance.getDbName() + "</a>");
                 dbNameCell.appendChild(dbName);

@@ -160,31 +160,26 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Tree overviewTree = (Tree) getFellow("overviewTree");
         overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
-        overviewTree.getPagingChild().setMold("os");
         
         //Upgrades grid
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
         upgradesGrid.setModel(new UpgradesListModel(upgrades));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
-        upgradesGrid.getPagingChild().setMold("os");
         
         //Destroy grid
         Grid destroyGrid = (Grid) getFellow("destroyGrid");
         destroyGrid.setModel(new DestroyListModel(toDestroy));
         destroyGrid.setRowRenderer(new DestroyGridRenderer(instanceDAO));
-        destroyGrid.getPagingChild().setMold("os");
         
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
         commandStatsGrid.setModel(new CommandStatsModel(commandStats));
         commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
-        commandStatsGrid.getPagingChild().setMold("os");
         
         //Job stats grid
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
-        jobStatsGrid.getPagingChild().setMold("os");
         filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();

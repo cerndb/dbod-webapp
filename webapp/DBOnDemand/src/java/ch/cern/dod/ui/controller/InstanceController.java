@@ -7,7 +7,6 @@ import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODInstanceChange;
 import ch.cern.dod.db.entity.DODJob;
 import ch.cern.dod.db.entity.DODUpgrade;
-import ch.cern.dod.ui.model.JobStatsModel;
 import ch.cern.dod.ui.model.OtherInstancesModel;
 import ch.cern.dod.ui.renderer.InstanceChangesRenderer;
 import ch.cern.dod.ui.renderer.OtherInstancesRenderer;
@@ -28,6 +27,7 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.*;
 
 /**

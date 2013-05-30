@@ -152,7 +152,6 @@ public class DODConstants {
     public static final String PAGE_MONITORING_OVERVIEW = "/monitoring_overview.zul";
 
     //Labels
-    public static final String LABEL_WELCOME = "welcome";
     public static final String LABEL_STATE = "state";
     public static final String LABEL_JOB = "jobAction";
     public static final String LABEL_JOB_STATE = "jobState";

@@ -136,7 +136,7 @@ public class RestoreController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("460px");
+        this.setWidth("470px");
 
         //Main box, used to apply padding
         Vbox mainBox = new Vbox();

@@ -25,7 +25,7 @@ public class OtherInstancesRenderer implements RowRenderer{
         row.setHeight("24px");
         // the data append to each row with simple label
         Html dbName = new Html();
-        dbName.setContent("<a style=\"text-decoration:underline;color:blue\" class=\"z-label\" href=\""
+        dbName.setContent("<a style=\"text-decoration:none;color:blue\" class=\"z-label\" href=\""
                             + Executions.encodeURL(DODConstants.PAGE_INSTANCE + "?" + DODConstants.INSTANCE + "=" + instance.getDbName()) 
                             +"\">" + instance.getDbName() + "</a>");
         row.appendChild(dbName);

@@ -97,7 +97,7 @@ public class FileController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("450px");
+        this.setWidth("420px");
 
         //Main box used to apply padding
         Vbox mainBox = new Vbox();
