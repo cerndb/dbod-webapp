@@ -30,16 +30,18 @@
         </html>
         
         
-        <div height="65px" width="100%" style="padding-top:5px;">
-            <a image="/img/cernlogo.jpg" style="margin-left:95px" href="http://cern.ch"/>
-            <a image="/img/dblogo.png" style="margin-left:5px" href="http://information-technology.web.cern.ch/about/organisation/database-services"/>
-            <a src="/img/logo.png" style="margin-left:5px" href="https://cern.ch/DBOnDemand"/>
-            <a sclass="appTitle" label="${c:l('appTitle')}" href="https://cern.ch/DBOnDemand"/>
+        <hbox height="60px" width="100%" style="margin-top: 5px" pack="stretch">
+            <hbox style="margin-left:95px; float: left" align="bottom">
+                <a image="/img/cernlogo.jpg" href="http://cern.ch"/>
+                <a image="/img/dblogo.png" style="margin-left:5px" href="http://information-technology.web.cern.ch/about/organisation/database-services"/>
+                <a src="/img/logo.png" style="margin-left:5px" href="https://cern.ch/DBOnDemand"/>
+                <a sclass="appTitle" label="${c:l('appTitle')}" href="https://cern.ch/DBOnDemand"/>
+            </hbox>
             <hbox style="margin-right:95px;margin-top:55px;float:right"  align="right">
                 ${c:l('contactMessage')}
                 <h:a href="mailto:dbondemand-admin@cern.ch" class="z-label">${c:l('contactUs')}</h:a>
             </hbox>
-        </div>
+        </hbox>
     </div>
     <menubar sclass="toolbar" style="padding-left:90px">
         <menuitem label="${c:l('home')}" sclass="title" href="/index.zul" />
@@ -47,4 +49,14 @@
         <menuitem label="${c:l('help')}" sclass="title" href="/help.zul"/>
         <menuitem label="${c:l('adminHelp')}" sclass="title" href="/admin/admin_help.zul" if="${topBarController.admin}"/>
     </menubar>
+    
+    <div id="announcementDiv" width="100%" align="center" visible="false">
+        <groupbox width="1185px" style="margin-top: 30px" contentStyle="overflow: auto" mold="3d">
+            <caption label=" ">
+                <label value="${c:l('announcementTitle')}" sclass="title" style="float:left;"/>
+            </caption>
+            <html style="color: red; font-weight: bold;" sclass="z-label" id="announcement">
+            </html>
+        </groupbox>
+    </div>
 </div>

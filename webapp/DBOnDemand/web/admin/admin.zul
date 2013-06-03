@@ -263,7 +263,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyCommandStatsMsg" style="display:none">
-                            <div style="padding-right:130px">
+                            <div style="padding-right:170px">
                                 <label value="${c:l('emptyCommandStatsList')}"/>
                             </div>
                         </div>
@@ -312,7 +312,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyJobStatsMsg" style="display:none">
-                            <div style="padding-right:230px">
+                            <div style="padding-right:180px">
                                 <label value="${c:l('emptyJobStatsList')}"/>
                             </div>
                         </div>
