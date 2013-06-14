@@ -270,7 +270,7 @@
                                     <div align="center" style="float:left">
                                         <label value="${c:l('jobInfo')} " sclass="titleSmall"/>
                                         <!-- Job Selector -->
-                                        <combobox id="jobSelector" width="300px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
+                                        <combobox id="jobSelector" width="350px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
                                     </div>
                                 </caption>
                                 <hbox align="bottom" height="24px">

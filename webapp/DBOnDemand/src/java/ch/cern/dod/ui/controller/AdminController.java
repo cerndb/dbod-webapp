@@ -489,7 +489,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-                if (!jobHelper.doBackup(instance, username, 0)){
+                if (!jobHelper.doBackup(instance, username)){
                     error = true;
                 }
             }

@@ -253,6 +253,7 @@ public class RestoreController extends Window {
             Calendar timePart = Calendar.getInstance();
             timePart.setTime(time.getValue());
             Calendar dayTime = Calendar.getInstance();
+            dayTime.clear();
             dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
                         timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
             Date dateToRestore = dayTime.getTime();
@@ -262,7 +263,7 @@ public class RestoreController extends Window {
                 //If there is an available snapshot
                 if (snapshotToRestore != null) {
                     //If the time is different and more than 1 minute in the future
-                    if (!pitrFormatter.format(dateToRestore).equals(pitrFormatter.format(snapshotToRestore.getCreationDate()))
+                    if (!dateToRestore.equals(snapshotToRestore.getCreationDate())
                             && dateToRestore.getTime() - snapshotToRestore.getCreationDate().getTime() < 60000) {
                         time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PIT_ONE_MINUTE));
                         return;

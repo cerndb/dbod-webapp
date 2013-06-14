@@ -269,6 +269,9 @@ public class DODConstants {
     public static final String ERROR_BACKUP_TO_TAPE_DATE = "errorBackupToTapeDate";
     public static final String ERROR_BACKUP_TO_TAPE_DAY_EMPTY = "errorBackupToTapeDayEmpty";
     public static final String ERROR_BACKUP_TO_TAPE_TIME_EMPTY = "errorBackupToTapeTimeEmpty";
+    public static final String ERROR_BACKUP_DATE = "errorBackupDate";
+    public static final String ERROR_BACKUP_DAY_EMPTY = "errorBackupDayEmpty";
+    public static final String ERROR_BACKUP_TIME_EMPTY = "errorBackupTimeEmpty";
     public static final String ERROR_ADDING_UPGRADE = "errorAddingUpgrade";
     public static final String ERROR_DELETING_UPGRADE = "errorDeletingUpgrade";
     public static final String ERROR_VERSION_EMPTY = "errorVersionEmpty";
