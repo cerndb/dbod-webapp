@@ -420,7 +420,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Upgrade button
                 final Toolbarbutton upgradeBtn = new Toolbarbutton();
-                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
                 upgradeBtn.setImage(DODConstants.IMG_UPGRADE);
                 upgradeBtn.setParent(box);
                 upgradeBtn.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -454,8 +453,16 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
                     upgradeBtn.setDisabled(true);
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
+                    //Change tooltip in case it's shared and there are backups
+                    if (shared) {
+                        upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_UPGRADE_SHARED_WARNING));
+                    }
+                    else {
+                        upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
+                    }
                 } else {
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON);
+                    upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
                 }
 
                 //Access monitoring button

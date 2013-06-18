@@ -513,9 +513,17 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
+            //Change tooltip in case it's shared and there are backups
+            if (shared) {
+                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_UPGRADE_SHARED_WARNING));
+            }
+            else {
+                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
+            }
         } else {
             upgradeBtn.setDisabled(false);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
+            upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
         }
 
         //Access monitoring button

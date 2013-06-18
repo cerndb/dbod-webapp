@@ -222,6 +222,7 @@ public class DODConstants {
     public static final String LABEL_METRICS = "metrics";
     public static final String LABEL_RESCUE_TITLE = "rescueTitle";
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
+    public static final String LABEL_UPGRADE_SHARED_WARNING = "upgradeSharedWarning";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
