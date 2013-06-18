@@ -447,7 +447,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement instanceStatement = null;
         PreparedStatement masterStatement = null;
-        int instanceResult = 0;
+        int instanceResult;
         int masterResult = 0;
         try {
             //Get connection
@@ -783,7 +783,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODInstanceChange> changes = new ArrayList<DODInstanceChange>();
+        ArrayList<DODInstanceChange> changes = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();

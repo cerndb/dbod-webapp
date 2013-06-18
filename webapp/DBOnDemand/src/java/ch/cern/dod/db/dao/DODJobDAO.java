@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -137,7 +136,7 @@ public class DODJobDAO {
                 Clob logClob = (Clob) result.getClob(1);
                 if (logClob != null) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(logClob.getAsciiStream()));
-                    String line = null;
+                    String line;
                     StringBuilder buffer = new StringBuilder();
                     while((line = reader.readLine()) != null) {
                         buffer.append(line);
@@ -223,8 +222,8 @@ public class DODJobDAO {
         PreparedStatement insertJobStatement = null;
         PreparedStatement insertParamsStatement = null;
         PreparedStatement updateInstanceStatement = null;
-        int insertJobResult = 0;
-        int insertParamsResult = 0;
+        int insertJobResult;
+        int insertParamsResult;
         int updateInstanceResult = 0;
         try {
             //Get connection

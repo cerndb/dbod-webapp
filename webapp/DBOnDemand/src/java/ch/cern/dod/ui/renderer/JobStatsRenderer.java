@@ -20,6 +20,7 @@ public class JobStatsRenderer implements RowRenderer{
      * @param object stat to render.
      * @throws Exception 
      */
+    @Override
     public void render(Row row, Object object, int i) throws Exception {
         DODJobStat stat = (DODJobStat) object; 
         row.setStyle("padding-top: 0px; padding-bottom: 0px");

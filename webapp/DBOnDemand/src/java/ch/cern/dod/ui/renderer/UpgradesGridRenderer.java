@@ -41,6 +41,7 @@ public class UpgradesGridRenderer implements RowRenderer {
      * @param row row to render
      * @param data DODUpgrade object to render
      */
+    @Override
     public void render(final Row row, Object data, int i) {
         //Cast upgrade object
         final DODUpgrade upgrade = (DODUpgrade) data;
@@ -62,6 +63,7 @@ public class UpgradesGridRenderer implements RowRenderer {
         deleteBtn.setImage(DODConstants.IMG_DESTROY);
         deleteBtn.setZclass(DODConstants.STYLE_BUTTON);
         deleteBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 try {
                     if (upgradeDAO.delete(upgrade)) {

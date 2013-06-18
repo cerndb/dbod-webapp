@@ -300,7 +300,37 @@ public class DODInstance implements Comparable, Cloneable{
     
     @Override
     public boolean equals(Object object) {
-        DODInstance instance = (DODInstance) object;
-        return this.getDbName().equals(instance.getDbName());
+        if (object instanceof DODInstance) {
+            DODInstance instance = (DODInstance) object;
+            return this.getDbName().equals(instance.getDbName());
+        }
+        else{
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.username);
+        hash = 29 * hash + Objects.hashCode(this.dbName);
+        hash = 29 * hash + Objects.hashCode(this.eGroup);
+        hash = 29 * hash + Objects.hashCode(this.category);
+        hash = 29 * hash + Objects.hashCode(this.creationDate);
+        hash = 29 * hash + Objects.hashCode(this.expiryDate);
+        hash = 29 * hash + Objects.hashCode(this.dbType);
+        hash = 29 * hash + this.dbSize;
+        hash = 29 * hash + this.noConnections;
+        hash = 29 * hash + Objects.hashCode(this.project);
+        hash = 29 * hash + Objects.hashCode(this.description);
+        hash = 29 * hash + Objects.hashCode(this.version);
+        hash = 29 * hash + Objects.hashCode(this.upgradeTo);
+        hash = 29 * hash + (this.status ? 1 : 0);
+        hash = 29 * hash + Objects.hashCode(this.master);
+        hash = 29 * hash + Objects.hashCode(this.slave);
+        hash = 29 * hash + Objects.hashCode(this.host);
+        hash = 29 * hash + Objects.hashCode(this.state);
+        hash = 29 * hash + (this.checked ? 1 : 0);
+        return hash;
     }
 }

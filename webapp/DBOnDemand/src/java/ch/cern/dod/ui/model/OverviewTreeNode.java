@@ -92,4 +92,10 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
         else
             return 0;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
 }

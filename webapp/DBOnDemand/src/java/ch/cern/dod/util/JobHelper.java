@@ -379,7 +379,7 @@ public class JobHelper {
      */
     private String mediaToString(Media media) throws IOException
     {
-        String text = "";
+        String text;
         if (media.isBinary()) {
             if (media.inMemory())
             {

@@ -60,7 +60,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
         this.instanceDAO = new DODInstanceDAO();
         this.jobHelper = new JobHelper(adminMode.booleanValue());
-        this.closed = new ArrayList<String>();
+        this.closed = new ArrayList<>();
         this.checkboxes = checkboxes;
     }
 
@@ -70,6 +70,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * @param data Tree node with the instance to render.
      * @throws Exception In case instance cannot be rendered.
      */
+    @Override
     public void render(final Treeitem item, final Object data, int i) throws Exception {
         //Only render instance if it's filtered
         if (data != null) {
@@ -91,6 +92,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 
                 //Remove or add item to closed items list if opened
                 item.addEventListener(Events.ON_OPEN, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         //Remove or add item to closed list
                         if (item.isOpen())
@@ -109,6 +111,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         checkbox.setChecked(true);
                     }
                     checkbox.addEventListener(Events.ON_CHECK, new EventListener() {
+                        @Override
                         public void onEvent(Event event) {
                             //Update arraylist
                             CheckEvent checkEvent = (CheckEvent) event;
@@ -221,20 +224,28 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 Image state = new Image();
                 state.setWidth("20px");
                 state.setHeight("20px");
-                if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-                    state.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
-                    state.setSrc(DODConstants.IMG_PENDING);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
-                    state.setSrc(DODConstants.IMG_RUNNING);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
-                    state.setSrc(DODConstants.IMG_STOPPED);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
-                    state.setSrc(DODConstants.IMG_MAINTENANCE);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
-                    state.setSrc(DODConstants.IMG_BUSY);
-                } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
-                    state.setSrc(DODConstants.IMG_UNKNOWN);
+                switch (instance.getState()) {
+                    case DODConstants.INSTANCE_STATE_AWAITING_APPROVAL:
+                        state.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
+                        break;
+                    case DODConstants.INSTANCE_STATE_JOB_PENDING:
+                        state.setSrc(DODConstants.IMG_PENDING);
+                        break;
+                    case DODConstants.INSTANCE_STATE_RUNNING:
+                        state.setSrc(DODConstants.IMG_RUNNING);
+                        break;
+                    case DODConstants.INSTANCE_STATE_STOPPED:
+                        state.setSrc(DODConstants.IMG_STOPPED);
+                        break;
+                    case DODConstants.INSTANCE_STATE_MAINTENANCE:
+                        state.setSrc(DODConstants.IMG_MAINTENANCE);
+                        break;
+                    case DODConstants.INSTANCE_STATE_BUSY:
+                        state.setSrc(DODConstants.IMG_BUSY);
+                        break;
+                    case DODConstants.INSTANCE_STATE_UNKNOWN:
+                        state.setSrc(DODConstants.IMG_UNKNOWN);
+                        break;
                 }
                 state.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
                 Treecell stateCell = new Treecell();
@@ -250,6 +261,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 startupBtn.setImage(DODConstants.IMG_STARTUP);
                 startupBtn.setParent(box);
                 startupBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         //Create new job and update instance status
                         if (jobHelper.doStartup(instance, username)) {
@@ -285,6 +297,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 shutdownBtn.setImage(DODConstants.IMG_SHUTDOWN);
                 shutdownBtn.setParent(box);
                 shutdownBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         //Show shutdown window
                         try {
@@ -315,6 +328,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 filesButton.setImage(DODConstants.IMG_FILES);
                 filesButton.setParent(box);
                 filesButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         try {
                             FileController fileController = new FileController(instance, username, jobHelper);
@@ -346,6 +360,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 backupBtn.setImage(DODConstants.IMG_BACKUP);
                 backupBtn.setParent(box);
                 backupBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         try {
                             BackupController backupController = new BackupController(instance, username, jobHelper);
@@ -377,6 +392,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 restoreBtn.setImage(DODConstants.IMG_RESTORE);
                 restoreBtn.setParent(box);
                 restoreBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         try {
                             RestoreController restoreController = new RestoreController(instance, username, jobHelper);
@@ -408,6 +424,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 upgradeBtn.setImage(DODConstants.IMG_UPGRADE);
                 upgradeBtn.setParent(box);
                 upgradeBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         //Show upgrade window
                         try {
@@ -447,6 +464,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 monitorBtn.setImage(DODConstants.IMG_MONITOR);
                 monitorBtn.setParent(box);
                 monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                    @Override
                     public void onEvent(Event event) {
                         try {
                             MonitoringController monitoringController = new MonitoringController(instance);
