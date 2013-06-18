@@ -3,6 +3,8 @@ package ch.cern.dod.util;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.ws.DODWebService;
 import ch.cern.dod.ws.DODWebServicePortType;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,7 +126,7 @@ public class FileHelper {
         try {
            URL url = new URL(urlString);
            file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "text/plain", url, "UTF-8");
-        } catch (Exception ex) {
+        } catch (MalformedURLException | FileNotFoundException ex) {
            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR SERVING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return file;

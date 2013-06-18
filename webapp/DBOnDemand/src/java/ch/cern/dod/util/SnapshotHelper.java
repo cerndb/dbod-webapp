@@ -43,7 +43,7 @@ public class SnapshotHelper {
      * @return list of snapshots.
      */
     public List<DODSnapshot> getSnapshots(DODInstance instance) {
-        ArrayList<DODSnapshot> snapshots = new ArrayList<DODSnapshot>();
+        ArrayList<DODSnapshot> snapshots = new ArrayList<>();
         try {
             DODWebService service = new DODWebService();
             DODWebServicePortType port = service.getDODWebServicePort();

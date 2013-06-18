@@ -46,29 +46,31 @@ public class DODMonitoringDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODMetric> metrics = new ArrayList<DODMetric>();
+        ArrayList<DODMetric> metrics = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
-                query.append("SELECT target_type, parameter_code, parameter_name, unit"
-                                + " FROM pdb_monitoring.target_params_defs"
-                                + " WHERE target_type = ? OR target_type = ?"
-                                + " ORDER BY target_type, parameter_name");
-                statement = connection.prepareStatement(query.toString());
-                statement.setString(1, DODConstants.MONITORING_TYPE_MYSQL);
-                statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
-            }
-            else if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
-                query.append("SELECT ?, metric_id, metric_name, metric_unit"
-                                + " FROM pdb_monitoring.rmon_metrics"
-                                + " WHERE metric_id <> 2144" //Exclude Average Synchronous Single-Block Read Latency
-                                + " ORDER BY metric_name");
-                statement = connection.prepareStatement(query.toString());
-                statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
+            switch (instance.getDbType()) {
+                case DODConstants.DB_TYPE_MYSQL:
+                    query.append("SELECT target_type, parameter_code, parameter_name, unit"
+                                    + " FROM pdb_monitoring.target_params_defs"
+                                    + " WHERE target_type = ? OR target_type = ?"
+                                    + " ORDER BY target_type, parameter_name");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, DODConstants.MONITORING_TYPE_MYSQL);
+                    statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
+                    break;
+                case DODConstants.DB_TYPE_ORACLE:
+                    query.append("SELECT ?, metric_id, metric_name, metric_unit"
+                                    + " FROM pdb_monitoring.rmon_metrics"
+                                    + " WHERE metric_id <> 2144" //Exclude Average Synchronous Single-Block Read Latency
+                                    + " ORDER BY metric_name");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
+                    break;
             }
 
             //Execute query
@@ -83,9 +85,7 @@ public class DODMonitoringDAO {
                 metric.setUnit(result.getString(4));
                 metrics.add(metric);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODMonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING AVAILABLE METRICS",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODMonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING AVAILABLE METRICS",ex);
         } finally {
             try {
@@ -126,47 +126,49 @@ public class DODMonitoringDAO {
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
             //If the metric is MySQL
-            if (metric.getType().equals(DODConstants.MONITORING_TYPE_MYSQL)) {
-                query.append("SELECT p.valid_from, p.valid_to, p.value"
-                                + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
-                                + " WHERE t.target_name = ?"
-                                + " AND p.target_id = t.target_id"
-                                + " AND p.target_type = ?"
-                                + " AND p.parameter_code= ?"
-                                + " AND (p.valid_to >= ? OR p.valid_to is NULL)"
-                                + " ORDER BY p.valid_from");
-                statement = connection.prepareStatement(query.toString());
-                statement.setString(1, DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
-                statement.setString(2, DODConstants.MONITORING_TYPE_MYSQL);
-                statement.setString(3, metric.getCode());
-                statement.setTimestamp(4, start);
-            }
-            else if (metric.getType().equals(DODConstants.MONITORING_TYPE_NODE)) {
-                query.append("SELECT p.valid_from, p.valid_to, p.value"
-                                + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
-                                + " WHERE t.target_name = ?"
-                                + " AND p.target_id = t.target_id"
-                                + " AND p.target_type = ?"
-                                + " AND p.parameter_code= ?"
-                                + " AND (p.valid_to >= ? OR p.valid_to IS NULL)"
-                                + " ORDER BY p.valid_from");
-                statement = connection.prepareStatement(query.toString());
-                statement.setString(1, host);
-                statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
-                statement.setString(3, metric.getCode());
-                statement.setTimestamp(4, start);
-            }
-            else if (metric.getType().equals(DODConstants.MONITORING_TYPE_ORACLE)) {
-                query.append("SELECT begin_time, end_time, average"
-                                + " FROM pdb_monitoring.rmon_data"
-                                + " WHERE cluster_name = ?"
-                                + " AND metric_id = ?"
-                                + " AND (end_time >= ? OR end_time IS NULL)"
-                                + " ORDER BY begin_time");
-                statement = connection.prepareStatement(query.toString());
-                statement.setString(1, instance.getDbName().toUpperCase());
-                statement.setString(2, metric.getCode());
-                statement.setTimestamp(3, start);
+            switch (metric.getType()) {
+                case DODConstants.MONITORING_TYPE_MYSQL:
+                    query.append("SELECT p.valid_from, p.valid_to, p.value"
+                                    + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
+                                    + " WHERE t.target_name = ?"
+                                    + " AND p.target_id = t.target_id"
+                                    + " AND p.target_type = ?"
+                                    + " AND p.parameter_code= ?"
+                                    + " AND (p.valid_to >= ? OR p.valid_to is NULL)"
+                                    + " ORDER BY p.valid_from");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+                    statement.setString(2, DODConstants.MONITORING_TYPE_MYSQL);
+                    statement.setString(3, metric.getCode());
+                    statement.setTimestamp(4, start);
+                    break;
+                case DODConstants.MONITORING_TYPE_NODE:
+                    query.append("SELECT p.valid_from, p.valid_to, p.value"
+                                    + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
+                                    + " WHERE t.target_name = ?"
+                                    + " AND p.target_id = t.target_id"
+                                    + " AND p.target_type = ?"
+                                    + " AND p.parameter_code= ?"
+                                    + " AND (p.valid_to >= ? OR p.valid_to IS NULL)"
+                                    + " ORDER BY p.valid_from");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, host);
+                    statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
+                    statement.setString(3, metric.getCode());
+                    statement.setTimestamp(4, start);
+                    break;
+                case DODConstants.MONITORING_TYPE_ORACLE:
+                    query.append("SELECT begin_time, end_time, average"
+                                    + " FROM pdb_monitoring.rmon_data"
+                                    + " WHERE cluster_name = ?"
+                                    + " AND metric_id = ?"
+                                    + " AND (end_time >= ? OR end_time IS NULL)"
+                                    + " ORDER BY begin_time");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, instance.getDbName().toUpperCase());
+                    statement.setString(2, metric.getCode());
+                    statement.setTimestamp(3, start);
+                    break;
             }
 
             //Execute query
@@ -258,9 +260,7 @@ public class DODMonitoringDAO {
                 //Close object
                 json.append("]}");
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODMonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING METRIC DATA",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODMonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING METRIC DATA",ex);
         } finally {
             try {

@@ -112,6 +112,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     /**
      * Method executed before composing the page. It instantiates the necessary attributes.
      */
+    @Override
     public void beforeCompose() {
         //Get instance
         String dbName = (String) Executions.getCurrent().getParameter(DODConstants.INSTANCE);
@@ -193,6 +194,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     /**
      * Method executed after composing the page. It loads instance info, buttons and jobs.
      */
+    @Override
     public void afterCompose() {
         //Configure input fields
         ((Textbox) getFellow("eGroupEdit")).setMaxlength(DODConstants.MAX_E_GROUP_LENGTH);
@@ -366,20 +368,28 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         stateImage.setHeight("20px");
         stateLabel.setValue(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
         stateImage.setTooltiptext(Labels.getLabel(DODConstants.LABEL_STATE + instance.getState()));
-        if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-            stateImage.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_JOB_PENDING)) {
-            stateImage.setSrc(DODConstants.IMG_PENDING);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)) {
-            stateImage.setSrc(DODConstants.IMG_RUNNING);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)) {
-            stateImage.setSrc(DODConstants.IMG_STOPPED);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_MAINTENANCE)) {
-            stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)) {
-            stateImage.setSrc(DODConstants.IMG_BUSY);
-        } else if (instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN)) {
-            stateImage.setSrc(DODConstants.IMG_UNKNOWN);
+        switch (instance.getState()) {
+            case DODConstants.INSTANCE_STATE_AWAITING_APPROVAL:
+                stateImage.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
+                break;
+            case DODConstants.INSTANCE_STATE_JOB_PENDING:
+                stateImage.setSrc(DODConstants.IMG_PENDING);
+                break;
+            case DODConstants.INSTANCE_STATE_RUNNING:
+                stateImage.setSrc(DODConstants.IMG_RUNNING);
+                break;
+            case DODConstants.INSTANCE_STATE_STOPPED:
+                stateImage.setSrc(DODConstants.IMG_STOPPED);
+                break;
+            case DODConstants.INSTANCE_STATE_MAINTENANCE:
+                stateImage.setSrc(DODConstants.IMG_MAINTENANCE);
+                break;
+            case DODConstants.INSTANCE_STATE_BUSY:
+                stateImage.setSrc(DODConstants.IMG_BUSY);
+                break;
+            case DODConstants.INSTANCE_STATE_UNKNOWN:
+                stateImage.setSrc(DODConstants.IMG_UNKNOWN);
+                break;
         }
         
         //If the user is an admin
@@ -397,12 +407,17 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(DODConstants.CATEGORY_OFFICIAL);
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(DODConstants.CATEGORY_PERSONAL);
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(2).setValue(DODConstants.CATEGORY_TEST);
-            if (DODConstants.CATEGORY_OFFICIAL.equals(instance.getCategory()))
-                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(0);
-            else if (DODConstants.CATEGORY_PERSONAL.equals(instance.getCategory()))
-                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
-            else if (DODConstants.CATEGORY_TEST.equals(instance.getCategory()))
-                ((Combobox) getFellow("categoryEdit")).setSelectedIndex(2);
+            switch (instance.getCategory()) {
+                case DODConstants.CATEGORY_OFFICIAL:
+                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(0);
+                    break;
+                case DODConstants.CATEGORY_PERSONAL:
+                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
+                    break;
+                case DODConstants.CATEGORY_TEST:
+                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(2);
+                    break;
+            }
             ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));
             if (instance.getNoConnections() > 0)
                 ((Textbox) getFellow("noConnectionsEdit")).setValue(String.valueOf(instance.getNoConnections()));
@@ -546,17 +561,23 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 String label = Labels.getLabel(DODConstants.LABEL_JOB + job.getCommandName()) + " " + dateTimeFormatter.format(job.getCreationDate());
                 item.setLabel(label);
                 item.setSclass(DODConstants.STYLE_JOB_STATE);
-                if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_OK)) {
-                    item.setImage(DODConstants.IMG_RUNNING);
-                } else if (job.getState().equals(DODConstants.JOB_STATE_RUNNING)) {
-                    item.setImage(DODConstants.IMG_PENDING);
-                } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_FAIL)) {
-                    item.setImage(DODConstants.IMG_STOPPED);
-                } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_WARNING)) {
-                    item.setImage(DODConstants.IMG_BUSY);
-                } else if (job.getState().equals(DODConstants.JOB_STATE_PENDING)) {
-                    item.setImage(DODConstants.IMG_AWAITING_APPROVAL);
-                } 
+                switch (job.getState()) {
+                    case DODConstants.JOB_STATE_FINISHED_OK:
+                        item.setImage(DODConstants.IMG_RUNNING);
+                        break;
+                    case DODConstants.JOB_STATE_RUNNING:
+                        item.setImage(DODConstants.IMG_PENDING);
+                        break;
+                    case DODConstants.JOB_STATE_FINISHED_FAIL:
+                        item.setImage(DODConstants.IMG_STOPPED);
+                        break;
+                    case DODConstants.JOB_STATE_FINISHED_WARNING: 
+                        item.setImage(DODConstants.IMG_BUSY);
+                        break;
+                    case DODConstants.JOB_STATE_PENDING:
+                        item.setImage(DODConstants.IMG_AWAITING_APPROVAL);
+                        break;
+                }
                 jobSelector.appendChild(item);
                 //If it was the selected one, select it again
                 if (selected != null && job.getUsername().equals(selected.getUsername()) && job.getDbName().equals(selected.getDbName())
@@ -622,16 +643,22 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             stateImage.setHeight("20px");
             stateLabel.setValue(Labels.getLabel(DODConstants.LABEL_JOB_STATE + job.getState()));
             stateImage.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB_STATE + job.getState()));
-            if (job.getState().equals(DODConstants.JOB_STATE_PENDING)) {
-                stateImage.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
-            } else if (job.getState().equals(DODConstants.JOB_STATE_RUNNING)) {
-                stateImage.setSrc(DODConstants.IMG_PENDING);
-            } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_OK)) {
-                stateImage.setSrc(DODConstants.IMG_RUNNING);
-            } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_FAIL)) {
-                stateImage.setSrc(DODConstants.IMG_STOPPED);
-            } else if (job.getState().equals(DODConstants.JOB_STATE_FINISHED_WARNING)) {
-                stateImage.setSrc(DODConstants.IMG_BUSY);
+            switch (job.getState()) {
+                case DODConstants.JOB_STATE_PENDING:
+                    stateImage.setSrc(DODConstants.IMG_AWAITING_APPROVAL);
+                    break;
+                case DODConstants.JOB_STATE_RUNNING:
+                    stateImage.setSrc(DODConstants.IMG_PENDING);
+                    break;
+                case DODConstants.JOB_STATE_FINISHED_OK:
+                    stateImage.setSrc(DODConstants.IMG_RUNNING);
+                    break;
+                case DODConstants.JOB_STATE_FINISHED_FAIL:
+                    stateImage.setSrc(DODConstants.IMG_STOPPED);
+                    break;
+                case DODConstants.JOB_STATE_FINISHED_WARNING:
+                    stateImage.setSrc(DODConstants.IMG_BUSY);
+                    break;
             }
             ((Label) getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
             if (job.getCompletionDate() != null) {

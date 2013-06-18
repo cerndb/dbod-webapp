@@ -63,6 +63,7 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
      * Overrides the method to get the size of the model.
      * @return the number of stats in the model.
      */
+    @Override
     public int getSize() {
         return filtered.size();
     }
@@ -72,6 +73,7 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
      * @param index index of the stat.
      * @return the stat.
      */
+    @Override
     public Object getElementAt(int index) {
         return filtered.get(index);
     }
@@ -81,6 +83,7 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
      * @param comparator comparator to use.
      * @param ascending indicates if the order is ascending or descending.
      */
+    @Override
     public void sort(Comparator comparator, boolean ascending) {
         this.ascending = ascending;
         this.comparator = comparator;
@@ -98,7 +101,7 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
         this.dbName = dbName;
         this.command = command;
         //Filter stats
-        filtered = new ArrayList<DODJobStat>();
+        filtered = new ArrayList<>();
         for (int i=0; i< jobStats.size(); i++) {
             DODJobStat stat = jobStats.get(i);
             if (stat.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0
@@ -110,6 +113,7 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
         sort(comparator, ascending);
     }
     
+    @Override
     public String getSortDirection(Comparator cmprtr) {
         if (ascending)
             return "ascending";

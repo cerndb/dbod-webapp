@@ -155,6 +155,7 @@ public class RestoreController extends Window {
         snapshotCalendar = new SnapshotCalendar();
         snapshotCalendar.setSnapshots(snapshots);
         snapshotCalendar.addEventListener(Events.ON_CHANGE, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 loadSnapshotsForDay(snapshotCalendar.getValue());
             }
@@ -196,6 +197,7 @@ public class RestoreController extends Window {
         cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -205,6 +207,7 @@ public class RestoreController extends Window {
         cancelLabel.setSclass(DODConstants.STYLE_TITLE);
         cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -221,7 +224,7 @@ public class RestoreController extends Window {
         acceptLabel.setSclass(DODConstants.STYLE_TITLE);
         acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -232,7 +235,7 @@ public class RestoreController extends Window {
         acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_ACCEPT);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
-
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -320,6 +323,7 @@ public class RestoreController extends Window {
                     Label label = new Label(timeFormatter.format(snapshot.getCreationDate()));
                     label.setStyle("margin-left:12px;hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;color:blue;cursor:pointer;text-decoration:underline");
                     label.addEventListener(Events.ON_CLICK, new EventListener() {
+                        @Override
                         public void onEvent(Event event) throws Exception {
                             //Load instance on day and time
                             day.setValue(snapshot.getCreationDate());
@@ -442,6 +446,7 @@ public class RestoreController extends Window {
             cancelButton.setZclass(DODConstants.STYLE_BUTTON);
             cancelButton.setImage(DODConstants.IMG_CANCEL);
             cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doCancel();
                 }
@@ -451,6 +456,7 @@ public class RestoreController extends Window {
             cancelLabel.setSclass(DODConstants.STYLE_TITLE);
             cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
             cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doCancel();
                 }
@@ -467,6 +473,7 @@ public class RestoreController extends Window {
             acceptLabel.setSclass(DODConstants.STYLE_TITLE);
             acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
             acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doAccept();
                 }
@@ -477,6 +484,7 @@ public class RestoreController extends Window {
             acceptButton.setZclass(DODConstants.STYLE_BUTTON);
             acceptButton.setImage(DODConstants.IMG_ACCEPT);
             acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doAccept();
                 }

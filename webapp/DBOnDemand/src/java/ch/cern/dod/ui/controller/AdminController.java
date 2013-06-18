@@ -78,6 +78,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     /**
      * Method executed before the page is composed. Obtains instances from DB.
      */
+    @Override
     public void beforeCompose() {
         Execution execution = Executions.getCurrent();
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
@@ -102,6 +103,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * Method executed after composing the page. Sets the model of the grid
      * with the instances obtained before composing.
      */
+    @Override
     public void afterCompose() {
         //Get filters for instances from session
         String filterDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME);

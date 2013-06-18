@@ -101,6 +101,7 @@ public class MonitoringController extends Window {
         metrics.setWidth("560px");
         loadMetrics();
         metrics.addEventListener(Events.ON_SELECT, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
@@ -153,6 +154,7 @@ public class MonitoringController extends Window {
         acceptLabel.setSclass(DODConstants.STYLE_TITLE);
         acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -162,6 +164,7 @@ public class MonitoringController extends Window {
         acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_CANCEL);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }

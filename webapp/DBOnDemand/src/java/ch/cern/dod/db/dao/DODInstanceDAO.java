@@ -49,7 +49,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODInstance> instances = new ArrayList<DODInstance>();
+        ArrayList<DODInstance> instances = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -96,9 +96,7 @@ public class DODInstanceDAO {
                 }
                 instances.add(instance);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
         } finally {
             try {
@@ -125,7 +123,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODInstance> instances = new ArrayList<DODInstance>();
+        ArrayList<DODInstance> instances = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -163,9 +161,7 @@ public class DODInstanceDAO {
                 instance.setHost(result.getString(17));
                 instances.add(instance);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES TO DESTROY",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES TO DESTROY",ex);
         } finally {
             try {
@@ -195,7 +191,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODInstance> instances = new ArrayList<DODInstance>();
+        ArrayList<DODInstance> instances = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -267,9 +263,7 @@ public class DODInstanceDAO {
                 }
                 instances.add(instance);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR USERNAME " + username ,ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR USERNAME " + username ,ex);
         } finally {
             try {
@@ -298,7 +292,7 @@ public class DODInstanceDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODInstance> instances = new ArrayList<DODInstance>();
+        ArrayList<DODInstance> instances = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -348,9 +342,7 @@ public class DODInstanceDAO {
                 }
                instances.add(instance);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
         } finally {
             try {
@@ -427,9 +419,7 @@ public class DODInstanceDAO {
                     }
                 }
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCE FOR DB NAME " + dbName ,ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCE FOR DB NAME " + dbName ,ex);
         } finally {
             try {
@@ -568,9 +558,7 @@ public class DODInstanceDAO {
             deleteStatement.setString(2, instance.getUsername());
 
             deleteResult = deleteStatement.executeUpdate();
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -821,9 +809,7 @@ public class DODInstanceDAO {
                 change.setNewValue(result.getString(7));
                 changes.add(change);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -859,9 +845,7 @@ public class DODInstanceDAO {
             rescueStatement.setString(2, instance.getUsername());
 
             rescueResult = rescueStatement.executeUpdate();
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -903,9 +887,7 @@ public class DODInstanceDAO {
             if (!result.next()) {
                 return false;
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING FIM OBJECT FOR DB NAME " + instance.getDbName() ,ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODInstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING FIM OBJECT FOR DB NAME " + instance.getDbName() ,ex);
         } finally {
             try {

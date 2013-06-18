@@ -54,6 +54,7 @@ public class DODUpgrade implements Comparable{
         this.versionTo = versionTo;
     }
     
+    @Override
     public int compareTo(Object object) {
         DODUpgrade upgrade = (DODUpgrade) object;
         return this.getDbType().compareTo(upgrade.getDbType());

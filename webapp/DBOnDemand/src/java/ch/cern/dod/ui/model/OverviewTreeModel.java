@@ -40,9 +40,9 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @return list of nodes with master/slave relations
      */
     private ArrayList<OverviewTreeNode> getNodeList (List<DODInstance> instances) {
-        ArrayList<OverviewTreeNode> nodeList = new ArrayList<OverviewTreeNode>();
-        ArrayList<DODInstance> masters = new ArrayList<DODInstance>();
-        ArrayList<DODInstance> slaves = new ArrayList<DODInstance>();
+        ArrayList<OverviewTreeNode> nodeList = new ArrayList<>();
+        ArrayList<DODInstance> masters = new ArrayList<>();
+        ArrayList<DODInstance> slaves = new ArrayList<>();
         
         //Separate masters and slaves and create single and shared isntances
         for (DODInstance instance : instances) {
@@ -63,7 +63,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
         
         //Merge masters and slaves
         for (DODInstance master : masters) {
-            ArrayList<OverviewTreeNode> slavesList =  new ArrayList<OverviewTreeNode>();
+            ArrayList<OverviewTreeNode> slavesList =  new ArrayList<>();
             for (DODInstance slave : slaves) {
                 if (slave.getMaster().equals(master.getDbName()) && filterInstance(slave)) {
                     slavesList.add(new OverviewTreeNode(slave));
@@ -102,6 +102,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param node Node to check.
      * @return true if node is a leaf, false otherwise.
      */
+    @Override
     public boolean isLeaf(Object node) {
         return ((OverviewTreeNode)node).isLeaf();
     }
@@ -112,6 +113,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param i Index of the child.
      * @return Node representing the selected child.
      */
+    @Override
     public Object getChild(Object node, int i) {
         if (((OverviewTreeNode)node).getChildren() != null)
             return ((OverviewTreeNode)node).getChildAt(i);
@@ -124,6 +126,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param node Node to get the number of children from.
      * @return Number of children the node has.
      */
+    @Override
     public int getChildCount(Object node) {
         if (((OverviewTreeNode)node).getChildren() != null)
             return ((OverviewTreeNode)node).getChildCount();
@@ -195,7 +198,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @return list of checked instances.
      */
     public List<DODInstance> getChecked (OverviewTreeNode root) {
-        List<DODInstance> checked = new ArrayList<DODInstance>();
+        List<DODInstance> checked = new ArrayList<>();
         if (root.getData() instanceof DODInstance && ((DODInstance)root.getData()).isChecked())
             checked.add((DODInstance)root.getData());
         for (int i=0; i < root.getChildCount(); i++)

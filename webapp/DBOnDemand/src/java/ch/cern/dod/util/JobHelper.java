@@ -114,7 +114,7 @@ public class JobHelper {
         job.setState(DODConstants.JOB_STATE_PENDING);
         
         //Param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         
         //Do not stop listener if instance is Oracle in a shared machine
         if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
@@ -183,7 +183,7 @@ public class JobHelper {
                 job.setState(DODConstants.JOB_STATE_PENDING);
 
                 //Create params
-                List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+                List<DODCommandParam> params = new ArrayList<>();
                 DODCommandParam configFile = new DODCommandParam();
                 configFile.setUsername(instance.getUsername());
                 configFile.setDbName(instance.getDbName());
@@ -278,7 +278,7 @@ public class JobHelper {
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
         //Create param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         DODCommandParam snapshotFile = new DODCommandParam();
         snapshotFile.setUsername(instance.getUsername());
         snapshotFile.setDbName(instance.getDbName());
@@ -335,7 +335,7 @@ public class JobHelper {
         job.setState(DODConstants.JOB_STATE_PENDING);
 
         //Create params
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         
         //If the database is Oracle add version from
         if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {

@@ -85,6 +85,7 @@ public class RescueController extends Window {
         cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -94,6 +95,7 @@ public class RescueController extends Window {
         cancelLabel.setSclass(DODConstants.STYLE_TITLE);
         cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -110,6 +112,7 @@ public class RescueController extends Window {
         acceptLabel.setSclass(DODConstants.STYLE_TITLE);
         acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -120,6 +123,7 @@ public class RescueController extends Window {
         acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_ACCEPT);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }

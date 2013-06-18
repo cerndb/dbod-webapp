@@ -37,6 +37,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
     /**
      * Method called before composing the page, it instantiates variables.
      */
+    @Override
     public void beforeCompose() {
         //Initialize instance and create job helper
         String dbName = (String) Executions.getCurrent().getParameter(DODConstants.INSTANCE);
@@ -47,6 +48,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
         dao = new DODMonitoringDAO();
     }
     
+    @Override
     public void afterCompose() {
         //Set title
         ((Label) getFellow("monitoringTitle")).setValue(Labels.getLabel(DODConstants.LABEL_MONITORING_OVERVIEW_TITLE) + " " + instance.getDbName());
@@ -63,14 +65,16 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
         String javascript = "";
         //Compose graphs
         DODMetric[] metrics;
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
-             metrics = DODConstants.MYSQL_OVERVIEW_METRICS;
-        }
-        else if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
-            metrics = DODConstants.ORACLE_OVERVIEW_METRICS;
-        }
-        else {
-            metrics = new DODMetric[0];
+        switch (instance.getDbType()) {
+            case DODConstants.DB_TYPE_MYSQL:
+                metrics = DODConstants.MYSQL_OVERVIEW_METRICS;
+                break;
+            case DODConstants.DB_TYPE_ORACLE:
+                metrics = DODConstants.ORACLE_OVERVIEW_METRICS;
+                break;
+            default:
+                metrics = new DODMetric[0];
+                break;
         }
         
         for (int i=0; i+1 < metrics.length; i = i+2) {

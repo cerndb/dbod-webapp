@@ -42,6 +42,7 @@ public class DODCommandStat implements Comparable{
         this.meanDuration = meanDuration;
     }
 
+    @Override
     public int compareTo(Object o) {
         return commandName.compareTo(((DODCommandStat)o).getCommandName());
     }

@@ -46,6 +46,7 @@ public class OtherInstancesModel extends AbstractListModel {
      * Overrides the method to get the size of the model.
      * @return the number of instances in the model.
      */
+    @Override
     public int getSize() {
         return filtered.size();
     }
@@ -55,6 +56,7 @@ public class OtherInstancesModel extends AbstractListModel {
      * @param index index of the instances.
      * @return the instances.
      */
+    @Override
     public Object getElementAt(int index) {
         return filtered.get(index);
     }
@@ -67,7 +69,7 @@ public class OtherInstancesModel extends AbstractListModel {
         //Store values
         this.dbName = dbName;
         //Filter stats
-        filtered = new ArrayList<DODInstance>();
+        filtered = new ArrayList<>();
         for (int i=0; i< instances.size(); i++) {
             DODInstance instance = instances.get(i);
             if (instance.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0) {

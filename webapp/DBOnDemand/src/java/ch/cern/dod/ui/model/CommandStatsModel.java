@@ -43,6 +43,7 @@ public class CommandStatsModel extends AbstractListModel implements Sortable{
      * Overrides the method to get the size of the model.
      * @return the number of stats in the model.
      */
+    @Override
     public int getSize() {
         return commandStats.size();
     }
@@ -52,6 +53,7 @@ public class CommandStatsModel extends AbstractListModel implements Sortable{
      * @param index index of the stat.
      * @return the stat.
      */
+    @Override
     public Object getElementAt(int index) {
         return commandStats.get(index);
     }
@@ -61,6 +63,7 @@ public class CommandStatsModel extends AbstractListModel implements Sortable{
      * @param comparator comparator to use.
      * @param ascending indicates if the order is ascending or descending.
      */
+    @Override
     public void sort(Comparator comparator, boolean ascending) {
         this.ascending = ascending;
         this.comparator = comparator;
@@ -68,6 +71,7 @@ public class CommandStatsModel extends AbstractListModel implements Sortable{
         fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);
     }
 
+    @Override
     public String getSortDirection(Comparator cmpr) {
         if (ascending) {
             return "ascending";

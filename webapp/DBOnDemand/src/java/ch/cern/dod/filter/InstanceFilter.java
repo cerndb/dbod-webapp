@@ -19,7 +19,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.zkoss.zk.ui.Executions;
 
 /**
  * Filters requests to only allow admin users to manage their own instances.
@@ -32,12 +31,14 @@ public class InstanceFilter implements Filter {
      * Init method
      * @param fc filter config
      */
+    @Override
     public void init(FilterConfig fc) {
     }
 
     /**
      * Destroy mehod
      */
+    @Override
     public void destroy() {
     }
 
@@ -47,6 +48,7 @@ public class InstanceFilter implements Filter {
      * @param sr1 servlet response.
      * @param fc filter chain.
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) {
         try {
             //Get instance from request
@@ -88,11 +90,7 @@ public class InstanceFilter implements Filter {
                 HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_INSTANCE_NOT_FOUND);
             }
         }
-        catch (IOException ex) {
-            Logger.getLogger(InstanceFilter.class.getName()).log(Level.SEVERE, "ERROR IN INSTANCE FILTER", ex);
-            HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
-        }
-        catch (ServletException ex) {
+        catch (IOException | ServletException ex) {
             Logger.getLogger(InstanceFilter.class.getName()).log(Level.SEVERE, "ERROR IN INSTANCE FILTER", ex);
             HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
         }

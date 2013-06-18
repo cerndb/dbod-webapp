@@ -26,11 +26,13 @@ public class AdminFilter implements Filter{
      * Init method
      * @param fc filter config
      */
+    @Override
     public void init(FilterConfig fc){}
 
     /**
      * Destroy method
      */
+    @Override
     public void destroy() {}
 
     /**
@@ -39,6 +41,7 @@ public class AdminFilter implements Filter{
      * @param sr1 servlet response.
      * @param fc filter chain.
      */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) {
         try {
             //Get groups
@@ -50,11 +53,7 @@ public class AdminFilter implements Filter{
             else
                 HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_NOT_AUTHORIZED);
         }
-        catch (IOException ex) {
-            Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN ADMIN FILTER", ex);
-            HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
-        }
-        catch (ServletException ex) {
+        catch (IOException | ServletException ex) {
             Logger.getLogger(AdminFilter.class.getName()).log(Level.SEVERE, "ERROR IN ADMIN FILTER", ex);
             HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, DODConstants.PAGE_ERROR);
         }

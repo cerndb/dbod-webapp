@@ -1,6 +1,7 @@
 package ch.cern.dod.db.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Represents a database in the system.
@@ -258,6 +259,7 @@ public class DODInstance implements Comparable, Cloneable{
         this.checked = checked;
     }
 
+    @Override
     public int compareTo(Object object) {
         DODInstance instance = (DODInstance) object;
         return this.getDbName().compareTo(instance.getDbName());
@@ -266,33 +268,33 @@ public class DODInstance implements Comparable, Cloneable{
     @Override
     public DODInstance clone() {
         DODInstance clone = new DODInstance();
-        clone.setCategory(new String(category));
+        clone.setCategory(category);
         clone.setCreationDate((Date) creationDate.clone());
-        clone.setDbName(new String(dbName));
+        clone.setDbName(dbName);
         clone.setDbSize(dbSize);
-        clone.setDbType(new String(dbType));
+        clone.setDbType(dbType);
         if (description != null)
-            clone.setDescription(new String(description));
+            clone.setDescription(description);
         if (eGroup != null)
-            clone.setEGroup(new String(eGroup));
+            clone.setEGroup(eGroup);
         if (expiryDate != null)
             clone.setExpiryDate((Date) expiryDate.clone());
         clone.setNoConnections(noConnections);
         if (project != null)
-            clone.setProject(new String(project));
-        clone.setState(new String(state));
+            clone.setProject(project);
+        clone.setState(state);
         clone.setStatus(status);
-        clone.setUsername(new String(username));
+        clone.setUsername(username);
         if (upgradeTo != null)
-            clone.setUpgradeTo(new String(upgradeTo));
+            clone.setUpgradeTo(upgradeTo);
         if (version != null)
-            clone.setVersion(new String(version));
+            clone.setVersion(version);
         if (master != null)
-            clone.setMaster(new String(master));
+            clone.setMaster(master);
         if (slave != null)
-            clone.setSlave(new String(slave));
+            clone.setSlave(slave);
         if (host != null)
-            clone.setHost(new String(host));
+            clone.setHost(host);
         return clone;
     }
     

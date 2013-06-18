@@ -70,6 +70,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Method executed before the page is composed. It checks authorization
      * and obtains instances from the database.
      */
+    @Override
     public void beforeCompose() {
         //Get username and groups
         Execution execution = Executions.getCurrent();
@@ -94,6 +95,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Method executed after composing the page. Sets the model of the grid
      * with the instances obtained before composing.
      */
+    @Override
     public void afterCompose() {
         //Get filters for instances from session
         String filterDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_FILTER_DB_NAME);

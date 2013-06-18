@@ -52,6 +52,7 @@ public class NewInstanceController extends Window implements AfterCompose {
      * Method called after the the children of every component have been composed.
      * It instantiates objects and interface components.
      */
+    @Override
     public void afterCompose() {
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);

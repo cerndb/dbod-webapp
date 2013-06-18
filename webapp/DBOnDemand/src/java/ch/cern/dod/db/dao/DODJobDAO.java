@@ -59,7 +59,7 @@ public class DODJobDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODJob> jobs = new ArrayList<DODJob>();
+        ArrayList<DODJob> jobs = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -89,9 +89,7 @@ public class DODJobDAO {
                 job.setResult(result.getString(10));
                 jobs.add(job);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -148,11 +146,7 @@ public class DODJobDAO {
                     log = buffer.toString();
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (IOException | NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
         } finally {
             try {
@@ -203,10 +197,7 @@ public class DODJobDAO {
             //Commit queries
             connection.commit();
         }
-        catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        }
-        catch (SQLException ex) {
+        catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
         }
 
@@ -379,10 +370,7 @@ public class DODJobDAO {
             //Execute
             createScheduleResult = createScheduleStatement.executeUpdate();
         }
-        catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        }
-        catch (SQLException ex) {
+        catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
@@ -430,10 +418,7 @@ public class DODJobDAO {
             if (deleteScheduleResult != CallableStatement.EXECUTE_FAILED)
                  Logger.getLogger(DODJobDAO.class.getName()).log(Level.INFO, "DISABLE AUTOMATIC BACKUPS JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
         }
-        catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        }
-        catch (SQLException ex) {
+        catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
@@ -479,9 +464,7 @@ public class DODJobDAO {
                 String intervalStr = result.getString(1);
                 interval = Integer.parseInt(intervalStr.substring(intervalStr.indexOf("INTERVAL=") + 9));
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -524,9 +507,7 @@ public class DODJobDAO {
             if (result.next()) {
                 date = new java.util.Date(result.getTimestamp(1).getTime());
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP START DATE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP START DATE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
@@ -630,10 +611,7 @@ public class DODJobDAO {
             if (deleteScheduleResult != CallableStatement.EXECUTE_FAILED)
                  Logger.getLogger(DODJobDAO.class.getName()).log(Level.INFO, "DISABLE AUTOMATIC BACKUPS TO TAPE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
         }
-        catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        }
-        catch (SQLException ex) {
+        catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
@@ -678,9 +656,7 @@ public class DODJobDAO {
             if (result.next()) {
                 date = new java.util.Date(result.getTimestamp(1).getTime());
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODJobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {

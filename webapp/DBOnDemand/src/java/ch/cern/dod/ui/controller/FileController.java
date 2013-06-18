@@ -133,6 +133,7 @@ public class FileController extends Window {
             uploadBtn.setParent(uploadDiv);
             uploadBtn.setUpload("true");
             uploadBtn.addEventListener(Events.ON_UPLOAD, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     try {
                         //Check config file value
@@ -187,6 +188,7 @@ public class FileController extends Window {
             downloadBtn.setImage(DODConstants.IMG_DOWNLOAD);
             downloadBtn.setParent(downloadDiv);
             downloadBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     //Check config file value
                     if (isTypeValid()) {
@@ -198,7 +200,7 @@ public class FileController extends Window {
                             type.getFellow("filesWindow").detach();
                         }
                         else {
-                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING CONFIG FILE: " + filePath);
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE {0} DOWNLOADING CONFIG FILE: {1}", new Object[]{instance.getDbName(), filePath});
                             showError(DODConstants.ERROR_DOWNLOADING_CONFIG_FILE, null);
                         }
                     }
@@ -241,6 +243,7 @@ public class FileController extends Window {
         downloadLogBtn.setImage(DODConstants.IMG_DOWNLOAD);
         downloadLogBtn.setParent(downloadLogDiv);
         downloadLogBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 //Check config file value
                 if (isLogValid()) {
@@ -255,11 +258,11 @@ public class FileController extends Window {
                             logs.getFellow("filesWindow").detach();
                         }
                         else {
-                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE {0} DOWNLOADING LOG: {1}", new Object[]{instance.getDbName(), filePath});
                             showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
                         }
                     }else {
-                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE " + instance.getDbName() + " DOWNLOADING LOG: " + filePath);
+                        Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE {0} DOWNLOADING LOG: {1}", new Object[]{instance.getDbName(), filePath});
                         showError(DODConstants.ERROR_DOWNLOADING_SLOW_LOG_FILE, null);
                     }
                 }
@@ -286,6 +289,7 @@ public class FileController extends Window {
         cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -295,6 +299,7 @@ public class FileController extends Window {
         cancelLabel.setSclass(DODConstants.STYLE_TITLE);
         cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -344,29 +349,30 @@ public class FileController extends Window {
         Combobox toret =  new Combobox();
         toret.setReadonly(true);
         toret.setWidth("300px");
-        
-        if (DODConstants.DB_TYPE_MYSQL.equals(instance.getDbType())) {
-            logArray = fileHelper.getSlowLogs(instance);
-            if (logArray != null) {
-                for (int i=0; i < logArray.length; i++) {
-                    Comboitem item = new Comboitem();
-                    item.setLabel(logArray[i].substring(logArray[i].lastIndexOf('/') + 1));
-                    item.setValue(logArray[i]);
-                    toret.appendChild(item);
+        switch (instance.getDbType()) {
+            case DODConstants.DB_TYPE_MYSQL:
+                logArray = fileHelper.getSlowLogs(instance);
+                if (logArray != null) {
+                    for (int i=0; i < logArray.length; i++) {
+                        Comboitem item = new Comboitem();
+                        item.setLabel(logArray[i].substring(logArray[i].lastIndexOf('/') + 1));
+                        item.setValue(logArray[i]);
+                        toret.appendChild(item);
+                    }
                 }
-            }
-        }
-        else if (DODConstants.DB_TYPE_ORACLE.equals(instance.getDbType())) {
-            logArray = fileHelper.getOracleLogs(instance);
-            if (logArray != null) {
-                for (int i=0; i < logArray.length; i++) {
-                    File logFile = new File(logArray[i]);
-                    Comboitem item = new Comboitem();
-                    item.setLabel(logFile.getParentFile().getName() + "/" + logFile.getName());
-                    item.setValue(logArray[i]);
-                    toret.appendChild(item);
+                break;
+            case DODConstants.DB_TYPE_ORACLE:
+                logArray = fileHelper.getOracleLogs(instance);
+                if (logArray != null) {
+                    for (int i=0; i < logArray.length; i++) {
+                        File logFile = new File(logArray[i]);
+                        Comboitem item = new Comboitem();
+                        item.setLabel(logFile.getParentFile().getName() + "/" + logFile.getName());
+                        item.setValue(logArray[i]);
+                        toret.appendChild(item);
+                    }
                 }
-            }
+                break;
         }
         if (logArray == null) {
             Comboitem item = new Comboitem();

@@ -2,8 +2,6 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
