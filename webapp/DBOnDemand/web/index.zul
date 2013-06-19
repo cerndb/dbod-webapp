@@ -115,9 +115,13 @@
                         </treecols>
                         <treefoot id="footer" style="display:none">
                             <treefooter span="12">
-                                 <hbox height="24px" width="300px" align="bottom">
-                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
-                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
+                                <hbox height="24px" width="300px" align="bottom" id="showAll" style="display:none">
+                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll(true);"/>
+                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll(true);"/>                               
+                                </hbox>
+                                <hbox height="24px" width="300px" align="bottom" id="paging" style="display:none">
+                                    <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAll(false);"/>
+                                    <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAll(false);"/>                               
                                 </hbox>
                             </treefooter>
                         </treefoot>
@@ -154,9 +158,13 @@
                                 </columns>
                                 <foot id="commandStatsFooter" style="display:none">
                                     <footer span="3">
-                                        <hbox height="24px" align="bottom">
-                                            <toolbarbutton tooltiptext="${c:l('showAllCommandStats')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats();"/>
-                                            <label value="${c:l('showAllCommandStats')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats();"/>                               
+                                        <hbox height="24px" width="300px" align="bottom" id="showAllCommandStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats(true);"/>
+                                            <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(true);"/>                               
+                                        </hbox>
+                                        <hbox height="24px" width="300px" align="bottom" id="pagingCommandStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllCommandStats(false);"/>
+                                            <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(false);"/>                               
                                         </hbox>
                                     </footer>
                                 </foot>
@@ -203,9 +211,13 @@
                                 </columns>
                                 <foot id="jobStatsFooter" style="display:none">
                                     <footer span="4">
-                                        <hbox height="24px" align="bottom">
-                                            <toolbarbutton tooltiptext="${c:l('showAllJobStats')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats();"/>
-                                            <label value="${c:l('showAllJobStats')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats();"/>                               
+                                        <hbox height="24px" width="300px" align="bottom" id="showAllJobStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats(true);"/>
+                                            <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(true);"/>                               
+                                        </hbox>
+                                        <hbox height="24px" width="300px" align="bottom" id="pagingJobStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllJobStats(false);"/>
+                                            <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(false);"/>                               
                                         </hbox>
                                     </footer>
                                 </foot>

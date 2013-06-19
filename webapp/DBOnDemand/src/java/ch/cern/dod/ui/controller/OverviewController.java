@@ -171,16 +171,27 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         displayOrHideAreas();
         
         //Get show all from session
-        //Get show all from session
-        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
-        if (showAll != null && showAll)
-            showAll();
-        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
-        if (showAllJobStats != null && showAllJobStats)
-            showAllJobStats();
-        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS);
-        if (showAllCommandStats != null && showAllCommandStats)
-            showAllCommandStats();
+        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL);
+        if (showAll != null) {
+            showAll(showAll);
+        }
+        else {
+            showAll(false);
+        }
+        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_JOB_STATS);
+        if (showAllJobStats != null){
+            showAllJobStats(showAllJobStats);
+        }
+        else {
+            showAllJobStats(false);
+        }
+        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS);
+        if (showAllCommandStats != null) {
+            showAllCommandStats(showAllCommandStats);
+        }
+        else {
+            showAllCommandStats(false);
+        }
     }
     
     /**
@@ -190,7 +201,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (instances != null && instances.size() > 0) {
             ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (instances.size() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+            if (instances.size() > 10) {
                 ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
@@ -206,7 +217,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (commandStats != null && commandStats.size() > 0) {
             ((Grid) getFellow("commandStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyCommandStatsMsg")).setStyle("display:none");
-            if (commandStats.size() > 10 && ((Grid) getFellow("commandStatsGrid")).getMold().equals("paging")) {
+            if (commandStats.size() > 10) {
                 ((Foot) getFellow("commandStatsFooter")).setStyle("display:block");
             }
             else {
@@ -222,8 +233,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (jobStats != null && jobStats.size() > 0) {
             ((Grid) getFellow("jobStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:none");
-            if (((Grid) getFellow("jobStatsGrid")).getModel().getSize() > 10
-                    && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
+            if (jobStats.size() > 10) {
                 ((Foot) getFellow("jobStatsFooter")).setStyle("display:block");
             }
             else {
@@ -278,14 +288,24 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     }
     
     /**
-     * Displays all instances in the view
+     * Displays all instances in the view (or goes back to normal mold)
      */
-    public void showAll() {
+    public void showAll(boolean show) {
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setMold("default");
-        Treefoot footer = (Treefoot) getFellow("footer");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAll");
+        Hbox paging = (Hbox) getFellow("paging");
+        if (show) {
+            tree.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            tree.setMold("paging");
+            tree.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL, show);
     }
     
     /**
@@ -314,23 +334,43 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     /**
      * Displays all command stats in the view
      */
-    public void showAllCommandStats() {
+    public void showAllCommandStats(boolean show) {
         Grid grid = (Grid) getFellow("commandStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("commandStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllCommandStats");
+        Hbox paging = (Hbox) getFellow("pagingCommandStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS, show);
     }
     
     /**
      * Displays all job stats in the view
      */
-    public void showAllJobStats() {
+    public void showAllJobStats(boolean show) {
         Grid grid = (Grid) getFellow("jobStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("jobStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllJobStats");
+        Hbox paging = (Hbox) getFellow("pagingJobStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_JOB_STATS, show);
     }
     
     /**
