@@ -20,7 +20,8 @@ public class InstanceChangesRenderer implements RowRenderer{
      * @param object change to render.
      * @throws Exception 
      */
-    public void render(Row row, Object object) throws Exception {
+    @Override
+    public void render(Row row, Object object, int i) throws Exception {
         DateFormat dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
         DateFormat timeFormatter = new SimpleDateFormat(DODConstants.TIME_FORMAT);
         DODInstanceChange change = (DODInstanceChange) object; 

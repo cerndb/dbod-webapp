@@ -64,8 +64,8 @@ public class MonitoringController extends Window {
 
         //Create params helper to get the host name for the link to Lemon
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
+        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
         ParamsHelper paramsHelper = new ParamsHelper(wsUser, wsPswd);
 
         String hostname = paramsHelper.getParam(instance, DODConstants.PARAM_HOST);
@@ -101,6 +101,7 @@ public class MonitoringController extends Window {
         metrics.setWidth("560px");
         loadMetrics();
         metrics.addEventListener(Events.ON_SELECT, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 if (metrics.getSelectedItem().getValue() != null) {
                     Clients.evalJavaScript("document.getElementById(\"graphDiv\").className += \" preloader\"; "
@@ -153,6 +154,7 @@ public class MonitoringController extends Window {
         acceptLabel.setSclass(DODConstants.STYLE_TITLE);
         acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -162,6 +164,7 @@ public class MonitoringController extends Window {
         acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_CANCEL);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -222,8 +225,6 @@ public class MonitoringController extends Window {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }

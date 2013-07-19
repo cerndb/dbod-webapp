@@ -114,7 +114,7 @@ public class JobHelper {
         job.setState(DODConstants.JOB_STATE_PENDING);
         
         //Param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         
         //Do not stop listener if instance is Oracle in a shared machine
         if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
@@ -183,7 +183,7 @@ public class JobHelper {
                 job.setState(DODConstants.JOB_STATE_PENDING);
 
                 //Create params
-                List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+                List<DODCommandParam> params = new ArrayList<>();
                 DODCommandParam configFile = new DODCommandParam();
                 configFile.setUsername(instance.getUsername());
                 configFile.setDbName(instance.getDbName());
@@ -224,10 +224,9 @@ public class JobHelper {
      * Creates a backup for an instance.
      * @param instance instance to create the backup from.
      * @param username requester of this job.
-     * @param hours interval (in hours) between automatic backups. 0 if no automatic backups should be done.
      * @return true if the creation of this job was successful, false otherwise.
      */
-    public boolean doBackup(DODInstance instance, String username, int hours) {
+    public boolean doBackup(DODInstance instance, String username) {
         Date now = new Date();
         //Create job
         DODJob job = new DODJob();
@@ -243,14 +242,11 @@ public class JobHelper {
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
         
-        int result = jobDAO.insertAndCreateScheduledBackup(job, hours, new ArrayList<DODCommandParam>());
+        int result = jobDAO.insert(job, new ArrayList<DODCommandParam>());
         //If everything went OK update instance object
         if (result > 0) {
             instance.setState(DODConstants.INSTANCE_STATE_JOB_PENDING);
-            if (hours > 0)
-                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB AND SCHEDULE FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
-            else
-                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
             return true;
         } else {
             return false;
@@ -282,7 +278,7 @@ public class JobHelper {
             job.setAdminAction(0);
         job.setState(DODConstants.JOB_STATE_PENDING);
         //Create param
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         DODCommandParam snapshotFile = new DODCommandParam();
         snapshotFile.setUsername(instance.getUsername());
         snapshotFile.setDbName(instance.getDbName());
@@ -339,7 +335,7 @@ public class JobHelper {
         job.setState(DODConstants.JOB_STATE_PENDING);
 
         //Create params
-        List<DODCommandParam> params = new ArrayList<DODCommandParam>();
+        List<DODCommandParam> params = new ArrayList<>();
         
         //If the database is Oracle add version from
         if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
@@ -383,7 +379,7 @@ public class JobHelper {
      */
     private String mediaToString(Media media) throws IOException
     {
-        String text = "";
+        String text;
         if (media.isBinary()) {
             if (media.inMemory())
             {

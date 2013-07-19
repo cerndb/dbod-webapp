@@ -78,6 +78,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     /**
      * Method executed before the page is composed. Obtains instances from DB.
      */
+    @Override
     public void beforeCompose() {
         Execution execution = Executions.getCurrent();
         username = execution.getHeader(DODConstants.ADFS_LOGIN);
@@ -102,6 +103,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * Method executed after composing the page. Sets the model of the grid
      * with the instances obtained before composing.
      */
+    @Override
     public void afterCompose() {
         //Get filters for instances from session
         String filterDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME);
@@ -158,53 +160,69 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         
         //Instances tree
         Tree overviewTree = (Tree) getFellow("overviewTree");
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+        overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
-        overviewTree.getPagingChild().setMold("os");
         
         //Upgrades grid
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
         upgradesGrid.setModel(new UpgradesListModel(upgrades));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
-        upgradesGrid.getPagingChild().setMold("os");
         
         //Destroy grid
         Grid destroyGrid = (Grid) getFellow("destroyGrid");
         destroyGrid.setModel(new DestroyListModel(toDestroy));
         destroyGrid.setRowRenderer(new DestroyGridRenderer(instanceDAO));
-        destroyGrid.getPagingChild().setMold("os");
         
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
         commandStatsGrid.setModel(new CommandStatsModel(commandStats));
         commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
-        commandStatsGrid.getPagingChild().setMold("os");
         
         //Job stats grid
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
-        jobStatsGrid.getPagingChild().setMold("os");
+        filterJobStats(); //Filter jobs (there could be values from session)
         filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();
         
         //Get show all from session
-        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
-        if (showAll != null && showAll)
-            showAll();
-        Boolean showAllToDestroy = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_TO_DESTROY);
-        if (showAllToDestroy != null && showAllToDestroy)
-            showAllToDestroy();
-        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
-        if (showAllJobStats != null && showAllJobStats)
-            showAllJobStats();
-        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS);
-        if (showAllCommandStats != null && showAllCommandStats)
-            showAllCommandStats();
-        Boolean showAllUpgrades = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_UPGRADES);
-        if (showAllUpgrades != null && showAllUpgrades)
-            showAllUpgrades();
+        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL);
+        if (showAll != null){
+            showAll(showAll);
+        }
+        else{
+            showAll(false);
+        }
+        Boolean showAllToDestroy = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY);
+        if (showAllToDestroy != null && showAllToDestroy) {
+            showAllToDestroy(showAllToDestroy);
+        }
+        else {
+            showAllToDestroy(false);
+        }
+        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_JOB_STATS);
+        if (showAllJobStats != null && showAllJobStats) {
+            showAllJobStats(showAllJobStats);
+        }
+        else {
+            showAllJobStats(false);
+        }
+        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_COMMAND_STATS);
+        if (showAllCommandStats != null && showAllCommandStats) {
+            showAllCommandStats(showAllCommandStats);
+        }
+        else {
+            showAllCommandStats(false);
+        }
+        Boolean showAllUpgrades = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES);
+        if (showAllUpgrades != null && showAllUpgrades) {
+            showAllUpgrades(showAllUpgrades);
+        }
+        else {
+            showAllUpgrades(false);
+        }
     }
     
     /**
@@ -215,7 +233,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Hbox) getFellow("collectiveBtns")).setStyle("display:block");
             ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+            if (instances.size() > 10) {
                 ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
@@ -232,7 +250,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (upgrades != null && upgrades.size() > 0) {
             ((Grid) getFellow("upgradesGrid")).setStyle("display:block");
             ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:none");
-            if (upgrades.size() > 10 && ((Grid) getFellow("upgradesGrid")).getMold().equals("paging")) {
+            if (upgrades.size() > 10) {
                 ((Foot) getFellow("footerUpgrades")).setStyle("display:block");
             }
             else {
@@ -248,7 +266,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (toDestroy != null && toDestroy.size() > 0) {
             ((Grid) getFellow("destroyGrid")).setStyle("display:block");
             ((Div) getFellow("emptyDestroyMsg")).setStyle("display:none");
-            if (toDestroy.size() > 10 && ((Grid) getFellow("destroyGrid")).getMold().equals("paging")) {
+            if (toDestroy.size() > 10) {
                 ((Foot) getFellow("footerDestroy")).setStyle("display:block");
             }
             else {
@@ -264,7 +282,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (commandStats != null && commandStats.size() > 0) {
             ((Grid) getFellow("commandStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyCommandStatsMsg")).setStyle("display:none");
-            if (commandStats.size() > 10 && ((Grid) getFellow("commandStatsGrid")).getMold().equals("paging")) {
+            if (commandStats.size() > 10) {
                 ((Foot) getFellow("commandStatsFooter")).setStyle("display:block");
             }
             else {
@@ -280,8 +298,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         if (jobStats != null && jobStats.size() > 0) {
             ((Grid) getFellow("jobStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:none");
-            if (((Grid) getFellow("jobStatsGrid")).getModel().getSize() > 10
-                    && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
+            if (jobStats.size() > 10) {
                 ((Foot) getFellow("jobStatsFooter")).setStyle("display:block");
             }
             else {
@@ -332,7 +349,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             activePage = tree.getActivePage();
         }
         //Set the new instances
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         try {
             if (tree.getMold().equals("paging")) {
                 tree.setActivePage(activePage);
@@ -493,7 +511,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         for (int i=0; i<checked.size(); i++) {
             DODInstance instance = checked.get(i);
             if (!instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-                if (!jobHelper.doBackup(instance, username, 0)){
+                if (!jobHelper.doBackup(instance, username)){
                     error = true;
                 }
             }
@@ -572,58 +590,108 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     }
     
     /**
-     * Displays all instances in the view
+     * Displays all instances in the view (or goes back to normal mold)
      */
-    public void showAll() {
+    public void showAll(boolean show) {
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setMold("default");
-        Treefoot footer = (Treefoot) getFellow("footer");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAll");
+        Hbox paging = (Hbox) getFellow("paging");
+        if (show) {
+            tree.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            tree.setMold("paging");
+            tree.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL, show);
     }
     
     /**
      * Displays all instances to destroy
      */
-    public void showAllToDestroy() {
+    public void showAllToDestroy(boolean show) {
         Grid grid = (Grid) getFellow("destroyGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("footerDestroy");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_TO_DESTROY, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllToDestroy");
+        Hbox paging = (Hbox) getFellow("pagingToDestroy");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY, show);
     }
     
     /**
      * Displays all upgrades in the view
      */
-    public void showAllUpgrades() {
+    public void showAllUpgrades(boolean show) {
         Grid grid = (Grid) getFellow("upgradesGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("footerUpgrades");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_UPGRADES, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllUpgrades");
+        Hbox paging = (Hbox) getFellow("pagingUpgrades");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES, show);
     }
     
     /**
      * Displays all command stats in the view
      */
-    public void showAllCommandStats() {
+    public void showAllCommandStats(boolean show) {
         Grid grid = (Grid) getFellow("commandStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("commandStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllCommandStats");
+        Hbox paging = (Hbox) getFellow("pagingCommandStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_COMMAND_STATS, show);
     }
     
     /**
      * Displays all job stats in the view
      */
-    public void showAllJobStats() {
+    public void showAllJobStats(boolean show) {
         Grid grid = (Grid) getFellow("jobStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("jobStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllJobStats");
+        Hbox paging = (Hbox) getFellow("pagingJobStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_ADMIN_SHOW_ALL_JOB_STATS, show);
     }
     
     /**
@@ -633,7 +701,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
         //Set the new instances
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         //Update group actions
         List<DODInstance> checked = ((OverviewTreeModel)tree.getModel()).getChecked((OverviewTreeNode)tree.getModel().getRoot());
         
@@ -701,9 +770,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
-        } catch (SuspendNotAllowedException ex) {
+        }
+        catch (SuspendNotAllowedException ex) {
             Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
     }

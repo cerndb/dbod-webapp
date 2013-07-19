@@ -1,5 +1,7 @@
 package ch.cern.dod.db.entity;
 
+import java.util.Objects;
+
 /**
  * Represents an upgrade to be added to the system.
  * @author Daniel Gomez Blanco
@@ -54,6 +56,7 @@ public class DODUpgrade implements Comparable{
         this.versionTo = versionTo;
     }
     
+    @Override
     public int compareTo(Object object) {
         DODUpgrade upgrade = (DODUpgrade) object;
         return this.getDbType().compareTo(upgrade.getDbType());
@@ -61,7 +64,21 @@ public class DODUpgrade implements Comparable{
     
     @Override
     public boolean equals(Object object) {
-        DODUpgrade upgrade = (DODUpgrade) object;
-        return this.getDbType().equals(upgrade.getDbType()) && this.getCategory().equals(upgrade.getCategory()) && this.getVersionFrom().equals(upgrade.getVersionFrom());
+        if (object instanceof DODUpgrade) {
+            DODUpgrade upgrade = (DODUpgrade) object;
+            return this.getDbType().equals(upgrade.getDbType()) && this.getCategory().equals(upgrade.getCategory()) && this.getVersionFrom().equals(upgrade.getVersionFrom());
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.dbType);
+        hash = 67 * hash + Objects.hashCode(this.category);
+        hash = 67 * hash + Objects.hashCode(this.versionFrom);
+        return hash;
     }
 }

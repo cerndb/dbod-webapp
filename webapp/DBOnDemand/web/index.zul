@@ -3,6 +3,7 @@
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?link href='https://fonts.googleapis.com/css?family=PT+Sans:400' rel='stylesheet' type='text/css'?>
 <?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
 <?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
@@ -20,17 +21,7 @@
     <topBar/>
 
     <!-- Main container for the databases overview (calls init method when created)-->
-    <vbox use="OverviewController" id="controller" style="padding-top:30px;padding-bottom:10px;" align="center" width="100%">
-        <!-- Error window -->
-        <error/>
-        <!-- Timer to update the instances every minute -->
-        <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
-        <!-- Script to mark the snapshot days in the calendar -->
-        <script src="/scripts/markSnapshots.js"/>
-        <!-- Scripts for monitoring -->
-        <script src="https://www.google.com/jsapi"/>
-        <script src="/scripts/graph.js"/>
-
+    <vbox use="OverviewController" id="controller" style="margin-top:30px;margin-bottom:10px;" align="center" width="100%">
         <!-- Groupbox forthe instances overview -->
         <groupbox width="1200px" mold="3d" closable="false">
             <caption label=" ">
@@ -83,7 +74,7 @@
                             <auxheader colspan="1">
                                 <hbox align="bottom">
                                     <image src="/img/filter.png" width="18px" height="18px"/>
-                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="125px" />
+                                    <textbox id="projectFilter" onChanging="self.value = event.value; controller.filterInstances(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="120px" />
                                 </hbox>
                             </auxheader>
                             <auxheader colspan="1">
@@ -115,18 +106,22 @@
                             <treecol label="${c:l('username')}" width="90px"/>
                             <treecol label="${c:l('eGroup')}"  width="165px"/>
                             <treecol label="${c:l('category')}" width="75px"/>
-                            <treecol label="${c:l('project')}" width="165px"/>
+                            <treecol label="${c:l('project')}" width="160px"/>
                             <treecol label="${c:l('dbType')}" width="70px"/>
                             <treecol label="${c:l('dbSize')}" width="65px"/>
                             <treecol label="${c:l('noConn')}" width="70px"/>
-                            <treecol label="${c:l('state')}" width="40px" align="center"/>
+                            <treecol label="${c:l('state')}" width="45px" align="center"/>
                             <treecol label="${c:l('actions')}" align="center"/>
                         </treecols>
                         <treefoot id="footer" style="display:none">
                             <treefooter span="12">
-                                 <hbox height="24px" width="300px" align="bottom">
-                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll();"/>
-                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll();"/>                               
+                                <hbox height="24px" width="300px" align="bottom" id="showAll" style="display:none">
+                                    <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAll(true);"/>
+                                    <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAll(true);"/>                               
+                                </hbox>
+                                <hbox height="24px" width="300px" align="bottom" id="paging" style="display:none">
+                                    <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAll(false);"/>
+                                    <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAll(false);"/>                               
                                 </hbox>
                             </treefooter>
                         </treefoot>
@@ -163,9 +158,13 @@
                                 </columns>
                                 <foot id="commandStatsFooter" style="display:none">
                                     <footer span="3">
-                                        <hbox height="24px" align="bottom">
-                                            <toolbarbutton tooltiptext="${c:l('showAllCommandStats')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats();"/>
-                                            <label value="${c:l('showAllCommandStats')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats();"/>                               
+                                        <hbox height="24px" width="300px" align="bottom" id="showAllCommandStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats(true);"/>
+                                            <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(true);"/>                               
+                                        </hbox>
+                                        <hbox height="24px" width="300px" align="bottom" id="pagingCommandStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllCommandStats(false);"/>
+                                            <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(false);"/>                               
                                         </hbox>
                                     </footer>
                                 </foot>
@@ -173,7 +172,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyCommandStatsMsg" style="display:none">
-                            <div style="padding-right:130px">
+                            <div style="padding-right:170px">
                                 <label value="${c:l('emptyCommandStatsList')}"/>
                             </div>
                         </div>
@@ -212,9 +211,13 @@
                                 </columns>
                                 <foot id="jobStatsFooter" style="display:none">
                                     <footer span="4">
-                                        <hbox height="24px" align="bottom">
-                                            <toolbarbutton tooltiptext="${c:l('showAllJobStats')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats();"/>
-                                            <label value="${c:l('showAllJobStats')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats();"/>                               
+                                        <hbox height="24px" width="300px" align="bottom" id="showAllJobStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats(true);"/>
+                                            <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(true);"/>                               
+                                        </hbox>
+                                        <hbox height="24px" width="300px" align="bottom" id="pagingJobStats" style="display:none">
+                                            <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllJobStats(false);"/>
+                                            <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(false);"/>                               
                                         </hbox>
                                     </footer>
                                 </foot>
@@ -222,7 +225,7 @@
                         </vbox>
                         <!--Show a message in case there no stats  -->
                         <div id="emptyJobStatsMsg" style="display:none">
-                            <div style="padding-right:230px">
+                            <div style="padding-right:180px">
                                 <label value="${c:l('emptyJobStatsList')}"/>
                             </div>
                         </div>
@@ -230,6 +233,15 @@
                 </groupbox>
             </hbox>
         </groupbox>
+        
+        <!-- Error window -->
+        <error/>
+        <!-- Timer to update the instances every minute -->
+        <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
+        <!-- Script to mark the snapshot days in the calendar -->
+        <script src="/scripts/markSnapshots.js"/>
+        <!-- Scripts for monitoring -->
+        <script src="https://www.google.com/jsapi"/>
+        <script src="/scripts/graph.js"/>
     </vbox>
-
 </zk>

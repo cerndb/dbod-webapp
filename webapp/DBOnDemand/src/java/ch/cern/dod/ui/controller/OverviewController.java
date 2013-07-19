@@ -70,6 +70,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Method executed before the page is composed. It checks authorization
      * and obtains instances from the database.
      */
+    @Override
     public void beforeCompose() {
         //Get username and groups
         Execution execution = Executions.getCurrent();
@@ -94,6 +95,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Method executed after composing the page. Sets the model of the grid
      * with the instances obtained before composing.
      */
+    @Override
     public void afterCompose() {
         //Get filters for instances from session
         String filterDbName = (String) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_FILTER_DB_NAME);
@@ -151,37 +153,46 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         //Overview tree
         if (instances != null && instances.size() > 0) {
             Tree overviewTree = (Tree) getFellow("overviewTree");
-            overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+            overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
             overviewTree.setItemRenderer(new OverviewTreeRenderer(false));
-            overviewTree.getPagingChild().setMold("os");
         }
         
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
         commandStatsGrid.setModel(new CommandStatsModel(commandStats));
         commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
-        commandStatsGrid.getPagingChild().setMold("os");
         
         //Job stats grid
         Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
-        jobStatsGrid.getPagingChild().setMold("os");
+        filterJobStats(); //Filter jobs (there could be values from session)
         filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();
         
         //Get show all from session
-        //Get show all from session
-        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL);
-        if (showAll != null && showAll)
-            showAll();
-        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS);
-        if (showAllJobStats != null && showAllJobStats)
-            showAllJobStats();
-        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS);
-        if (showAllCommandStats != null && showAllCommandStats)
-            showAllCommandStats();
+        Boolean showAll = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL);
+        if (showAll != null) {
+            showAll(showAll);
+        }
+        else {
+            showAll(false);
+        }
+        Boolean showAllJobStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_JOB_STATS);
+        if (showAllJobStats != null){
+            showAllJobStats(showAllJobStats);
+        }
+        else {
+            showAllJobStats(false);
+        }
+        Boolean showAllCommandStats = (Boolean) Sessions.getCurrent().getAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS);
+        if (showAllCommandStats != null) {
+            showAllCommandStats(showAllCommandStats);
+        }
+        else {
+            showAllCommandStats(false);
+        }
     }
     
     /**
@@ -191,7 +202,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (instances != null && instances.size() > 0) {
             ((Tree) getFellow("overviewTree")).setStyle("display:block");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:none");
-            if (((Tree) getFellow("overviewTree")).getItemCount() > 10 && ((Tree) getFellow("overviewTree")).getMold().equals("paging")) {
+            if (instances.size() > 10) {
                 ((Treefoot) getFellow("footer")).setStyle("display:block");
             }
             else {
@@ -207,7 +218,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (commandStats != null && commandStats.size() > 0) {
             ((Grid) getFellow("commandStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyCommandStatsMsg")).setStyle("display:none");
-            if (commandStats.size() > 10 && ((Grid) getFellow("commandStatsGrid")).getMold().equals("paging")) {
+            if (commandStats.size() > 10) {
                 ((Foot) getFellow("commandStatsFooter")).setStyle("display:block");
             }
             else {
@@ -223,8 +234,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         if (jobStats != null && jobStats.size() > 0) {
             ((Grid) getFellow("jobStatsGrid")).setStyle("display:block");
             ((Div) getFellow("emptyJobStatsMsg")).setStyle("display:none");
-            if (((Grid) getFellow("jobStatsGrid")).getModel().getSize() > 10
-                    && ((Grid) getFellow("jobStatsGrid")).getMold().equals("paging")) {
+            if (jobStats.size() > 10) {
                 ((Foot) getFellow("jobStatsFooter")).setStyle("display:block");
             }
             else {
@@ -252,15 +262,17 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         jobStats = statsDAO.selectJobStats(instances);
 
         //Set the new instances
-        Tree overviewTree = (Tree) getFellow("overviewTree");
+        Tree tree = (Tree) getFellow("overviewTree");
         int activePage = 0;
-        if (overviewTree.getMold().equals("paging")) {
-             activePage = overviewTree.getActivePage();
+        if (tree.getMold().equals("paging")) {
+             activePage = tree.getActivePage();
         }
-        overviewTree.setModel(OverviewTreeModel.getInstance(instances, overviewTree));
+        //Set the new instances
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
         try {
-            if (overviewTree.getMold().equals("paging")) {
-                overviewTree.setActivePage(activePage);
+            if (tree.getMold().equals("paging")) {
+                tree.setActivePage(activePage);
             }
         }
         catch (WrongValueException ex) {}
@@ -277,14 +289,24 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     }
     
     /**
-     * Displays all instances in the view
+     * Displays all instances in the view (or goes back to normal mold)
      */
-    public void showAll() {
+    public void showAll(boolean show) {
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setMold("default");
-        Treefoot footer = (Treefoot) getFellow("footer");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAll");
+        Hbox paging = (Hbox) getFellow("paging");
+        if (show) {
+            tree.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            tree.setMold("paging");
+            tree.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL, show);
     }
     
     /**
@@ -293,7 +315,10 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     public void filterInstances () {
         //Re-render the tree
         Tree tree = (Tree) getFellow("overviewTree");
-        tree.setModel(OverviewTreeModel.getInstance(instances, tree));
+        //Set the new instances
+        ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+        tree.setModel(tree.getModel());
+        //Hide fields
         displayOrHideAreas();
         
         //Set filters on session
@@ -310,23 +335,43 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     /**
      * Displays all command stats in the view
      */
-    public void showAllCommandStats() {
+    public void showAllCommandStats(boolean show) {
         Grid grid = (Grid) getFellow("commandStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("commandStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_COMMAND_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllCommandStats");
+        Hbox paging = (Hbox) getFellow("pagingCommandStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS, show);
     }
     
     /**
      * Displays all job stats in the view
      */
-    public void showAllJobStats() {
+    public void showAllJobStats(boolean show) {
         Grid grid = (Grid) getFellow("jobStatsGrid");
-        grid.setMold("default");
-        Foot footer = (Foot) getFellow("jobStatsFooter");
-        footer.setStyle("display:none");
-        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_SHOW_ALL_JOB_STATS, new Boolean(true));
+        Hbox showAll = (Hbox) getFellow("showAllJobStats");
+        Hbox paging = (Hbox) getFellow("pagingJobStats");
+        if (show) {
+            grid.setMold("default");
+            showAll.setStyle("display:none");
+            paging.setStyle("display:block");
+        }
+        else {
+            grid.setMold("paging");
+            grid.setPageSize(10);
+            showAll.setStyle("display:block");
+            paging.setStyle("display:none");
+        }
+        Sessions.getCurrent().setAttribute(DODConstants.ATTRIBUTE_USER_SHOW_ALL_JOB_STATS, show);
     }
     
     /**

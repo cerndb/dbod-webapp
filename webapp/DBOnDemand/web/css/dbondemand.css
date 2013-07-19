@@ -64,7 +64,8 @@
 
 .appTitle {
     color: #3861AA;
-    font: 20pt verdana;
+    font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
+    font-size: 20pt ;
     text-decoration: none;
     margin-left: 20px;
 }
@@ -72,13 +73,15 @@
 .title,
 .title button{
     color: #3861AA !important;
-    font: 12pt verdana !important;
+    font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
+    font-size: 12pt !important;
     text-decoration: none;
 }
 
 .titleSmall {
     color: #3861AA !important;
-    font: 10pt verdana !important;
+    font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
+    font-size: 10pt !important;
     text-decoration: none;
 }
 
@@ -87,7 +90,8 @@
 .titleLinks a:visited,
 .titleLinks a:active{
     color: #3861AA;
-    font: 12pt verdana;
+    font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
+    font-size: 12pt;
     text-decoration: none;
     margin-right:5px;
     margin-left:5px;
@@ -112,7 +116,7 @@
 
 .text {
     font-size:12px;
-    font-family: arial,helvetica,sans-serif;
+    font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
 }
 
 a{

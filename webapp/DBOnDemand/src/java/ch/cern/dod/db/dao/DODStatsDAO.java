@@ -44,7 +44,7 @@ public class DODStatsDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODCommandStat> commandStats = new ArrayList<DODCommandStat>();
+        ArrayList<DODCommandStat> commandStats = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -66,9 +66,7 @@ public class DODStatsDAO {
                 commandStat.setMeanDuration(result.getInt(3));
                 commandStats.add(commandStat);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
         } finally {
             try {
@@ -96,7 +94,7 @@ public class DODStatsDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODCommandStat> commandStats = new ArrayList<DODCommandStat>();
+        ArrayList<DODCommandStat> commandStats = new ArrayList<>();
         try {
             //If there are no instances return empty array
             if (instances == null || instances.isEmpty())
@@ -133,9 +131,7 @@ public class DODStatsDAO {
                 commandStat.setMeanDuration(result.getInt(3));
                 commandStats.add(commandStat);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING COMMAND STATS",ex);
         } finally {
             try {
@@ -162,7 +158,7 @@ public class DODStatsDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODJobStat> jobStats = new ArrayList<DODJobStat>();
+        ArrayList<DODJobStat> jobStats = new ArrayList<>();
         try {
             //Get connection
             connection = getConnection();
@@ -185,9 +181,7 @@ public class DODStatsDAO {
                 jobStat.setMeanDuration(result.getInt(4));
                 jobStats.add(jobStat);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
         } finally {
             try {
@@ -215,7 +209,7 @@ public class DODStatsDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<DODJobStat> jobStats = new ArrayList<DODJobStat>();
+        ArrayList<DODJobStat> jobStats = new ArrayList<>();
         try {
             //If there are no instances return empty array
             if (instances == null || instances.isEmpty())
@@ -251,9 +245,7 @@ public class DODStatsDAO {
                 jobStat.setMeanDuration(result.getInt(4));
                 jobStats.add(jobStat);
             }
-        } catch (NamingException ex) {
-            Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             Logger.getLogger(DODStatsDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB STATS",ex);
         } finally {
             try {

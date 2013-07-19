@@ -17,27 +17,36 @@ import org.zkoss.zul.Tree;
 public class OverviewTreeModel extends AbstractTreeModel{
     
     /**
-     * Constructor of this class.
-     * @param root Root node to create the model from.
+     * Tree where this is displayed
      */
-    public OverviewTreeModel (OverviewTreeNode root) {
-        super(root);
+    Tree tree;
+    
+    /**
+     * Constructor of this class.
+     * @param instances list of instances to make a tree of
+     * @param tree component where instances are to be displayed
+     */
+    public OverviewTreeModel (List<DODInstance> instances, Tree tree) {
+        //Call super-constructor
+        super(new OverviewTreeNode(null, new ArrayList<OverviewTreeNode>()));
+        this.tree = tree;
+        setInstances(instances);
     }
     
     /**
-     * Static method that constructs a tree of overview tree nodes from a list of instances, and returns an object of this model.
-     * @param instances List of instances to get the model from.
-     * @return Model representing the list of instances passed as parameter.
+     * Gets a list of nodes representing the tree of instances
+     * @param instances list of instances to make a tree of
+     * @param tree component where instances are to be displayed
+     * @return list of nodes with master/slave relations
      */
-    public static OverviewTreeModel getInstance (List<DODInstance> instances, Tree tree) {
-        ArrayList<OverviewTreeNode> mainList = new ArrayList<OverviewTreeNode>();
-        ArrayList<DODInstance> masters = new ArrayList<DODInstance>();
-        ArrayList<DODInstance> slaves = new ArrayList<DODInstance>();
+    private ArrayList<OverviewTreeNode> getNodeList (List<DODInstance> instances) {
+        ArrayList<OverviewTreeNode> nodeList = new ArrayList<>();
+        ArrayList<DODInstance> masters = new ArrayList<>();
+        ArrayList<DODInstance> slaves = new ArrayList<>();
         
         //Separate masters and slaves and create single and shared isntances
-        for (int i=0; i < instances.size(); i++) {
+        for (DODInstance instance : instances) {
             //Masters and slaves are treated later
-            DODInstance instance = instances.get(i);
             if (instance.getSlave() != null) {
                 masters.add(instance);
             }
@@ -46,37 +55,46 @@ public class OverviewTreeModel extends AbstractTreeModel{
             }
             else {
                 //Only add instance to tree if it is filtered
-                if (filterInstance(instance, tree)) {
-                    mainList.add(new OverviewTreeNode(instance));
+                if (filterInstance(instance)) {
+                    nodeList.add(new OverviewTreeNode(instance));
                 }
             }
         }
         
         //Merge masters and slaves
-        for (int i=0; i < masters.size(); i++) {
-            DODInstance master = masters.get(i);
-            ArrayList<OverviewTreeNode> slavesList =  new ArrayList<OverviewTreeNode>();
-            for (int j=0; j < slaves.size(); j++) {
-                DODInstance slave = slaves.get(j);
-                if (slave.getMaster().equals(master.getDbName()) && filterInstance(slave, tree)) {
+        for (DODInstance master : masters) {
+            ArrayList<OverviewTreeNode> slavesList =  new ArrayList<>();
+            for (DODInstance slave : slaves) {
+                if (slave.getMaster().equals(master.getDbName()) && filterInstance(slave)) {
                     slavesList.add(new OverviewTreeNode(slave));
                 }
             }
             //If there are filtered slaves
-            if (slavesList.size() > 0)
-                mainList.add(new OverviewTreeNode(master, slavesList));
+            if (slavesList.size() > 0) {
+                nodeList.add(new OverviewTreeNode(master, slavesList));
+            }
             else {
-                if (filterInstance(master, tree))
-                    mainList.add(new OverviewTreeNode(master));
+                if (filterInstance(master)) {
+                    nodeList.add(new OverviewTreeNode(master));
+                }
             }
         }
         
-        //Order list
-        Collections.sort(mainList);
+        //Sort node list
+        Collections.sort(nodeList);
         
-        //Create root and return object
-        OverviewTreeNode root = new OverviewTreeNode (null, mainList);
-        return new OverviewTreeModel(root);
+        return nodeList;
+    }
+    
+    /**
+     * Set the instances in the model (does not fire event to refresh view)
+     * @param instances new list of instances
+     */
+    public final void setInstances (List<DODInstance> instances) {
+        List<OverviewTreeNode> children = ((OverviewTreeNode)this.getRoot()).getChildren();
+        List<OverviewTreeNode> nodeList = getNodeList(instances);
+        children.removeAll(children);
+        children.addAll(nodeList);
     }
 
     /**
@@ -84,6 +102,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param node Node to check.
      * @return true if node is a leaf, false otherwise.
      */
+    @Override
     public boolean isLeaf(Object node) {
         return ((OverviewTreeNode)node).isLeaf();
     }
@@ -94,6 +113,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param i Index of the child.
      * @return Node representing the selected child.
      */
+    @Override
     public Object getChild(Object node, int i) {
         if (((OverviewTreeNode)node).getChildren() != null)
             return ((OverviewTreeNode)node).getChildAt(i);
@@ -106,6 +126,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param node Node to get the number of children from.
      * @return Number of children the node has.
      */
+    @Override
     public int getChildCount(Object node) {
         if (((OverviewTreeNode)node).getChildren() != null)
             return ((OverviewTreeNode)node).getChildCount();
@@ -116,10 +137,9 @@ public class OverviewTreeModel extends AbstractTreeModel{
     /**
      * Filters an instance considering the information contained in the filter fields.
      * @param instance Instance to be filtered
-     * @param tree Tree containing the instance
      * @return true if the instance is filtered, false otherwise
      */
-    private static boolean filterInstance (DODInstance instance, Tree tree) {
+    private boolean filterInstance (DODInstance instance) {
         //Get field values
         String dbName = ((Textbox) tree.getFellow("dbNameFilter")).getValue().trim();
         String host = ((Textbox) tree.getFellow("hostFilter")).getValue().trim();
@@ -170,7 +190,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
             ((DODInstance)root.getData()).setChecked(checked);
         for (int i=0; i < root.getChildCount(); i++)
             checkAll((OverviewTreeNode)root.getChildAt(i), checked);
-    }
+}
     
     /**
      * Gets the list of checked instances.
@@ -178,7 +198,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @return list of checked instances.
      */
     public List<DODInstance> getChecked (OverviewTreeNode root) {
-        List<DODInstance> checked = new ArrayList<DODInstance>();
+        List<DODInstance> checked = new ArrayList<>();
         if (root.getData() instanceof DODInstance && ((DODInstance)root.getData()).isChecked())
             checked.add((DODInstance)root.getData());
         for (int i=0; i < root.getChildCount(); i++)

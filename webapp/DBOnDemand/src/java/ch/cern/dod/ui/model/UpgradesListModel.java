@@ -6,13 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ListDataEvent;
 import org.zkoss.zul.AbstractListModel;
-import org.zkoss.zul.ListModelExt;
+import org.zkoss.zul.ext.Sortable;
 
 /**
  * Represents a list of upgrades. It implements sorting to save it from query to query.
  * @author Daniel Gomez Blanco
  */
-public class UpgradesListModel extends AbstractListModel implements ListModelExt {
+public class UpgradesListModel extends AbstractListModel implements Sortable {
     /**
      * Instances in the model.
      */
@@ -47,6 +47,7 @@ public class UpgradesListModel extends AbstractListModel implements ListModelExt
      * Overrides the method to get the size of the model.
      * @return the number of upgrades in the model.
      */
+    @Override
     public int getSize() {
         return upgrades.size();
     }
@@ -56,6 +57,7 @@ public class UpgradesListModel extends AbstractListModel implements ListModelExt
      * @param index index of the upgrade.
      * @return the upgrade.
      */
+    @Override
     public Object getElementAt(int index) {
         return upgrades.get(index);
     }
@@ -65,10 +67,19 @@ public class UpgradesListModel extends AbstractListModel implements ListModelExt
      * @param comparator comparator to use.
      * @param ascending indicates if the order is ascending or descending.
      */
+    @Override
     public void sort(Comparator comparator, boolean ascending) {
         this.ascending = ascending;
         this.comparator = comparator;
         Collections.sort(upgrades, comparator);
         fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);
+    }
+    
+    @Override
+    public String getSortDirection(Comparator cmprtr) {
+        if (ascending)
+            return "ascending";
+        else
+            return "descending";
     }
 }

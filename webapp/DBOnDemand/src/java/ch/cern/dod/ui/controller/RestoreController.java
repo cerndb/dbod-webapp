@@ -121,8 +121,8 @@ public class RestoreController extends Window {
         pitrFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT_PITR);
 
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getNativeContext()).getInitParameter(DODConstants.WS_PSWD);
+        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
+        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
 
         //Get snapshots
         SnapshotHelper snapshotHelper = new SnapshotHelper(wsUser, wsPswd);
@@ -136,7 +136,7 @@ public class RestoreController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("460px");
+        this.setWidth("470px");
 
         //Main box, used to apply padding
         Vbox mainBox = new Vbox();
@@ -155,6 +155,7 @@ public class RestoreController extends Window {
         snapshotCalendar = new SnapshotCalendar();
         snapshotCalendar.setSnapshots(snapshots);
         snapshotCalendar.addEventListener(Events.ON_CHANGE, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 loadSnapshotsForDay(snapshotCalendar.getValue());
             }
@@ -196,6 +197,7 @@ public class RestoreController extends Window {
         cancelButton.setZclass(DODConstants.STYLE_BUTTON);
         cancelButton.setImage(DODConstants.IMG_CANCEL);
         cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -205,6 +207,7 @@ public class RestoreController extends Window {
         cancelLabel.setSclass(DODConstants.STYLE_TITLE);
         cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doCancel();
             }
@@ -221,7 +224,7 @@ public class RestoreController extends Window {
         acceptLabel.setSclass(DODConstants.STYLE_TITLE);
         acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -232,7 +235,7 @@ public class RestoreController extends Window {
         acceptButton.setZclass(DODConstants.STYLE_BUTTON);
         acceptButton.setImage(DODConstants.IMG_ACCEPT);
         acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
-
+            @Override
             public void onEvent(Event event) {
                 doAccept();
             }
@@ -253,6 +256,7 @@ public class RestoreController extends Window {
             Calendar timePart = Calendar.getInstance();
             timePart.setTime(time.getValue());
             Calendar dayTime = Calendar.getInstance();
+            dayTime.clear();
             dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
                         timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
             Date dateToRestore = dayTime.getTime();
@@ -262,7 +266,7 @@ public class RestoreController extends Window {
                 //If there is an available snapshot
                 if (snapshotToRestore != null) {
                     //If the time is different and more than 1 minute in the future
-                    if (!pitrFormatter.format(dateToRestore).equals(pitrFormatter.format(snapshotToRestore.getCreationDate()))
+                    if (!dateToRestore.equals(snapshotToRestore.getCreationDate())
                             && dateToRestore.getTime() - snapshotToRestore.getCreationDate().getTime() < 60000) {
                         time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_PIT_ONE_MINUTE));
                         return;
@@ -319,6 +323,7 @@ public class RestoreController extends Window {
                     Label label = new Label(timeFormatter.format(snapshot.getCreationDate()));
                     label.setStyle("margin-left:12px;hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;color:blue;cursor:pointer;text-decoration:underline");
                     label.addEventListener(Events.ON_CLICK, new EventListener() {
+                        @Override
                         public void onEvent(Event event) throws Exception {
                             //Load instance on day and time
                             day.setValue(snapshot.getCreationDate());
@@ -371,8 +376,6 @@ public class RestoreController extends Window {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
@@ -443,6 +446,7 @@ public class RestoreController extends Window {
             cancelButton.setZclass(DODConstants.STYLE_BUTTON);
             cancelButton.setImage(DODConstants.IMG_CANCEL);
             cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doCancel();
                 }
@@ -452,6 +456,7 @@ public class RestoreController extends Window {
             cancelLabel.setSclass(DODConstants.STYLE_TITLE);
             cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
             cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doCancel();
                 }
@@ -468,6 +473,7 @@ public class RestoreController extends Window {
             acceptLabel.setSclass(DODConstants.STYLE_TITLE);
             acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
             acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doAccept();
                 }
@@ -478,6 +484,7 @@ public class RestoreController extends Window {
             acceptButton.setZclass(DODConstants.STYLE_BUTTON);
             acceptButton.setImage(DODConstants.IMG_ACCEPT);
             acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
+                @Override
                 public void onEvent(Event event) {
                     doAccept();
                 }

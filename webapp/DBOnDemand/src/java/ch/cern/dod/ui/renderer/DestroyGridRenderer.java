@@ -42,7 +42,8 @@ public class DestroyGridRenderer implements RowRenderer {
      * @param row row to render
      * @param data DODUpgrade object to render
      */
-    public void render(final Row row, Object data) {
+    @Override
+    public void render(final Row row, Object data, int i) {
         //Cast upgrade object
         final DODInstance instance = (DODInstance) data;
         row.setStyle("padding-top: 0px; padding-bottom: 0px");
@@ -61,6 +62,7 @@ public class DestroyGridRenderer implements RowRenderer {
         rescueBtn.setImage(DODConstants.IMG_RESCUE);
         rescueBtn.setZclass(DODConstants.STYLE_BUTTON);
         rescueBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 try {
                     RescueController rescueController = new RescueController(instance, instanceDAO);
@@ -83,6 +85,7 @@ public class DestroyGridRenderer implements RowRenderer {
         destroyBtn.setImage(DODConstants.IMG_DESTROY);
         destroyBtn.setZclass(DODConstants.STYLE_BUTTON);
         destroyBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 try {
                     DestroyController destroyController = new DestroyController(instance, instanceDAO);
@@ -115,8 +118,6 @@ public class DestroyGridRenderer implements RowRenderer {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DestroyGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(DestroyGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }

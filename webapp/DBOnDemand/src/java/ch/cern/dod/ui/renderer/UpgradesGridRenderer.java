@@ -41,7 +41,8 @@ public class UpgradesGridRenderer implements RowRenderer {
      * @param row row to render
      * @param data DODUpgrade object to render
      */
-    public void render(final Row row, Object data) {
+    @Override
+    public void render(final Row row, Object data, int i) {
         //Cast upgrade object
         final DODUpgrade upgrade = (DODUpgrade) data;
         row.setStyle("padding-top: 0px; padding-bottom: 0px");
@@ -62,6 +63,7 @@ public class UpgradesGridRenderer implements RowRenderer {
         deleteBtn.setImage(DODConstants.IMG_DESTROY);
         deleteBtn.setZclass(DODConstants.STYLE_BUTTON);
         deleteBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 try {
                     if (upgradeDAO.delete(upgrade)) {
@@ -93,8 +95,6 @@ public class UpgradesGridRenderer implements RowRenderer {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(UpgradesGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(UpgradesGridRenderer.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }

@@ -2,24 +2,27 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.EGroupHelper;
-import org.zkoss.util.resource.Labels;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Menu;
+import org.zkoss.zul.Html;
 
 /**
  * Controller for top bar's actions.
  * @author Daniel Gomez Blanco
  * @version 23/09/2011
  */
-public class TopBarController extends Div implements BeforeCompose{
+public class TopBarController extends Div implements BeforeCompose, AfterCompose{
     
-    /**
-     * Authenticated user's full name
-     */
-    private String fullName;
     /**
      * e-groups this user belongs to
      */
@@ -28,7 +31,17 @@ public class TopBarController extends Div implements BeforeCompose{
      * Indicates if the user is admin
      */
     private boolean admin;
+    /**
+     * Userame logged in
+     */
+    private String username;
+    
+    /**
+     * Full name logged in
+     */
+    private String fullName;
 
+    @Override
     public void beforeCompose() {
         //Get username and groups
         Execution execution = Executions.getCurrent();
@@ -36,26 +49,40 @@ public class TopBarController extends Div implements BeforeCompose{
 
         //Only show admin link if the user is admin
         admin = EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
-    }
-
-    /**
-     * Initializes the top bar component
-     */
-    public void init() {
+        
         //Get authenticated user's name
-        Execution execution = Executions.getCurrent();
+        username = execution.getHeader(DODConstants.ADFS_LOGIN);
         fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
-
-        //Set the drop down menu title
-        String title = Labels.getLabel(DODConstants.LABEL_WELCOME) + " " + fullName;
-        ((Menu) getFellow("accountMenu")).setLabel(title);
+    }
+    
+    @Override
+    public void afterCompose() {
+        //Get HTML for announcement
+        String text = new String();
+        try {
+            byte[] encoded = Files.readAllBytes(Paths.get(DODConstants.ANNOUNCEMENT_FILE));
+            text = Charset.defaultCharset().decode(ByteBuffer.wrap(encoded)).toString().trim();
+        }
+        catch (IOException e){
+            Logger.getLogger(TopBarController.class.getName()).log(Level.SEVERE, "ERROR READING ANNOUNCEMENT FILE ON " + DODConstants.ANNOUNCEMENT_FILE, e);
+        }
+        
+        if (!text.isEmpty()) {
+            Html announcement = (Html) getFellow("announcement");
+            announcement.setContent(text);
+            ((Div) getFellow("announcementDiv")).setVisible(true);
+        }
     }
 
-    /**
-     * Getter for the admin attribute.
-     * @return true if the user is an admin, false otherwise.
-     */
     public boolean isAdmin() {
         return admin;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 }

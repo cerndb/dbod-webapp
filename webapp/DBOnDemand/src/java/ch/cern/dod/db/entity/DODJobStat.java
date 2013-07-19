@@ -54,6 +54,7 @@ public class DODJobStat implements Comparable{
         this.meanDuration = meanDuration;
     }
 
+    @Override
     public int compareTo(Object o) {
         return dbName.compareTo(((DODJobStat)o).getDbName());
     }

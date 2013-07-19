@@ -6,13 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ListDataEvent;
 import org.zkoss.zul.AbstractListModel;
-import org.zkoss.zul.ListModelExt;
+import org.zkoss.zul.ext.Sortable;
 
 /**
  * Represents a list of command stats. It implements sorting to save it from query to query.
  * @author Daniel Gomez Blanco
  */
-public class CommandStatsModel extends AbstractListModel implements ListModelExt {
+public class CommandStatsModel extends AbstractListModel implements Sortable{
     /**
      * Command stats in the model.
      */
@@ -43,6 +43,7 @@ public class CommandStatsModel extends AbstractListModel implements ListModelExt
      * Overrides the method to get the size of the model.
      * @return the number of stats in the model.
      */
+    @Override
     public int getSize() {
         return commandStats.size();
     }
@@ -52,6 +53,7 @@ public class CommandStatsModel extends AbstractListModel implements ListModelExt
      * @param index index of the stat.
      * @return the stat.
      */
+    @Override
     public Object getElementAt(int index) {
         return commandStats.get(index);
     }
@@ -61,10 +63,21 @@ public class CommandStatsModel extends AbstractListModel implements ListModelExt
      * @param comparator comparator to use.
      * @param ascending indicates if the order is ascending or descending.
      */
+    @Override
     public void sort(Comparator comparator, boolean ascending) {
         this.ascending = ascending;
         this.comparator = comparator;
         Collections.sort(commandStats, comparator);
         fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);
+    }
+
+    @Override
+    public String getSortDirection(Comparator cmpr) {
+        if (ascending) {
+            return "ascending";
+        }
+        else {
+            return "descending";
+        }
     }
 }

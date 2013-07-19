@@ -41,7 +41,7 @@ public class SnapshotCalendar extends Calendar {
      */
     public void setSnapshots(List<DODSnapshot> snapshots) {
         if (snapshots != null && snapshots.size() > 0) {
-            this.snapshots = new ArrayList<String>();
+            this.snapshots = new ArrayList<>();
             for (DODSnapshot item : snapshots) {
                 this.snapshots.add(dateFormatter.format((item.getCreationDate())));
             }

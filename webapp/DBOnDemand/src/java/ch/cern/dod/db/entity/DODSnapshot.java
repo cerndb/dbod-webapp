@@ -33,6 +33,7 @@ public class DODSnapshot implements Comparable {
         this.fileLocator = fileLocator;
     }
 
+    @Override
     public int compareTo(Object object) {
         DODSnapshot snapshot = (DODSnapshot) object;
         return creationDate.compareTo(snapshot.getCreationDate());

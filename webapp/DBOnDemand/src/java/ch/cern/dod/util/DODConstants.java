@@ -10,11 +10,14 @@ import ch.cern.dod.db.entity.DODMetric;
 public class DODConstants {
     
     //Session attributes
-    public static final String ATTRIBUTE_SHOW_ALL = "showAll";
-    public static final String ATTRIBUTE_SHOW_ALL_TO_DESTROY = "showAllToDestroy";
-    public static final String ATTRIBUTE_SHOW_ALL_UPGRADES = "showAllUpgrades";
-    public static final String ATTRIBUTE_SHOW_ALL_JOB_STATS = "showAllJobStats";
-    public static final String ATTRIBUTE_SHOW_ALL_COMMAND_STATS = "showAllCommandStats";
+    public static final String ATTRIBUTE_USER_SHOW_ALL = "userShowAll";
+    public static final String ATTRIBUTE_USER_SHOW_ALL_JOB_STATS = "userShowAllJobStats";
+    public static final String ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS = "userShowAllCommandStats";
+    public static final String ATTRIBUTE_ADMIN_SHOW_ALL = "showAll";
+    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY = "showAllToDestroy";
+    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES = "showAllUpgrades";
+    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_JOB_STATS = "showAllJobStats";
+    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_COMMAND_STATS = "showAllCommandStats";
     public static final String ATTRIBUTE_ADMIN_FILTER_DB_NAME = "adminFilterDbName";
     public static final String ATTRIBUTE_ADMIN_FILTER_HOST= "adminFilterHost";
     public static final String ATTRIBUTE_ADMIN_FILTER_USERNAME = "adminFilterUsername";
@@ -97,6 +100,7 @@ public class DODConstants {
                                                                 new DODMetric("2034","Redo Writes Per Sec","C","Writes Per Second")};
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
+    public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
@@ -152,7 +156,6 @@ public class DODConstants {
     public static final String PAGE_MONITORING_OVERVIEW = "/monitoring_overview.zul";
 
     //Labels
-    public static final String LABEL_WELCOME = "welcome";
     public static final String LABEL_STATE = "state";
     public static final String LABEL_JOB = "jobAction";
     public static final String LABEL_JOB_STATE = "jobState";
@@ -222,6 +225,7 @@ public class DODConstants {
     public static final String LABEL_METRICS = "metrics";
     public static final String LABEL_RESCUE_TITLE = "rescueTitle";
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
+    public static final String LABEL_UPGRADE_SHARED_WARNING = "upgradeSharedWarning";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -269,6 +273,9 @@ public class DODConstants {
     public static final String ERROR_BACKUP_TO_TAPE_DATE = "errorBackupToTapeDate";
     public static final String ERROR_BACKUP_TO_TAPE_DAY_EMPTY = "errorBackupToTapeDayEmpty";
     public static final String ERROR_BACKUP_TO_TAPE_TIME_EMPTY = "errorBackupToTapeTimeEmpty";
+    public static final String ERROR_BACKUP_DATE = "errorBackupDate";
+    public static final String ERROR_BACKUP_DAY_EMPTY = "errorBackupDayEmpty";
+    public static final String ERROR_BACKUP_TIME_EMPTY = "errorBackupTimeEmpty";
     public static final String ERROR_ADDING_UPGRADE = "errorAddingUpgrade";
     public static final String ERROR_DELETING_UPGRADE = "errorDeletingUpgrade";
     public static final String ERROR_VERSION_EMPTY = "errorVersionEmpty";

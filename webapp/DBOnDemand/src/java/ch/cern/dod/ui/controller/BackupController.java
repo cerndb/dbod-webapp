@@ -6,6 +6,7 @@ import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -56,17 +57,29 @@ public class BackupController extends Window {
      */
     private Spinner interval;
     /**
+     * Timebox to select backup start
+     */
+    private Timebox backupTime;
+    /**
+     * Datebox to select backup start
+     */
+    private Datebox backupDay;
+    /**
+     * Date for backups to start (combination of day and time from form)
+     */
+    private Date backupStartDate;
+    /**
      * Checkbox to indicate if backups to tape should be enabled.
      */
     private Checkbox backupToTape;
     /**
      * Timebox to select backup to tape start
      */
-    private Timebox time;
+    private Timebox tapeTime;
     /**
      * Datebox to select backup to tape start
      */
-    private Datebox day;
+    private Datebox tapeDay;
     /**
      * Date for backups to tapes to start (combination of day and time from form)
      */
@@ -83,6 +96,10 @@ public class BackupController extends Window {
      * Indicates the interval for scheduled backups before clicking accept.
      */
     private int prevInterval;
+    /**
+     * Indicates the start date for backups.
+     */
+    private Date prevBackupDate;
     /**
      * Indicates if backups to tape were enabled before clicking accept.
      */
@@ -117,7 +134,7 @@ public class BackupController extends Window {
         this.setMode(Window.OVERLAPPED);
         this.setPosition("center");
         this.setClosable(false);
-        this.setWidth("520px");
+        this.setWidth("530px");
 
         //Main box used to apply pading
         Vbox mainBox = new Vbox();
@@ -140,6 +157,7 @@ public class BackupController extends Window {
         backupNowButton.setZclass(DODConstants.STYLE_BUTTON);
         backupNowButton.setImage(DODConstants.IMG_BACKUP);
         backupNowButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doBackupNow();
             }
@@ -179,6 +197,24 @@ public class BackupController extends Window {
         interval.setConstraint("min " + DODConstants.MIN_INTERVAL_HOURS);
         autoBox.appendChild(interval);
         autoBox.appendChild(new Label(Labels.getLabel(DODConstants.LABEL_HOURS)));
+        //Create date and time choosers
+        backupDay = new Datebox();
+        backupDay.setFormat(DODConstants.DATE_FORMAT);
+        backupDay.setWidth("90px");
+        autoBox.appendChild(backupDay);
+        backupTime = new Timebox();
+        backupTime.setWidth("80px");
+        autoBox.appendChild(backupTime);        
+        configContent.appendChild(autoBox);
+        if (prevBackupEnabled) {
+            backupDay.setValue(prevBackupDate);
+            backupTime.setValue(prevBackupDate);
+        }
+        else {
+            Date now = new Date();
+            backupDay.setValue(now);
+            backupTime.setValue(now);
+        }
         configContent.appendChild(autoBox);
         
         
@@ -192,22 +228,23 @@ public class BackupController extends Window {
         backupToTape.setChecked(prevBackupToTapeEnabled);
         tapeBox.appendChild(backupToTape);
         //Create date and time choosers
-        day = new Datebox();
-        day.setFormat(DODConstants.DATE_FORMAT);
-        day.setWidth("90px");
-        tapeBox.appendChild(day);
-        time = new Timebox();
-        time.setWidth("80px");
-        tapeBox.appendChild(time);        
+        tapeDay = new Datebox();
+        tapeDay.setFormat(DODConstants.DATE_FORMAT);
+        tapeDay.setWidth("90px");
+        tapeDay.setStyle("margin-left:9px");
+        tapeBox.appendChild(tapeDay);
+        tapeTime = new Timebox();
+        tapeTime.setWidth("80px");
+        tapeBox.appendChild(tapeTime);        
         configContent.appendChild(tapeBox);
         if (prevBackupToTapeEnabled) {
-            day.setValue(prevBackupToTapeDate);
-            time.setValue(prevBackupToTapeDate);
+            tapeDay.setValue(prevBackupToTapeDate);
+            tapeTime.setValue(prevBackupToTapeDate);
         }
         else {
             Date now = new Date();
-            day.setValue(now);
-            time.setValue(now);
+            tapeDay.setValue(now);
+            tapeTime.setValue(now);
         }
         
         //Create warning for backups to tape
@@ -228,6 +265,7 @@ public class BackupController extends Window {
         applyChangesLabel.setSclass(DODConstants.STYLE_TITLE);
         applyChangesLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         applyChangesLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doApplyChanges();
             }
@@ -238,6 +276,7 @@ public class BackupController extends Window {
         applyChangesButton.setZclass(DODConstants.STYLE_BUTTON);
         applyChangesButton.setImage(DODConstants.IMG_ACCEPT);
         applyChangesButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doApplyChanges();
             }
@@ -263,6 +302,7 @@ public class BackupController extends Window {
         closeButton.setZclass(DODConstants.STYLE_BUTTON);
         closeButton.setImage(DODConstants.IMG_CANCEL);
         closeButton.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doClose();
             }
@@ -272,6 +312,7 @@ public class BackupController extends Window {
         closeLabel.setSclass(DODConstants.STYLE_TITLE);
         closeLabel.setStyle("font-size:10pt !important;cursor:pointer;");
         closeLabel.addEventListener(Events.ON_CLICK, new EventListener() {
+            @Override
             public void onEvent(Event event) {
                 doClose();
             }
@@ -286,6 +327,7 @@ public class BackupController extends Window {
      */
     private void initScheduledBackup () {
         prevInterval = jobDAO.getBackupInterval(instance);
+        prevBackupDate = jobDAO.getBackupStartDate(instance);
         if (prevInterval > 0)
             prevBackupEnabled = true;
         else
@@ -307,7 +349,7 @@ public class BackupController extends Window {
      * Disables the automatic backups created in a previous job.
      */
     private void doBackupNow() {
-        boolean result = jobHelper.doBackup(instance, username, 0);
+        boolean result = jobHelper.doBackup(instance, username);
         if (!result) {
             showError(DODConstants.ERROR_DISPATCHING_JOB);
         }
@@ -342,11 +384,12 @@ public class BackupController extends Window {
      */
     private void doApplyChanges() {
         boolean result = false;
-        //If there are no previous error messages on the interval component
+        //If there are no previous error messages
         if (isConfigValid()) {
             //If backup to tape has changed or the date has changed
-            boolean backupToTapeResult = false;
-            if (backupToTape.isChecked() != prevBackupToTapeEnabled || (backupToTape.isChecked() && !backupToTapeStartDate.equals(prevBackupToTapeDate))) {
+            boolean backupToTapeResult;
+            if (backupToTape.isChecked() != prevBackupToTapeEnabled
+                    || (backupToTape.isChecked() && !backupToTapeStartDate.equals(prevBackupToTapeDate))) {
                 //If automatic backups to tape are checked
                 if (backupToTape.isChecked()) {
                     if (jobHelper.isAdminMode())
@@ -368,12 +411,15 @@ public class BackupController extends Window {
             //If the operation was succesful continue with automatic backups
             if (backupToTapeResult) {
                 //If scheduled backups changed
-                if (automatic.isChecked() != prevBackupEnabled || (automatic.isChecked() && interval.getValue() != prevInterval)) {
+                if (automatic.isChecked() != prevBackupEnabled
+                        || (automatic.isChecked() && interval.getValue() != prevInterval)
+                        || (automatic.isChecked() && !backupStartDate.equals(prevBackupDate))) {
                     //If automatic backups are checked
                     if (automatic.isChecked()) {
-                        //If the interval has changed (if they just enable it, it will always change because the previous value was 0)
-                        if ((interval.getValue() != prevInterval) && interval.getValue() != null && interval.getValue() > 0)
-                            result = jobHelper.doBackup(instance, username, interval.getValue());
+                        if (jobHelper.isAdminMode())
+                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue().intValue(), 1);
+                        else
+                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue().intValue(), 0);
                     }
                     //If automatic backups are not checked disable them
                     else {
@@ -422,40 +468,75 @@ public class BackupController extends Window {
      */
     public boolean isConfigValid() {
         boolean intervalValid = true;
-        boolean dateValid = true;
+        boolean tapeDateValid = true;
+        boolean backupDateValid = true;
         //Check interval (restriction on component)
         if (automatic.isChecked() && (interval.getErrorMessage() != null && !interval.getErrorMessage().isEmpty())) {
             intervalValid = false;
         }
-        //Check start date for backups to tape
-        if (backupToTape.isChecked()) {
-            if (day.getValue() != null) {
-                if (time.getValue() != null) {
-                    Calendar dayPart = Calendar.getInstance();
-                    dayPart.setTime(day.getValue());
-                    Calendar timePart = Calendar.getInstance();
-                    timePart.setTime(time.getValue());
-                    Calendar dayTime = Calendar.getInstance();
+        //Check start date for backups
+        if (automatic.isChecked()) {
+            if (backupDay.getValue() != null) {
+                if (backupTime.getValue() != null) {
+                    Calendar dayPart = new GregorianCalendar();
+                    dayPart.setTime(backupDay.getValue());
+                    Calendar timePart = new GregorianCalendar();
+                    timePart.setTime(backupTime.getValue());
+                    Calendar dayTime = new GregorianCalendar();
+                    dayTime.clear();
                     dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
                                 timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
-                    backupToTapeStartDate = dayTime.getTime();
-                    if (backupToTapeStartDate.compareTo(new Date()) <= 0) {
-                        time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DATE));
-                        dateValid = false;
+                    backupStartDate = dayTime.getTime();
+                    //If date has changed and it is not in the future show error
+                    if (backupStartDate.compareTo(new Date()) <= 0
+                            && !backupStartDate.equals(prevBackupDate)) {
+                        backupTime.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_DATE));
+                        backupDateValid = false;
                     }
                 }
                 else {
-                    time.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_TIME_EMPTY));
-                    dateValid = false;
+                    backupTime.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TIME_EMPTY));
+                    backupDateValid = false;
                 }
             }
             else
             {
-                day.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DAY_EMPTY));
-                dateValid = false;
+                backupDay.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_DAY_EMPTY));
+                backupDateValid = false;
             }
         }
-        return intervalValid && dateValid;
+        //Check start date for backups to tape
+        if (backupToTape.isChecked()) {
+            if (tapeDay.getValue() != null) {
+                if (tapeTime.getValue() != null) {
+                    Calendar dayPart = new GregorianCalendar();
+                    dayPart.setTime(tapeDay.getValue());
+                    Calendar timePart = new GregorianCalendar();
+                    timePart.setTime(tapeTime.getValue());
+                    Calendar dayTime = new GregorianCalendar();
+                    dayTime.clear();
+                    dayTime.set(dayPart.get(Calendar.YEAR), dayPart.get(Calendar.MONTH), dayPart.get(Calendar.DAY_OF_MONTH),
+                                timePart.get(Calendar.HOUR_OF_DAY), timePart.get(Calendar.MINUTE), timePart.get(Calendar.SECOND));
+                    backupToTapeStartDate = dayTime.getTime();
+                    //If date has changed and it is not in the future show error
+                    if (backupToTapeStartDate.compareTo(new Date()) <= 0
+                            && !backupToTapeStartDate.equals(prevBackupToTapeDate)) {
+                        tapeTime.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DATE));
+                        tapeDateValid = false;
+                    }
+                }
+                else {
+                    tapeTime.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_TIME_EMPTY));
+                    tapeDateValid = false;
+                }
+            }
+            else
+            {
+                tapeDay.setErrorMessage(Labels.getLabel(DODConstants.ERROR_BACKUP_TO_TAPE_DAY_EMPTY));
+                tapeDateValid = false;
+            }
+        }
+        return intervalValid && backupDateValid && tapeDateValid;
     }
 
     /**
@@ -475,8 +556,6 @@ public class BackupController extends Window {
         errorMessage.setValue(Labels.getLabel(errorCode));
         try {
             errorWindow.doModal();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
         }
