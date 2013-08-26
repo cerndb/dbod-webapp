@@ -13,6 +13,7 @@ lib/DBOD/Templates.pm
 lib/DBOD/Database.pm
 lib/DBOD/MySQL.pm
 lib/DBOD/Oracle.pm
+lib/DBOD/PostgreSQL.pm
 lib/DBOD/Config.pm
 lib/DBOD/All.pm
 lib/DBOD/LDAP.pm

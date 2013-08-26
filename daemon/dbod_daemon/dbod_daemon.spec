@@ -56,6 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/5.8.8/DBOD/MySQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Database.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Oracle.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/PostgreSQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/LDAP.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/All.pm
 /usr/bin/dbod_daemon
@@ -83,3 +84,6 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Initial packaging
+* Mon Aug 26 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added PostgreSQL.pm to file list
+
