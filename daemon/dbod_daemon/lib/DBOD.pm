@@ -12,6 +12,7 @@ use DBOD::Config qw( $config );
 use DBOD::Database;
 use DBOD::MySQL;
 use DBOD::Oracle;
+use DBOD::PostgreSQL;
 use DBOD::All;
 use DBOD::Command;
 
@@ -35,12 +36,14 @@ INIT {
 
 my %command_callback_table = (
     'UPGRADE' => { 'MYSQL' => \&DBOD::MySQL::upgrade_callback , 
-                    'ORACLE' => \&DBOD::Oracle::upgrade_callback }
+                    'ORACLE' => \&DBOD::Oracle::upgrade_callback, 
+                    'POSTGRESQL' => \&DBOD::PostgreSQL::upgrade_callback }
 );
 
 my %state_checker_table = (
     'MYSQL' => \&DBOD::MySQL::state_checker,
-    'ORACLE' => \&DBOD::Oracle::state_checker 
+    'ORACLE' => \&DBOD::Oracle::state_checker, 
+    'POSTGRESQL' => \&DBOD::PostgreSQL::state_checker 
 );
 
 sub jobDispatcher {
