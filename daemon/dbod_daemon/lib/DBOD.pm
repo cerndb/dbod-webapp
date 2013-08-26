@@ -37,13 +37,13 @@ INIT {
 my %command_callback_table = (
     'UPGRADE' => { 'MYSQL' => \&DBOD::MySQL::upgrade_callback , 
                     'ORACLE' => \&DBOD::Oracle::upgrade_callback, 
-                    'POSTGRESQL' => \&DBOD::PostgreSQL::upgrade_callback }
+                    'PG' => \&DBOD::PostgreSQL::upgrade_callback }
 );
 
 my %state_checker_table = (
     'MYSQL' => \&DBOD::MySQL::state_checker,
     'ORACLE' => \&DBOD::Oracle::state_checker, 
-    'POSTGRESQL' => \&DBOD::PostgreSQL::state_checker 
+    'PG' => \&DBOD::PostgreSQL::state_checker 
 );
 
 sub jobDispatcher {
