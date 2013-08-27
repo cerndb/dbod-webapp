@@ -26,71 +26,92 @@ INIT{
 
 sub prepareCommand {
     my ($job, $dbh) = @_;
-    my $cmd;
     eval{
+
+        my $cmd;
         $logger->debug( "Fetching execution string" );
         my $exe_string = DBOD::Database::getExecString($job, $dbh);
+
         if (defined $exe_string){
             $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+            $logger->debug( "Unprocessed command line: $cmd " );
         }
         else{
             $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'});
+            $logger->debug( "Command line: $cmd" );
         }
-        $logger->debug( " $cmd " );
-        $logger->debug( "Fetching Job params" );
-        my $params = $job->{'PARAMS'};
-        my $nparams;
-        if (defined $params){
-            $nparams = scalar(@{$params});
-            }
-        else{
-            $nparams = 0;
+        
+        my $nparams = 0;
+        if (defined(@{$job->{'PARAMS'}})) {
+            $nparams = scalar(@{$job->{'PARAMS'}});
         }
+        
         my $expected_nparams = 0;
         my $optional_nparams = 0;
         $expected_nparams++ while ($cmd =~ m/:/g);
         $optional_nparams++ while ($cmd =~ m/#/g);
-        $logger->debug("Expected: $expected_nparams, Optional: $optional_nparams");
+        
+        $logger->debug("# of parameters: $nparams, Expected: $expected_nparams, Optional: $optional_nparams");
 
-        if ($expected_nparams == 0){
-            $logger->debug("No parameters, returning cmd: $cmd " );
+        if ($expected_nparams == 0) {
             return $cmd;
         }
+
+        # UPLOAD_CONFIG commands
+
+        if ($job->{'COMMAND_NAME'} == 'UPLOAD_CONFIG') {
+
+            my @buf = grep($_->{'NAME'} =~ /FILE/, @{$job->{'PARAMS'}});
+            my $clob = $buf[0]->{'VALUE'};
+            @buf = grep($_->{'NAME'} =~ /TYPE/, @{$job->{'PARAMS'}});
+            my $filetype = $buf[0]->{'VALUE'};
+            
+            $logger->debug("Fetching parser for config file type: $filetype");
+            my $parser = DBOD::Templates::parser( $filetype );
+            $logger->debug("parser: $parser");
+            my $filename = $parser->($clob); 
+
+            # Distribute file to target entity
+            my $entity = DBOD::All::get_entity($job);
+            $logger->debug( "Copying file to target entity: $entity" );
+            DBOD::All::copy_to_entity( $filename, $entity );
+            
+            $cmd =~ s/:CONFIG_FILE=/$filename/;
+            $logger->debug( "Processed command line: $cmd" );
+            
+            #$logger->debug( "Deleting temporal files");
+            #system("rm -fr $filename");
+
+            return $cmd;
+
+        }
+
+        # Regular execution
+
         if ($nparams >= $expected_nparams){
+
+            # Parameter substitution
             $logger->debug( "Substituting params");
-            foreach my $param (@{$params}){
-                if ($param->{'NAME'} =~ /FILE/){
-                    my ($pname, $type) = split( /=/, $param->{'NAME'} );
-                    $logger->debug("pname: $pname, type: $type");
-                    my $clob = $param->{'VALUE'};
-                    my $parser = DBOD::Templates::parser( $type );
-                    $logger->debug("parser: $parser");
-                    my $filename = $parser->($clob); 
-                    $cmd =~ s/:$param->{'NAME'}/$filename/;
-                    $logger->debug( "cmd: $cmd" );
-                    # Distribute required files
-                    $logger->debug("Fetching entity name");
-                    my $entity = DBOD::All::get_entity($job);
-                    $logger->debug( "Copying files to $entity" );
-                    DBOD::All::copy_to_entity( $filename, $entity );
-                    $logger->debug( "Deleting temporal files");
-                    system("rm -fr $filename");
-                    }
-                else{
-                    $cmd =~ s/:$param->{'NAME'}=/$param->{'VALUE'}/;
-                    $cmd =~ s/#$param->{'NAME'}=/$param->{'VALUE'}/;
-                    }
+            foreach my $param (@{$job->{'PARAMS'}}){
+                $cmd =~ s/:$param->{'NAME'}=/$param->{'VALUE'}/;
+                $cmd =~ s/#$param->{'NAME'}=/$param->{'VALUE'}/;
                 }
+
+            # Checks that all mandatory parameter have been substituted
             my $buf = 0;
             $buf++ while ($cmd =~ m/:(.*)+=/g);
             if ($buf) {
-                $logger->error( "Some of the command parameters could not be parsed\n $!" );
+                $logger->error( "Some of the command parameters have not been substituted\n $!" );
+                return undef;
                 }
+
+            # Checks optional parameter substitution
             $buf = 0;
             $buf++ while ($cmd =~ m/#(.*)+=/g);
-            if ($buf>0) {
-                $logger->debug( "Some of the Optional command parameters could not be parsed" );
-                $logger->debug( "Buf: $buf, cmd: $cmd" );
+            if ($buf) {
+                $logger->debug( "Some of the Optional command parameters have not been substituted" );
+                $logger->debug( "Cmd line: $cmd" );
+                $logger->debug( "Removing placeholders" );
                 my @items = split( /-/, $cmd);
                 my @result;
                 for my $item (@items){
@@ -100,20 +121,21 @@ sub prepareCommand {
                     }
                 }
                 $cmd = join('-', @result);
-                $logger->debug( "Num. optional params: $buf, \ncmd: $cmd" );
+                $logger->debug( "Processed commandline: $cmd" );
+                return $cmd;
                 }
         }
         else {
-            $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained.\n $!" );
-            $cmd = undef;
+            $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained." );
+            return undef;
         }
         1;
     } or do {
-        $logger->error( "Unable to prepare command\n $!" );
-        $cmd = undef;
+        $logger->error( "Unable to prepare command: $!" );
+        return undef;
     };
-    return $cmd;
 }
+
 
 
 END{
