@@ -66,7 +66,7 @@ sub MYSQL_writeFile{
     $logger->debug( "Created temporary folder $tempdir" );
     my ($fh, $filename) = File::Temp::tempfile( DIR => $tempdir );
     $logger->debug( "Created temporary file $filename" );
-    chmod(0644, $filename); # Remote user doing the readng will be sysctl
+    chmod(0644, $filename); # Remote user doing the reading will be sysctl
     open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
     while ( my($section, $valueref) = each( %{$hashref} ) ){
         print FP "[$section]\n";
@@ -188,20 +188,76 @@ sub MYSQL_process {
     return $filename;
 }
 
+sub PG_writeFile {
+    my $hashref = shift;
+    my $hash = %{$hashref};
+    my ($fh, $filename) = File::Temp::tempfile( DIR => '/tmp' );
+    $logger->debug( "Created temporary file $filename" );
+    chmod(0644, $filename); # Remote user doing the reading will be sysctl
+    open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
+    foreach (keys (%hash}){
+            print FP "$_ = $hash{$_}\n";
+        }
+    close(FP);
+    return $filename;
+}
+
+
+sub PG_enforce {
+    my ($new_config, $filename) = @_;
+    my $template;
+    my $config_dir = File::ShareDir::dist_dir( "dbod_daemon" );
+    my $template_ref = YAML::Syck::LoadFile( "$config_dir/templates/$filename" );
+    my $res = {};
+    my %template = %{$template_ref};
+    return $new_config;
+}
+
+sub PG_parser
+{
+    my ($clob, $type) = @_;
+    my (%hash, $keyword, $value);
+    my @lines = split(/\n/, $clob);
+    foreach (@lines) {
+        next if /^#/ or /^(\s)*$/;
+        chomp;
+        if (/.*=.*/) {
+            my ($k,$v) = split(/\s*=\s*/, $_);
+            $keyword = $k;
+            $value = $v ;
+            $hash->{$keyword} = $value;
+        }
+    }
+    return \%hash;
+}
+
+sub PG_process {
+    my ($clob, $type) = shift;
+    if ($type == 'HBA') {
+        $logger->debug( 'Passing through HBA config file' );
+        return  PG_writeFile($clob, $type)
+    }
+    else{
+        $logger->debug( 'Parsing PG configuration file' );
+        $logger->debug( "type: $type, clob:\n$clob" );
+        my $parsed = PG_parser( $clob, $type );
+        $logger->debug( "parsed: $parsed" );
+        my $enforced = PG_enforce( $parsed, $type );
+        $logger->debug( "enforced: $enforced" );
+        return PG_writeFile( $enforced );
+    }
+}
+
 sub parser{
     my $type = shift;
     $logger->debug( "Returning parser for $type");
     return $processors{$type};
 }
 
-sub PG_stub{
-    my $filename = MYSQL_writefile( shift );
-}
-
 %processors = ( 
     'MY_CNF' => \&MYSQL_process,
-    'PG' => \&PG_stub,
-    'HBA' => \&PG_stub
+    'PG' => \&PG_process,
+    'HBA' => \&PG_process
     );
 
 
