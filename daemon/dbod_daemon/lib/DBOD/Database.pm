@@ -12,7 +12,7 @@ use DBOD::Config qw( $config );
 use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
-    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_RUNNING,
+    $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_DURATION,
     $JOB_MAX_PENDING);
 
 $VERSION     = 1.7;
@@ -32,7 +32,7 @@ INIT{
     $DBTAG = $config->{'DB_TAG'};
     $user = $config->{'DB_USER'};
     $password = $config->{'DB_PASSWORD'};
-    $JOB_MAX_RUNNING = $config->{'JOB_MAX_RUNNING'};
+    $JOB_MAX_DURATION = $config->{'JOB_MAX_DURATION'};
     $JOB_MAX_PENDING = $config->{'JOB_MAX_PENDING'};
 } # INIT BLOCK
 
@@ -57,7 +57,7 @@ sub getInstanceList{
         $sth->finish();
         1;
     } or do{
-        $logger->error( "Error fetching instances List : $!" );
+        $logger->error( "Error fetching instances List : $DBI::errstr" );
         return ();
     };
     return @result;
@@ -86,7 +86,7 @@ sub isShared{
         }
         1;
     } or do {
-        $logger->error( "Error fetching shared state for $db_name : $!" );
+        $logger->error( "Error fetching shared state for $db_name : $DBI::errstr" );
         return undef;
     }
 }
@@ -108,7 +108,7 @@ sub isMaster{
         }
         1;
     } or do {
-        $logger->error( "Error fetching master status for $db_name : $!" );
+        $logger->error( "Error fetching master status for $db_name : $DBI::errstr" );
         return undef;
     }
 }
@@ -130,7 +130,7 @@ sub isSlave{
         }
         1;
     } or do {
-        $logger->error( "Error fetching slave status for $db_name : $!" );
+        $logger->error( "Error fetching slave status for $db_name : $DBI::errstr" );
         return undef;
     }
 }
@@ -166,19 +166,19 @@ sub getJobList{
         $sth->finish();
         1;
     } or do{
-        $logger->error( "Error fetching job list : $!" );
+        $logger->error( "Error fetching job list : $DBI::errstr" );
         return ();
     };
     return @result;
 }   
 
-sub getTimedOutJobs{
+sub getTimedOutJobs {
     my $dbh = shift;
     my @result;
     eval {
         my $sql = "select username, db_name, command_name, type, creation_date
             from dod_jobs where (state = 'RUNNING' or state = 'PENDING')
-            and creation_date < (select sysdate from dual) -$JOB_MAX_RUNNING/24"; 
+            and creation_date < (select sysdate from dual) -$JOB_MAX_DURATION/24"; 
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
@@ -195,7 +195,8 @@ sub getTimedOutJobs{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable to check for TIMED OUT jobs : $!" );
+        $logger->error( "Unable to check for TIMED OUT jobs : $DBI::errstr" );
+
         return (); # Returns an empty array in an attempt to fail smoothly
     };
     return @result;
@@ -208,7 +209,7 @@ sub getPendingJobs {
     eval{
         ($count) = $dbh->selectrow_array($sql);
     } or do {
-        $logger->error( "Unable to check for PENDING jobs : $!" );
+        $logger->error( "Unable to check for PENDING jobs : $DBI::errstr" );
         return undef;
     };
     return $count;
@@ -219,7 +220,7 @@ sub updateInstance{
     eval {
         my $sql = "update DOD_INSTANCES set $col_name = ?
         where username = ? and db_name = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
+        $logger->debug( "Preparing statement: $sql" );
         my $sth = $dbh->prepare( $sql );
         $logger->debug( "Binding parameters");
         $sth->bind_param(1, $col_value);
@@ -231,7 +232,7 @@ sub updateInstance{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable update instance status : $!" );
+        $logger->error( "Unable update instance status : $DBI::errstr" );
         return undef;
     };
 }
@@ -245,7 +246,7 @@ sub updateJob{
         if ($col_name eq 'COMPLETION_DATE'){
             $sql = "update DOD_JOBS set $col_name = sysdate
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-            $logger->debug( "Preparing statement: \n\t$sql" );
+            $logger->debug( "Preparing statement: $sql" );
             $sth = $dbh->prepare( $sql );
             $logger->debug( "Binding parameters");
             $sth->bind_param(1, $job->{'USERNAME'});
@@ -257,7 +258,7 @@ sub updateJob{
         else{
             $sql = "update DOD_JOBS set $col_name = ?
             where username = ? and db_name = ? and command_name = ? and type = ? and creation_date = ?";
-            $logger->debug( "Preparing statement: \n\t$sql" );
+            $logger->debug( "Preparing statement: $sql" );
             $sth = $dbh->prepare( $sql );
             $logger->debug( "Binding parameters");
             $sth->bind_param(1, $col_value);
@@ -273,7 +274,7 @@ sub updateJob{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable to update job status : $!" );
+        $logger->error( "Unable to update job status : $DBI::errstr" );
         return undef;
     };
 }
@@ -301,7 +302,7 @@ sub finishJob{
         }
         1;
     } or do {
-        $logger->error( "An error occured trying to finish the job : $!");
+        $logger->error( "An error occured trying to finish the job : $DBI::errstr");
         return undef;
     };
 }
@@ -313,7 +314,7 @@ sub getJobParams{
         $dbh->{LongReadLen} = 32768; 
         my $sql = "select NAME, VALUE from DOD_COMMAND_PARAMS
         where USERNAME = ? and DB_NAME = ? and COMMAND_NAME = ? and TYPE = ? and CREATION_DATE = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
+        $logger->debug( "Preparing statement: $sql" );
         my $sth = $dbh->prepare( $sql, { ora_pers_lob => 1 } );
         $logger->debug( "Binding parameters");
         $sth->bind_param(1, $job->{'USERNAME'});
@@ -335,7 +336,7 @@ sub getJobParams{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable to fetch job parameters : $!" );
+        $logger->error( "Unable to fetch job parameters : $DBI::errstr" );
         return undef;
     };
     return $res; 
@@ -347,7 +348,7 @@ sub getExecString{
     eval {
         my $sql = "select EXEC from DOD_COMMAND_DEFINITION
         where COMMAND_NAME = ? and TYPE = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
+        $logger->debug( "Preparing statement: $sql" );
         my $sth = $dbh->prepare( $sql );
         $logger->debug( "Binding parameters");
         $sth->bind_param(1, $job->{'COMMAND_NAME'});
@@ -359,7 +360,7 @@ sub getExecString{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable to fetch command execution string : $!" );
+        $logger->error( "Unable to fetch command execution string : $DBI::errstr" );
         return undef;
     };
     return $ref->{'EXEC'}; 
@@ -372,7 +373,7 @@ sub getConfigFile{
         $dbh->{LongReadLen} = 32768; 
         my $sql = "select CONFIG_FILE from DOD_CONFIG_FILES
         where DB_NAME = ? and USERNAME = ? and FILE_TYPE = ?";
-        $logger->debug( "Preparing statement: \n\t$sql" );
+        $logger->debug( "Preparing statement: $sql" );
         my $sth = $dbh->prepare( $sql, { ora_pers_lob => 1 } );
         $logger->debug( "Binding parameters");
         $sth->bind_param(1, $job->{'DB_NAME'});
@@ -386,7 +387,7 @@ sub getConfigFile{
         $sth->finish();
         1;
     } or do {
-        $logger->error( "Unable to fetch config file : $!" );
+        $logger->error( "Unable to fetch config file : $DBI::errstr" );
         return undef;
     };
     return $result;
@@ -406,7 +407,7 @@ sub getDBH{
         $logger->debug( "Setting date format: $DATEFORMAT" );
         $dbh->do( "alter session set NLS_DATE_FORMAT='$DATEFORMAT'" );
     } or do {
-        $logger->error("Unable to obtain DB handler.\n Interpreter($@)\n libc($!)\n OS($^E)\n");
+        $logger->error("Unable to obtain DB handler.\n Interpreter($@)\n libc($!)\n OS($^E)\nDBI($DBI::errstr)\n");
         $dbh = undef;
     };
     return $dbh;
@@ -414,8 +415,7 @@ sub getDBH{
 
 sub oracle_taf_event{
     my ($event, $type) = @_;
-    $logger->error("TAF event");
-    $logger->error(" TAF event: $event\n TAF type: $type");
+    $logger->error( " TAF event: $event\n TAF type: $type, DBI errstr: $DBI::errstr" );
     return;
 }
 

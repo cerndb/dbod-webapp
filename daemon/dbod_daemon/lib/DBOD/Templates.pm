@@ -194,7 +194,15 @@ sub parser{
     return $processors{$type};
 }
 
-%processors = ("MY_CNF" => \&MYSQL_process);
+sub PG_stub{
+    my $filename = MYSQL_writefile( shift );
+}
+
+%processors = ( 
+    'MY_CNF' => \&MYSQL_process,
+    'PG' => \&PG_stub,
+    'HBA' => \&PG_stub
+    );
 
 
 # End of Module
