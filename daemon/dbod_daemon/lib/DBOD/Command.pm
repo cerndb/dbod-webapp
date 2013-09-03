@@ -69,7 +69,7 @@ sub prepareCommand {
             $logger->debug("Fetching parser for config file type: $filetype");
             my $parser = DBOD::Templates::parser( $filetype );
             $logger->debug("parser: $parser");
-            my $filename = $parser->($clob); 
+            my $filename = $parser->($clob, $filetype); 
 
             # Distribute file to target entity
             my $entity = DBOD::All::get_entity($job);
@@ -77,6 +77,7 @@ sub prepareCommand {
             DBOD::All::copy_to_entity( $filename, $entity );
             
             $cmd =~ s/:CONFIG_FILE=/$filename/;
+            $cmd =~ s/:CONFIG_TYPE=/$filetype/;
             $logger->debug( "Processed command line: $cmd" );
             
             #$logger->debug( "Deleting temporal files");
