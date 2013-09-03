@@ -189,15 +189,22 @@ sub MYSQL_process {
 }
 
 sub PG_writeFile {
-    my $hashref = shift;
-    my $hash = %{$hashref};
+    my ($hashref, $type) = @_;    
     my ($fh, $filename) = File::Temp::tempfile( DIR => '/tmp' );
     $logger->debug( "Created temporary file $filename" );
     chmod(0644, $filename); # Remote user doing the reading will be sysctl
     open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
-    foreach (keys (%hash}){
-            print FP "$_ = $hash{$_}\n";
-        }
+    if ($type eq 'HBA'){
+        $logger->debug( 'Passing through HBA clob to file' );
+        print FP $hashref;
+    }
+    else { # PG
+        $logger->debug( 'Converting PG hash to file');
+        my %hash = %{$hashref};
+        foreach (keys (%hash)){
+                print FP "$_ = $hash{$_}\n";
+            }
+    }
     close(FP);
     return $filename;
 }
@@ -209,8 +216,34 @@ sub PG_enforce {
     my $config_dir = File::ShareDir::dist_dir( "dbod_daemon" );
     my $template_ref = YAML::Syck::LoadFile( "$config_dir/templates/$filename" );
     my $res = {};
-    my %template = %{$template_ref};
-    return $new_config;
+    foreach my $key (keys (%{$new_config})) {
+        if (exists($template_ref->{$key})) {
+            my $buf = $template_ref->{$key};
+            $logger->debug( "Enforcing template value ($key: $buf)" );
+            if (ref($buf) eq 'ARRAY'){
+                my ($min, $max, $default) = @{$buf};
+                $logger->debug( "Range parameter check (min, max, default): ($min, $max, $default)" );
+                if (($new_config->{$key} >= $min) && ($new_config->{$key} <= $max)) {
+                    $logger->debug( 'Parameter value accepted');
+                    $res->{$key} = $new_config->{$key};
+                }
+                else {
+                    # Default value
+                    $logger->debug( 'Parameter defaulted' );
+                    $res->{$key} = $default;
+                }
+            }
+            else {
+                $logger->debug( 'Parameter enforced' );
+                $res->{$key} = $template_ref->{$key};
+            }
+        }
+        else {
+            # Take value from new configuration file
+            $res->{$key} = $new_config->{$key};
+        }
+    }
+    return $res;
 }
 
 sub PG_parser
@@ -225,17 +258,17 @@ sub PG_parser
             my ($k,$v) = split(/\s*=\s*/, $_);
             $keyword = $k;
             $value = $v ;
-            $hash->{$keyword} = $value;
+            $hash{$keyword} = $value;
         }
     }
     return \%hash;
 }
 
 sub PG_process {
-    my ($clob, $type) = shift;
-    if ($type == 'HBA') {
+    my ($clob, $type) = @_;
+    if ($type eq 'HBA') {
         $logger->debug( 'Passing through HBA config file' );
-        return  PG_writeFile($clob, $type)
+        return PG_writeFile($clob, $type)
     }
     else{
         $logger->debug( 'Parsing PG configuration file' );
