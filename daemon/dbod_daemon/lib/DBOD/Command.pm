@@ -94,8 +94,12 @@ sub prepareCommand {
             # Parameter substitution
             $logger->debug( "Substituting params");
             foreach my $param (@{$job->{'PARAMS'}}){
+                $logger->debug( "param name: " . $param->{'NAME'} . "param value: " . $param->{'VALUE'} );
+                $logger->debug(" Cmd : $cmd" );
                 $cmd =~ s/:$param->{'NAME'}=/$param->{'VALUE'}/;
+                $logger->debug(" Cmd (mandatory): $cmd" );
                 $cmd =~ s/#$param->{'NAME'}=/$param->{'VALUE'}/;
+                $logger->debug(" Cmd (optional): $cmd" );
                 }
 
             # Checks that all mandatory parameter have been substituted
@@ -125,6 +129,7 @@ sub prepareCommand {
                 $logger->debug( "Processed commandline: $cmd" );
                 return $cmd;
                 }
+            return $cmd;
         }
         else {
             $logger->error( "The number of parameters is wrong. $expected_nparams expected, $nparams obtained." );
