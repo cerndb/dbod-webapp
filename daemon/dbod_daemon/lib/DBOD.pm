@@ -13,6 +13,7 @@ use DBOD::Database;
 use DBOD::MySQL;
 use DBOD::Oracle;
 use DBOD::PostgreSQL;
+use DBOD::Middleware;
 use DBOD::All;
 use DBOD::Command;
 
@@ -43,7 +44,8 @@ my %command_callback_table = (
 my %state_checker_table = (
     'MYSQL' => \&DBOD::MySQL::state_checker,
     'ORACLE' => \&DBOD::Oracle::state_checker, 
-    'PG' => \&DBOD::PostgreSQL::state_checker 
+    'PG' => \&DBOD::PostgreSQL::state_checker, 
+    'MIDDLEWARE' => \&DBOD::Middleware::state_checker, 
 );
 
 sub jobDispatcher {

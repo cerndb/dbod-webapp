@@ -33,13 +33,22 @@ sub prepareCommand {
         my $exe_string = DBOD::Database::getExecString($job, $dbh);
 
         if (defined $exe_string){
-            $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+            $logger->debug( "Job type: " . $job->{'TYPE'} );
+            if ( $job->{'TYPE'} eq 'MIDDLEWARE') {
+                $cmd = 'manage -action ' . ' ' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+            }
+            else {
+                $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'}) . ' ' . $exe_string;
+            }
             $logger->debug( "Unprocessed command line: $cmd " );
         }
         else{
             $cmd = $job->{'TYPE'} . '_' . lc($job->{'COMMAND_NAME'});
             $logger->debug( "Command line: $cmd" );
         }
+
+        # MWOD Support
+        #
         
         my $nparams = 0;
         if (defined(@{$job->{'PARAMS'}})) {
