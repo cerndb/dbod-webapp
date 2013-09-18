@@ -59,7 +59,7 @@ sub prepareCommand {
 
         # UPLOAD_CONFIG commands
 
-        if ($job->{'COMMAND_NAME'} == 'UPLOAD_CONFIG') {
+        if ($job->{'COMMAND_NAME'} eq 'UPLOAD_CONFIG') {
 
             my @buf = grep($_->{'NAME'} =~ /FILE/, @{$job->{'PARAMS'}});
             my $clob = $buf[0]->{'VALUE'};
