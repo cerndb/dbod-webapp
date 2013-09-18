@@ -55,6 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Config.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/MySQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Database.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/Command.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Oracle.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Middleware.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/PostgreSQL.pm
