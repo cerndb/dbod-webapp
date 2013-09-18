@@ -56,11 +56,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/5.8.8/DBOD/MySQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Database.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Oracle.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/Middleware.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/PostgreSQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/LDAP.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/All.pm
 /usr/bin/dbod_daemon
 /usr/bin/dbod_state_checker
+/usr/bin/dbod_daemon_monitor
 /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/.packlist
 /etc/init.d/dbod_daemon
 /etc/rc0.d/K85dbod_daemon
@@ -79,6 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon_logger.conf
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon_logger.conf
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/MY_CNF
+%config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/PG
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/templates
 
 %changelog
@@ -86,4 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 - Initial packaging
 * Mon Aug 26 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Added PostgreSQL.pm to file list
+* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added Middleware.pm to file list
+- Added templates/PG
+- Added dbod_daemon_monitor
 
