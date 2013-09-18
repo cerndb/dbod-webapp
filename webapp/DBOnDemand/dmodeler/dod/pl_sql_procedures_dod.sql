@@ -37,10 +37,17 @@ BEGIN
 			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
 
 	-- Query for any job with the same name running at the moment
-	SELECT COUNT(*)
+        BEGIN
+            SELECT COUNT(*)
 		INTO job_count
 		FROM user_scheduler_jobs
 		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
 
 	-- Quote name to create object
 	name := '"' || db_name || '_BACKUP"';
@@ -62,14 +69,6 @@ BEGIN
 	   	repeat_interval      => 'FREQ=HOURLY;INTERVAL=' || interval_hours,
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup job for DB On Demand');
-       
-       
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -91,10 +90,17 @@ BEGIN
 	name := db_name || '_BACKUP';
 
 	-- Query for any job with the same name running at the moment
-	SELECT COUNT(*)
+        BEGIN
+            SELECT COUNT(*)
 		INTO job_count
 		FROM user_scheduler_jobs
 		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
 
 	-- Quote name to create object
 	name := '"' || db_name || '_BACKUP"';
@@ -106,13 +112,6 @@ BEGIN
 			job_name   =>  name,
 			force      =>  TRUE);
     	END IF;
-
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -155,10 +154,17 @@ BEGIN
 			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
 
 	-- Query for any job with the same name running at the moment
-	SELECT COUNT(*)
+        BEGIN
+            SELECT COUNT(*)
 		INTO job_count
 		FROM user_scheduler_jobs
 		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
 
 	-- Quote name to create object
 	name := '"' || db_name || '_BACKUP_TO_TAPE"';
@@ -180,13 +186,6 @@ BEGIN
 	   	repeat_interval      => 'FREQ=WEEKLY;INTERVAL=1',
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup to tape job for DB On Demand');
-       
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -208,10 +207,17 @@ BEGIN
 	name := db_name || '_BACKUP_TO_TAPE';
 
 	-- Query for any job with the same name running at the moment
-	SELECT COUNT(*)
+        BEGIN
+            SELECT COUNT(*)
 		INTO job_count
 		FROM user_scheduler_jobs
 		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
 
 	-- Quote name to create object
 	name := '"' || db_name || '_BACKUP_TO_TAPE"';
@@ -223,13 +229,6 @@ BEGIN
 			job_name   =>  name,
 			force      =>  TRUE);
     	END IF;
-
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -242,11 +241,19 @@ BEGIN
     result := 1;
 
     -- If instance is not in database do nothing and return error
-    SELECT username, db_type
+    BEGIN
+        SELECT username, db_type
             INTO username, db_type
             FROM dod_instances
             WHERE db_name = db_name_param;
-    IF user IS NOT NULL
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            username := NULL;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
+
+    IF username IS NOT NULL
     THEN
         -- Insert FIM object row
         INSERT INTO fim_ora_ma.dod_fim_objects (id, db_name)
@@ -273,12 +280,6 @@ BEGIN
         -- Return 0 for success
         result := 0;
     END IF;
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         RETURN;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -304,10 +305,17 @@ BEGIN
     backup_name := instance || '_BACKUP';
 
     -- Query for any scheduled backups with the same name running at the moment
-    SELECT COUNT(*)
+    BEGIN
+        SELECT COUNT(*)
             INTO backup_count
             FROM user_scheduler_jobs
             WHERE job_name = backup_name;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            backup_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
 
     -- If there is a scheduled backup, drop it
     IF backup_count > 0
@@ -324,10 +332,17 @@ BEGIN
     tape_name := instance || '_BACKUP_TO_TAPE';
 
     -- Query for any scheduled backups to tape with the same name running at the moment
-    SELECT COUNT(*)
+    BEGIN
+        SELECT COUNT(*)
             INTO tape_count
             FROM user_scheduler_jobs
             WHERE job_name = tape_name;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
 
     -- If there is a scheduled backup to tape, drop it
     IF tape_count > 0
@@ -344,10 +359,17 @@ BEGIN
     cleanup_name := instance || '_CLEANUP';
 
     -- Query for any scheduled cleanups with the same name running at the moment
-    SELECT COUNT(*)
+    BEGIN
+        SELECT COUNT(*)
             INTO cleanup_count
             FROM user_scheduler_jobs
             WHERE job_name = cleanup_name;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            cleanup_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
 
     -- If there is a cleanup, drop it
     IF cleanup_count > 0
@@ -374,9 +396,7 @@ BEGIN
 
 EXCEPTION
        WHEN NO_DATA_FOUND THEN
-         IF USER IS NULL THEN
-            RETURN;
-         END IF;
+         RETURN;
        WHEN OTHERS THEN
          RAISE;
          ROLLBACK;
@@ -412,11 +432,18 @@ BEGIN
     backup_name := instance || '_BACKUP';
 
     -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
             INTO backup_count, backup_action, backup_start_date, backup_interval
             FROM user_scheduler_jobs
             WHERE job_name = backup_name
             GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            backup_count := 0;
+	WHEN OTHERS THEN
+            RAISE;
+    END;
             
     -- If there is a scheduled backup
     IF backup_count > 0
@@ -445,11 +472,18 @@ BEGIN
     tape_name := instance || '_BACKUP_TO_TAPE';
 
     -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
             INTO tape_count, tape_action, tape_start_date, tape_interval
             FROM user_scheduler_jobs
             WHERE job_name = tape_name
             GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_count := 0;
+	WHEN OTHERS THEN
+            RAISE;
+    END;
             
     -- If there is a scheduled backups to tape
     IF tape_count > 0
@@ -478,13 +512,20 @@ BEGIN
     cleanup_name := instance || '_CLEANUP';
 
     -- Query for any schedule cleanups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
             INTO cleanup_count, cleanup_action, cleanup_start_date, cleanup_interval
             FROM user_scheduler_jobs
             WHERE job_name = cleanup_name
             GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            cleanup_count := 0;
+	WHEN OTHERS THEN
+            RAISE;
+    END;
             
-    -- If there is a scheduled backups to tape
+    -- If there is a scheduled cleanups
     IF cleanup_count > 0
     THEN
             -- Quote name for object
@@ -505,12 +546,6 @@ BEGIN
                     enabled              =>  TRUE,
                     comments             => 'Scheduled cleanup for DB On Demand');
     END IF;
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
 END;
 /
 
@@ -846,6 +881,11 @@ IS
     tape_action VARCHAR2 (1024);
     tape_interval VARCHAR2 (64);
     tape_start_date DATE;
+    cleanup_count INTEGER;
+    cleanup_name VARCHAR2 (512);
+    cleanup_action VARCHAR2 (1024);
+    cleanup_interval VARCHAR2 (64);
+    cleanup_start_date DATE;
 BEGIN
     -- Update instance username
     UPDATE dod_instances
@@ -857,11 +897,18 @@ BEGIN
     backup_name := old_instance || '_BACKUP';
 
     -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
             INTO backup_count, backup_action, backup_start_date, backup_interval
             FROM user_scheduler_jobs
             WHERE job_name = backup_name
             GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            backup_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
             
     -- If there is a scheduled backup
     IF backup_count > 0
@@ -893,11 +940,18 @@ BEGIN
     tape_name := old_instance || '_BACKUP_TO_TAPE';
 
     -- Query for any schedule backups with the same name running at the moment
-    SELECT COUNT(*), job_action, start_date, repeat_interval
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
             INTO tape_count, tape_action, tape_start_date, tape_interval
             FROM user_scheduler_jobs
             WHERE job_name = tape_name
             GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
             
     -- If there is a scheduled backups to tape
     IF tape_count > 0
@@ -923,11 +977,47 @@ BEGIN
                     enabled              =>  TRUE,
                     comments             => 'Scheduled backup job for DB On Demand');
     END IF;
-EXCEPTION
-       WHEN NO_DATA_FOUND THEN
-         NULL;
-       WHEN OTHERS THEN
-         RAISE;
-         ROLLBACK;
+
+    -- Drop and create new cleanups in case there were any
+    -- Initialise name
+    cleanup_name := old_instance || '_CLEANUP';
+
+    -- Query for any schedule cleanups with the same name running at the moment
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO cleanup_count, cleanup_action, cleanup_start_date, cleanup_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = cleanup_name
+            GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            cleanup_count := 0;
+	WHEN OTHERS THEN
+            RAISE;
+    END;
+            
+    -- If there is a scheduled cleanups
+    IF cleanup_count > 0
+    THEN
+            -- Quote name for object
+            cleanup_name := '"' || old_instance || '_CLEANUP"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  cleanup_name,
+                    force      =>  TRUE);
+
+            cleanup_name := '"' || new_instance || '_CLEANUP"';
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => cleanup_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(cleanup_action, '''' || old_instance || '''', '''' || new_instance || ''''),
+                    start_date           => cleanup_start_date,
+                    repeat_interval      => cleanup_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled cleanup for DB On Demand');
+    END IF;
 END;
 /

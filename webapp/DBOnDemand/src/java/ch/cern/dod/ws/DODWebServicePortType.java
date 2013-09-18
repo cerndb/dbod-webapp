@@ -61,11 +61,38 @@ public interface DODWebServicePortType {
      * @return
      *     returns java.lang.String
      */
+    @WebMethod(operationName = "GetPGLogs", action = "https://syscontrol.cern.ch/Dod/#GetPGLogs")
+    @WebResult(name = "logs", partName = "logs")
+    public String getPGLogs(
+        @WebParam(name = "instance", partName = "instance")
+        String instance);
+
+    /**
+     * 
+     * @param instance
+     * @return
+     *     returns java.lang.String
+     */
     @WebMethod(operationName = "GetMySQLConfigFile", action = "https://syscontrol.cern.ch/Dod/#GetMySQLConfigFile")
     @WebResult(name = "file", partName = "file")
     public String getMySQLConfigFile(
         @WebParam(name = "instance", partName = "instance")
         String instance);
+
+    /**
+     * 
+     * @param type
+     * @param instance
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "GetPGConfigFile", action = "https://syscontrol.cern.ch/Dod/#GetPGConfigFile")
+    @WebResult(name = "file", partName = "file")
+    public String getPGConfigFile(
+        @WebParam(name = "instance", partName = "instance")
+        String instance,
+        @WebParam(name = "type", partName = "type")
+        String type);
 
     /**
      * 

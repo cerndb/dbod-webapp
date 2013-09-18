@@ -162,7 +162,7 @@
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('project')}: " style="font-weight:bold"/>
                         <hbox id="projectBox" align="bottom">
-                            <label id="project"/>
+                            <label id="project" maxlength="35"/>
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="projectBox.setVisible(false);projectEditBox.setVisible(true);"/>
                         </hbox>
                         <hbox id="projectEditBox" visible="false" align="bottom">
@@ -202,7 +202,7 @@
                     <hbox width="500px" align="bottom">
                         <label value="${c:l('version')}: " style="font-weight:bold"/>
                         <hbox id="versionBox" align="bottom">
-                            <label id="version"/>
+                            <label id="version" maxlength="35"/>
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="versionBox.setVisible(false);versionEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="versionEditBox" visible="false" align="bottom" if="${controller.admin}">
@@ -214,7 +214,7 @@
                     <hbox width="350px" align="bottom" id="hostArea">
                         <label value="${c:l('host')}: " style="font-weight:bold"/>
                         <hbox id="hostBox" align="bottom">
-                            <label id="host"/>
+                            <label id="host" maxlength="35"/>
                             <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
                         </hbox>
                         <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">

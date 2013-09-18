@@ -105,7 +105,8 @@ public class FileController extends Window {
         this.appendChild(mainBox);
         
         //Config files groupbox
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)
+                || instance.getDbType().equals(DODConstants.DB_TYPE_PG)) {
             Groupbox config = new Groupbox();
             config.setClosable(false);
             config.setWidth("390px");
@@ -139,9 +140,8 @@ public class FileController extends Window {
                         //Check config file value
                         if (isTypeValid()) {
                             //Create new job and update instance status
-                            String fileType = ((String[])type.getSelectedItem().getValue())[0];
-                            String filePath = ((String[])type.getSelectedItem().getValue())[1];
-                            boolean result = jobHelper.doUpload(instance, username, fileType, filePath, (UploadEvent) event);
+                            String fileType = (String) type.getSelectedItem().getValue();
+                            boolean result = jobHelper.doUpload(instance, username, fileType, (UploadEvent) event);
                             //Depending on the result
                             if (result) {
                                 //If we are in the overview page
@@ -193,14 +193,26 @@ public class FileController extends Window {
                     //Check config file value
                     if (isTypeValid()) {
                         //Obtain file
-                        String filePath = ((String[])type.getSelectedItem().getValue())[1];
-                        AMedia file = fileHelper.getMySQLConfigFile(instance);
+                        String fileType = (String) type.getSelectedItem().getValue();
+                        AMedia file;
+                        switch (instance.getDbType()) {
+                            case DODConstants.DB_TYPE_MYSQL:
+                                file = fileHelper.getMySQLConfigFile(instance);
+                                break;
+                            case DODConstants.DB_TYPE_PG:
+                                file = fileHelper.getPGConfigFile(instance, fileType);
+                                break;
+                            default:
+                                file = null;
+                                break;
+                        }
+                        
                         if (file != null) {
                             Filedownload.save(file);
                             type.getFellow("filesWindow").detach();
                         }
                         else {
-                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE {0} DOWNLOADING CONFIG FILE: {1}", new Object[]{instance.getDbName(), filePath});
+                            Logger.getLogger(FileController.class.getName()).log(Level.SEVERE, "ERROR ON INSTANCE {0} DOWNLOADING CONFIG FILE: {1}", new Object[]{instance.getDbName(), fileType});
                             showError(DODConstants.ERROR_DOWNLOADING_CONFIG_FILE, null);
                         }
                     }
@@ -325,17 +337,29 @@ public class FileController extends Window {
         Combobox toret =  new Combobox();
         toret.setReadonly(true);
         toret.setWidth("300px");
-        if (dbType.equals(DODConstants.DB_TYPE_MYSQL)) {
-            Comboitem myCfg = new Comboitem();
-            myCfg.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_MY_CNF));
-            myCfg.setValue(new String[]{DODConstants.CONFIG_FILE_MY_CNF, DODConstants.CONFIG_PATH_MY_CNF});
-            toret.appendChild(myCfg);
-        }
-        else {
-            Comboitem noConfig = new Comboitem();
-            noConfig.setLabel(Labels.getLabel(DODConstants.LABEL_NO_CONFIG_FILES));
-            noConfig.setValue(null);
-            toret.appendChild(noConfig);
+        switch (dbType) {
+            case DODConstants.DB_TYPE_MYSQL:
+                Comboitem myCfg = new Comboitem();
+                myCfg.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_MY_CNF));
+                myCfg.setValue(DODConstants.CONFIG_FILE_MY_CNF);
+                toret.appendChild(myCfg);
+                break;
+            case DODConstants.DB_TYPE_PG:
+                Comboitem pg = new Comboitem();
+                pg.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_PG));
+                pg.setValue(DODConstants.CONFIG_FILE_PG);
+                toret.appendChild(pg);
+                Comboitem hba = new Comboitem();
+                hba.setLabel(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_PG_HBA));
+                hba.setValue(DODConstants.CONFIG_FILE_PG_HBA);
+                toret.appendChild(hba);
+                break;
+            default:
+                Comboitem noConfig = new Comboitem();
+                noConfig.setLabel(Labels.getLabel(DODConstants.LABEL_NO_CONFIG_FILES));
+                noConfig.setValue(null);
+                toret.appendChild(noConfig);
+                break;
         }
         toret.setSelectedIndex(0);
         return toret;
@@ -373,6 +397,17 @@ public class FileController extends Window {
                     }
                 }
                 break;
+           case DODConstants.DB_TYPE_PG:
+                logArray = fileHelper.getPGLogs(instance);
+                if (logArray != null) {
+                    for (int i=0; i < logArray.length; i++) {
+                        Comboitem item = new Comboitem();
+                        item.setLabel(logArray[i].substring(logArray[i].lastIndexOf('/') + 1));
+                        item.setValue(logArray[i]);
+                        toret.appendChild(item);
+                    }
+                }
+                break;
         }
         if (logArray == null) {
             Comboitem item = new Comboitem();
@@ -390,17 +425,16 @@ public class FileController extends Window {
      */
     public boolean isTypeValid() {
         Comboitem item = type.getSelectedItem();
-        if (item != null && item.getValue() != null && item.getValue() instanceof String[] && ((String[])item.getValue()).length == 2) {
-            if (instance.getDbType().equals(DODConstants.DB_TYPE_MYSQL)) {
-                String fileType = ((String[])item.getValue())[0];
-                if (!DODConstants.CONFIG_FILE_MY_CNF.equals(fileType))
+        if (item != null && item.getValue() != null && item.getValue() instanceof String) {
+            switch (instance.getDbType()) {
+                case DODConstants.DB_TYPE_MYSQL:
+                    return DODConstants.CONFIG_FILE_MY_CNF.equals((String)item.getValue());
+                case DODConstants.DB_TYPE_PG:
+                    return DODConstants.CONFIG_FILE_PG.equals((String)item.getValue())
+                            ||
+                            DODConstants.CONFIG_FILE_PG_HBA.equals((String)item.getValue()); 
+                case DODConstants.DB_TYPE_ORACLE:
                     return false;
-                String filePath = ((String[])item.getValue())[1];
-                if (!DODConstants.CONFIG_PATH_MY_CNF.equals(filePath))
-                    return false;
-            }
-            if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
-                return false;
             }
             return true;
         }

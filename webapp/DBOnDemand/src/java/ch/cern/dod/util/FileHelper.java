@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.util.resource.Labels;
 
 /**
  * Helper to manage snapshots using web services.
@@ -48,7 +49,28 @@ public class FileHelper {
             DODWebServicePortType port = service.getDODWebServicePort();
             String content = port.getMySQLConfigFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
             if (content != null) {
-                file = new AMedia(DODConstants.CONFIG_PATH_MY_CNF, null, "text/plain", content);
+                file = new AMedia(Labels.getLabel(DODConstants.LABEL_CONFIG + DODConstants.CONFIG_FILE_MY_CNF), null, "text/plain", content);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return file;
+    }
+    
+    /**
+     * Gets a configuration file from a specific instance.
+     * @param instance instance to get the snapshots of.
+     * @param type type of config file to get.
+     * @return configuration file.
+     */
+    public AMedia getPGConfigFile(DODInstance instance, String type) {
+        AMedia file = null;
+        try {
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String content = port.getPGConfigFile(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName(), type);
+            if (content != null) {
+                file = new AMedia(Labels.getLabel(DODConstants.LABEL_CONFIG + type), null, "text/plain", content);
             }
         } catch (Exception ex) {
             Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
@@ -87,6 +109,26 @@ public class FileHelper {
             DODWebService service = new DODWebService();
             DODWebServicePortType port = service.getDODWebServicePort();
             String logsString = port.getOracleLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            if (logsString != null && !logsString.isEmpty()) {
+                logs = logsString.split(":");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING LOGS ON INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return logs;
+    }
+    
+    /**
+     * Gets the logs for a specific PostgreSQL instance.
+     * @param instance instance to get the logs of.
+     * @return array of file names corresponding to the log files.
+     */
+    public String[] getPGLogs(DODInstance instance) {
+        String[] logs = null;
+        try {
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String logsString = port.getPGLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
             if (logsString != null && !logsString.isEmpty()) {
                 logs = logsString.split(":");
             }

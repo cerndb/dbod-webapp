@@ -202,7 +202,7 @@ public class MonitoringController extends Window {
             Comboitem item = new Comboitem();
             item.setValue(metric);
             if (metric.getUnit() != null) {
-                item.setLabel("\t" + metric.getName() + " [" + metric.getUnit() + " ]");
+                item.setLabel("\t" + metric.getName() + " (" + metric.getUnit() + " )");
             }
             else {
                 item.setLabel("\t" + metric.getName());

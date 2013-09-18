@@ -72,6 +72,9 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             case DODConstants.DB_TYPE_ORACLE:
                 metrics = DODConstants.ORACLE_OVERVIEW_METRICS;
                 break;
+            case DODConstants.DB_TYPE_PG:
+                metrics = DODConstants.PG_OVERVIEW_METRICS;
+                break;
             default:
                 metrics = new DODMetric[0];
                 break;
@@ -88,7 +91,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             vboxLeft.setWidth("600px");
             Label labelLeft = new Label();
             if (metrics[i].getUnit() != null) {
-                labelLeft.setValue(metrics[i].getName() + " [" + metrics[i].getUnit() + "]");
+                labelLeft.setValue(metrics[i].getName() + " (" + metrics[i].getUnit() + ")");
             }
             else {
                 labelLeft.setValue(metrics[i].getName());
@@ -106,7 +109,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             vboxRight.setWidth("600px");
             Label labelRight = new Label();
             if (metrics[i+1].getUnit() != null) {
-                labelRight.setValue(metrics[i+1].getName() + " [" + metrics[i+1].getUnit() + "]");
+                labelRight.setValue(metrics[i+1].getName() + " (" + metrics[i+1].getUnit() + ")");
             }
             else {
                 labelRight.setValue(metrics[i+1].getName());
@@ -129,7 +132,7 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             vbox.setWidth("1200px");
             Label labelLeft = new Label();
             if (metrics[metrics.length - 1].getUnit() != null) {
-                labelLeft.setValue(metrics[metrics.length - 1].getName() + " [" + metrics[metrics.length - 1].getUnit() + "]");
+                labelLeft.setValue(metrics[metrics.length - 1].getName() + " (" + metrics[metrics.length - 1].getUnit() + ")");
             }
             else {
                 labelLeft.setValue(metrics[metrics.length - 1].getName());

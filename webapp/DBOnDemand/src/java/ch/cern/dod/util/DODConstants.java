@@ -64,6 +64,7 @@ public class DODConstants {
     public static final String MONITORING_TYPE_MYSQL = "M";
     public static final String MONITORING_TYPE_NODE = "N";
     public static final String MONITORING_TYPE_ORACLE = "C";
+    public static final String MONITORING_TYPE_PG = "P";
     public static final String LEMON_URL = "http://lemonweb.cern.ch/lemon-web/info.php?entity=";
     public static final String PARAM_HOST = "host";
     public static final int MAX_SIZE_CONFIG_FILE = 512;
@@ -78,16 +79,16 @@ public class DODConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
-    public static final DODMetric[] MYSQL_OVERVIEW_METRICS = {new DODMetric("Threads_connected","Number of currently open connections","M",""),
-                                                                new DODMetric("Aborted_connects","Number of aborted connections","M",""),
-                                                                new DODMetric("Innodb_buffer_pool_reads","Number of logical reads that innoDB had to read directly from the disk","M",""),
-                                                                new DODMetric("Innodb_data_reads","Total number of data reads","M",""),
-                                                                new DODMetric("Innodb_buffer_pool_write_requests","Number of writes done to the innoDB buffer pool","M",""),
-                                                                new DODMetric("Innodb_data_writes","Total number of data writes","M",""),
-                                                                new DODMetric("Innodb_data_read","Amount of data read since the server was started","M",""),
-                                                                new DODMetric("Innodb_data_written","Amount of data written","M",""),
-                                                                new DODMetric("Qcache_hits","Number of query cache hits","M",""),
-                                                                new DODMetric("Qcache_not_cached","Number of noncached queries","M","")};
+    public static final DODMetric[] MYSQL_OVERVIEW_METRICS = {new DODMetric("Threads_connected","Currently open connections","M",null),
+                                                                new DODMetric("Aborted_connects","Aborted connections","M",null),
+                                                                new DODMetric("Innodb_buffer_pool_reads","Logical reads that InnoDB had to read directly from the disk","M",null),
+                                                                new DODMetric("Innodb_data_reads","Data reads","M",null),
+                                                                new DODMetric("Innodb_buffer_pool_write_requests","Writes done to the InnoDB buffer pool","M",null),
+                                                                new DODMetric("Innodb_data_writes","Data writes","M",null),
+                                                                new DODMetric("Innodb_data_read","Data read since the server was started","M","bytes"),
+                                                                new DODMetric("Innodb_data_written","Data written since the server was started","M","bytes"),
+                                                                new DODMetric("Qcache_hits","Query cache hits","M",null),
+                                                                new DODMetric("Qcache_not_cached","Noncached queries","M",null)};
     public static final DODMetric[] ORACLE_OVERVIEW_METRICS = {new DODMetric("2147","Average Active Sessions","C","Active Sessions"),
                                                                 new DODMetric("2003","User Transaction Per Sec","C","Transactions Per Second"),
                                                                 new DODMetric("2093","Physical Read Total Bytes Per Sec","C","Bytes Per Second"),
@@ -98,6 +99,16 @@ public class DODConstants {
                                                                 new DODMetric("2057","Host CPU Utilization (%)","C","% Busy/(Idle+Busy)"),
                                                                 new DODMetric("2016","Redo Generated Per Sec","C","Bytes Per Second"),
                                                                 new DODMetric("2034","Redo Writes Per Sec","C","Writes Per Second")};
+    public static final DODMetric[] PG_OVERVIEW_METRICS = {new DODMetric("numbackends","Backends connected","P",null),
+                                                                new DODMetric("deadlocks","Deadlocks detected","P",null),
+                                                                new DODMetric("xact_commit","Transactions that have been committed","P",null),
+                                                                new DODMetric("xact_rollback","Transactions that have been rolled back","P",null),
+                                                                new DODMetric("heap_blks_read","Disk blocks read","P",null),
+                                                                new DODMetric("buffers_clean","Buffers written by the background writer","P",null),
+                                                                new DODMetric("blks_hit","Times that disk blocks were found in the buffer cache","P",null),
+                                                                new DODMetric("blks_read","Times that disk blocks were not found in the buffer cache","P",null),
+                                                                new DODMetric("n_live_tup","Estimated number of live rows","P",null),
+                                                                new DODMetric("n_dead_tup","Estimated number of dead rows","P",null)};
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
     public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
@@ -130,13 +141,15 @@ public class DODConstants {
     public static final String JOB_CLEANUP = "CLEANUP";
     public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
+    public static final String DB_TYPE_PG = "PG";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";
     public static final String PREFIX_INSTANCE_NAME = "dod_";
     public static final String PARAM_SNAPSHOT = "SNAPSHOT";
     public static final String PARAM_CONFIG_FILE = "CONFIG_FILE";
+    public static final String PARAM_CONFIG_TYPE = "CONFIG_TYPE";
     public static final String CONFIG_FILE_MY_CNF = "MY_CNF";
-    public static final String PARAM_CONFIG_PATH = "CONFIG_PATH";
-    public static final String CONFIG_PATH_MY_CNF = "my.cnf";
+    public static final String CONFIG_FILE_PG = "PG";
+    public static final String CONFIG_FILE_PG_HBA = "HBA";
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
     public static final String PARAM_PITR_TIME = "TIMESTAMP";
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";

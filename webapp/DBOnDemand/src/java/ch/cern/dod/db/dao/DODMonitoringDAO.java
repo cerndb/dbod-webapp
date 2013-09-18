@@ -57,7 +57,8 @@ public class DODMonitoringDAO {
                 case DODConstants.DB_TYPE_MYSQL:
                     query.append("SELECT target_type, parameter_code, parameter_name, unit"
                                     + " FROM pdb_monitoring.target_params_defs"
-                                    + " WHERE target_type = ? OR target_type = ?"
+                                    + " WHERE (target_type = ? OR target_type = ?)"
+                                    + " AND parameter_code <> 'SESSIONS'" //Exlude sessions on the node
                                     + " ORDER BY target_type, parameter_name");
                     statement = connection.prepareStatement(query.toString());
                     statement.setString(1, DODConstants.MONITORING_TYPE_MYSQL);
@@ -70,6 +71,16 @@ public class DODMonitoringDAO {
                                     + " ORDER BY metric_name");
                     statement = connection.prepareStatement(query.toString());
                     statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
+                    break;
+                case DODConstants.DB_TYPE_PG:
+                    query.append("SELECT target_type, parameter_code, parameter_name, unit"
+                                    + " FROM pdb_monitoring.target_params_defs"
+                                    + " WHERE (target_type = ? OR target_type = ?)"
+                                    + " AND parameter_code <> 'SESSIONS'" //Exlude sessions on the node
+                                    + " ORDER BY target_type desc, parameter_name");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, DODConstants.MONITORING_TYPE_PG);
+                    statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
                     break;
             }
 
@@ -168,6 +179,21 @@ public class DODMonitoringDAO {
                     statement.setString(1, instance.getDbName().toUpperCase());
                     statement.setString(2, metric.getCode());
                     statement.setTimestamp(3, start);
+                    break;
+                case DODConstants.MONITORING_TYPE_PG:
+                    query.append("SELECT p.valid_from, p.valid_to, p.value"
+                                    + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
+                                    + " WHERE t.target_name = ?"
+                                    + " AND p.target_id = t.target_id"
+                                    + " AND p.target_type = ?"
+                                    + " AND p.parameter_code= ?"
+                                    + " AND (p.valid_to >= ? OR p.valid_to is NULL)"
+                                    + " ORDER BY p.valid_from");
+                    statement = connection.prepareStatement(query.toString());
+                    statement.setString(1, DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+                    statement.setString(2, DODConstants.MONITORING_TYPE_PG);
+                    statement.setString(3, metric.getCode());
+                    statement.setTimestamp(4, start);
                     break;
             }
 

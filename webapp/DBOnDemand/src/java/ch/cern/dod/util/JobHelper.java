@@ -161,7 +161,7 @@ public class JobHelper {
      * @throws UnsupportedEncodingException if the enconding is not supported.
      * @throws IOException if there is an error reading the file.
      */
-    public boolean doUpload(DODInstance instance, String username, String fileType, String filePath, UploadEvent event) throws ConfigFileSizeException, UnsupportedEncodingException, IOException {
+    public boolean doUpload(DODInstance instance, String username, String fileType, UploadEvent event) throws ConfigFileSizeException, UnsupportedEncodingException, IOException {
         //Get config file
         Media media = event.getMedia();
         if (media != null) {
@@ -190,7 +190,7 @@ public class JobHelper {
                 configFile.setCommandName(DODConstants.JOB_UPLOAD);
                 configFile.setType(instance.getDbType());
                 configFile.setCreationDate(now);
-                configFile.setName(DODConstants.PARAM_CONFIG_FILE + "=" + fileType);
+                configFile.setName(DODConstants.PARAM_CONFIG_FILE);
                 configFile.setValue(data);
                 params.add(configFile);
                 DODCommandParam path = new DODCommandParam();
@@ -199,8 +199,8 @@ public class JobHelper {
                 path.setCommandName(DODConstants.JOB_UPLOAD);
                 path.setType(instance.getDbType());
                 path.setCreationDate(now);
-                path.setName(DODConstants.PARAM_CONFIG_PATH);
-                path.setValue(filePath);
+                path.setName(DODConstants.PARAM_CONFIG_TYPE);
+                path.setValue(fileType);
                 params.add(path);
 
                 int result = jobDAO.insert(job, params);
