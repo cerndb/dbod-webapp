@@ -3,11 +3,11 @@
 #
 Summary: DB On Demand Job Dispatching Daemon 
 Name: dbod_daemon
-Version: 1.5
+Version: 2.0
 Release: 0 
 License: GPL
 Group: Applications
-Source: dbod_daemon-1.5.tar.gz
+Source: dbod_daemon-2.0.tar.gz
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
 Vendor: CERN
@@ -85,12 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/templates
 
 %changelog
-* Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Initial packaging
+* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added Middleware, PostgreSQL support and dbod_daemon_monitor
 * Mon Aug 26 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Added PostgreSQL.pm to file list
-* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Added Middleware.pm to file list
-- Added templates/PG
-- Added dbod_daemon_monitor
-
+* Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Initial packaging
