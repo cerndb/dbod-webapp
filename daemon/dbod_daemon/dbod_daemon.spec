@@ -3,11 +3,11 @@
 #
 Summary: DB On Demand Job Dispatching Daemon 
 Name: dbod_daemon
-Version: 1.5
+Version: 2.0
 Release: 0 
 License: GPL
 Group: Applications
-Source: dbod_daemon-1.5.tar.gz
+Source: dbod_daemon-2.0.tar.gz
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
 Vendor: CERN
@@ -55,11 +55,15 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Config.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/MySQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Database.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/Command.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Oracle.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/Middleware.pm
+/usr/lib/perl5/site_perl/5.8.8/DBOD/PostgreSQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/LDAP.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/All.pm
 /usr/bin/dbod_daemon
 /usr/bin/dbod_state_checker
+/usr/bin/dbod_daemon_monitor
 /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/.packlist
 /etc/init.d/dbod_daemon
 /etc/rc0.d/K85dbod_daemon
@@ -78,8 +82,13 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon_logger.conf
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon_logger.conf
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/MY_CNF
+%config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/PG
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/templates
 
 %changelog
+* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added Middleware, PostgreSQL support and dbod_daemon_monitor
+* Mon Aug 26 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added PostgreSQL.pm to file list
 * Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Initial packaging

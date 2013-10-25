@@ -1,7 +1,7 @@
 use inc::Module::Install;
 
 author      'Ignacio Coterillo <ignacio.coterillo@cern.ch>';
-version    '1.5';
+version    '2.0';
 license     'perl';
 
 name          'dbod_daemon';

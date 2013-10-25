@@ -50,7 +50,11 @@ sub get_host_from_entity{
 sub copy_to_entity{
     my ($item, $entity) = @_;
     my $host = get_host_from_entity($entity);
-    system("scp", "-r",  $item, "sysctl\@$host:/tmp");
+    my $cmd = "scp -r $item sysctl\@$host:/tmp";
+    my $output = `$cmd`;
+    $logger->debug( $cmd );
+    $logger->debug( "Cmd Output: $output" );
+    $logger->debug( "Cmd exit code: $?" );
     return $?;
 }
 

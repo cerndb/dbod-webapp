@@ -1,0 +1,25 @@
+---
+listen_addresses : '*'
+port : 
+    - 1025
+    - 65355
+max_connections : 
+    - 10
+    - 1000
+unix_socket_directory : '/var/lib/pgsql'
+ssl : on
+shared_buffers : 
+    - 1GB
+    - 4GB
+wal_level : archive
+archive_mode : on
+log_line_prefix : '<%m>'
+log_timezone : 'Europe/Paris'
+datestyle : 'iso, mdy'
+timezone : 'Europe/Paris'
+lc_messages : 'en_US.UTF-8'
+lc_monetary : 'en_US.UTF-8'
+lc_numeric : 'en_US.UTF-8' 
+lc_time : 'en_US.UTF-8'
+default_text_search_config : 'pg_catalog.english'
+---
