@@ -109,10 +109,18 @@ sub jobDispatcher {
             foreach my $job (@timedoutjobs){
                 my $state_checker = get_state_checker($job);
                 if (! defined($state_checker)){
-                    $logger->error( "Not state checker defined for this DB type" );
+                    $logger->error( "No state checker defined for this DB type" );
                 }
+                # Fetching instance state
                 my ($job_state, $instance_state) = $state_checker->($job, 1);
-                DBOD::Database::finishJob( $job, $job_state, "TIMED OUT", $dbh );
+                $logger->debug( "Updating job STATE" );
+                updateJob($job, 'STATE', 'TIMED OUT', $dbh);
+                DBOD::Database::updateJob( $job, 'STATE', 'TIMED OUT', $dbh );
+                $logger->debug( "Updating job Completion Date" );
+                DBOD::Database::updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
+                $logger->debug( "Updating job LOG" );
+                DBOD::Database::updateJob($job, 'LOG', 'This job was cancelled for exceeding the maximum running time (6h)', $dbh);
+                $logger->debug( "Updating Instance State" );
                 DBOD::Database::updateInstance( $job, 'STATE', $instance_state, $dbh );
                 my $task = $job->{'task'};
                 if (ref $task) {
