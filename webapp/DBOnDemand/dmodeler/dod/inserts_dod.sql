@@ -1,0 +1,25 @@
+-- Insert command definitions
+INSERT INTO dod_command_definition VALUES ('DISABLE_AUTOMATIC_BACKUPS', 'ALL', NULL);
+INSERT INTO dod_command_definition VALUES ('DISABLE_BACKUPS_TO_TAPE', 'ALL', NULL);
+INSERT INTO dod_command_definition VALUES ('ENABLE_AUTOMATIC_BACKUPS', 'ALL', NULL);
+INSERT INTO dod_command_definition VALUES ('ENABLE_BACKUPS_TO_TAPE', 'ALL', NULL);
+INSERT INTO dod_command_definition VALUES ('BACKUP', 'MYSQL', '-debug');
+INSERT INTO dod_command_definition VALUES ('BACKUP_TO_TAPE', 'MYSQL', '-debug');
+INSERT INTO dod_command_definition VALUES ('RESTORE', 'MYSQL', '-r :SNAPSHOT= -t #TIMESTAMP= -debug');
+INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'MYSQL', NULL);
+INSERT INTO dod_command_definition VALUES ('STARTUP', 'MYSQL', NULL);
+INSERT INTO dod_command_definition VALUES ('UPGRADE', 'MYSQL', '-to :VERSION_TO=');
+INSERT INTO dod_command_definition VALUES ('UPLOAD_CONFIG', 'MYSQL', '-file :CONFIG_FILE=');
+INSERT INTO dod_command_definition VALUES ('BACKUP', 'ORA', '-debug');
+INSERT INTO dod_command_definition VALUES ('CLEANUP', 'ORA', '-debug -arch');
+INSERT INTO dod_command_definition VALUES ('RESTORE', 'ORA', '-r :SNAPSHOT= -t #TIMESTAMP= -debug');
+INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'ORA', '-debug');
+INSERT INTO dod_command_definition VALUES ('STARTUP', 'ORA', '-debug');
+INSERT INTO dod_command_definition VALUES ('UPGRADE', 'ORA', '-from :VERSION_FROM= -to :VERSION_TO=');
+INSERT INTO dod_command_definition VALUES ('BACKUP', 'PG', '-debug');
+INSERT INTO dod_command_definition VALUES ('CLEANUP', 'PG', '-debug');
+INSERT INTO dod_command_definition VALUES ('RESTORE', 'PG', '-r :SNAPSHOT= -t #TIMESTAMP= -debug');
+INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'PG', NULL);
+INSERT INTO dod_command_definition VALUES ('STARTUP', 'PG', NULL);
+INSERT INTO dod_command_definition VALUES ('UPGRADE', 'PG', '-to :VERSION_TO=');
+INSERT INTO dod_command_definition VALUES ('UPLOAD_CONFIG', 'PG', '-file :CONFIG_FILE= -type :CONFIG_TYPE=');
