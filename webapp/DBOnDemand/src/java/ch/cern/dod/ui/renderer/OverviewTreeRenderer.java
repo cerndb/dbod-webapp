@@ -420,6 +420,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Upgrade button
                 final Toolbarbutton upgradeBtn = new Toolbarbutton();
+                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
                 upgradeBtn.setImage(DODConstants.IMG_UPGRADE);
                 upgradeBtn.setParent(box);
                 upgradeBtn.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -439,30 +440,16 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     }
                 });
                 
-                //Find out if instance is Oracle shared or not
-                boolean shared = false;
-                if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
-                        && instanceDAO.selectInstancesPerHost(instance.getHost(), null).size() > 1) {
-                    shared = true;
-                }
                 //Only enable button if the instance is not shared stopped or running (and there is an upgrade available)
                 if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
                         && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
-                        || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
+                        || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
                     upgradeBtn.setDisabled(true);
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON_DISABLED);
-                    //Change tooltip in case it's shared and there are backups
-                    if (shared) {
-                        upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_UPGRADE_SHARED_WARNING));
-                    }
-                    else {
-                        upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
-                    }
                 } else {
                     upgradeBtn.setZclass(DODConstants.STYLE_BUTTON);
-                    upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
                 }
 
                 //Access monitoring button

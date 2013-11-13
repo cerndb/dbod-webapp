@@ -83,7 +83,7 @@
                                     <combobox id="dbTypeFilter" width="0px" mold="rounded" readonly="true" onSelect="controller.filterInstances();">
                                         <comboitem label="${c:l('all')}" value=""/>
                                         <comboitem label="${c:l('dbTypeMYSQL')}" value="MYSQL"/>
-                                        <comboitem label="${c:l('dbTypeORACLE')}" value="ORACLE"/>
+                                        <comboitem label="${c:l('dbTypeORA')}" value="ORA"/>
                                         <comboitem label="${c:l('dbTypePG')}" value="PG"/>
                                     </combobox>
                                 </hbox>

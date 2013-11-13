@@ -391,7 +391,7 @@ public class FileController extends Window {
                     for (int i=0; i < logArray.length; i++) {
                         File logFile = new File(logArray[i]);
                         Comboitem item = new Comboitem();
-                        item.setLabel(logFile.getParentFile().getName() + "/" + logFile.getName());
+                        item.setLabel(logFile.getName());
                         item.setValue(logArray[i]);
                         toret.appendChild(item);
                     }

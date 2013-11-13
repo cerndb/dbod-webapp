@@ -263,19 +263,6 @@ BEGIN
         UPDATE dod_instances
             SET state = 'RUNNING'
             WHERE db_name = db_name_param;
-            
-        -- If Oracle instance, add scheduled cleanup job
-        IF db_type = 'ORACLE' OR db_type = 'PG'
-        THEN
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => '"' || db_name_param || '_CLEANUP"',
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => 'BEGIN dbondemand.insert_cleanup_job(''' || username || ''',''' 
-                                            || db_name_param || ''',''' || db_type || ''',''dbod''); END;',
-                    repeat_interval      => 'FREQ=DAILY;',
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled cleanup job for DB On Demand');
-        END IF;
 
         -- Return 0 for success
         result := 0;
@@ -290,8 +277,6 @@ IS
     backup_name VARCHAR2 (512);
     tape_count INTEGER;
     tape_name VARCHAR2 (512);
-    cleanup_count INTEGER;
-    cleanup_name VARCHAR2 (512);
     instance VARCHAR2(128);
 BEGIN
     result := 1;
@@ -355,33 +340,6 @@ BEGIN
                     force      =>  TRUE);
     END IF;
 
-    -- Initialise cleanup name
-    cleanup_name := instance || '_CLEANUP';
-
-    -- Query for any scheduled cleanups with the same name running at the moment
-    BEGIN
-        SELECT COUNT(*)
-            INTO cleanup_count
-            FROM user_scheduler_jobs
-            WHERE job_name = cleanup_name;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            cleanup_count := 0;
-        WHEN OTHERS THEN
-            RAISE;
-    END;
-
-    -- If there is a cleanup, drop it
-    IF cleanup_count > 0
-    THEN
-            -- Quote tape name to create object
-            cleanup_name := '"' || instance || '_CLEANUP"';
-
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  cleanup_name,
-                    force      =>  TRUE);
-    END IF;
-
     -- Update instance status
     UPDATE dod_instances
         SET status = '0'
@@ -416,11 +374,6 @@ IS
     tape_action VARCHAR2 (1024);
     tape_interval VARCHAR2 (64);
     tape_start_date DATE;
-    cleanup_count INTEGER;
-    cleanup_name VARCHAR2 (512);
-    cleanup_action VARCHAR2 (1024);
-    cleanup_interval VARCHAR2 (64);
-    cleanup_start_date DATE;
 BEGIN
     -- Update instance username
     UPDATE dod_instances
@@ -505,46 +458,6 @@ BEGIN
                     repeat_interval      => tape_interval,
                     enabled              =>  TRUE,
                     comments             => 'Scheduled backup job for DB On Demand');
-    END IF;
-    
-    -- Drop and create new cleanups in case there were any
-    -- Initialise name
-    cleanup_name := instance || '_CLEANUP';
-
-    -- Query for any schedule cleanups with the same name running at the moment
-    BEGIN
-        SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO cleanup_count, cleanup_action, cleanup_start_date, cleanup_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = cleanup_name
-            GROUP BY job_action, start_date, repeat_interval;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            cleanup_count := 0;
-	WHEN OTHERS THEN
-            RAISE;
-    END;
-            
-    -- If there is a scheduled cleanups
-    IF cleanup_count > 0
-    THEN
-            -- Quote name for object
-            cleanup_name := '"' || instance || '_CLEANUP"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  cleanup_name,
-                    force      =>  TRUE);
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => cleanup_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(cleanup_action, '''' || old_user || '''', '''' || new_user || ''''),
-                    start_date           => cleanup_start_date,
-                    repeat_interval      => cleanup_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled cleanup for DB On Demand');
     END IF;
 END;
 /
@@ -798,225 +711,5 @@ BEGIN
             message => message,
             mime_type => 'text/html');
     END LOOP;
-END;
-/
-
--- Inserts a cleanup job in the database
-CREATE OR REPLACE PROCEDURE insert_cleanup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
-						type_param IN VARCHAR2, requester_param IN VARCHAR2)
-IS
-	now DATE;
-BEGIN
-	SELECT sysdate
-		INTO now
-		FROM dual;
-	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
-		VALUES (username_param, db_name_param, 'CLEANUP', type_param, now, requester_param, 2, 'PENDING');
-        UPDATE dbondemand.dod_instances
-                SET state = 'JOB_PENDING'
-                WHERE username = username_param AND db_name = db_name_param;
-END;
-/
-
--- Add check_ownership, monitor_jobs, clean_jobs and check_expired to dbms_scheduler
-BEGIN
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name             => 'DBOD_OWNERSHIP_CHECK',
-        job_type             => 'PLSQL_BLOCK',
-        job_action           => 'BEGIN dbondemand.check_ownership; END;',
-        repeat_interval      => 'FREQ=MINUTELY;INTERVAL=10',
-        enabled              =>  TRUE,
-        comments             => 'Scheduled job to check for ownership changes on instances');
-
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name             => 'DBOD_MONITOR_JOBS',
-        job_type             => 'PLSQL_BLOCK',
-        job_action           => 'BEGIN dbondemand.monitor_jobs; END;',
-        repeat_interval      => 'FREQ=MINUTELY;INTERVAL=5',
-        enabled              =>  TRUE,
-        comments             => 'Scheduled job to check for timed out jobs');
-
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name             => 'DBOD_CLEAN_JOBS',
-        job_type             => 'PLSQL_BLOCK',
-        job_action           => 'BEGIN dbondemand.clean_jobs; END;',
-        repeat_interval      => 'FREQ=DAILY;',
-        enabled              =>  TRUE,
-        comments             => 'Scheduled job to clean jobs table');
-
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name             => 'DBOD_BACKUP_WARNING',
-        job_type             => 'PLSQL_BLOCK',
-        job_action           => 'BEGIN dbondemand.backup_warning; END;',
-        repeat_interval      => 'FREQ=MONTHLY; BYMONTHDAY=1;',
-        enabled              =>  TRUE,
-        comments             => 'Warns users when automatic backups are not enabled');
-
-    DBMS_SCHEDULER.CREATE_JOB (
-        job_name             => 'DBOD_CHECK_EXPIRED',
-        job_type             => 'PLSQL_BLOCK',
-        job_action           => 'BEGIN dbondemand.check_expired; END;',
-        repeat_interval      => 'FREQ=DAILY;',
-        enabled              =>  TRUE,
-        comments             => 'Checks for expired instances');
-END;
-/
-
--- Grant rights to fim_ora_ma to execute procedures
-GRANT EXECUTE ON dbondemand.approve_instance TO fim_ora_ma;
-GRANT EXECUTE ON dbondemand.destroy_instance TO fim_ora_ma;
-
-
--- Updates the DB name  of an instance
-CREATE OR REPLACE PROCEDURE change_db_name (old_instance IN VARCHAR2, new_instance IN VARCHAR2)
-IS
-    backup_count INTEGER;
-    backup_name VARCHAR2 (512);
-    backup_action VARCHAR2 (1024);
-    backup_interval VARCHAR2 (64);
-    backup_start_date DATE;
-    tape_count INTEGER;
-    tape_name VARCHAR2 (512);
-    tape_action VARCHAR2 (1024);
-    tape_interval VARCHAR2 (64);
-    tape_start_date DATE;
-    cleanup_count INTEGER;
-    cleanup_name VARCHAR2 (512);
-    cleanup_action VARCHAR2 (1024);
-    cleanup_interval VARCHAR2 (64);
-    cleanup_start_date DATE;
-BEGIN
-    -- Update instance username
-    UPDATE dod_instances
-        SET db_name = new_instance
-        WHERE db_name = old_instance;
-
-    -- Drop and create new automatic backups in case there were any
-    -- Initialise name
-    backup_name := old_instance || '_BACKUP';
-
-    -- Query for any schedule backups with the same name running at the moment
-    BEGIN
-        SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO backup_count, backup_action, backup_start_date, backup_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = backup_name
-            GROUP BY job_action, start_date, repeat_interval;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            backup_count := 0;
-        WHEN OTHERS THEN
-            RAISE;
-    END;
-            
-    -- If there is a scheduled backup
-    IF backup_count > 0
-    THEN
-            -- Quote name for object
-            backup_name := '"' || old_instance || '_BACKUP"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  backup_name,
-                    force      =>  TRUE);
-
-            -- Quote name for object
-            backup_name := '"' || new_instance || '_BACKUP"';
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => backup_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(backup_action, '''' || old_instance || '''', '''' || new_instance || ''''),
-                    start_date           => backup_start_date,
-                    repeat_interval      => backup_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
-    END IF;
-
-    -- Drop and create new backups to tape in case there were any
-    -- Initialise name
-    tape_name := old_instance || '_BACKUP_TO_TAPE';
-
-    -- Query for any schedule backups with the same name running at the moment
-    BEGIN
-        SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO tape_count, tape_action, tape_start_date, tape_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = tape_name
-            GROUP BY job_action, start_date, repeat_interval;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            tape_count := 0;
-        WHEN OTHERS THEN
-            RAISE;
-    END;
-            
-    -- If there is a scheduled backups to tape
-    IF tape_count > 0
-    THEN
-            -- Quote name for object
-            tape_name := '"' || old_instance || '_BACKUP_TO_TAPE"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  tape_name,
-                    force      =>  TRUE);
-
-            -- Quote name for object
-            tape_name := '"' || new_instance || '_BACKUP_TO_TAPE"';
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => tape_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(tape_action, '''' || old_instance || '''', '''' || new_instance || ''''),
-                    start_date           => tape_start_date,
-                    repeat_interval      => tape_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
-    END IF;
-
-    -- Drop and create new cleanups in case there were any
-    -- Initialise name
-    cleanup_name := old_instance || '_CLEANUP';
-
-    -- Query for any schedule cleanups with the same name running at the moment
-    BEGIN
-        SELECT COUNT(*), job_action, start_date, repeat_interval
-            INTO cleanup_count, cleanup_action, cleanup_start_date, cleanup_interval
-            FROM user_scheduler_jobs
-            WHERE job_name = cleanup_name
-            GROUP BY job_action, start_date, repeat_interval;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            cleanup_count := 0;
-	WHEN OTHERS THEN
-            RAISE;
-    END;
-            
-    -- If there is a scheduled cleanups
-    IF cleanup_count > 0
-    THEN
-            -- Quote name for object
-            cleanup_name := '"' || old_instance || '_CLEANUP"';
-
-            -- Drop previous job
-            DBMS_SCHEDULER.DROP_JOB (
-                    job_name   =>  cleanup_name,
-                    force      =>  TRUE);
-
-            cleanup_name := '"' || new_instance || '_CLEANUP"';
-            
-            -- Create the scheduled job
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => cleanup_name,
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => REPLACE(cleanup_action, '''' || old_instance || '''', '''' || new_instance || ''''),
-                    start_date           => cleanup_start_date,
-                    repeat_interval      => cleanup_interval,
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled cleanup for DB On Demand');
-    END IF;
 END;
 /

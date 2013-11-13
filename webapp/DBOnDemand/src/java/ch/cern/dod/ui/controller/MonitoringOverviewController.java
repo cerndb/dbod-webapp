@@ -69,9 +69,6 @@ public class MonitoringOverviewController extends Hbox  implements BeforeCompose
             case DODConstants.DB_TYPE_MYSQL:
                 metrics = DODConstants.MYSQL_OVERVIEW_METRICS;
                 break;
-            case DODConstants.DB_TYPE_ORACLE:
-                metrics = DODConstants.ORACLE_OVERVIEW_METRICS;
-                break;
             case DODConstants.DB_TYPE_PG:
                 metrics = DODConstants.PG_OVERVIEW_METRICS;
                 break;

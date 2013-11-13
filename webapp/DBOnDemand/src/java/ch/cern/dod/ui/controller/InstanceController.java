@@ -499,27 +499,15 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
-        //Find out if insance is shared or not
-        boolean shared = false;
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
-                && instanceDAO.selectInstancesPerHost(instance.getHost(), null).size() > 1) {
-            shared = true;
-        }
-        //Only enable button if the instance is not shared and is stopped or running (and there is an upgrade available)
+        //Only enable button if the instance is stopped or running (and there is an upgrade available)
         if ((!instance.getState().equals(DODConstants.INSTANCE_STATE_RUNNING)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_STOPPED)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_BUSY)
                 && !instance.getState().equals(DODConstants.INSTANCE_STATE_UNKNOWN))
-                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty() || shared) {
+                || instance.getUpgradeTo() == null || instance.getUpgradeTo().isEmpty()) {
             upgradeBtn.setDisabled(true);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON_DISABLED);
-            //Change tooltip in case it's shared and there are backups
-            if (shared) {
-                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_UPGRADE_SHARED_WARNING));
-            }
-            else {
-                upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
-            }
+            upgradeBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_UPGRADE));
         } else {
             upgradeBtn.setDisabled(false);
             upgradeBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);

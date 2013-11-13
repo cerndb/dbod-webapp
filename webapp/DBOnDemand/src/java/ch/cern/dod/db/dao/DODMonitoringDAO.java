@@ -64,14 +64,6 @@ public class DODMonitoringDAO {
                     statement.setString(1, DODConstants.MONITORING_TYPE_MYSQL);
                     statement.setString(2, DODConstants.MONITORING_TYPE_NODE);
                     break;
-                case DODConstants.DB_TYPE_ORACLE:
-                    query.append("SELECT ?, metric_id, metric_name, metric_unit"
-                                    + " FROM pdb_monitoring.rmon_metrics"
-                                    + " WHERE metric_id <> 2144" //Exclude Average Synchronous Single-Block Read Latency
-                                    + " ORDER BY metric_name");
-                    statement = connection.prepareStatement(query.toString());
-                    statement.setString(1, DODConstants.MONITORING_TYPE_ORACLE);
-                    break;
                 case DODConstants.DB_TYPE_PG:
                     query.append("SELECT target_type, parameter_code, parameter_name, unit"
                                     + " FROM pdb_monitoring.target_params_defs"
@@ -168,18 +160,6 @@ public class DODMonitoringDAO {
                     statement.setString(3, metric.getCode());
                     statement.setTimestamp(4, start);
                     break;
-                case DODConstants.MONITORING_TYPE_ORACLE:
-                    query.append("SELECT begin_time, end_time, average"
-                                    + " FROM pdb_monitoring.rmon_data"
-                                    + " WHERE cluster_name = ?"
-                                    + " AND metric_id = ?"
-                                    + " AND (end_time >= ? OR end_time IS NULL)"
-                                    + " ORDER BY begin_time");
-                    statement = connection.prepareStatement(query.toString());
-                    statement.setString(1, instance.getDbName().toUpperCase());
-                    statement.setString(2, metric.getCode());
-                    statement.setTimestamp(3, start);
-                    break;
                 case DODConstants.MONITORING_TYPE_PG:
                     query.append("SELECT p.valid_from, p.valid_to, p.value"
                                     + " FROM pdb_monitoring.targets t, pdb_monitoring.target_params p"
@@ -228,9 +208,8 @@ public class DODMonitoringDAO {
                 json.append(value1);
                 json.append("}]}");
                 
-                //If the next point is after more than 7 minutes add delta 0 (not for Oracle)
-                if (!instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
-                        && start.getTime() + 420000 < end.getTime()) {
+                //If the next point is after more than 7 minutes add delta 0
+                if (start.getTime() + 420000 < end.getTime()) {
                     json.append(", {c: [{v: new Date(");
                     json.append(end.getTime() - 360000);
                     json.append(")}, {}, {v:0}]}");
@@ -264,8 +243,7 @@ public class DODMonitoringDAO {
                     json.append("}]}");
                     
                     //If the next point is after more than 7 minutes add delta 0
-                    if (!instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)
-                            && result.getTimestamp(1).getTime() + 420000 < end.getTime()) {
+                    if (result.getTimestamp(1).getTime() + 420000 < end.getTime()) {
                         json.append(", {c: [{v: new Date(");
                         json.append(result.getTimestamp(1).getTime() + 360000);
                         json.append(")}, {}, {v:0}]}");
