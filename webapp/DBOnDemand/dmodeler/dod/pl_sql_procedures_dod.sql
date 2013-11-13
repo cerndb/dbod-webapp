@@ -710,14 +710,15 @@ CREATE OR REPLACE PROCEDURE clean_jobs
 IS
     now DATE;
 BEGIN
-    -- Insert a row in the jobs table
+    -- Get system date
     SELECT sysdate
         INTO now
         FROM dual;
 
     -- Delete old jobs
     DELETE FROM dod_jobs
-        WHERE now - creation_date > 90;
+        WHERE now - creation_date > 90
+            AND command_name <> 'UPLOAD_CONFIG';
 END;
 /
 
