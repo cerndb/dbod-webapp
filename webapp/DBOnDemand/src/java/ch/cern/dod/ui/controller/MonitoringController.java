@@ -68,7 +68,7 @@ public class MonitoringController extends Window {
         String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
         ParamsHelper paramsHelper = new ParamsHelper(wsUser, wsPswd);
 
-        String hostname = paramsHelper.getParam(instance, DODConstants.PARAM_HOST);
+        String hostname = paramsHelper.getHost(instance);
         if (hostname == null)
             hostname = "";
         final String host = hostname.substring(0, hostname.indexOf("."));

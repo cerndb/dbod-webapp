@@ -124,4 +124,16 @@ public interface DODWebServicePortType {
         @WebParam(name = "param", partName = "param")
         String param);
 
+    /**
+     * 
+     * @param instance
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod(operationName = "GetHost", action = "https://syscontrol.cern.ch/Dod/#GetHost")
+    @WebResult(name = "host", partName = "host")
+    public String getHost(
+        @WebParam(name = "instance", partName = "instance")
+        String instance);
+
 }

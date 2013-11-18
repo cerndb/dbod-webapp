@@ -49,4 +49,21 @@ public class ParamsHelper {
         }
         return paramValue;
     }
+    
+    /**
+     * Gets th host of an instance.
+     * @param instance instance to get the host of.
+     * @return host value.
+     */
+    public String getHost(DODInstance instance) {
+        String host = null;
+        try {
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            host = port.getHost(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+        } catch (Exception ex) {
+            Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING HOST OF INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return host;
+    }
 }

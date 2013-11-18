@@ -74,6 +74,14 @@
     <wsdl:message name="GetParamResponse">
         <wsdl:part name="paramValue" type="xsd:string" />
     </wsdl:message>
+    
+    <wsdl:message name="GetHostRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetHostResponse">
+        <wsdl:part name="host" type="xsd:string" />
+    </wsdl:message>
 
     <wsdl:portType name="DODWebServicePortType">
         <wsdl:operation name="GetSnapshots">
@@ -107,6 +115,10 @@
         <wsdl:operation name="GetParam">
             <wsdl:input message="impl:GetParamRequest" name="GetParamRequest" />
             <wsdl:output message="impl:GetParamResponse" name="GetParamResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetHost">
+            <wsdl:input message="impl:GetHostRequest" name="GetHostRequest" />
+            <wsdl:output message="impl:GetHostResponse" name="GetHostResponse" />
         </wsdl:operation>
     </wsdl:portType>
 
@@ -181,6 +193,15 @@
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:input>
             <wsdl:output name="GetParamResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetHost">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetHost"/>
+            <wsdl:input name="GetHostRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetHostResponse">
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:output>
         </wsdl:operation>
