@@ -227,7 +227,7 @@ public class BackupController extends Window {
         backupToTape.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE));
         backupToTape.setChecked(prevBackupToTapeEnabled);
         //Limit tape backups to production databases
-        if (!instance.getCategory().equals(DODConstants.CATEGORY_OFFICIAL)) {
+        if (!instance.getCategory().equals(DODConstants.CATEGORY_OFFICIAL) && !prevBackupToTapeEnabled) {
             backupToTape.setDisabled(true);
         }
         tapeBox.appendChild(backupToTape);
