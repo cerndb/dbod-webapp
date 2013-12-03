@@ -226,6 +226,10 @@ public class BackupController extends Window {
         backupToTape = new Checkbox();
         backupToTape.setLabel(Labels.getLabel(DODConstants.LABEL_BACKUP_TO_TAPE));
         backupToTape.setChecked(prevBackupToTapeEnabled);
+        //Limit tape backups to production databases
+        if (!instance.getCategory().equals(DODConstants.CATEGORY_OFFICIAL)) {
+            backupToTape.setDisabled(true);
+        }
         tapeBox.appendChild(backupToTape);
         //Create date and time choosers
         tapeDay = new Datebox();
