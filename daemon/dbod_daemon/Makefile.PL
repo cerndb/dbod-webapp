@@ -18,5 +18,17 @@ install_script 'scripts/dbod_state_checker';
 install_script 'scripts/dbod_daemon_monitor';
 install_share 'share';
 
+# Overriding postamble section to create a new target in the MakeFile
+# /usr/src/redhat/SOURCES/
+# /usr/src/redhat/SPECS/
+
+sub MY::postamble {
+    "rpm :\n" .
+    "\tmake dist\n" .
+    "\tcp dbod_daemon-2.0.tar.gz /usr/src/redhat/SOURCES/\n" .
+    "\tcp dbod_daemon.spec /usr/src/redhat/SPECS/\n" .
+    "\tcd /usr/src/redhat/SPECS/; rpmbuild -bb dbod_daemon.spec\n"
+}
+
 WriteAll;
 
