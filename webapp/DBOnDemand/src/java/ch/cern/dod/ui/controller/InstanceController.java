@@ -25,6 +25,9 @@ import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.*;
@@ -523,7 +526,20 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         } else {
             monitorBtn.setDisabled(false);
             monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
-        }      
+        }
+        //If it is an oracle instance, send to OEM
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+            monitorBtn.setTarget("_blank");
+            monitorBtn.setHref(DODConstants.OEM_URL + "?target=" + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase() + "&type=oracle_pdb");
+        }
+        else {
+            monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                        @Override
+                        public void onEvent(Event event) {
+                            doMonitor();
+                        }
+                    });
+        }
     }
 
      /**

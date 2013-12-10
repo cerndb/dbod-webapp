@@ -101,6 +101,7 @@ public class DODConstants {
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
     public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
+    public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home";
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";

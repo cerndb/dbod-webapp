@@ -54,7 +54,7 @@
                             <toolbarbutton id="upgrade" image="/img/upgrade_big.png" onClick="controller.doUpgrade();" tooltiptext="${c:l('jobActionUPGRADE')}"/>
                         </div>
                         <div width="52px" height="52px">
-                            <toolbarbutton id="monitor" image="/img/monitor_big.png" onClick="controller.doMonitor();" tooltiptext="${c:l('jobActionMONITOR')}"/>
+                            <toolbarbutton id="monitor" image="/img/monitor_big.png" tooltiptext="${c:l('jobActionMONITOR')}"/>
                         </div>
                     </vbox>
                 </groupbox>

@@ -457,21 +457,28 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 monitorBtn.setTooltiptext(Labels.getLabel(DODConstants.LABEL_JOB + DODConstants.JOB_MONITOR));
                 monitorBtn.setImage(DODConstants.IMG_MONITOR);
                 monitorBtn.setParent(box);
-                monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-                    @Override
-                    public void onEvent(Event event) {
-                        try {
-                            MonitoringController monitoringController = new MonitoringController(instance);
-                            //Only show window if it is not already being diplayed
-                            if (row.getRoot().getFellowIfAny(monitoringController.getId()) == null) {
-                                monitoringController.setParent(row.getRoot());
-                                monitoringController.doModal();
+                //If it is an oracle instance, send to OEM
+                if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+                    monitorBtn.setTarget("_blank");
+                    monitorBtn.setHref(DODConstants.OEM_URL + "?target=" + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase() + "&type=oracle_pdb");
+                }
+                else {
+                    monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
+                        @Override
+                        public void onEvent(Event event) {
+                            try {
+                                MonitoringController monitoringController = new MonitoringController(instance);
+                                //Only show window if it is not already being diplayed
+                                if (row.getRoot().getFellowIfAny(monitoringController.getId()) == null) {
+                                    monitoringController.setParent(row.getRoot());
+                                    monitoringController.doModal();
+                                }
+                            } catch (InterruptedException ex) {
+                                showError(item, ex, DODConstants.ERROR_DISPATCHING_JOB);
                             }
-                        } catch (InterruptedException ex) {
-                            showError(item, ex, DODConstants.ERROR_DISPATCHING_JOB);
                         }
-                    }
-                });
+                    });
+                }
 
                 //Only disable button if the instance is awaiting approval
                 if (instance.getState().equals(DODConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
