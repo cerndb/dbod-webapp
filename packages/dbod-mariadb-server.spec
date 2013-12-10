@@ -18,6 +18,9 @@ DB On Demand MariaDB Server.
 RPM package for the MariaDB General Linux binary tarball distributed 
 with customized startup script and destination folder.
 
+Tests and SQL benchmarks are not packaged to avoid extra Perl
+library dependencies.
+
 #Requires: 
 
 %prep
@@ -33,7 +36,24 @@ exit 0
 exit 0
 
 %files 
-/usr/local/mysql/mariadb-5.5.34
+%defattr(-,mysql,mysql)
+/usr/local/mysql/mariadb-5.5.34/bin
+/usr/local/mysql/mariadb-5.5.34/COPYING
+/usr/local/mysql/mariadb-5.5.34/COPYING.LESSER
+/usr/local/mysql/mariadb-5.5.34/data
+%doc /usr/local/mysql/mariadb-5.5.34/docs
+/usr/local/mysql/mariadb-5.5.34/include
+/usr/local/mysql/mariadb-5.5.34/INSTALL-BINARY
+/usr/local/mysql/mariadb-5.5.34/lib
+%doc /usr/local/mysql/mariadb-5.5.34/man
+%doc /usr/local/mysql/mariadb-5.5.34/README
+/usr/local/mysql/mariadb-5.5.34/scripts
+/usr/local/mysql/mariadb-5.5.34/share
+/usr/local/mysql/mariadb-5.5.34/support-files
+%attr(755,root,root) /etc/init.d/mariadb
+
+
+
 
 %changelog
 * Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
