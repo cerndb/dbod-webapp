@@ -171,7 +171,9 @@ This is the script in charge of checking maintaining an updated
 state for the DB instances in the DBOD application database.
 
 Configuration and additional support files (i.e. templates for DBMS configuration files)
-can be found at: <PATH_TO_PERL_SHARE>/DBOD/. Expected files are:
+can be found at: <PATH_TO_PERL_SHARE>/DBOD/. 
+
+Expected files are:
 
 - dbod_daemon.conf : General configuration file. YAML format
 
