@@ -5,33 +5,48 @@ package dbod_state_checker;
 use strict;
 use DBOD;
 use DBOD::Database;
+use POSIX ':sys_wait_h';
 
 # Initializes Logging Settings
 
 our ($logger, $lock_file); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger("DBOD.StateChecker");
-    $logger->debug("Logger created");
-    $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
+    $logger = Log::Log4perl::get_logger( 'DBOD.StateChecker' );
+    $logger->debug( 'Logger created' );
+    $lock_file = $DBOD::config->{ 'SC_LOCK_FILE'};
 }
 
 sub usage() {
-    print "USAGE:\n\tcommand\n";
+    print "USAGE:\n\t$0\n";
     exit -1;
 }
 
 sub worker {
-    
-    my ($instance, $dbh) = @_;
-    my $db_name = $instance->{'DB_NAME'};
-    my $instance_name = "dod_$db_name";
-    $logger->debug( "Checking $instance_name" );
+    my ($instance, $pdbh) = @_;
+    my $logger = Log::Log4perl::get_logger( "DBOD.worker" );
+
+    my $worker_dbh;
+    if (defined($pdbh)){
+        # Cloning parent process DB handler
+        $logger->debug("Cloning parent DB handler");
+        $worker_dbh = $pdbh->clone();
+        $logger->debug( "Setting date format: $DBOD::Database::DATEFORMAT" );
+        $worker_dbh->do( "alter session set NLS_DATE_FORMAT='$DBOD::Database::DATEFORMAT'" );
+        $pdbh->{InactiveDestroy} = 1;
+        undef $pdbh;
+    }
+    else{
+        # Obtaining a new DB connector
+        $worker_dbh = DBOD::Database::getDBH();
+    }
+
+    $logger->debug( 'Checking ' . $instance->{ 'DB_NAME' } );
     
     my $state_checker = DBOD::get_state_checker($instance);
     if (!defined $state_checker){
-        $logger->error( "Not state checker defined for this DB type" );
-        return 1;
+        $logger->error( 'Not state checker defined for this DB type' );
+        exit -1;
     }
 
     if (($instance->{'STATE'} ne 'JOB_PENDING') && 
@@ -39,16 +54,16 @@ sub worker {
         ($instance->{'STATE'} ne 'MAINTENANCE')) {
         my ($buf, $instance_state) = $state_checker->($instance, 0);
         if (($instance->{'STATE'} ne $instance_state)) {
-            $logger->debug( "Updating $instance_name STATE to $instance_state");
-            DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $dbh);
-            $logger->debug( "$instance_name state update successfully");
+            $logger->debug( 'Updating STATE to ' . $instance_state . ' for ' . $instance->{ 'DB_NAME' });
+            DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $worker_dbh);
         }
     }
     else{
-        $logger->debug( "State untouched for $instance_name: " . $instance->{'STATE'} );
+        $logger->debug( "State untouched for " . $instance->{'DB_NAME'} );
     }
-    
-    return 0;
+   
+    $worker_dbh->disconnect();
+    exit 0;
 }
 
 sub Main{
@@ -57,29 +72,68 @@ sub Main{
 
     unless (-e $lock_file){
 
-        $logger->debug("Creating lock file: $lock_file");
+        $logger->debug( "Creating lock file: $lock_file" );
         open(LOCKF, ">$lock_file");
         close(LOCKF);
-        $logger->debug("Opening DB connection");
+        $logger->debug( 'Opening DB connection' );
         my $dbh = DBOD::Database::getDBH();
         my $rc;
 
         if (defined($dbh)){
             my @instances = DBOD::Database::getInstanceList($dbh);
+            my @tasks;
+
             foreach my $instance (@instances){
-                $logger->debug( "Checking state for instance: " . $instance->{'DB_NAME'} );
-                worker($instance, $dbh);
+                if ($#tasks < 32){
+                    my $worker_pid = fork();
+                    if ($worker_pid){
+                        $logger->debug( "Adding worker ($worker_pid) to pool" );
+                        my $task = {};
+                        $task->{'pid'} = $worker_pid;
+                        $task->{'instance'} = $instance;
+                        push(@tasks, $task);
+                        $logger->debug( 'PID:' . $worker_pid . ' Instance ' . $instance->{'DB_NAME'} );
+                    }                                                                                                 
+                    else{
+                        $logger->debug( 'Checking state for instance: ' . $instance->{'DB_NAME'} );
+                        worker($instance, $dbh);
+                        exit 0;
+                    }
+                }
+                else { # Waiting in case the workers pool fills
+                    $logger->debug( "Waiting for $#tasks tasks  completion" );
+                    foreach my $task (@tasks) {
+                        my $tmp = waitpid($task->{'pid'}, 0);
+                        $logger->debug( "Done with worker : $tmp" );
+                    }
+                    $logger->debug( 'Removing finished workers from pool' );
+                    @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
+                }
+ 
             }
-            $logger->debug("Closing DB connection");
+
+            # Waiting for workers to finish 
+            #  - when the number of processes is less than MAX_PARALLEL_PROCS
+            
+            $logger->debug( "Waiting for $#tasks tasks  completion" );
+            foreach my $task (@tasks) {
+                my $tmp = waitpid($task->{'pid'}, 0);
+                $logger->debug( "Done with worker : $tmp" );
+            }
+
+            # Everthing completed successfully
             $rc = 0;
         }
         else{
-            $logger->error("Unable to get DB connection");
+            $logger->error( 'Unable to get DB connection' );
             $rc = -1;
         }
 
-        $logger->debug("Deleting lock file");
-        unlink($lock_file);
+        $logger->debug( 'Disconnecting from DB' );
+        $dbh->disconnect();
+
+        $logger->debug( 'Deleting lock file' );
+        unlink $lock_file ;
 
         exit $rc;
     }
