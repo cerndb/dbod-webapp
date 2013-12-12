@@ -1,12 +1,16 @@
 #
 # Database On Demand (DBOD) PostgreSQL server SPEC file
 #
+
+# The version to be compiled must be passed via an environment variable
+%define version %(echo $PG_VERSION)
+
 Summary: DB On Demand MySQL server 
 Name: DBOD-PostgreSQL-server
-Version: 9.2.4
+Version: %{version}
 Release: 0 
 License: GPL
-Source: postgresql-9.2.4.tar.gz
+Source: postgresql-%{version}.tar.gz
 Group: Applications
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
@@ -20,8 +24,8 @@ RPM package for the PostgreSQL server.
 #Requires: 
 
 %prep
-%setup -n postgresql-9.2.4
-./configure --prefix=/usr/local/pgsql/pgsql-9.2.4 \
+%setup -n postgresql-%{version}
+./configure --prefix=/usr/local/pgsql/pgsql-%{version} \
 --with-openssl \
 --with-krb5 \
 --with-pam \
@@ -41,9 +45,9 @@ exit 0
 
 %files 
 %defattr(-,postgres,postgres)
-%dir /usr/local/pgsql/pgsql-9.2.4
-%doc /usr/local/pgsql/pgsql-9.2.4/share/man
-%doc /usr/local/pgsql/pgsql-9.2.4/share/doc
+%dir /usr/local/pgsql/pgsql-%{version}
+%doc /usr/local/pgsql/pgsql-%{version}/share/man
+%doc /usr/local/pgsql/pgsql-%{version}/share/doc
 
 %changelog
 * Tue Dec 10 2013 Ignacio Coterillo <icoteril@cern.ch>
