@@ -1,9 +1,13 @@
 #
 # Database On Demand (DBOD) MariaDB server SPEC file
 #
+
+# Gets version of package from environment variable
+%define version=$(echo $MARIADB_VERSION)
+
 Summary: DB On Demand MariaDB server 
 Name: DBOD-MariaDB-server
-Version: 5.5.34
+Version: %{version}
 Release: 0 
 License: GPL
 Group: Applications
@@ -37,24 +41,23 @@ exit 0
 
 %files 
 %defattr(-,mysql,mysql)
-/usr/local/mysql/mariadb-5.5.34/bin
-/usr/local/mysql/mariadb-5.5.34/COPYING
-/usr/local/mysql/mariadb-5.5.34/COPYING.LESSER
-/usr/local/mysql/mariadb-5.5.34/data
-%doc /usr/local/mysql/mariadb-5.5.34/docs
-/usr/local/mysql/mariadb-5.5.34/include
-/usr/local/mysql/mariadb-5.5.34/INSTALL-BINARY
-/usr/local/mysql/mariadb-5.5.34/lib
-%doc /usr/local/mysql/mariadb-5.5.34/man
-%doc /usr/local/mysql/mariadb-5.5.34/README
-/usr/local/mysql/mariadb-5.5.34/scripts
-/usr/local/mysql/mariadb-5.5.34/share
-/usr/local/mysql/mariadb-5.5.34/support-files
+/usr/local/mysql/mariadb-%{version}/bin
+/usr/local/mysql/mariadb-%{version}/COPYING
+/usr/local/mysql/mariadb-%{version}/COPYING.LESSER
+/usr/local/mysql/mariadb-%{version}/data
+%doc /usr/local/mysql/mariadb-%{version}/docs
+/usr/local/mysql/mariadb-%{version}/include
+/usr/local/mysql/mariadb-%{version}/INSTALL-BINARY
+/usr/local/mysql/mariadb-%{version}/lib
+%doc /usr/local/mysql/mariadb-%{version}/man
+%doc /usr/local/mysql/mariadb-%{version}/README
+/usr/local/mysql/mariadb-%{version}/scripts
+/usr/local/mysql/mariadb-%{version}/share
+/usr/local/mysql/mariadb-%{version}/support-files
 %attr(755,root,root) /etc/init.d/mariadb
-
-
-
 
 %changelog
 * Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Initial packaging
+* Fri Dec 13 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Use of %{version}

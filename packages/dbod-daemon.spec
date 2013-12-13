@@ -1,13 +1,17 @@
 #
 # Database On Demand (DBOD) Daemon SPEC file
 #
+
+# The version to be compiled must be passed via an environment variable
+%define version %(echo $DAEMON_VERSION)
+
 Summary: DB On Demand Job Dispatching Daemon 
-Name: dbod_daemon
-Version: 2.0
+Name: DBOD-daemon
+Version: %{version}
 Release: 0 
 License: GPL
 Group: Applications
-Source: dbod_daemon-2.0.tar.gz
+Source: dbod_daemon-%{version}.tar.gz
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
 Vendor: CERN
@@ -19,31 +23,31 @@ DB On Demand Job Dispatching Daemon
 #Requires: 
 
 %prep
-%setup -c
+%setup -n dbod_daemon-%{version}
 
 %build
-cd $(basename $PWD) # This won't be needed if tar wouldn't contain extra folder
+#cd $(basename $PWD) # This won't be needed if tar wouldn't contain extra folder
 perl Makefile.PL
 make
 
 %install
-cd $(basename $PWD) # This won't be needed if tar wouldn't contain extra folder
+#cd $(basename $PWD) # This won't be needed if tar wouldn't contain extra folder
 make install
 # Creates configuration links
-ln -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon.conf \
+ln -f -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon.conf \
  /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon.conf
-ln -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon_logger.conf \
+ln -f -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon_logger.conf \
  /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon_logger.conf
-ln -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/  \
+ln -f -s /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/  \
  /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/templates
 # Creates start scripts
 cp scripts/dbod_daemon_init /etc/init.d/dbod_daemon
-for a in 0 1 6; do ln -s /etc/init.d/dbod_daemon /etc/rc$a.d/K85dbod_daemon; done
-for a in 2 3 4 5; do ln -s /etc/init.d/dbod_daemon /etc/rc$a.d/S85dbod_daemon; done
+for a in 0 1 6; do ln -f -s /etc/init.d/dbod_daemon /etc/rc$a.d/K85dbod_daemon; done
+for a in 2 3 4 5; do ln -f -s /etc/init.d/dbod_daemon /etc/rc$a.d/S85dbod_daemon; done
 # Creates running folders
-mkdir /var/run/dbod_daemon
+mkdir -p /var/run/dbod_daemon
 chown dbod:dbod /var/run/dbod_daemon/
-mkdir /var/log/dbod_daemon
+mkdir -p /var/log/dbod_daemon
 chown dbod:dbod /var/log/dbod_daemon/
 
 %clean
@@ -73,8 +77,8 @@ rm -rf $RPM_BUILD_ROOT
 /etc/rc4.d/S85dbod_daemon
 /etc/rc5.d/S85dbod_daemon
 /etc/rc6.d/K85dbod_daemon
-/var/run/dbod_daemon
-/var/log/dbod_daemon
+%attr (-, dbod, dbod) /var/run/dbod_daemon
+%attr (-, dbod, dbod) /var/log/dbod_daemon
 %doc /usr/share/man/man1/dbod_state_checker.1
 %doc /usr/share/man/man1/dbod_daemon.1
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon.conf

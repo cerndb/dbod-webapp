@@ -52,3 +52,5 @@ exit 0
 %changelog
 * Tue Dec 10 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Initial packaging
+* Thu Dec 12 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added use of %{version}

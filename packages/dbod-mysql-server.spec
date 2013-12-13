@@ -1,9 +1,13 @@
 #
 # Database On Demand (DBOD) MySQL server SPEC file
 #
+
+# The version to be compiled must be passed via an environment variable
+%define version %(echo $MYSQL_VERSION)
+
 Summary: DB On Demand MySQL server 
 Name: DBOD-MySQL-server
-Version: 5.5.35
+Version: %{version}
 Release: 0 
 License: GPL
 Group: Applications
@@ -37,20 +41,22 @@ exit 0
 
 %files 
 %defattr(-,mysql,mysql)
-/usr/local/mysql/mysql-5.5.35/bin
-/usr/local/mysql/mysql-5.5.35/COPYING
-/usr/local/mysql/mysql-5.5.35/data
-%doc /usr/local/mysql/mysql-5.5.35/docs
-/usr/local/mysql/mysql-5.5.35/include
-/usr/local/mysql/mysql-5.5.35/INSTALL-BINARY
-/usr/local/mysql/mysql-5.5.35/lib
-%doc /usr/local/mysql/mysql-5.5.35/man
-%doc /usr/local/mysql/mysql-5.5.35/README
-/usr/local/mysql/mysql-5.5.35/scripts
-/usr/local/mysql/mysql-5.5.35/share
-/usr/local/mysql/mysql-5.5.35/support-files
+/usr/local/mysql/mysql-%{version}/bin
+/usr/local/mysql/mysql-%{version}/COPYING
+/usr/local/mysql/mysql-%{version}/data
+%doc /usr/local/mysql/mysql-%{version}/docs
+/usr/local/mysql/mysql-%{version}/include
+/usr/local/mysql/mysql-%{version}/INSTALL-BINARY
+/usr/local/mysql/mysql-%{version}/lib
+%doc /usr/local/mysql/mysql-%{version}/man
+%doc /usr/local/mysql/mysql-%{version}/README
+/usr/local/mysql/mysql-%{version}/scripts
+/usr/local/mysql/mysql-%{version}/share
+/usr/local/mysql/mysql-%{version}/support-files
 %attr(755,root,root) /etc/init.d/mysql
 
 %changelog
 * Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Initial packaging
+* Fri Dec 13 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Added use of %{version}
