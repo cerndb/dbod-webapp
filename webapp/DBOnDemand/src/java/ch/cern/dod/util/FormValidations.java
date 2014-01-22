@@ -187,7 +187,8 @@ public class FormValidations {
                 return false;
             }
             //Check dbtype Oracle, MySQL or PostgreSQL
-            if (!dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_ORACLE)
+            if (!dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_ORA)
+                    && !dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_ORACLE)
                     && !dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_MYSQL)
                     && !dbType.getSelectedItem().getValue().equals(DODConstants.DB_TYPE_PG)) {
                 dbType.setErrorMessage(Labels.getLabel(DODConstants.ERROR_DB_TYPE_LIST));

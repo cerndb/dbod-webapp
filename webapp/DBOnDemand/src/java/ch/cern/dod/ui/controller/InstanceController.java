@@ -528,7 +528,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             monitorBtn.setZclass(DODConstants.STYLE_BIG_BUTTON);
         }
         //If it is an oracle instance, send to OEM
-        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+        if (instance.getDbType().equals(DODConstants.DB_TYPE_ORA)) {
             monitorBtn.setTarget("_blank");
             monitorBtn.setHref(DODConstants.OEM_URL + "?target=" + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase() + "&type=oracle_pdb");
         }

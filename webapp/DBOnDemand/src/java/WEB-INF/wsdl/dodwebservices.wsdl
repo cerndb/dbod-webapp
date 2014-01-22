@@ -32,6 +32,14 @@
         <wsdl:part name="logs" type="xsd:string" />
     </wsdl:message>
     
+    <wsdl:message name="GetOraLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOraLogsResponse">
+        <wsdl:part name="logs" type="xsd:string" />
+    </wsdl:message>
+    
     <wsdl:message name="GetPGLogsRequest">
         <wsdl:part name="instance" type="xsd:string" />
     </wsdl:message>
@@ -96,6 +104,10 @@
             <wsdl:input message="impl:GetOracleLogsRequest" name="GetOracleLogsRequest" />
             <wsdl:output message="impl:GetOracleLogsResponse" name="GetOracleLogsResponse" />
         </wsdl:operation>
+        <wsdl:operation name="GetOraLogs">
+            <wsdl:input message="impl:GetOraLogsRequest" name="GetOraLogsRequest" />
+            <wsdl:output message="impl:GetOraLogsResponse" name="GetOraLogsResponse" />
+        </wsdl:operation>
         <wsdl:operation name="GetPGLogs">
             <wsdl:input message="impl:GetPGLogsRequest" name="GetPGLogsRequest" />
             <wsdl:output message="impl:GetPGLogsResponse" name="GetPGLogsResponse" />
@@ -148,6 +160,15 @@
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:input>
             <wsdl:output name="GetOracleLogsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOraLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOraLogs"/>
+            <wsdl:input name="GetOraLogsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetOraLogsResponse">
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:output>
         </wsdl:operation>

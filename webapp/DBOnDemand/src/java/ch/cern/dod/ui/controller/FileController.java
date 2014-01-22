@@ -397,6 +397,18 @@ public class FileController extends Window {
                     }
                 }
                 break;
+            case DODConstants.DB_TYPE_ORA:
+                logArray = fileHelper.getOraLogs(instance);
+                if (logArray != null) {
+                    for (int i=0; i < logArray.length; i++) {
+                        File logFile = new File(logArray[i]);
+                        Comboitem item = new Comboitem();
+                        item.setLabel(logFile.getName());
+                        item.setValue(logArray[i]);
+                        toret.appendChild(item);
+                    }
+                }
+                break;
            case DODConstants.DB_TYPE_PG:
                 logArray = fileHelper.getPGLogs(instance);
                 if (logArray != null) {
@@ -433,6 +445,8 @@ public class FileController extends Window {
                     return DODConstants.CONFIG_FILE_PG.equals((String)item.getValue())
                             ||
                             DODConstants.CONFIG_FILE_PG_HBA.equals((String)item.getValue()); 
+                case DODConstants.DB_TYPE_ORA:
+                    return false;
                 case DODConstants.DB_TYPE_ORACLE:
                     return false;
             }

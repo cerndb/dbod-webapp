@@ -61,6 +61,18 @@ public interface DODWebServicePortType {
      * @return
      *     returns java.lang.String
      */
+    @WebMethod(operationName = "GetOraLogs", action = "https://syscontrol.cern.ch/Dod/#GetOraLogs")
+    @WebResult(name = "logs", partName = "logs")
+    public String getOraLogs(
+        @WebParam(name = "instance", partName = "instance")
+        String instance);
+
+    /**
+     * 
+     * @param instance
+     * @return
+     *     returns java.lang.String
+     */
     @WebMethod(operationName = "GetPGLogs", action = "https://syscontrol.cern.ch/Dod/#GetPGLogs")
     @WebResult(name = "logs", partName = "logs")
     public String getPGLogs(

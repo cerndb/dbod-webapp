@@ -63,6 +63,7 @@ public class DODConstants {
     public static final String MONITORING_TYPE = "tgtt";
     public static final String MONITORING_TYPE_MYSQL = "M";
     public static final String MONITORING_TYPE_NODE = "N";
+    public static final String MONITORING_TYPE_ORACLE = "C";
     public static final String MONITORING_TYPE_PG = "P";
     public static final String LEMON_URL = "http://lemonweb.cern.ch/lemon-web/info.php?entity=";
     public static final String PARAM_HOST = "host";
@@ -88,6 +89,16 @@ public class DODConstants {
                                                                 new DODMetric("Innodb_data_written","Data written since the server was started","M","bytes"),
                                                                 new DODMetric("Qcache_hits","Query cache hits","M",null),
                                                                 new DODMetric("Qcache_not_cached","Noncached queries","M",null)};
+    public static final DODMetric[] ORACLE_OVERVIEW_METRICS = {new DODMetric("2147","Average Active Sessions","C","Active Sessions"),
+                                                                new DODMetric("2003","User Transaction Per Sec","C","Transactions Per Second"),
+                                                                new DODMetric("2093","Physical Read Total Bytes Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2092","Physical Read Total IO Requests Per Sec","C","Requests Per Second"),
+                                                                new DODMetric("2124","Physical Write Total Bytes Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2100","Physical Write Total IO Requests Per Sec","C","Requests Per Second"),
+                                                                new DODMetric("2106","SQL Service Response Time","C","CentiSeconds Per Call"),
+                                                                new DODMetric("2057","Host CPU Utilization (%)","C","% Busy/(Idle+Busy)"),
+                                                                new DODMetric("2016","Redo Generated Per Sec","C","Bytes Per Second"),
+                                                                new DODMetric("2034","Redo Writes Per Sec","C","Writes Per Second")};
     public static final DODMetric[] PG_OVERVIEW_METRICS = {new DODMetric("numbackends","Backends connected","P",null),
                                                                 new DODMetric("deadlocks","Deadlocks detected","P",null),
                                                                 new DODMetric("xact_commit","Transactions that have been committed","P",null),
@@ -129,7 +140,8 @@ public class DODConstants {
     public static final String JOB_UPGRADE = "UPGRADE";
     public static final String JOB_MONITOR = "MONITOR";
     public static final String JOB_CLEANUP = "CLEANUP";
-    public static final String DB_TYPE_ORACLE = "ORA";
+    public static final String DB_TYPE_ORA = "ORA";
+    public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String DB_TYPE_PG = "PG";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";

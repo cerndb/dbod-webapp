@@ -75,7 +75,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Datebox) getFellow("expiryDate")).setTimeZonesReadonly(true);
         ((Combobox) getFellow("dbType")).getItemAtIndex(0).setValue(DODConstants.DB_TYPE_MYSQL);
         ((Combobox) getFellow("dbType")).getItemAtIndex(1).setValue(DODConstants.DB_TYPE_ORACLE);
-        ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(DODConstants.DB_TYPE_PG);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(DODConstants.DB_TYPE_ORA);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(3).setValue(DODConstants.DB_TYPE_PG);
         ((Combobox) getFellow("dbType")).setSelectedIndex(0);
         ((Slider) getFellow("dbSizeSlider")).setMaxpos(DODConstants.MAX_DB_SIZE);
         ((Textbox) getFellow("dbSize")).setMaxlength(String.valueOf(DODConstants.MAX_DB_SIZE).length());

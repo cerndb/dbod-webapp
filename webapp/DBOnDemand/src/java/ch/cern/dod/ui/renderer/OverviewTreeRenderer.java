@@ -458,7 +458,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 monitorBtn.setImage(DODConstants.IMG_MONITOR);
                 monitorBtn.setParent(box);
                 //If it is an oracle instance, send to OEM
-                if (instance.getDbType().equals(DODConstants.DB_TYPE_ORACLE)) {
+                if (instance.getDbType().equals(DODConstants.DB_TYPE_ORA)) {
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(DODConstants.OEM_URL + "?target=" + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase() + "&type=oracle_pdb");
                 }

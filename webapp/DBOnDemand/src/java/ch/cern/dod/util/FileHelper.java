@@ -119,6 +119,26 @@ public class FileHelper {
     }
     
     /**
+     * Gets the logs for a specific Oracle 12c instance.
+     * @param instance instance to get the logs of.
+     * @return array of file names corresponding to the log files.
+     */
+    public String[] getOraLogs(DODInstance instance) {
+        String[] logs = null;
+        try {
+            DODWebService service = new DODWebService();
+            DODWebServicePortType port = service.getDODWebServicePort();
+            String logsString = port.getOraLogs(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            if (logsString != null && !logsString.isEmpty()) {
+                logs = logsString.split(":");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING LOGS ON INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return logs;
+    }
+    
+    /**
      * Gets the logs for a specific PostgreSQL instance.
      * @param instance instance to get the logs of.
      * @return array of file names corresponding to the log files.
