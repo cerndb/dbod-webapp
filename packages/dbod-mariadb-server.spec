@@ -3,7 +3,7 @@
 #
 
 # Gets version of package from environment variable
-%define version=$(echo $MARIADB_VERSION)
+%define version %(echo $MARIADB_VERSION)
 
 Summary: DB On Demand MariaDB server 
 Name: DBOD-MariaDB-server
@@ -57,7 +57,7 @@ exit 0
 %attr(755,root,root) /etc/init.d/mariadb
 
 %changelog
-* Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Initial packaging
 * Fri Dec 13 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Use of %{version}
+* Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Initial packaging
