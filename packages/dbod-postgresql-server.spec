@@ -50,7 +50,7 @@ exit 0
 %doc /usr/local/pgsql/pgsql-%{version}/share/doc
 
 %changelog
-* Tue Dec 10 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Initial packaging
 * Thu Dec 12 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Added use of %{version}
+* Tue Dec 10 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Initial packaging

@@ -56,7 +56,7 @@ exit 0
 %attr(755,root,root) /etc/init.d/mysql
 
 %changelog
-* Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Initial packaging
 * Fri Dec 13 2013 Ignacio Coterillo <icoteril@cern.ch>
 - Added use of %{version}
+* Mon Dec 09 2013 Ignacio Coterillo <icoteril@cern.ch>
+- Initial packaging
