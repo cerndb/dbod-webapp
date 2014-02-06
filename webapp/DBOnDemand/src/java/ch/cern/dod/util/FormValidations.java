@@ -132,7 +132,7 @@ public class FormValidations {
                 category.setErrorMessage(Labels.getLabel(DODConstants.ERROR_CATEGORY_EMPTY));
                 return false;
             }
-            //Check dbtype Oracle or MySQL
+            //Check category
             if (!category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_OFFICIAL)
                     && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_PERSONAL)
                     && !category.getSelectedItem().getValue().equals(DODConstants.CATEGORY_TEST)) {

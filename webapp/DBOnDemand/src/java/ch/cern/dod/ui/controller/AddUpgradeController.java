@@ -118,8 +118,8 @@ public class AddUpgradeController extends Window {
         oracle.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_ORACLE));
         dbType.appendChild(oracle);
         Comboitem ora = new Comboitem();
-        oracle.setValue(DODConstants.DB_TYPE_ORA);
-        oracle.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_ORA));
+        ora.setValue(DODConstants.DB_TYPE_ORA);
+        ora.setLabel(Labels.getLabel(DODConstants.LABEL_DB_TYPE + DODConstants.DB_TYPE_ORA));
         dbType.appendChild(ora);
         Comboitem pg = new Comboitem();
         pg.setValue(DODConstants.DB_TYPE_PG);
