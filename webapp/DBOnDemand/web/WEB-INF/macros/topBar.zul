@@ -37,10 +37,14 @@
                 <a src="/img/logo.png" style="margin-left:5px" href="https://cern.ch/DBOnDemand"/>
                 <a sclass="appTitle" label="${c:l('appTitle')}" href="https://cern.ch/DBOnDemand"/>
             </hbox>
-            <hbox style="margin-right:95px;margin-top:55px;float:right"  align="right">
+            <vbox style="margin-right:95px;margin-top:55px;float:right"  align="right">
                 ${c:l('contactMessage')}
-                <h:a href="mailto:dbondemand-admin@cern.ch" class="z-label">${c:l('contactUs')}</h:a>
-            </hbox>
+                <hbox>
+                    <h:a href="https://cern.service-now.com/service-portal/report-ticket.do?name=incident&amp;se=database-on-demand" class="z-label" target="_blank">${c:l('contactIncident')}</h:a>
+                    <label>${c:l('contactOr')}</label>
+                    <h:a href="https://cern.service-now.com/service-portal/report-ticket.do?name=request&amp;se=database-on-demand" class="z-label" target="_blank">${c:l('contactRequest')}</h:a>
+                </hbox>
+            </vbox>
         </hbox>
     </div>
     <menubar sclass="toolbar" style="padding-left:90px">
