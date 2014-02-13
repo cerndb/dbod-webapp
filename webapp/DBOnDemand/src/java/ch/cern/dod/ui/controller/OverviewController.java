@@ -167,7 +167,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         jobStatsGrid.setModel(new JobStatsModel(jobStats));
         jobStatsGrid.setRowRenderer(new JobStatsRenderer());
         filterJobStats(); //Filter jobs (there could be values from session)
-        filterJobStats(); //Filter jobs (there could be values from session)
         
         displayOrHideAreas();
         
@@ -269,9 +268,14 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         }
         //Set the new instances
         if (instances != null && instances.size() > 0) {
-            ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+            if (tree.getModel() != null) {
+                ((OverviewTreeModel) tree.getModel()).setInstances(instances);
+            }
+            else {
+                tree.setModel(new OverviewTreeModel(instances, tree));
+                tree.setItemRenderer(new OverviewTreeRenderer(false));
+            }
         }
-        tree.setModel(tree.getModel());
         try {
             if (tree.getMold().equals("paging")) {
                 tree.setActivePage(activePage);
@@ -280,16 +284,46 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         catch (WrongValueException ex) {}
         
         //Set the new command stats
-        if (commandStats != null && commandStats.size() > 0) {
-            Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
-            ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
+        Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");
+        if (commandStatsGrid.getMold().equals("paging")) {
+            activePage = commandStatsGrid.getActivePage();
         }
+        if (commandStats != null && commandStats.size() > 0) {
+            if (commandStatsGrid.getModel() != null) {
+                ((CommandStatsModel)commandStatsGrid.getModel()).setCommandStats(commandStats);
+            }
+            else {
+                commandStatsGrid.setModel(new CommandStatsModel(commandStats));
+                commandStatsGrid.setRowRenderer(new CommandStatsRenderer());
+            }
+        }
+        try {
+            if (commandStatsGrid.getMold().equals("paging")) {
+                commandStatsGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
         
         //Set the new job stats
-        if (jobStats != null && jobStats.size() > 0) {
-            Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
-            ((JobStatsModel)jobStatsGrid.getModel()).setJobStats(jobStats);
+        Grid jobStatsGrid = (Grid) getFellow("jobStatsGrid");
+        if (jobStatsGrid.getMold().equals("paging")) {
+            activePage = jobStatsGrid.getActivePage();
         }
+        if (jobStats != null && jobStats.size() > 0) {
+            if (jobStatsGrid.getModel() != null) {
+                ((JobStatsModel)jobStatsGrid.getModel()).setJobStats(jobStats);
+            }
+            else {
+                jobStatsGrid.setModel(new JobStatsModel(jobStats));
+                jobStatsGrid.setRowRenderer(new JobStatsRenderer());
+            }
+        }
+        try {
+            if (jobStatsGrid.getMold().equals("paging")) {
+                jobStatsGrid.setActivePage(activePage);
+            }
+        }
+        catch (WrongValueException ex) {}
         
         displayOrHideAreas();
     }
@@ -323,7 +357,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         Tree tree = (Tree) getFellow("overviewTree");
         //Set the new instances
         ((OverviewTreeModel) tree.getModel()).setInstances(instances);
-        tree.setModel(tree.getModel());
         //Hide fields
         displayOrHideAreas();
         

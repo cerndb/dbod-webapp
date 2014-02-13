@@ -132,7 +132,7 @@
                 <!--Show a message in case there no instances  -->
                 <div id="emptyInstancesMsg" style="display:none">
                     <div style="padding-right:400px" xmlns:h="http://www.w3.org/1999/xhtml">
-                        <label value="${c:l('emptyInstancesList')}" style="margin-right:2px"/> <h:a href="https://resources.web.cern.ch/resources/" class="z-label">${c:l('emptyInstancesListLink')}</h:a>
+                        <label value="${c:l('emptyInstancesList')}" style="margin-right:2px"/> <h:a href="https://resources.web.cern.ch/resources/Manage/DbOnDemand" class="z-label">${c:l('emptyInstancesListLink')}</h:a>
                     </div>
                 </div>
             </vbox>

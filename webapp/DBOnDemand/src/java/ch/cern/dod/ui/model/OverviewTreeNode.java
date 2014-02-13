@@ -30,7 +30,7 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
     public OverviewTreeNode(DODInstance data) {
         super(data);
     }
-
+    
     /**
      * Overrides the equals method of the object, having into consideration that the node's data might be a DODInstance
      * or a String.
@@ -39,7 +39,7 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
      */
     @Override
     public boolean equals(Object o) {
-        if (o != null &&  o instanceof OverviewTreeNode) {
+        if (o != null && o instanceof OverviewTreeNode) {
             OverviewTreeNode node = (OverviewTreeNode) o;
             if (this.getData() instanceof String)
                 if (node.getData() instanceof String)
@@ -50,9 +50,9 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
                     return false;
             else if (this.getData() instanceof DODInstance)
                 if (node.getData() instanceof String)
-                    return ((DODInstance)node.getData()).getDbName().equals(node.getData());
+                    return ((DODInstance)this.getData()).getDbName().equals(node.getData());
                 else if (node.getData() instanceof DODInstance)
-                    return ((DODInstance)node.getData()).getDbName().equals(((DODInstance)node.getData()).getDbName());
+                    return ((DODInstance)this.getData()).getDbName().equals(((DODInstance)node.getData()).getDbName());
                 else
                     return false;
             else
@@ -91,11 +91,5 @@ public class OverviewTreeNode extends DefaultTreeNode implements Comparable{
         }
         else
             return 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        return hash;
     }
 }

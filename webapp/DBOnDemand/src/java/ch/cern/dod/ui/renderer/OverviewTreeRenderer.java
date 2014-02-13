@@ -10,15 +10,12 @@ import ch.cern.dod.util.EGroupHelper;
 import ch.cern.dod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.CheckEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -39,11 +36,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * Helper to create jobs
      */
     private JobHelper jobHelper;
-
-     /**
-     * Items that are closed.
-     */
-     private List<String> closed;
      
      /**
       * Indicates if ceckboxes should be created or not
@@ -60,7 +52,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(DODConstants.ADMIN_E_GROUP, eGroups);
         this.instanceDAO = new DODInstanceDAO();
         this.jobHelper = new JobHelper(adminMode.booleanValue());
-        this.closed = new ArrayList<>();
         this.checkboxes = checkboxes;
     }
 
@@ -71,36 +62,23 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      * @throws Exception In case instance cannot be rendered.
      */
     @Override
-    public void render(final Treeitem item, final Object data, int i) throws Exception {
+    public void render(final Treeitem item, final Object node, int i) throws Exception {
         //Only render instance if it's filtered
-        if (data != null) {
-            
+        if (node != null) {
             //Render normal instance
-            if (((OverviewTreeNode) data).getData() instanceof DODInstance) {
+            if (((OverviewTreeNode) node).getData() instanceof DODInstance) {                
                 //Obtain username
                 Execution execution = Executions.getCurrent();
                 final String username = execution.getHeader(DODConstants.ADFS_LOGIN);
 
                 //Cast database object
-                final DODInstance instance = (DODInstance)((OverviewTreeNode) data).getData();
+                final DODInstance instance = (DODInstance)((OverviewTreeNode) node).getData();
 
                 //Create date formatter
                 DateFormat dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
 
                 //Create row
                 final Treerow row = new Treerow();
-                
-                //Remove or add item to closed items list if opened
-                item.addEventListener(Events.ON_OPEN, new EventListener() {
-                    @Override
-                    public void onEvent(Event event) {
-                        //Remove or add item to closed list
-                        if (item.isOpen())
-                            closed.remove(instance.getDbName());
-                        else
-                            closed.add(instance.getDbName()); 
-                    }
-                });
 
                 //Render check only in admin page
                 if (checkboxes) {
@@ -161,10 +139,10 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                                     +"\">" + instance.getDbName() + "</a>");
                 dbNameCell.appendChild(dbName);
                 //If instance is master append (M) to name
-                if (((OverviewTreeNode) data).getChildCount() > 0)
+                if (((OverviewTreeNode) node).getChildCount() > 0)
                     dbNameCell.appendChild(new Label(" (M)"));
                 //If instance is slave append (S) to name
-                if ( ((OverviewTreeNode) data).getParent().getData() instanceof DODInstance)
+                if ( ((OverviewTreeNode) node).getParent().getData() instanceof DODInstance)
                     dbNameCell.appendChild(new Label(" (S)"));
                 row.appendChild(dbNameCell);
                 
@@ -265,19 +243,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     public void onEvent(Event event) {
                         //Create new job and update instance status
                         if (jobHelper.doStartup(instance, username)) {
-                            //Reload the tree
-                            Tree tree = row.getTree();
-                            int activePage = 0;
-                            if (tree.getMold().equals("paging")) {
-                                activePage = tree.getActivePage();
-                            }
-                            tree.setModel(tree.getModel());
-                            try {
-                                if (tree.getMold().equals("paging")) {
-                                    tree.setActivePage(activePage);
-                                }
-                            }
-                            catch (WrongValueException ex) {}
+                            //Reload the row
+                            ((OverviewTreeModel)row.getTree().getModel()).updateNode((OverviewTreeNode)node);
                         }
                         else
                             showError(item, null, DODConstants.ERROR_DISPATCHING_JOB);
@@ -301,7 +268,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     public void onEvent(Event event) {
                         //Show shutdown window
                         try {
-                            ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper);
+                            ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper, (OverviewTreeModel)row.getTree().getModel());
                             //Only show window if it is not already being diplayed
                             if (row.getRoot().getFellowIfAny(shutdownController.getId()) == null) {
                                 shutdownController.setParent(row.getRoot());
@@ -331,7 +298,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     @Override
                     public void onEvent(Event event) {
                         try {
-                            FileController fileController = new FileController(instance, username, jobHelper);
+                            FileController fileController = new FileController(instance, username, jobHelper, (OverviewTreeModel)row.getTree().getModel());
                             //Only show window if it is not already being diplayed
                             if (row.getRoot().getFellowIfAny(fileController.getId()) == null) {
                                 fileController.setParent(row.getRoot());
@@ -363,7 +330,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     @Override
                     public void onEvent(Event event) {
                         try {
-                            BackupController backupController = new BackupController(instance, username, jobHelper);
+                            BackupController backupController = new BackupController(instance, username, jobHelper, (OverviewTreeModel)row.getTree().getModel());
                             //Only show window if it is not already being diplayed
                             if (row.getRoot().getFellowIfAny(backupController.getId()) == null) {
                                 backupController.setParent(row.getRoot());
@@ -395,7 +362,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     @Override
                     public void onEvent(Event event) {
                         try {
-                            RestoreController restoreController = new RestoreController(instance, username, jobHelper);
+                            RestoreController restoreController = new RestoreController(instance, username, jobHelper, (OverviewTreeModel)row.getTree().getModel());
                             //Only show window if it is not already being diplayed
                             if (row.getRoot().getFellowIfAny(restoreController.getId()) == null) {
                                 restoreController.setParent(row.getRoot());
@@ -428,7 +395,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     public void onEvent(Event event) {
                         //Show upgrade window
                         try {
-                            UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
+                            UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper, (OverviewTreeModel)row.getTree().getModel());
                             //Only show window if it is not already being diplayed
                             if (row.getRoot().getFellowIfAny(upgradeController.getId()) == null) {
                                 upgradeController.setParent(row.getRoot());
@@ -495,10 +462,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Add row to item
                 item.appendChild(row);
-                
-                //Open item if it's not the closed items list
-//                item.setOpen(!closed.contains(instance.getDbName()));
-                item.setOpen(true);
             }
         }
     }

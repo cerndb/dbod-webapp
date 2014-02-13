@@ -2,6 +2,7 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.exception.ConfigFileSizeException;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.FileHelper;
 import ch.cern.dod.util.JobHelper;
@@ -14,7 +15,6 @@ import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -28,7 +28,6 @@ import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -67,16 +66,32 @@ public class FileController extends Window {
     /**
      * Helper to obtain config files.
      */
-    FileHelper fileHelper;
+    private FileHelper fileHelper;
+    /**
+     * Model of the tree (null if we are in list view).
+     */
+    private OverviewTreeModel model;
 
     /**
-     * Constructor for this window.
+     * Constructor for this window (coming from instance view)
      * @param inst instance to be managed.
      * @param user username for the authenticated user.
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
     public FileController(DODInstance inst, String user, JobHelper helper) throws InterruptedException {
+        this(inst, user, helper, null);
+    }
+    
+    /**
+     * Constructor for this window (coming from list view)
+     * @param inst instance to be managed.
+     * @param user username for the authenticated user.
+     * @param jobHelper helper to execute jobs.
+     * @param model model of the tree (null if we are in instance view).
+     * @throws InterruptedException if the window cannot be created.
+     */
+    public FileController(DODInstance inst, String user, JobHelper helper, final OverviewTreeModel model) throws InterruptedException {
         //Call super constructor
         super();
 
@@ -84,6 +99,9 @@ public class FileController extends Window {
         this.instance = inst;
         this.username = user;
         this.jobHelper = helper;
+        
+        //Initialise model and node
+        this.model = model;
 
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
@@ -145,20 +163,9 @@ public class FileController extends Window {
                             //Depending on the result
                             if (result) {
                                 //If we are in the overview page
-                                if (type.getRoot().getFellowIfAny("overviewTree") != null) {
-                                    //Reload the tree
-                                    Tree tree = (Tree) type.getRoot().getFellow("overviewTree");
-                                    int activePage = 0;
-                                    if (tree.getMold().equals("paging")) {
-                                        activePage = tree.getActivePage();
-                                    }
-                                    tree.setModel(tree.getModel());
-                                    try {
-                                        if (tree.getMold().equals("paging")) {
-                                            tree.setActivePage(activePage);
-                                        }
-                                    }
-                                    catch (WrongValueException ex) {}
+                                if (model != null) {
+                                    //Reload the node
+                                    model.updateInstance(instance);
                                 } //If we are in the instance page
                                 else if (type.getRoot().getFellowIfAny("controller") != null && type.getRoot().getFellow("controller") instanceof InstanceController) {
                                     InstanceController controller = (InstanceController) type.getRoot().getFellow("controller");

@@ -2,6 +2,7 @@ package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.dao.DODJobDAO;
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
 import java.util.Calendar;
@@ -11,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -25,7 +25,6 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Spinner;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -108,16 +107,31 @@ public class BackupController extends Window {
      * Indicates the start date for backups to tape.
      */
     private Date prevBackupToTapeDate;
-    
-
     /**
-     * Constructor for this window.
+     * Model of the tree (null if we are in list view).
+     */
+    private OverviewTreeModel model;
+    
+    /**
+     * Constructor for this window (coming from instance view)
      * @param inst instance to be managed.
      * @param user username for the authenticated user.
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
     public BackupController(DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {
+        this(inst, user, jobHelper, null);
+    }
+    
+    /**
+     * Constructor for this window (coming from list view)
+     * @param inst instance to be managed.
+     * @param user username for the authenticated user.
+     * @param jobHelper helper to execute jobs.
+     * @param model model of the tree (null if we are in instance view).
+     * @throws InterruptedException if the window cannot be created.
+     */
+    public BackupController(DODInstance inst, String user, JobHelper jobHelper, OverviewTreeModel model) throws InterruptedException {
         //Call super constructor
         super();
 
@@ -126,6 +140,9 @@ public class BackupController extends Window {
         this.username = user;
         this.jobHelper = jobHelper;
         this.jobDAO = new DODJobDAO();
+        
+        //Initialise model
+        this.model = model;
 
         //Basic window properties
         this.setId("backupWindow");
@@ -135,7 +152,7 @@ public class BackupController extends Window {
         this.setPosition("center");
         this.setClosable(false);
         this.setWidth("530px");
-
+        
         //Main box used to apply pading
         Vbox mainBox = new Vbox();
         mainBox.setStyle("padding-top:5px;padding-left:5px;padding-right:5px");
@@ -359,20 +376,9 @@ public class BackupController extends Window {
         }
         else {
             //If we are in the overview page
-            if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
-                //Reload the tree
-                Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
-                int activePage = 0;
-                if (tree.getMold().equals("paging")) {
-                    activePage = tree.getActivePage();
-                }
-                tree.setModel(tree.getModel());
-                try {
-                    if (tree.getMold().equals("paging")) {
-                        tree.setActivePage(activePage);
-                    }
-                }
-                catch (WrongValueException ex) {}
+            if (model != null) {
+                //Reload the node
+                model.updateInstance(instance);
             } //If we are in the instance page
             else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");
@@ -440,20 +446,9 @@ public class BackupController extends Window {
             //If the operation was successful update instance status
             if (backupToTapeResult && result) {
                 //If we are in the overview page
-                if (interval.getRoot().getFellowIfAny("overviewTree") != null) {
-                    //Reload the tree
-                    Tree tree = (Tree) interval.getRoot().getFellow("overviewTree");
-                    int activePage = 0;
-                    if (tree.getMold().equals("paging")) {
-                        activePage = tree.getActivePage();
-                    }
-                    tree.setModel(tree.getModel());
-                    try {
-                        if (tree.getMold().equals("paging")) {
-                            tree.setActivePage(activePage);
-                        }
-                    }
-                    catch (WrongValueException ex) {}
+                if (model != null) {
+                    //Reload the node
+                    model.updateInstance(instance);
                 } //If we are in the instance page
                 else if (interval.getRoot().getFellowIfAny("controller") != null && interval.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) interval.getRoot().getFellow("controller");

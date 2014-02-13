@@ -1,13 +1,13 @@
 package ch.cern.dod.ui.controller;
 
 import ch.cern.dod.db.entity.DODInstance;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -16,7 +16,6 @@ import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -38,16 +37,31 @@ public class ShutdownController extends Window {
      * User authenticated in the system at the moment.
      */
     private String username;
-
+    /**
+     * Model of the tree (null if we are in list view).
+     */
+    private OverviewTreeModel model;
 
     /**
-     * Constructor for this window.
+     * Constructor for this window (coming from instance view)
      * @param inst instance to be managed.
      * @param user username for the authenticated user.
      * @param jobHelper helper to execute jobs.
      * @throws InterruptedException if the window cannot be created.
      */
-    public ShutdownController (DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {        
+    public ShutdownController (DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException { 
+        this (inst, user, jobHelper, null);
+    }
+
+    /**
+     * Constructor for this window (coming from list view)
+     * @param inst instance to be managed.
+     * @param user username for the authenticated user.
+     * @param jobHelper helper to execute jobs.
+     * @param model model of the tree (null if we are in instance view).
+     * @throws InterruptedException if the window cannot be created.
+     */
+    public ShutdownController (DODInstance inst, String user, JobHelper jobHelper, OverviewTreeModel model) throws InterruptedException {        
         //Call super constructor
         super();
         
@@ -55,7 +69,10 @@ public class ShutdownController extends Window {
         this.instance = inst;
         this.jobHelper = jobHelper;
         this.username = user;
-
+        
+        //Initialise model and node
+        this.model = model;
+        
         //Basic window properties
         this.setId("shutdownWindow");
         this.setTitle(Labels.getLabel(DODConstants.LABEL_SHUTDOWN_TITLE) + " " + instance.getDbName());
@@ -150,20 +167,9 @@ public class ShutdownController extends Window {
         ///Create new job and update instance status
         if (jobHelper.doShutdown(instance, username)) {
             //If we are in the overview page
-            if (this.getRoot().getFellowIfAny("overviewTree") != null) {
-                //Reload the tree
-                Tree tree = (Tree) this.getRoot().getFellow("overviewTree");
-                int activePage = 0;
-                if (tree.getMold().equals("paging")) {
-                    activePage = tree.getActivePage();
-                }
-                tree.setModel(tree.getModel());
-                try {
-                    if (tree.getMold().equals("paging")) {
-                        tree.setActivePage(activePage);
-                    }
-                }
-                catch (WrongValueException ex) {}
+            if (model != null) {
+                //Reload the node
+                model.updateInstance(instance);
             } //If we are in the instance page
             else if (this.getRoot().getFellowIfAny("controller") != null && this.getRoot().getFellow("controller") instanceof InstanceController) {
                 InstanceController controller = (InstanceController) this.getRoot().getFellow("controller");

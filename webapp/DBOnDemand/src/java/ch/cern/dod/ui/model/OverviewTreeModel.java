@@ -3,12 +3,14 @@ package ch.cern.dod.ui.model;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zul.AbstractTreeModel;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.event.TreeDataEvent;
 
 /**
  * Model for overview tree.
@@ -95,6 +97,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
         List<OverviewTreeNode> nodeList = getNodeList(instances);
         children.removeAll(children);
         children.addAll(nodeList);
+        fireEvent(TreeDataEvent.STRUCTURE_CHANGED, new int[0], 0, 0);
     }
 
     /**
@@ -186,23 +189,79 @@ public class OverviewTreeModel extends AbstractTreeModel{
      * @param checked true or false, depending if the action is checking or unchecking.
      */
     public void checkAll (OverviewTreeNode root, boolean checked) {
-        if (root.getData() instanceof DODInstance)
+        if (root.getData() instanceof DODInstance) {
             ((DODInstance)root.getData()).setChecked(checked);
+            //Rerender node
+            int[] path = this.getPath(root.getParent());
+            int index = root.getParent().getIndex(root);
+            fireEvent(TreeDataEvent.CONTENTS_CHANGED, path, index, index);
+        }
         for (int i=0; i < root.getChildCount(); i++)
             checkAll((OverviewTreeNode)root.getChildAt(i), checked);
 }
     
     /**
-     * Gets the list of checked instances.
+     * Gets the list of checked nodes.
      * @param root root node to start.
-     * @return list of checked instances.
+     * @return list of checked nodes.
      */
-    public List<DODInstance> getChecked (OverviewTreeNode root) {
-        List<DODInstance> checked = new ArrayList<>();
+    public List<OverviewTreeNode> getChecked (OverviewTreeNode root) {
+        List<OverviewTreeNode> checked = new ArrayList<>();
         if (root.getData() instanceof DODInstance && ((DODInstance)root.getData()).isChecked())
-            checked.add((DODInstance)root.getData());
+            checked.add(root);
         for (int i=0; i < root.getChildCount(); i++)
             checked.addAll(getChecked((OverviewTreeNode)root.getChildAt(i)));
         return checked;
+    }
+    
+    /**
+     * Updates the node corresponding to the instance
+     * @param instance instance to update
+     */
+    public void updateInstance (DODInstance instance) {
+        OverviewTreeNode node = searchNode((OverviewTreeNode)this.getRoot(),instance);
+        
+        node.setData(instance);
+        
+        if (node != null) {
+            updateNode(node);
+        }
+    }
+    
+    /**
+     * Searches a node corresponding to a certain instance in the subtree
+     * @param root node to start from
+     * @param instance instance to search for
+     * @return node corresponding to the given instance
+     */
+    public OverviewTreeNode searchNode (OverviewTreeNode root, DODInstance instance) {
+        if (root.getData() instanceof DODInstance) {
+            if (root.getData().equals(instance)) {
+                //Rerender node
+                int[] path = this.getPath(root.getParent());
+                int index = root.getParent().getIndex(root);
+                fireEvent(TreeDataEvent.CONTENTS_CHANGED, path, index, index);
+                return root;
+            }
+        }
+        
+        for (int i=0; i < root.getChildCount(); i++) {
+            OverviewTreeNode node = searchNode((OverviewTreeNode)root.getChildAt(i), instance);
+            if (node != null) {
+                return node;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Generates a CONTENTS_CHANGED event to refresh a specific node
+     * @param node 
+     */
+    public void updateNode (OverviewTreeNode node) {
+        int[] path = getPath(node.getParent());
+        int index = node.getParent().getIndex(node);
+        fireEvent(TreeDataEvent.CONTENTS_CHANGED, path, index, index);
     }
 }

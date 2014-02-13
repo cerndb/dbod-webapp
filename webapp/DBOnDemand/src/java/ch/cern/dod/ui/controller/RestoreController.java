@@ -3,6 +3,7 @@ package ch.cern.dod.ui.controller;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.db.entity.DODSnapshot;
 import ch.cern.dod.ui.components.SnapshotCalendar;
+import ch.cern.dod.ui.model.OverviewTreeModel;
 import ch.cern.dod.util.DODConstants;
 import ch.cern.dod.util.JobHelper;
 import ch.cern.dod.util.SnapshotHelper;
@@ -18,7 +19,6 @@ import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -29,7 +29,6 @@ import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
-import org.zkoss.zul.Tree;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
@@ -100,15 +99,31 @@ public class RestoreController extends Window {
      * Max date for PITR
      */
     private Date maxDate;
+    /**
+     * Model of the tree (null if we are in list view).
+     */
+    private OverviewTreeModel model;
 
     /**
-     * Creates this window, obtains the snapshots from the database and creates child components.
+     * Creates this window, obtains the snapshots from the database and creates child components. Coming from instance view.
      * @param inst current instance.
      * @param user current authenticated user.
      * @param jobHelper helper to create jobs.
      * @throws InterruptedException if the window cannot be created.
      */
     public RestoreController(DODInstance inst, String user, JobHelper jobHelper) throws InterruptedException {
+        this(inst, user, jobHelper, null);
+    }
+    
+    /**
+     * Creates this window, obtains the snapshots from the database and creates child components. Coming from list view.
+     * @param inst current instance.
+     * @param user current authenticated user.
+     * @param jobHelper helper to create jobs.
+     * @param model model of the tree (null if we are in instance view).
+     * @throws InterruptedException if the window cannot be created.
+     */
+    public RestoreController(DODInstance inst, String user, JobHelper jobHelper, OverviewTreeModel model) throws InterruptedException {
         //Call super constructor
         super();
 
@@ -119,6 +134,9 @@ public class RestoreController extends Window {
         timeFormatter = new SimpleDateFormat(DODConstants.TIME_FORMAT);
         dateFormatter = new SimpleDateFormat(DODConstants.DATE_FORMAT);
         pitrFormatter = new SimpleDateFormat(DODConstants.DATE_TIME_FORMAT_PITR);
+        
+        //Initialise model and node
+        this.model = model;
 
         //Get user and password for the web services account
         String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
@@ -501,22 +519,10 @@ public class RestoreController extends Window {
         private void doAccept() {
             //Create new job and update instance status
             if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
-                //If we are in the overview page
-                if (time.getRoot().getFellowIfAny("overviewTree") != null) {
-                    //Reload the tree
-                    Tree tree = (Tree) time.getRoot().getFellow("overviewTree");
-                    int activePage = 0;
-                    if (tree.getMold().equals("paging")) {
-                        activePage = tree.getActivePage();
-                    }
-                    tree.setModel(tree.getModel());
-                    try {
-                        if (tree.getMold().equals("paging")) {
-                            tree.setActivePage(activePage);
-                        }
-                    }
-                    catch (WrongValueException ex) {}
-                } //If we are in the instance page
+                if (model != null) {
+                //Reload the node
+                model.updateInstance(instance);
+            } //If we are in the instance page
                 else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
                     InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");
                     controller.afterCompose();
