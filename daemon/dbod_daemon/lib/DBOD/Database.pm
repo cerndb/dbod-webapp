@@ -141,15 +141,20 @@ sub getJobList{
     my @result;
     eval {
         my $sql = "select a.username, a.db_name, a.command_name, a.type, a.creation_date
-            from dod_jobs a inner join (
-                select username, db_name, min(creation_date) as creation_date 
-                from dod_jobs
-                where state = 'PENDING'
-                group by username, db_name) b
-            on a.username = b.username
-            and a.db_name = b.db_name
-            and a.creation_date = b.creation_date
-            where a.state = 'PENDING'"; 
+           from dod_jobs a inner join (
+               select username, db_name, min(creation_date) as creation_date
+               from dod_jobs
+               where state = 'PENDING'
+               group by username, db_name) b
+           on a.username = b.username
+           and a.db_name = b.db_name
+           and a.creation_date = b.creation_date
+           and (select count(*) 
+                from dod_jobs c 
+                where c.username = a.username 
+                and c.db_name = a.db_name 
+                and state = 'RUNNING') = 0
+           where a.state = 'PENDING'";
         $logger->debug( $sql );
         my $sth = $dbh->prepare( $sql );
         $logger->debug("Executing statement");
