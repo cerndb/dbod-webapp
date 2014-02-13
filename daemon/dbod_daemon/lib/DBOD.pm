@@ -38,12 +38,14 @@ INIT {
 my %command_callback_table = (
     'UPGRADE' => { 'MYSQL' => \&DBOD::MySQL::upgrade_callback , 
                     'ORACLE' => \&DBOD::Oracle::upgrade_callback, 
-                    'PG' => \&DBOD::PostgreSQL::upgrade_callback }
+                    'ORA' => \&DBOD::Oracle::upgrade_callback, 
+                    'PG' => \&DBOD::PostgreSQL::upgrade_callback, }
 );
 
 my %state_checker_table = (
     'MYSQL' => \&DBOD::MySQL::state_checker,
     'ORACLE' => \&DBOD::Oracle::state_checker, 
+    'ORA' => \&DBOD::Oracle::state_checker, 
     'PG' => \&DBOD::PostgreSQL::state_checker, 
     'MIDDLEWARE' => \&DBOD::Middleware::state_checker, 
 );
