@@ -3,7 +3,6 @@ package ch.cern.dod.ui.model;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.zkoss.zul.AbstractTreeModel;
