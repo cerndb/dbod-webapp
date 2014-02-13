@@ -26,9 +26,9 @@ INIT{
 } # INIT BLOCK
 
 sub test_instance{
-    my $entity = shift;
+    my ($entity, $type) = @_;
     $logger->debug( "Fetching state of entity $entity" );
-    my $cmd = "/etc/init.d/syscontrol -i $entity ORACLE_ping -debug";
+    my $cmd = "/etc/init.d/syscontrol -i $entity $type\_ping -debug";
     my $res = `$cmd`;
     $logger->debug( "\n$res" );
     return $res;
@@ -37,7 +37,7 @@ sub test_instance{
 sub state_checker{
     my ($job, $code) = @_;
     my $entity = DBOD::All::get_entity($job);
-    my $output = test_instance($entity);
+    my $output = test_instance($entity, $job->{'TYPE'});
     my $retcode = DBOD::All::result_code($output);
     my $job_state = $job_status_table->{$code};
     my $instance_state = $instance_status_table->{$retcode};
