@@ -1,2 +1,2 @@
-@javax.xml.bind.annotation.XmlSchema(namespace = "https://cra-ws.cern.ch/cra-ws/", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package ch.cern.dod.ws.egroups;

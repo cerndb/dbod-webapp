@@ -18,9 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="p_niceUserid" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_password" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_egroup" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupType"/>
+ *         &lt;element name="egroup" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,90 +29,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "pNiceUserid",
-    "pPassword",
-    "pEgroup"
+    "egroup"
 })
-@XmlRootElement(name = "synchronizeEgroupRequest")
+@XmlRootElement(name = "SynchronizeEgroupRequest")
 public class SynchronizeEgroupRequest {
 
-    @XmlElement(name = "p_niceUserid", required = true)
-    protected String pNiceUserid;
-    @XmlElement(name = "p_password", required = true)
-    protected String pPassword;
-    @XmlElement(name = "p_egroup", required = true)
-    protected EgroupType pEgroup;
+    @XmlElement(required = true)
+    protected EgroupType egroup;
 
     /**
-     * Gets the value of the pNiceUserid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPNiceUserid() {
-        return pNiceUserid;
-    }
-
-    /**
-     * Sets the value of the pNiceUserid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPNiceUserid(String value) {
-        this.pNiceUserid = value;
-    }
-
-    /**
-     * Gets the value of the pPassword property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPPassword() {
-        return pPassword;
-    }
-
-    /**
-     * Sets the value of the pPassword property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPPassword(String value) {
-        this.pPassword = value;
-    }
-
-    /**
-     * Gets the value of the pEgroup property.
+     * Gets the value of the egroup property.
      * 
      * @return
      *     possible object is
      *     {@link EgroupType }
      *     
      */
-    public EgroupType getPEgroup() {
-        return pEgroup;
+    public EgroupType getEgroup() {
+        return egroup;
     }
 
     /**
-     * Sets the value of the pEgroup property.
+     * Sets the value of the egroup property.
      * 
      * @param value
      *     allowed object is
      *     {@link EgroupType }
      *     
      */
-    public void setPEgroup(EgroupType value) {
-        this.pEgroup = value;
+    public void setEgroup(EgroupType value) {
+        this.egroup = value;
     }
 
 }

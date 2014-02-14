@@ -17,12 +17,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="CCID" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="Type" type="{https://cra-ws.cern.ch/cra-ws/cra/}UserTypeCode"/>
+ *         &lt;element name="PersonId" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="ComputingRulesSigned" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="Pem" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="PrimaryGem" type="{https://cra-ws.cern.ch/cra-ws/cra/}GemType" minOccurs="0"/>
+ *         &lt;element name="PrimaryGem" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}GemType" minOccurs="0"/>
  *         &lt;element name="CernUnit" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="CernDepartment" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="CernGroup" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -41,9 +40,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UserType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
-    "ccid",
-    "type",
+@XmlType(name = "UserType", propOrder = {
+    "personId",
     "name",
     "computingRulesSigned",
     "pem",
@@ -60,10 +58,8 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UserType {
 
-    @XmlElement(name = "CCID")
-    protected long ccid;
-    @XmlElement(name = "Type", required = true)
-    protected UserTypeCode type;
+    @XmlElement(name = "PersonId")
+    protected long personId;
     @XmlElement(name = "Name")
     protected String name;
     @XmlElement(name = "ComputingRulesSigned")
@@ -92,43 +88,19 @@ public class UserType {
     protected String mailbox;
 
     /**
-     * Gets the value of the ccid property.
+     * Gets the value of the personId property.
      * 
      */
-    public long getCCID() {
-        return ccid;
+    public long getPersonId() {
+        return personId;
     }
 
     /**
-     * Sets the value of the ccid property.
+     * Sets the value of the personId property.
      * 
      */
-    public void setCCID(long value) {
-        this.ccid = value;
-    }
-
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link UserTypeCode }
-     *     
-     */
-    public UserTypeCode getType() {
-        return type;
-    }
-
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link UserTypeCode }
-     *     
-     */
-    public void setType(UserTypeCode value) {
-        this.type = value;
+    public void setPersonId(long value) {
+        this.personId = value;
     }
 
     /**

@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Egroup" type="{https://cra-ws.cern.ch/cra-ws/cra/}SelfsubscriptionEgroupType" maxOccurs="unbounded"/>
+ *         &lt;element name="SelfsubscriptionEgroups" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionEgroupType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,27 +29,27 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SelfsubscriptionEgroupsType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
-    "egroup"
+@XmlType(name = "SelfsubscriptionEgroupsType", propOrder = {
+    "selfsubscriptionEgroups"
 })
 public class SelfsubscriptionEgroupsType {
 
-    @XmlElement(name = "Egroup", required = true)
-    protected List<SelfsubscriptionEgroupType> egroup;
+    @XmlElement(name = "SelfsubscriptionEgroups")
+    protected List<SelfsubscriptionEgroupType> selfsubscriptionEgroups;
 
     /**
-     * Gets the value of the egroup property.
+     * Gets the value of the selfsubscriptionEgroups property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the egroup property.
+     * This is why there is not a <CODE>set</CODE> method for the selfsubscriptionEgroups property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getEgroup().add(newItem);
+     *    getSelfsubscriptionEgroups().add(newItem);
      * </pre>
      * 
      * 
@@ -59,11 +59,11 @@ public class SelfsubscriptionEgroupsType {
      * 
      * 
      */
-    public List<SelfsubscriptionEgroupType> getEgroup() {
-        if (egroup == null) {
-            egroup = new ArrayList<SelfsubscriptionEgroupType>();
+    public List<SelfsubscriptionEgroupType> getSelfsubscriptionEgroups() {
+        if (selfsubscriptionEgroups == null) {
+            selfsubscriptionEgroups = new ArrayList<SelfsubscriptionEgroupType>();
         }
-        return this.egroup;
+        return this.selfsubscriptionEgroups;
     }
 
 }

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GemType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
+@XmlType(name = "GemType", propOrder = {
     "emailAddress",
     "displayInPhonebook"
 })

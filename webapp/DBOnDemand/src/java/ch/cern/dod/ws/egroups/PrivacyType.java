@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "PrivacyType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/")
+@XmlType(name = "PrivacyType")
 @XmlEnum
 public enum PrivacyType {
 

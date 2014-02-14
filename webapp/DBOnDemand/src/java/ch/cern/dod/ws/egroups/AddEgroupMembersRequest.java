@@ -18,11 +18,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="p_niceUserid" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_password" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_egroupName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_members" type="{https://cra-ws.cern.ch/cra-ws/cra/}MembersType"/>
- *         &lt;element name="p_overwriteMembers" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="egroupName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}MembersType"/>
+ *         &lt;element name="overwriteMembers" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,136 +31,81 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "pNiceUserid",
-    "pPassword",
-    "pEgroupName",
-    "pMembers",
-    "pOverwriteMembers"
+    "egroupName",
+    "members",
+    "overwriteMembers"
 })
-@XmlRootElement(name = "addEgroupMembersRequest")
+@XmlRootElement(name = "AddEgroupMembersRequest")
 public class AddEgroupMembersRequest {
 
-    @XmlElement(name = "p_niceUserid", required = true)
-    protected String pNiceUserid;
-    @XmlElement(name = "p_password", required = true)
-    protected String pPassword;
-    @XmlElement(name = "p_egroupName", required = true)
-    protected String pEgroupName;
-    @XmlElement(name = "p_members", required = true)
-    protected MembersType pMembers;
-    @XmlElement(name = "p_overwriteMembers")
-    protected boolean pOverwriteMembers;
+    @XmlElement(required = true)
+    protected String egroupName;
+    @XmlElement(required = true)
+    protected MembersType members;
+    protected boolean overwriteMembers;
 
     /**
-     * Gets the value of the pNiceUserid property.
+     * Gets the value of the egroupName property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPNiceUserid() {
-        return pNiceUserid;
+    public String getEgroupName() {
+        return egroupName;
     }
 
     /**
-     * Sets the value of the pNiceUserid property.
+     * Sets the value of the egroupName property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPNiceUserid(String value) {
-        this.pNiceUserid = value;
+    public void setEgroupName(String value) {
+        this.egroupName = value;
     }
 
     /**
-     * Gets the value of the pPassword property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPPassword() {
-        return pPassword;
-    }
-
-    /**
-     * Sets the value of the pPassword property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPPassword(String value) {
-        this.pPassword = value;
-    }
-
-    /**
-     * Gets the value of the pEgroupName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPEgroupName() {
-        return pEgroupName;
-    }
-
-    /**
-     * Sets the value of the pEgroupName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPEgroupName(String value) {
-        this.pEgroupName = value;
-    }
-
-    /**
-     * Gets the value of the pMembers property.
+     * Gets the value of the members property.
      * 
      * @return
      *     possible object is
      *     {@link MembersType }
      *     
      */
-    public MembersType getPMembers() {
-        return pMembers;
+    public MembersType getMembers() {
+        return members;
     }
 
     /**
-     * Sets the value of the pMembers property.
+     * Sets the value of the members property.
      * 
      * @param value
      *     allowed object is
      *     {@link MembersType }
      *     
      */
-    public void setPMembers(MembersType value) {
-        this.pMembers = value;
+    public void setMembers(MembersType value) {
+        this.members = value;
     }
 
     /**
-     * Gets the value of the pOverwriteMembers property.
+     * Gets the value of the overwriteMembers property.
      * 
      */
-    public boolean isPOverwriteMembers() {
-        return pOverwriteMembers;
+    public boolean isOverwriteMembers() {
+        return overwriteMembers;
     }
 
     /**
-     * Sets the value of the pOverwriteMembers property.
+     * Sets the value of the overwriteMembers property.
      * 
      */
-    public void setPOverwriteMembers(boolean value) {
-        this.pOverwriteMembers = value;
+    public void setOverwriteMembers(boolean value) {
+        this.overwriteMembers = value;
     }
 
 }

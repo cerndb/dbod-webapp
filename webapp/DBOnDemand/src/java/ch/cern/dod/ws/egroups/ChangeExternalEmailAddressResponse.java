@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="result" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="transactionId" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="error" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}ErrorType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,14 +32,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "result",
-    "transactionId"
+    "transactionId",
+    "error"
 })
-@XmlRootElement(name = "changeExternalEmailAddressResponse")
+@XmlRootElement(name = "ChangeExternalEmailAddressResponse")
 public class ChangeExternalEmailAddressResponse {
 
     protected int result;
     @XmlElement(required = true)
     protected String transactionId;
+    protected ErrorType error;
 
     /**
      * Gets the value of the result property.
@@ -78,6 +81,30 @@ public class ChangeExternalEmailAddressResponse {
      */
     public void setTransactionId(String value) {
         this.transactionId = value;
+    }
+
+    /**
+     * Gets the value of the error property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ErrorType }
+     *     
+     */
+    public ErrorType getError() {
+        return error;
+    }
+
+    /**
+     * Sets the value of the error property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ErrorType }
+     *     
+     */
+    public void setError(ErrorType value) {
+        this.error = value;
     }
 
 }

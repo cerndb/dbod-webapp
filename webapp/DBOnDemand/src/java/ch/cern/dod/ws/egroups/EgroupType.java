@@ -20,23 +20,23 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Aliases" type="{https://cra-ws.cern.ch/cra-ws/cra/}AliasesType" minOccurs="0"/>
- *         &lt;element name="ID" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="Type" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupTypeCode"/>
- *         &lt;element name="Status" type="{https://cra-ws.cern.ch/cra-ws/cra/}StatusCode" minOccurs="0"/>
- *         &lt;element name="BlockingReason" type="{https://cra-ws.cern.ch/cra-ws/cra/}BlockingReasonCode" minOccurs="0"/>
- *         &lt;element name="Usage" type="{https://cra-ws.cern.ch/cra-ws/cra/}UsageCode"/>
+ *         &lt;element name="Aliases" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}AliasesType" minOccurs="0"/>
+ *         &lt;element name="ID" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
+ *         &lt;element name="Type" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupTypeCode"/>
+ *         &lt;element name="Status" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}StatusCode" minOccurs="0"/>
+ *         &lt;element name="BlockingReason" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}BlockingReasonCode" minOccurs="0"/>
+ *         &lt;element name="Usage" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}UsageCode"/>
  *         &lt;element name="Topic" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="Description" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="Comments" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="ExpiryDate" type="{http://www.w3.org/2001/XMLSchema}date" minOccurs="0"/>
- *         &lt;element name="Owner" type="{https://cra-ws.cern.ch/cra-ws/cra/}UserType"/>
- *         &lt;element name="Administrator" type="{https://cra-ws.cern.ch/cra-ws/cra/}AdministratorType" minOccurs="0"/>
- *         &lt;element name="Privacy" type="{https://cra-ws.cern.ch/cra-ws/cra/}PrivacyType"/>
- *         &lt;element name="Selfsubscription" type="{https://cra-ws.cern.ch/cra-ws/cra/}SelfsubscriptionType"/>
- *         &lt;element name="SelfsubscriptionEgroups" type="{https://cra-ws.cern.ch/cra-ws/cra/}SelfsubscriptionEgroupsType" minOccurs="0"/>
- *         &lt;element name="Members" type="{https://cra-ws.cern.ch/cra-ws/cra/}MembersType" minOccurs="0"/>
- *         &lt;element name="EmailMembers" type="{https://cra-ws.cern.ch/cra-ws/cra/}EmailMembersType" minOccurs="0"/>
+ *         &lt;element name="Owner" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}UserType"/>
+ *         &lt;element name="AdministratorEgroup" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="Privacy" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}PrivacyType"/>
+ *         &lt;element name="Selfsubscription" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionType"/>
+ *         &lt;element name="SelfsubscriptionEgroups" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionEgroupsType" minOccurs="0"/>
+ *         &lt;element name="Members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}MembersType"/>
+ *         &lt;element name="EmailProperties" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EmailPropertiesType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -46,7 +46,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "EgroupType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
+@XmlType(name = "EgroupType", propOrder = {
     "name",
     "aliases",
     "id",
@@ -59,12 +59,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "comments",
     "expiryDate",
     "owner",
-    "administrator",
+    "administratorEgroup",
     "privacy",
     "selfsubscription",
     "selfsubscriptionEgroups",
     "members",
-    "emailMembers"
+    "emailProperties"
 })
 public class EgroupType {
 
@@ -73,7 +73,7 @@ public class EgroupType {
     @XmlElement(name = "Aliases")
     protected AliasesType aliases;
     @XmlElement(name = "ID")
-    protected long id;
+    protected Long id;
     @XmlElement(name = "Type", required = true)
     protected EgroupTypeCode type;
     @XmlElement(name = "Status")
@@ -93,18 +93,18 @@ public class EgroupType {
     protected XMLGregorianCalendar expiryDate;
     @XmlElement(name = "Owner", required = true)
     protected UserType owner;
-    @XmlElement(name = "Administrator")
-    protected AdministratorType administrator;
+    @XmlElement(name = "AdministratorEgroup")
+    protected String administratorEgroup;
     @XmlElement(name = "Privacy", required = true)
     protected PrivacyType privacy;
     @XmlElement(name = "Selfsubscription", required = true)
     protected SelfsubscriptionType selfsubscription;
     @XmlElement(name = "SelfsubscriptionEgroups")
     protected SelfsubscriptionEgroupsType selfsubscriptionEgroups;
-    @XmlElement(name = "Members")
+    @XmlElement(name = "Members", required = true)
     protected MembersType members;
-    @XmlElement(name = "EmailMembers")
-    protected EmailMembersType emailMembers;
+    @XmlElement(name = "EmailProperties")
+    protected EmailPropertiesType emailProperties;
 
     /**
      * Gets the value of the name property.
@@ -157,16 +157,24 @@ public class EgroupType {
     /**
      * Gets the value of the id property.
      * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
      */
-    public long getID() {
+    public Long getID() {
         return id;
     }
 
     /**
      * Sets the value of the id property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
      */
-    public void setID(long value) {
+    public void setID(Long value) {
         this.id = value;
     }
 
@@ -387,27 +395,27 @@ public class EgroupType {
     }
 
     /**
-     * Gets the value of the administrator property.
+     * Gets the value of the administratorEgroup property.
      * 
      * @return
      *     possible object is
-     *     {@link AdministratorType }
+     *     {@link String }
      *     
      */
-    public AdministratorType getAdministrator() {
-        return administrator;
+    public String getAdministratorEgroup() {
+        return administratorEgroup;
     }
 
     /**
-     * Sets the value of the administrator property.
+     * Sets the value of the administratorEgroup property.
      * 
      * @param value
      *     allowed object is
-     *     {@link AdministratorType }
+     *     {@link String }
      *     
      */
-    public void setAdministrator(AdministratorType value) {
-        this.administrator = value;
+    public void setAdministratorEgroup(String value) {
+        this.administratorEgroup = value;
     }
 
     /**
@@ -507,27 +515,27 @@ public class EgroupType {
     }
 
     /**
-     * Gets the value of the emailMembers property.
+     * Gets the value of the emailProperties property.
      * 
      * @return
      *     possible object is
-     *     {@link EmailMembersType }
+     *     {@link EmailPropertiesType }
      *     
      */
-    public EmailMembersType getEmailMembers() {
-        return emailMembers;
+    public EmailPropertiesType getEmailProperties() {
+        return emailProperties;
     }
 
     /**
-     * Sets the value of the emailMembers property.
+     * Sets the value of the emailProperties property.
      * 
      * @param value
      *     allowed object is
-     *     {@link EmailMembersType }
+     *     {@link EmailPropertiesType }
      *     
      */
-    public void setEmailMembers(EmailMembersType value) {
-        this.emailMembers = value;
+    public void setEmailProperties(EmailPropertiesType value) {
+        this.emailProperties = value;
     }
 
 }

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "SelfsubscriptionType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/")
+@XmlType(name = "SelfsubscriptionType")
 @XmlEnum
 public enum SelfsubscriptionType {
 

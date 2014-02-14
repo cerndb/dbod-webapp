@@ -17,9 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="ID" type="{http://www.w3.org/2001/XMLSchema}long"/>
- *         &lt;element name="Type" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupTypeCode"/>
  *         &lt;element name="ApprovalNeeded" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -30,46 +28,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SelfsubscriptionEgroupType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
-    "name",
+@XmlType(name = "SelfsubscriptionEgroupType", propOrder = {
     "id",
-    "type",
     "approvalNeeded"
 })
 public class SelfsubscriptionEgroupType {
 
-    @XmlElement(name = "Name", required = true)
-    protected String name;
     @XmlElement(name = "ID")
     protected long id;
-    @XmlElement(name = "Type", required = true)
-    protected EgroupTypeCode type;
     @XmlElement(name = "ApprovalNeeded")
     protected boolean approvalNeeded;
-
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
 
     /**
      * Gets the value of the id property.
@@ -85,30 +53,6 @@ public class SelfsubscriptionEgroupType {
      */
     public void setID(long value) {
         this.id = value;
-    }
-
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link EgroupTypeCode }
-     *     
-     */
-    public EgroupTypeCode getType() {
-        return type;
-    }
-
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link EgroupTypeCode }
-     *     
-     */
-    public void setType(EgroupTypeCode value) {
-        this.type = value;
     }
 
     /**

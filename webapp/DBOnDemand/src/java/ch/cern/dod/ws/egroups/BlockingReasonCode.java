@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "BlockingReasonCode", namespace = "https://cra-ws.cern.ch/cra-ws/cra/")
+@XmlType(name = "BlockingReasonCode")
 @XmlEnum
 public enum BlockingReasonCode {
 

@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Egroup" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Egroup" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "EgroupsType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
+@XmlType(name = "EgroupsType", propOrder = {
     "egroup"
 })
 public class EgroupsType {

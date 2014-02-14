@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "MemberTypeCode", namespace = "https://cra-ws.cern.ch/cra-ws/cra/")
+@XmlType(name = "MemberTypeCode")
 @XmlEnum
 public enum MemberTypeCode {
 

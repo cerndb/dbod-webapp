@@ -18,10 +18,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="p_niceUserid" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_password" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_oldEmailAddress" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_newEmailAddress" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="oldEmail" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="newEmail" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,117 +30,63 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "pNiceUserid",
-    "pPassword",
-    "pOldEmailAddress",
-    "pNewEmailAddress"
+    "oldEmail",
+    "newEmail"
 })
-@XmlRootElement(name = "changeExternalEmailAddressRequest")
+@XmlRootElement(name = "ChangeExternalEmailAddressRequest")
 public class ChangeExternalEmailAddressRequest {
 
-    @XmlElement(name = "p_niceUserid", required = true)
-    protected String pNiceUserid;
-    @XmlElement(name = "p_password", required = true)
-    protected String pPassword;
-    @XmlElement(name = "p_oldEmailAddress", required = true)
-    protected String pOldEmailAddress;
-    @XmlElement(name = "p_newEmailAddress", required = true)
-    protected String pNewEmailAddress;
+    @XmlElement(required = true)
+    protected String oldEmail;
+    @XmlElement(required = true)
+    protected String newEmail;
 
     /**
-     * Gets the value of the pNiceUserid property.
+     * Gets the value of the oldEmail property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPNiceUserid() {
-        return pNiceUserid;
+    public String getOldEmail() {
+        return oldEmail;
     }
 
     /**
-     * Sets the value of the pNiceUserid property.
+     * Sets the value of the oldEmail property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPNiceUserid(String value) {
-        this.pNiceUserid = value;
+    public void setOldEmail(String value) {
+        this.oldEmail = value;
     }
 
     /**
-     * Gets the value of the pPassword property.
+     * Gets the value of the newEmail property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPPassword() {
-        return pPassword;
+    public String getNewEmail() {
+        return newEmail;
     }
 
     /**
-     * Sets the value of the pPassword property.
+     * Sets the value of the newEmail property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPPassword(String value) {
-        this.pPassword = value;
-    }
-
-    /**
-     * Gets the value of the pOldEmailAddress property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPOldEmailAddress() {
-        return pOldEmailAddress;
-    }
-
-    /**
-     * Sets the value of the pOldEmailAddress property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPOldEmailAddress(String value) {
-        this.pOldEmailAddress = value;
-    }
-
-    /**
-     * Gets the value of the pNewEmailAddress property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPNewEmailAddress() {
-        return pNewEmailAddress;
-    }
-
-    /**
-     * Sets the value of the pNewEmailAddress property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPNewEmailAddress(String value) {
-        this.pNewEmailAddress = value;
+    public void setNewEmail(String value) {
+        this.newEmail = value;
     }
 
 }

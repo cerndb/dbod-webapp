@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Member" type="{https://cra-ws.cern.ch/cra-ws/cra/}MemberType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}MemberType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,27 +29,27 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MembersType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
-    "member"
+@XmlType(name = "MembersType", propOrder = {
+    "members"
 })
 public class MembersType {
 
-    @XmlElement(name = "Member")
-    protected List<MemberType> member;
+    @XmlElement(name = "Members")
+    protected List<MemberType> members;
 
     /**
-     * Gets the value of the member property.
+     * Gets the value of the members property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the member property.
+     * This is why there is not a <CODE>set</CODE> method for the members property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getMember().add(newItem);
+     *    getMembers().add(newItem);
      * </pre>
      * 
      * 
@@ -59,11 +59,11 @@ public class MembersType {
      * 
      * 
      */
-    public List<MemberType> getMember() {
-        if (member == null) {
-            member = new ArrayList<MemberType>();
+    public List<MemberType> getMembers() {
+        if (members == null) {
+            members = new ArrayList<MemberType>();
         }
-        return this.member;
+        return this.members;
     }
 
 }

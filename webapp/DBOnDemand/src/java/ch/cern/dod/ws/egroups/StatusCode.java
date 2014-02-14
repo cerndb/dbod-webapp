@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "StatusCode", namespace = "https://cra-ws.cern.ch/cra-ws/cra/")
+@XmlType(name = "StatusCode")
 @XmlEnum
 public enum StatusCode {
 

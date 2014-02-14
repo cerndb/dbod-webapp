@@ -18,9 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="p_niceUserid" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_password" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="p_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,90 +29,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "pNiceUserid",
-    "pPassword",
-    "pName"
+    "name"
 })
-@XmlRootElement(name = "findEgroupByNameRequest")
+@XmlRootElement(name = "FindEgroupByNameRequest")
 public class FindEgroupByNameRequest {
 
-    @XmlElement(name = "p_niceUserid", required = true)
-    protected String pNiceUserid;
-    @XmlElement(name = "p_password", required = true)
-    protected String pPassword;
-    @XmlElement(name = "p_name", required = true)
-    protected String pName;
+    @XmlElement(required = true)
+    protected String name;
 
     /**
-     * Gets the value of the pNiceUserid property.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPNiceUserid() {
-        return pNiceUserid;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the value of the pNiceUserid property.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPNiceUserid(String value) {
-        this.pNiceUserid = value;
-    }
-
-    /**
-     * Gets the value of the pPassword property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPPassword() {
-        return pPassword;
-    }
-
-    /**
-     * Sets the value of the pPassword property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPPassword(String value) {
-        this.pPassword = value;
-    }
-
-    /**
-     * Gets the value of the pName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPName() {
-        return pName;
-    }
-
-    /**
-     * Sets the value of the pName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPName(String value) {
-        this.pName = value;
+    public void setName(String value) {
+        this.name = value;
     }
 
 }

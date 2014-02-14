@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AliasesType", namespace = "https://cra-ws.cern.ch/cra-ws/cra/", propOrder = {
+@XmlType(name = "AliasesType", propOrder = {
     "alias"
 })
 public class AliasesType {

@@ -18,8 +18,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="result" type="{https://cra-ws.cern.ch/cra-ws/cra/}EgroupType"/>
+ *         &lt;element name="result" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupType" minOccurs="0"/>
  *         &lt;element name="transactionId" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="error" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}ErrorType" minOccurs="0"/>
+ *         &lt;element name="warnings" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}WarningsType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,15 +33,18 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "result",
-    "transactionId"
+    "transactionId",
+    "error",
+    "warnings"
 })
-@XmlRootElement(name = "findEgroupByIdResponse")
+@XmlRootElement(name = "FindEgroupByIdResponse")
 public class FindEgroupByIdResponse {
 
-    @XmlElement(required = true)
     protected EgroupType result;
     @XmlElement(required = true)
     protected String transactionId;
+    protected ErrorType error;
+    protected WarningsType warnings;
 
     /**
      * Gets the value of the result property.
@@ -87,6 +92,54 @@ public class FindEgroupByIdResponse {
      */
     public void setTransactionId(String value) {
         this.transactionId = value;
+    }
+
+    /**
+     * Gets the value of the error property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ErrorType }
+     *     
+     */
+    public ErrorType getError() {
+        return error;
+    }
+
+    /**
+     * Sets the value of the error property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ErrorType }
+     *     
+     */
+    public void setError(ErrorType value) {
+        this.error = value;
+    }
+
+    /**
+     * Gets the value of the warnings property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link WarningsType }
+     *     
+     */
+    public WarningsType getWarnings() {
+        return warnings;
+    }
+
+    /**
+     * Sets the value of the warnings property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link WarningsType }
+     *     
+     */
+    public void setWarnings(WarningsType value) {
+        this.warnings = value;
     }
 
 }
