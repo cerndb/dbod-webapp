@@ -89,14 +89,15 @@ public class FormValidations {
     /**
      * Validates e-Group name.
      * @param eGroup Textbox with the e-group to validate.
+     * @param dbType Type of the DB.
      * @return true if e-group name is valid, false otherwise.
      */
-    public static boolean isEGroupValid(Textbox eGroup) {
+    public static boolean isEGroupValid(Textbox eGroup, String dbType) {
         //If there are no previous errors
         if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
-            if (eGroup.getText().length() > 0) {
-                //Trim and lowercase
-                eGroup.setValue(eGroup.getValue().trim().toLowerCase());
+            //Trim and lowercase
+            eGroup.setValue(eGroup.getValue().trim().toLowerCase());
+            if (eGroup.getValue().length() > 0) {
                 //Check eGroup length
                 if (eGroup.getText().length() > DODConstants.MAX_E_GROUP_LENGTH) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_LENGTH));
@@ -110,6 +111,13 @@ public class FormValidations {
                 //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
                 if (!Pattern.matches("[\\da-z\\.\\-_]*", eGroup.getValue())) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CHARS));
+                    return false;
+                }
+            }
+            //If egroup is empty and the instance is Oracle 12c show error
+            else {
+                if (DODConstants.DB_TYPE_ORA.equals(dbType)) {
+                    eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_ORA12));
                     return false;
                 }
             }

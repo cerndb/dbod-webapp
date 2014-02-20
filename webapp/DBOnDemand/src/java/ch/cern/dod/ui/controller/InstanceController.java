@@ -96,10 +96,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
     EGroupHelper eGroupHelper;
 
     /**
-     * User creating the instance.
-     */
-    private String fullName;
-    /**
      * CCID of the user creating the instance.
      */
     private long userCCID;
@@ -135,7 +131,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 //Get user and password for the web services account
                 String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
                 String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
-                fullName = execution.getHeader(DODConstants.ADFS_FULLNAME);
                 String userCCIDText = execution.getHeader(DODConstants.ADFS_CCID);
                 if (userCCIDText != null && !userCCIDText.isEmpty())
                     userCCID = Long.parseLong(execution.getHeader(DODConstants.ADFS_CCID));
@@ -530,7 +525,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //If it is an oracle instance, send to OEM
         if (instance.getDbType().equals(DODConstants.DB_TYPE_ORA)) {
             monitorBtn.setTarget("_blank");
-            monitorBtn.setHref(DODConstants.OEM_URL + "?target=" + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase() + "&type=oracle_pdb");
+            monitorBtn.setHref(DODConstants.OEM_URL + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase());
         }
         else {
             monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
@@ -842,12 +837,12 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void checkAndEditEGroup() {
         //Check for errors in form
-        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")))) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType())) {
             //If there is an egroup
             if(((Textbox) getFellow("eGroupEdit")).getValue() != null && !((Textbox) getFellow("eGroupEdit")).getValue().isEmpty()) {
                 //Check if e-group exists
                 boolean eGroupExists = eGroupHelper.eGroupExists(((Textbox) getFellow("eGroupEdit")).getValue());
-                //If the egroup does not exist show confimation window and return (the creation of e-groups is not allowed when editing)
+                //If the egroup does not exist show error window and return (the creation of e-groups is not allowed when editing)
                 if (!eGroupExists) {
                     try {
                         ((Window) getFellow("eGroupConfirm")).doModal();
@@ -871,33 +866,43 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void editEGroup(boolean eGroupExists) {
         //Check for errors in form
-        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")))) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType())) {
             boolean eGroupCreated = false;
             //If the egroup does not exist create it
             if (!eGroupExists) {
                 //If the egroup was successfully created store the instance in the DB
                 eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroupEdit")).getValue(),
-                        instance.getDbName(), userCCID, fullName);
+                        instance.getDbName(), userCCID, true);
             }
             //If the egroup exists or it was successfully created
             if (eGroupExists || eGroupCreated) {
-                //Clone the instance and override eGroup
-                DODInstance clone = instance.clone();
-                clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
-                if (instanceDAO.update(instance, clone, username) > 0) {
-                    instance = clone;
-                    if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
-                        ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
-                    else
-                        ((Label) getFellow("eGroup")).setValue("-");
-                    ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
-                    ((Hbox) getFellow("eGroupBox")).setVisible(true);
-                    //Reload changes
-                    refreshInfo();
-                    loadChanges();
+                //If instance is Oracle 12 change it in OEM
+                boolean changedInOEM = true;
+                if (DODConstants.DB_TYPE_ORA.equals(instance.getDbType())) {
+                    changedInOEM = eGroupHelper.changeEgroupInOEM(instance.getDbName(),
+                                                    instance.getEGroup(),
+                                                    ((Textbox) getFellow("eGroupEdit")).getValue());
                 }
-                else {
-                    showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+                
+                if (changedInOEM) {
+                    //Clone the instance and override eGroup
+                    DODInstance clone = instance.clone();
+                    clone.setEGroup(((Textbox) getFellow("eGroupEdit")).getValue());
+                    if (instanceDAO.update(instance, clone, username) > 0) {
+                        instance = clone;
+                        if (instance.getEGroup() != null && !instance.getEGroup().isEmpty())
+                            ((Label) getFellow("eGroup")).setValue(instance.getEGroup());
+                        else
+                            ((Label) getFellow("eGroup")).setValue("-");
+                        ((Hbox) getFellow("eGroupEditBox")).setVisible(false);
+                        ((Hbox) getFellow("eGroupBox")).setVisible(true);
+                        //Reload changes
+                        refreshInfo();
+                        loadChanges();
+                    }
+                    else {
+                        showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
+                    }
                 }
             }
             else {

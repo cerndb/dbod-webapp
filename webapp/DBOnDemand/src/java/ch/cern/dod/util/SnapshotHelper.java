@@ -47,7 +47,14 @@ public class SnapshotHelper {
         try {
             DODWebService service = new DODWebService();
             DODWebServicePortType port = service.getDODWebServicePort();
-            String snapshotsString = port.getSnapshots(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            String snapshotsString;
+            //If the database is Oracle 12c
+            if (DODConstants.DB_TYPE_ORA.equals(instance.getDbType())) {
+                snapshotsString = port.getOraSnapshots(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            }
+            else {
+                snapshotsString = port.getSnapshots(DODConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
+            }
             String[] snapshotArray = snapshotsString.split(":");
             Pattern pattern = Pattern.compile("_");
             for (int i=0; i<snapshotArray.length;i++) {

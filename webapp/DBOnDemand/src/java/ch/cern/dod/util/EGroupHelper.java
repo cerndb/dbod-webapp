@@ -1,19 +1,13 @@
 package ch.cern.dod.util;
 
 import ch.cern.dod.ws.egroups.*;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.handler.MessageContext;
 
 /**
  * Helper to manage e-groups. It also provides a static method to check if a
@@ -35,6 +29,10 @@ public class EGroupHelper {
      * Password to connect to web services.
      */
     private String wsPassword;
+    /**
+     * Port to send requests to
+     */
+    private EgroupsService port;
 
     /**
      * Constructor for this class.
@@ -45,6 +43,15 @@ public class EGroupHelper {
     public EGroupHelper(String user, String password) {
         this.wsUser = user;
         this.wsPassword = password;
+        
+        // Service locator
+        EgroupsWebService webService = new EgroupsWebService();
+        // Service stub
+        this.port = webService.getEgroupsServiceSoap11();
+        //Set username and password
+        BindingProvider bp = (BindingProvider) port;
+        bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, wsUser);
+        bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, wsPassword);
     }
 
     /**
@@ -74,19 +81,11 @@ public class EGroupHelper {
      * @param eGroupName name for the e-group to be created.
      * @param instanceName name of the instance.
      * @param userCCID id number of the owner of this e-group.
-     * @param name full name of the owner of this e-group.
+     * @param ownerIsMember indicates if the owner should be added as member or not.
      * @return List of groups for the specified user.
      */
-    public boolean createEGroup(String eGroupName, String instanceName, long userCCID, String name) {
-        try {
-            // Service locator
-            EgroupsWebService webService = new EgroupsWebService();
-            // Service stub
-            EgroupsService port = webService.getEgroupsServiceSoap11();
-            //Set username and password
-            BindingProvider bp = (BindingProvider) port;
-            bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, wsUser);
-            bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, wsPassword);
+    public boolean createEGroup(String eGroupName, String instanceName, long userCCID, boolean ownerIsMember) {
+        try {            
             //Create eGroup
             EgroupType egroup = new EgroupType();
             egroup.setName(eGroupName);
@@ -98,14 +97,15 @@ public class EGroupHelper {
             UserType owner = new UserType();
             owner.setPersonId(userCCID);
             egroup.setOwner(owner);
-            //User is member
-            MemberType member = new MemberType();
-            member.setID(String.valueOf(userCCID));
-            member.setType(MemberTypeCode.PERSON);
-            member.setName(name);
-            MembersType members = new MembersType();
-            members.getMembers().add(member);
-            egroup.setMembers(members);
+            if (ownerIsMember) {
+                //User is member
+                MemberType member = new MemberType();
+                member.setID(String.valueOf(userCCID));
+                member.setType(MemberTypeCode.PERSON);
+                MembersType members = new MembersType();
+                members.getMembers().add(member);
+                egroup.setMembers(members);
+            }
             //Group privacy and subscription
             egroup.setPrivacy(PrivacyType.MEMBERS);
             egroup.setSelfsubscription(SelfsubscriptionType.USERS_WITH_ADMIN_APPROVAL);
@@ -119,7 +119,6 @@ public class EGroupHelper {
             //Check errors
             if (resp.getError() != null) {
                 Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR CREATING EGROUP {0}: {1}", new Object[]{eGroupName, resp.getError().getMessage()});
-                
                 return false;
             }
             //Check warnings
@@ -140,25 +139,52 @@ public class EGroupHelper {
         }
         return false;
     }
-
+    
     /**
-     * Checks if an e-group already exists.
+     * Deletes an e-group
+     * @param egroup e-group to delete
+     * @return true if the operation is successful
+     */
+    public boolean deleteEgroup(String egroup) {
+        try {
+            //Create request
+            DeleteEgroupRequest req = new DeleteEgroupRequest();
+            req.setEgroupName(egroup);
+            //Get result
+            DeleteEgroupResponse resp = port.deleteEgroup(req);
+            
+            //Check errors
+            if (resp.getError() != null) {
+                Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR DELETING EGROUP {0}: {1}", new Object[]{egroup, resp.getError().getMessage()});
+                return false;
+            }
+            
+            return true;
+
+        } catch (Exception ex) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR DELETING EGROUP " + egroup, ex);
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if an e-group exists
+     * @param egroup name of the egroup
+     * @return true if exits, false otherwise
+     */
+    public boolean eGroupExists (String egroup) {
+        return findEgroup(egroup) != null;
+    }
+        
+  
+    /**
+     * Finds an e-group by name.
      *
      * @param egroup name of the e-group to check.
-     * @return true if the e-group exists, false otherwise.
+     * @return the group object.
      */
-    public boolean eGroupExists(String egroup) {
-        try {            
-            // Service locator
-            EgroupsWebService webSservice = new EgroupsWebService();
-            // Service stub
-            EgroupsService port = webSservice.getEgroupsServiceSoap11();
-            
-            //Set username and password
-            BindingProvider bp = (BindingProvider) port;
-            bp.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, wsUser);
-            bp.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, wsPassword);
-            
+    private EgroupType findEgroup(String egroup) {
+        try {                        
             // get e-group by name
             FindEgroupByNameRequest req = new FindEgroupByNameRequest();
             req.setName(egroup);
@@ -176,10 +202,150 @@ public class EGroupHelper {
                 }
             }
             
-            return group != null && group.getID() > 0;
+            return group;
         } catch (Exception ex) {
             Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING EGROUP " + egroup, ex);
         }
+        return null;
+    }
+    
+    /**
+     * Adds an e-group as member of another e-group
+     * @param ownerEgroup e-group to add the other e-group to
+     * @param memberEgroup e-goup to be added
+     * @return true if successful
+     */
+    private boolean addEgroupAsMember (String ownerEgroup, String memberEgroup) {
+        try {
+            //Get owner and member eGroups
+            EgroupType owner = findEgroup(ownerEgroup);
+            EgroupType member = findEgroup(memberEgroup);
+
+            if (owner != null && member != null) {
+                //Add member
+                MemberType m = new MemberType();
+                m.setID(String.valueOf(member.getID()));
+                m.setType(MemberTypeCode.fromValue(member.getType().value()));
+                owner.getMembers().getMembers().add(m);
+
+                //Create request
+                SynchronizeEgroupRequest req = new SynchronizeEgroupRequest();
+                req.setEgroup(owner);
+                //Get result
+                SynchronizeEgroupResponse resp = port.synchronizeEgroup(req);
+
+                //Check errors
+                if (resp.getError() != null) {
+                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR ADDING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, resp.getError().getMessage()});
+                    return false;
+                }
+                //Check warnings
+                if (resp.getWarnings() != null) {
+                    List<ErrorType> warnings = resp.getWarnings().getWarnings();
+                    if (warnings != null) {
+                        ListIterator<ErrorType> iter = warnings.listIterator();
+                        while (iter.hasNext()) {
+                            Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING ADDING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
+                        }
+                    }
+                }
+
+                return true;
+            }
+            else return false;
+
+        } catch (Exception ex) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR ADDING EGROUP " + memberEgroup + " TO EGROUP " + ownerEgroup, ex);
+        }
         return false;
+    }
+    
+    /**
+     * Remove an e-group as member of another e-group
+     * @param ownerEgroup e-group to remove the other e-group from
+     * @param memberEgroup e-goup to be removed
+     * @return true if successful
+     */
+    private boolean removeEgroupAsMember (String ownerEgroup, String memberEgroup) {
+        try {
+            //Get owner and member eGroups
+            EgroupType owner = findEgroup(ownerEgroup);
+            EgroupType member = findEgroup(memberEgroup);
+
+            if (owner != null && member != null) {
+                //Remove member
+                Iterator members = owner.getMembers().getMembers().iterator();
+                while (members.hasNext()) {
+                   MemberType m = (MemberType)members.next();
+                    if (m.getID().equals(member.getID().toString())) {
+                        owner.getMembers().getMembers().remove(m);
+                        break;
+                    }
+                }
+
+                //Create request
+                SynchronizeEgroupRequest req = new SynchronizeEgroupRequest();
+                req.setEgroup(owner);
+                //Get result
+                SynchronizeEgroupResponse resp = port.synchronizeEgroup(req);
+
+                //Check errors
+                if (resp.getError() != null) {
+                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, resp.getError().getMessage()});
+                    return false;
+                }
+                //Check warnings
+                if (resp.getWarnings() != null) {
+                    List<ErrorType> warnings = resp.getWarnings().getWarnings();
+                    if (warnings != null) {
+                        ListIterator<ErrorType> iter = warnings.listIterator();
+                        while (iter.hasNext()) {
+                            Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING REMOVING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
+                        }
+                    }
+                }
+
+                return true;
+            }
+            else return false;
+
+        } catch (Exception ex) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP " + memberEgroup + " TO EGROUP " + ownerEgroup, ex);
+        }
+        return false;
+    }
+    
+    /**
+     * Creates an e-group to be assigned to a role on OEM, and adds the given e-group to it.
+     * It also adds the created e-group to the groups managed by OEM.
+     * @param instanceName name of the instance to add
+     * @param egroup name of the e-group given by the user
+     * @return true if the operation is successful
+     */
+    public boolean addEgroupToOEM(String instanceName, String egroup) {
+        return createEGroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, instanceName, DODConstants.OEM_EGROUP_OWNER_CCID, false)
+                && addEgroupAsMember(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, egroup)
+                && addEgroupAsMember(DODConstants.OEM_EGROUP, DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
+    }
+    
+    /**
+     * Removes the e-group associated to a role from the master e-group and deletes it.
+     * @param instanceName name of the instance to remove
+     * @return true if the operation is successful
+     */
+    public boolean removeEgroupFromOEM(String instanceName) {
+        return deleteEgroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
+    }
+    
+    /**
+     * Changes the e-group associated with an instance in OEM
+     * @param instanceName name of the instance to change
+     * @param oldEgroup old e-group
+     * @param newEgroup new e-group
+     * @return 
+     */
+    public boolean changeEgroupInOEM(String instanceName, String oldEgroup, String newEgroup) {
+        return removeEgroupAsMember(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, oldEgroup)
+                && addEgroupAsMember(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, newEgroup);
     }
 }

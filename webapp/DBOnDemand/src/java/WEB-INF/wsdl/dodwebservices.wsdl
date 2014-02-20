@@ -16,6 +16,14 @@
         <wsdl:part name="snapshots" type="xsd:string" />
     </wsdl:message>
     
+    <wsdl:message name="GetOraSnapshotsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOraSnapshotsResponse">
+        <wsdl:part name="snapshots" type="xsd:string" />
+    </wsdl:message>
+    
     <wsdl:message name="GetSlowLogsRequest">
         <wsdl:part name="instance" type="xsd:string" />
     </wsdl:message>
@@ -96,6 +104,10 @@
             <wsdl:input message="impl:GetSnapshotsRequest" name="GetSnapshotsRequest" />
             <wsdl:output message="impl:GetSnapshotsResponse" name="GetSnapshotsResponse" />
         </wsdl:operation>
+        <wsdl:operation name="GetOraSnapshots">
+            <wsdl:input message="impl:GetOraSnapshotsRequest" name="GetOraSnapshotsRequest" />
+            <wsdl:output message="impl:GetOraSnapshotsResponse" name="GetOraSnapshotsResponse" />
+        </wsdl:operation>
         <wsdl:operation name="GetSlowLogs">
             <wsdl:input message="impl:GetSlowLogsRequest" name="GetSlowLogsRequest" />
             <wsdl:output message="impl:GetSlowLogsResponse" name="GetSlowLogsResponse" />
@@ -142,6 +154,15 @@
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:input>
             <wsdl:output name="GetSnapshotsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOraSnapshots">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOraSnapshots"/>
+            <wsdl:input name="GetOraSnapshotsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetOraSnapshotsResponse">
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:output>
         </wsdl:operation>

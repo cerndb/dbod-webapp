@@ -112,7 +112,11 @@ public class DODConstants {
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
     public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
-    public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home";
+    public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
+    
+    public static final String OEM_EGROUP = "oracle-em-users";
+    public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
+    public static final long OEM_EGROUP_OWNER_CCID = 679638; //dbmon service account
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
@@ -249,6 +253,7 @@ public class DODConstants {
     public static final String ERROR_E_GROUP_CHARS = "errorEGroupChars";
     public static final String ERROR_E_GROUP_DASH = "errorEGroupDash";
     public static final String ERROR_E_GROUP_SEARCH = "errorEGroupSearch";
+    public static final String ERROR_E_GROUP_ORA12 = "errorEGroupOra12";
     public static final String ERROR_EXPIRY_DATE_FORMAT = "errorExpiryDateFormat";
     public static final String ERROR_EXPIRY_DATE_FUTURE = "errorExpiryDateFuture";
     public static final String ERROR_DB_TYPE_EMPTY = "errorDbTypeEmpty";

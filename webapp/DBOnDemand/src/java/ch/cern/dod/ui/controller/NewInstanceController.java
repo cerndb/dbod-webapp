@@ -25,10 +25,6 @@ import org.zkoss.zul.*;
  */
 public class NewInstanceController extends Window implements AfterCompose {
     /**
-     * User creating the instance.
-     */
-    private String fullName;
-    /**
      * CCID of the user creating the instance.
      */
     private int userCCID;
@@ -96,7 +92,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //Check for errors in form
         if (isUsernameValid()
                 & FormValidations.isDbNameValid((Textbox) getFellow("dbName"))
-                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"))
+                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())
                 & FormValidations.isCategoryValid((Combobox) getFellow("category"))
                 & FormValidations.isExpiryDateValid((Datebox) getFellow("expiryDate"))
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))
@@ -137,7 +133,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //Check for errors in form
         if (isUsernameValid()
                 & FormValidations.isDbNameValid((Textbox) getFellow("dbName"))
-                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"))
+                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())
                 & FormValidations.isCategoryValid((Combobox) getFellow("category"))
                 & FormValidations.isExpiryDateValid((Datebox) getFellow("expiryDate"))
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))
@@ -153,10 +149,19 @@ public class NewInstanceController extends Window implements AfterCompose {
             if (!eGroupExists) {
                 //If the egroup was successfully created store the instance in the DB
                 eGroupCreated = eGroupHelper.createEGroup(((Textbox) getFellow("eGroup")).getValue(),
-                        ((Textbox) getFellow("dbName")).getValue(), userCCID, fullName);
+                        ((Textbox) getFellow("dbName")).getValue(), userCCID, true);
             }
-            //If the egroup exists or it was successfully created
-            if (eGroupExists || eGroupCreated) {
+            
+            //If the egroups exists or it was created adn  instance is Oracle 12c create OEM e-group
+            boolean addedToOEM = true;
+            if ((eGroupExists || eGroupCreated)
+                    && DODConstants.DB_TYPE_ORA.equals((String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())) {
+                addedToOEM = eGroupHelper.addEgroupToOEM(((Textbox) getFellow("dbName")).getValue(),
+                                            ((Textbox) getFellow("eGroup")).getValue());
+            }
+            
+            //If the egroup exists or it was successfully created (and added to OEM)
+            if ((eGroupExists || eGroupCreated) && addedToOEM) {
                 //Create instace object
                 DODInstance instance = new DODInstance();
                 instance.setUsername(((Textbox) getFellow("username")).getValue());
@@ -204,7 +209,6 @@ public class NewInstanceController extends Window implements AfterCompose {
         Textbox username = (Textbox) getFellow("username");
         UserInfo userInfo = FormValidations.isUsernameValid(username, authenticationHelper);
         if (userInfo != null) {
-            fullName = userInfo.getFirstname() + " " + userInfo.getLastname();
             userCCID = userInfo.getCcid();
             return true;
         }
