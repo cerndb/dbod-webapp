@@ -194,17 +194,7 @@ sub PG_writeFile {
     $logger->debug( "Created temporary file $filename" );
     chmod(0644, $filename); # Remote user doing the reading will be sysctl
     open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
-    if ($type eq 'HBA'){
-        $logger->debug( 'Passing through HBA clob to file' );
-        print FP $hashref;
-    }
-    else { # PG
-        $logger->debug( 'Converting PG hash to file');
-        my %hash = %{$hashref};
-        foreach (keys (%hash)){
-                print FP "$_ = $hash{$_}\n";
-            }
-    }
+    print FP $hashref;
     close(FP);
     return $filename;
 }
@@ -266,19 +256,7 @@ sub PG_parser
 
 sub PG_process {
     my ($clob, $type) = @_;
-    if ($type eq 'HBA') {
-        $logger->debug( 'Passing through HBA config file' );
-        return PG_writeFile($clob, $type)
-    }
-    else{
-        $logger->debug( 'Parsing PG configuration file' );
-        $logger->debug( "type: $type, clob:\n$clob" );
-        my $parsed = PG_parser( $clob, $type );
-        $logger->debug( "parsed: $parsed" );
-        my $enforced = PG_enforce( $parsed, $type );
-        $logger->debug( "enforced: $enforced" );
-        return PG_writeFile( $enforced );
-    }
+    return PG_writeFile( $clob, $type );
 }
 
 sub parser{
