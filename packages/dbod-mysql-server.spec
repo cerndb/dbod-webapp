@@ -11,6 +11,7 @@ Version: %{version}
 Release: 0 
 License: GPL
 Group: Applications
+Source: mysql-%{version}.tar.gz
 URL: https://cern.ch/DBOnDemand/
 Distribution: DBOD
 Vendor: CERN
@@ -28,12 +29,14 @@ library dependencies.
 #Requires: 
 
 %prep
+%setup -n mysql-%{version}
 exit 0
 
 %build
 exit 0
 
 %install
+cd .. && cp -r mysql-%{version} /usr/local/mysql
 exit 0
 
 %clean
