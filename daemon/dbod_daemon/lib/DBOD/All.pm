@@ -58,6 +58,16 @@ sub copy_to_entity{
     return $?;
 }
 
+sub write_file {
+    my ($clob) = shift;    
+    my ($fh, $filename) = File::Temp::tempfile( DIR => '/tmp' );
+    $logger->debug( "Created temporary file $filename" );
+    chmod(0644, $filename); # Remote user doing the reading will be sysctl
+    open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
+    print FP $clob;
+    close(FP);
+    return $filename;
+}
 
 sub result_code{
     my $log = shift;
