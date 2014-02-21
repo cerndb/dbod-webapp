@@ -185,7 +185,7 @@ sub worker_body {
     my $log;
     my $retcode;
     my $params = $job->{'PARAMS'};
-    if (defined $cmd_line){
+    if ((defined $cmd_line) && ($cmd_line !~ /^ERROR/)){
         my $entity = DBOD::All::get_entity($job);
         my $cmd =  "/etc/init.d/syscontrol -i $entity $cmd_line";
         $logger->debug( "Executing $cmd" );
@@ -195,9 +195,9 @@ sub worker_body {
         DBOD::Database::finishJob( $job, $retcode, $log, $worker_dbh );
     }
     else{
-        $logger->error( "An error ocurred preparing command execution \n $!" );
+        $logger->error( "An error ocurred preparing command execution:\n$cmd_line" );
         $logger->debug( "Finishing Job.");
-        DBOD::Database::finishJob( $job, 1, $!, $worker_dbh );
+        DBOD::Database::finishJob( $job, 1, $cmd_line, $worker_dbh );
     }
     $logger->debug( "Exiting worker process" );
     $worker_dbh->disconnect();
