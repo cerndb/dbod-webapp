@@ -123,15 +123,15 @@ sub Main{
 
             # Everthing completed successfully
             $rc = 0;
+
+            $logger->debug( 'Disconnecting from DB' );
+            $dbh->disconnect();
         }
         else{
             $logger->error( 'Unable to get DB connection' );
             $rc = -1;
         }
-
-        $logger->debug( 'Disconnecting from DB' );
-        $dbh->disconnect();
-
+        
         $logger->debug( 'Deleting lock file' );
         unlink $lock_file ;
 
