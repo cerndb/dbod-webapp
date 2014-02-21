@@ -9,7 +9,6 @@ use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
-use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_DURATION,

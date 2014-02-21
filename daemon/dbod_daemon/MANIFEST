@@ -9,7 +9,6 @@ inc/Module/Install/Share.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/DBOD.pm
-lib/DBOD/Templates.pm
 lib/DBOD/Database.pm
 lib/DBOD/MySQL.pm
 lib/DBOD/Oracle.pm
@@ -29,6 +28,4 @@ scripts/dbod_daemon_init
 scripts/dbod_daemon_monitor
 share/dbod_daemon.conf
 share/dbod_daemon_logger.conf
-share/templates/MY_CNF
-share/templates/PG
 t/DBOD.t

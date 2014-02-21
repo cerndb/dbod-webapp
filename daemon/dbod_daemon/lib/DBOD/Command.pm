@@ -7,7 +7,6 @@ use Exporter;
 use DBOD::Config qw( $config );
 use DBOD::All;
 use DBOD::Database; 
-use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger);
 
@@ -75,10 +74,8 @@ sub prepareCommand {
             @buf = grep($_->{'NAME'} =~ /TYPE/, @{$job->{'PARAMS'}});
             my $filetype = $buf[0]->{'VALUE'};
             
-            $logger->debug("Fetching parser for config file type: $filetype");
-            my $parser = DBOD::Templates::parser( $filetype );
-            $logger->debug("parser: $parser");
-            my $filename = $parser->($clob, $filetype); 
+            $logger->debug("Writing file: $filetype");
+            my $filename = All::write_file($clob); 
 
             # Distribute file to target entity
             my $entity = DBOD::All::get_entity($job);
