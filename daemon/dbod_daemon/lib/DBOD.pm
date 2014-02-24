@@ -22,7 +22,7 @@ use POSIX ":sys_wait_h";
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, %callback_table);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw(jobDispatcher $logger);
 @EXPORT_OK   = ( );
@@ -43,10 +43,10 @@ my %command_callback_table = (
 );
 
 my %state_checker_table = (
-    'MYSQL' => \&DBOD::MySQL::state_checker,
-    'ORACLE' => \&DBOD::Oracle::state_checker, 
-    'ORA' => \&DBOD::Oracle::state_checker, 
-    'PG' => \&DBOD::PostgreSQL::state_checker, 
+    'MYSQL' => \&DBOD::All::state_checker,
+    'ORACLE' => \&DBOD::All::state_checker, 
+    'ORA' => \&DBOD::All::state_checker, 
+    'PG' => \&DBOD::All::state_checker, 
     'MIDDLEWARE' => \&DBOD::Middleware::state_checker, 
 );
 
@@ -114,7 +114,7 @@ sub jobDispatcher {
                     $logger->error( "No state checker defined for this DB type" );
                 }
                 # Fetching instance state
-                my ($job_state, $instance_state) = $state_checker->($job, 1);
+                my ($job_state, $instance_state) = $state_checker->($job, 1, 1);
                 $logger->debug( "Updating job STATE" );
                 updateJob($job, 'STATE', 'TIMED OUT', $dbh);
                 DBOD::Database::updateJob( $job, 'STATE', 'TIMED OUT', $dbh );

@@ -10,7 +10,7 @@ use DBOD::Database;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw();
 @EXPORT_OK   = qw();

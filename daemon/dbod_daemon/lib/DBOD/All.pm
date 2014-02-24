@@ -8,10 +8,10 @@ use DBOD::Config qw( $config );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger, $job_status_table, $instance_status_table);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw( );
-@EXPORT_OK   = qw( $job_status_table $instance_status_table );
+@EXPORT_OK   = qw( $job_status_table $instance_status_table test_instance);
 %EXPORT_TAGS = ( );
 
 # Load general configuration
@@ -87,6 +87,28 @@ sub result_code{
         # If the command doesn't return any result code, we take it as bad
         return 1;
     }
+}
+
+sub test_instance{
+    my ($entity, $type, $log) = @_;
+    $logger->debug( "Fetching state of entity $entity" );
+    my $cmd = "/etc/init.d/syscontrol -i $entity $type\_ping -debug";
+    my $res = `$cmd`;
+    if (defined $log) {
+        $logger->debug( "\n$res" );
+    }
+    return $res;
+    }
+
+sub state_checker{
+    my ($job, $code, $log) = @_;
+    my $entity = get_entity($job);
+    my $output = test_instance($entity, $job->{'TYPE'}, $log);
+    my $retcode = result_code($output);
+    my $job_state = $job_status_table->{$code};
+    my $instance_state = $instance_status_table->{$retcode};
+    $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
+    return ($job_state, $instance_state);
 }
 
 1;
