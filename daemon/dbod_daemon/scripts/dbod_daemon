@@ -109,6 +109,8 @@ service dbod_daemon (start/stop/restart/status)
 
 Configuration and additional support files can be found at: <PATH_TO_PERL_SHARE>/DBOD/
 
+=over
+
 =item *
 
 dbod_daemon.conf : General configuration file. YAML format
@@ -157,95 +159,9 @@ dbod_daemon.conf : General configuration file. YAML format
 
 dbod_daemon_logger.conf : L<Log::Log4perl> configuration file format
 
-=item *
-
-templates/MY_CNF : MySQL parameter enforcing template. YAML format
-
-=begin
-
-        ---
-        mysqld :
-            port:
-                - 1025
-                - 65355
-            max_connections :
-                - 10
-                - 1000
-            default-storage-engine : INNODB
-            innodb_read_io_threads : 4
-            innodb_write_io_threads : 4
-            innodb_io_capacity : 200
-            innodb_file_per_table :
-            innodb_log_file_size : 16M
-            innodb_flush_method : O_DIRECT
-            innodb_open_files : 
-                - 10
-                - 500
-            query_cache_size :
-                - 0
-                - 128M
-            tmp_table_size : 
-                - 16M
-                - 32M
-            max_heap_table_size:
-                - 16M
-                - 32M
-            thread_cache_size : 
-                - 0
-                - 50
-            table_definition_cache: 
-                - 10
-                - 1000
-            table_open_cache :
-                - 10
-                - 1000
-            expire_logs_days : 32
-            binlog_format : MIXED
-            max_binlog-size : 1073741824 
-            sync_binlog : 1
-            large-pages: -1
-        ---
-
-=end
-
-=item *
-
-templates/PG : PostgreSQL configuration parameters template. YAML format
-
-=begin
-
-        ---
-        listen_addresses : '*'
-        port : 
-            - 1025
-            - 65355
-        max_connections : 
-            - 10
-            - 1000
-        unix_socket_directory : '/var/lib/pgsql'
-        ssl : on
-        shared_buffers : 
-            - 1GB
-            - 4GB
-        wal_level : archive
-        archive_mode : on
-        log_line_prefix : '<%m>'
-        log_timezone : 'Europe/Paris'
-        datestyle : 'iso, mdy'
-        timezone : 'Europe/Paris'
-        lc_messages : 'en_US.UTF-8'
-        lc_monetary : 'en_US.UTF-8'
-        lc_numeric : 'en_US.UTF-8' 
-        lc_time : 'en_US.UTF-8'
-        default_text_search_config : 'pg_catalog.english'
-        ---
-
-=end
-
-
 =head1 Comments
 
-Related executables in relation with the DBOD daemon package and executable are:
+Other related executables deployed as part of the DBOD daemon package installation are:
 
 =item *
 
@@ -257,7 +173,7 @@ L<dbod_daemon_monitor>
 
 =head1 Author
 
-Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+Ignacio Coterillo <ignacio.coterillo.cern.ch> 
 
 IT-DB-DBB
 
