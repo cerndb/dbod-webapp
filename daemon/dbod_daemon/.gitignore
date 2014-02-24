@@ -1,2 +1,9 @@
 *.swp
-
+META.yml
+MANIFEST.SKIP
+Makefile
+Makefile.old
+blib/
+inc/
+pm_to_blib
+share/dbod_daemon.conf
