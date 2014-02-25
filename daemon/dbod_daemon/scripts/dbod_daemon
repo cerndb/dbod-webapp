@@ -13,19 +13,19 @@ use DBOD;
 
 our ($logger, $workdir, $pidfile); 
 
-INIT{
-    $logger = Log::Log4perl::get_logger("DBOD.Daemon");
-    $logger->debug("Logger created");
+INIT {
+    $logger = Log::Log4perl::get_logger('DBOD.Daemon');
+    $logger->info('Logger created');
     $workdir = $config->{'DAEMON_WORKDIR'};
     $pidfile = "$workdir/$config->{'DAEMON_PIDFILE'}";
 }
 
-sub usage(){
+sub usage() {
     print "USAGE:\n\tcommand --start\n\tcommand --stop\n";
     exit -1;
 }
 
-sub Main{
+sub Main {
 
     my ($start, $stop);
     usage() if (@ARGV != 1 or ! GetOptions('start' => \$start, 'stop' => \$stop));
@@ -35,15 +35,15 @@ sub Main{
                                     child_STDERR => ">>$config->{'DAEMON_STDERR'}",
                                     pid_file => $pidfile);
 
-    $logger->debug( "Workdir: $workdir, pidfile: $pidfile" );
+    $logger->info("Workdir: $workdir, pidfile: $pidfile");
 
     if (-e $pidfile){
         my $pid = `cat $pidfile`;
         if ($stop){
-            $logger->debug( "Stopping daemon process PID: $pid" );
+            $logger->info( "Stopping daemon process PID: $pid" );
             print "Stopping daemon process PID: $pid\n" ;
             my $stopped = $daemon->Kill_Daemon( $pid );
-            $logger->debug( "Number of processes killed: $stopped ");
+            $logger->info( "Number of processes killed: $stopped ");
             unlink($pidfile);
             exit 0;
         }
@@ -55,7 +55,7 @@ sub Main{
     }
     else{
         if ($start){
-            $logger->debug( "Starting DBOD daemon" );
+            $logger->info('Starting DBOD daemon');
             my $dispatcher = $daemon->Init();
             unless ($dispatcher){
                 # Daemon process
@@ -63,12 +63,12 @@ sub Main{
                     DBOD::jobDispatcher();
                     1;
                 } or do {
-                    $logger->error( "The daemon process died!" );
+                    $logger->error('The daemon process died!');
                     unlink($pidfile);
                     exit -1;
                 }
             }
-            $logger->debug( "Job dispatcher PID: $dispatcher" );
+            $logger->info("Job dispatcher PID: $dispatcher");
             my $status = $daemon->Status($dispatcher);
             print "PID: $dispatcher\n";
             exit 0;
@@ -83,7 +83,7 @@ sub Main{
 &Main();
 1;
 
-END{}
+END { }
 
 =head1 Name
 
