@@ -58,7 +58,7 @@ sub jobDispatcher {
     my @job_list;
     while (1){
 
-        $logger->info('Checking status of connection');
+        $logger->info('Checking Database connection');
         unless(defined($dbh->ping)) {
             $logger->error('The connecion to the DB was lost');
             $dbh = undef;
@@ -105,8 +105,7 @@ sub jobDispatcher {
         }
         else{
             # Cleaning stranded jobs 
-            $logger->info('No pending jobs');
-            $logger->info('Checking for timed out jobs');
+            $logger->info('Checking for Timed Out jobs');
             my @timedoutjobs = DBOD::Database::getTimedOutJobs($dbh);
             foreach my $job (@timedoutjobs){
                 my $state_checker = get_state_checker($job);
@@ -138,13 +137,13 @@ sub jobDispatcher {
         }
 
         # Remove dispatched jobs from joblist
-        $logger->info("Cleaning Dispatched jobs from job list. #JOBS = $pendingjobs");
+        $logger->info("Cleaning Dispatched jobs from job list ($pendingjobs)");
         @job_list = grep( ( $_->{'STATE'} =~ 'PENDING' ), @job_list);
-        $logger->info(sprintf("Pending jobs after cleaning Dispatched jobs #JOBS = %d", $#job_list + 1));
+        $logger->info(sprintf("Pending jobs after cleaning (%d)", $#job_list + 1));
         
         # Reaping
         my $ntasks = $#tasks +1;
-        $logger->info("Waiting for $ntasks tasks  completion");
+        $logger->info("Waiting for $ntasks tasks");
         foreach my $task (@tasks) {
             my $tmp = waitpid($task->{'pid'}, WNOHANG);
             if ($tmp) {
