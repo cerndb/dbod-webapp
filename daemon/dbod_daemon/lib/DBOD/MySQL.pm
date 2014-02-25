@@ -8,7 +8,7 @@ use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
 use DBOD::Database;
-use DBOD::All qw( $job_status_table $instance_status_table );
+use DBOD::All;
 use DBOD::LDAP;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);

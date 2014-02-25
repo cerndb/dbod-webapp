@@ -16,8 +16,8 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $l
 
 $VERSION     = 0.03;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(state_checker);
-@EXPORT_OK   = qw();
+@EXPORT      = qw( );
+@EXPORT_OK   = qw( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration

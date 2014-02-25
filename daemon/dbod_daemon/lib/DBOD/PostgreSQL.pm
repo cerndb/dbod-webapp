@@ -7,7 +7,7 @@ use Exporter;
 use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
-use DBOD::All qw( $job_status_table $instance_status_table );
+use DBOD::All;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $config, $config_dir, $logger);
 

@@ -11,7 +11,7 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger, $job_status_tab
 $VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw( );
-@EXPORT_OK   = qw( $job_status_table $instance_status_table test_instance);
+@EXPORT_OK   = qw( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration

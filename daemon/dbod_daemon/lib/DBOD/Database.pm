@@ -16,8 +16,8 @@ our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
 
 $VERSION     = 2.1;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(getJobList updateJobState updateJobCompletionDate updateJobLog finishJob getDBH);
-@EXPORT_OK   = qw(getDBH);
+@EXPORT      = qw( );
+@EXPORT_OK   = qw( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
