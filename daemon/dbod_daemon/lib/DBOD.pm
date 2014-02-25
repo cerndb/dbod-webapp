@@ -116,7 +116,6 @@ sub jobDispatcher {
                 # Fetching instance state
                 my ($job_state, $instance_state) = $state_checker->($job, 1, 1);
                 $logger->debug( "Updating job STATE" );
-                updateJob($job, 'STATE', 'TIMED OUT', $dbh);
                 DBOD::Database::updateJob( $job, 'STATE', 'TIMED OUT', $dbh );
                 $logger->debug( "Updating job Completion Date" );
                 DBOD::Database::updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
