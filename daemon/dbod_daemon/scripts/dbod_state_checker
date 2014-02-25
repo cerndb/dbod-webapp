@@ -24,7 +24,7 @@ sub usage() {
 
 sub worker {
     my ($instance, $pdbh) = @_;
-    my $logger = Log::Log4perl::get_logger('DBOD.worker');
+    my $logger = Log::Log4perl::get_logger('DBOD.worker_sc');
 
     my $worker_dbh;
     if (defined($pdbh)){
@@ -132,7 +132,7 @@ sub Main {
             $rc = -1;
         }
         
-        $logger->debug( 'Deleting lock file' );
+        $logger->info( 'Deleting lock file' );
         unlink $lock_file ;
 
         exit $rc;
