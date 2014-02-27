@@ -75,7 +75,7 @@ sub prepareCommand {
             my $filetype = $buf[0]->{'VALUE'};
             
             $logger->debug("Writing file: $filetype");
-            my $filename = All::write_file($clob); 
+            my $filename = DBOD::All::write_file($clob); 
 
             # Distribute file to target entity
             my $entity = DBOD::All::get_entity($job);
