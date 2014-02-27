@@ -284,7 +284,7 @@ sub updateJob{
 }
 
 sub finishJob{
-    my ($job, $resultCode, $log, $dbh, $params) = @_;
+    my ($job, $resultCode, $log, $dbh, $no_callback) = @_;
     eval{
         my $state_checker = DBOD::get_state_checker($job);
         if (!defined $state_checker){
@@ -298,11 +298,13 @@ sub finishJob{
         $logger->debug( "Updating job STATE" );
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
-        updateInstance($job, 'STATE', $instance_state, $dbh); 
-        my $callback = DBOD::get_callback($job);
-        if (defined $callback){
-            $logger->debug( "Executing callback" );
-            $callback->($job, $dbh);
+        updateInstance($job, 'STATE', $instance_state, $dbh);
+        unless (defined $no_callback) {
+            my $callback = DBOD::get_callback($job);
+            if (defined $callback) {
+                $logger->debug( "Executing callback" );
+                $callback->($job, $dbh);
+            }
         }
         1;
     } or do {
