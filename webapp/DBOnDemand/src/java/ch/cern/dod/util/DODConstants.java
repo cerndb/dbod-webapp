@@ -114,9 +114,8 @@ public class DODConstants {
     public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
     public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
     
-    public static final String OEM_EGROUP = "oracle-em-users";
+    public static final String OEM_EGROUP = "oracle-em-test-users";
     public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
-    public static final long OEM_EGROUP_OWNER_CCID = 679638; //dbmon service account
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";

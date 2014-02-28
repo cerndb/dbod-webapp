@@ -1,7 +1,7 @@
 package ch.cern.dod.util;
 
+import ch.cern.dod.ws.authentication.UserInfo;
 import ch.cern.dod.ws.egroups.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
@@ -77,35 +77,38 @@ public class EGroupHelper {
     /**
      * Creates a new eGroup for the given user and instance with the given
      * instance name.
-     *
      * @param eGroupName name for the e-group to be created.
      * @param instanceName name of the instance.
      * @param userCCID id number of the owner of this e-group.
      * @param ownerIsMember indicates if the owner should be added as member or not.
-     * @return List of groups for the specified user.
+     * @return true if the creation was successful.
      */
     public boolean createEGroup(String eGroupName, String instanceName, long userCCID, boolean ownerIsMember) {
-        try {            
+        try {
             //Create eGroup
             EgroupType egroup = new EgroupType();
             egroup.setName(eGroupName);
             egroup.setType(EgroupTypeCode.STATIC_EGROUP);
             egroup.setDescription("e-group for DB On Demand instance " + instanceName);
-            egroup.setUsage(UsageCode.EGROUPS_ONLY);
+            egroup.setUsage(UsageCode.SECURITY_MAILING);
             egroup.setTopic("DB On Demand");
+            
             //User is owner
             UserType owner = new UserType();
             owner.setPersonId(userCCID);
             egroup.setOwner(owner);
+            
+            //Add members
+            MembersType members = new MembersType();
             if (ownerIsMember) {
                 //User is member
                 MemberType member = new MemberType();
                 member.setID(String.valueOf(userCCID));
                 member.setType(MemberTypeCode.PERSON);
-                MembersType members = new MembersType();
                 members.getMembers().add(member);
-                egroup.setMembers(members);
             }
+            egroup.setMembers(members);
+            
             //Group privacy and subscription
             egroup.setPrivacy(PrivacyType.MEMBERS);
             egroup.setSelfsubscription(SelfsubscriptionType.USERS_WITH_ADMIN_APPROVAL);
@@ -130,6 +133,7 @@ public class EGroupHelper {
                         Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING CREATING EGROUP {0}: {1}", new Object[]{eGroupName, iter.next().getMessage()});
                     }
                 }
+                return false;
             }
             
             return true;
@@ -197,7 +201,7 @@ public class EGroupHelper {
                 if (warnings != null) {
                     ListIterator<ErrorType> iter = warnings.listIterator();
                     while (iter.hasNext()) {
-                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING FINDING EGROUP {0}:\n{1}\n", new Object[]{egroup, iter.next().getMessage()});
+                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING FINDING EGROUP {0}: {1}", new Object[]{egroup, iter.next().getMessage()});
                     }
                 }
             }
@@ -217,22 +221,23 @@ public class EGroupHelper {
      */
     private boolean addEgroupAsMember (String ownerEgroup, String memberEgroup) {
         try {
-            //Get owner and member eGroups
-            EgroupType owner = findEgroup(ownerEgroup);
+            //Get member eGroup
             EgroupType member = findEgroup(memberEgroup);
 
-            if (owner != null && member != null) {
+            if (member != null) {
                 //Add member
+                MembersType members = new MembersType();
                 MemberType m = new MemberType();
                 m.setID(String.valueOf(member.getID()));
                 m.setType(MemberTypeCode.fromValue(member.getType().value()));
-                owner.getMembers().getMembers().add(m);
-
+                members.getMembers().add(m);
                 //Create request
-                SynchronizeEgroupRequest req = new SynchronizeEgroupRequest();
-                req.setEgroup(owner);
+                AddEgroupMembersRequest req = new AddEgroupMembersRequest();
+                req.setEgroupName(ownerEgroup);
+                req.setMembers(members);
+                req.setOverwriteMembers(false);
                 //Get result
-                SynchronizeEgroupResponse resp = port.synchronizeEgroup(req);
+                AddEgroupMembersResponse resp = port.addEgroupMembers(req);
 
                 //Check errors
                 if (resp.getError() != null) {
@@ -248,6 +253,7 @@ public class EGroupHelper {
                             Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING ADDING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
                         }
                     }
+                    return false;
                 }
 
                 return true;
@@ -269,25 +275,22 @@ public class EGroupHelper {
     private boolean removeEgroupAsMember (String ownerEgroup, String memberEgroup) {
         try {
             //Get owner and member eGroups
-            EgroupType owner = findEgroup(ownerEgroup);
             EgroupType member = findEgroup(memberEgroup);
 
-            if (owner != null && member != null) {
+            if (member != null) {
                 //Remove member
-                Iterator members = owner.getMembers().getMembers().iterator();
-                while (members.hasNext()) {
-                   MemberType m = (MemberType)members.next();
-                    if (m.getID().equals(member.getID().toString())) {
-                        owner.getMembers().getMembers().remove(m);
-                        break;
-                    }
-                }
+                MembersType members = new MembersType();
+                MemberType m = new MemberType();
+                m.setID(String.valueOf(member.getID()));
+                m.setType(MemberTypeCode.fromValue(member.getType().value()));
+                members.getMembers().add(m);
 
                 //Create request
-                SynchronizeEgroupRequest req = new SynchronizeEgroupRequest();
-                req.setEgroup(owner);
+                RemoveEgroupMembersRequest req = new RemoveEgroupMembersRequest();
+                req.setEgroupName(ownerEgroup);
+                req.setMembers(members);
                 //Get result
-                SynchronizeEgroupResponse resp = port.synchronizeEgroup(req);
+                RemoveEgroupMembersResponse resp = port.removeEgroupMembers(req);
 
                 //Check errors
                 if (resp.getError() != null) {
@@ -303,6 +306,7 @@ public class EGroupHelper {
                             Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING REMOVING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
                         }
                     }
+                    return false;
                 }
 
                 return true;
@@ -323,9 +327,24 @@ public class EGroupHelper {
      * @return true if the operation is successful
      */
     public boolean addEgroupToOEM(String instanceName, String egroup) {
-        return createEGroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, instanceName, DODConstants.OEM_EGROUP_OWNER_CCID, false)
-                && addEgroupAsMember(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, egroup)
-                && addEgroupAsMember(DODConstants.OEM_EGROUP, DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
+        //Get dodws CCID (curently same as dgomezbl but someone will inherit it)
+        AuthenticationHelper authenticationHelper = new AuthenticationHelper(wsUser, wsPassword);
+        if (authenticationHelper == null) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "COULD NOT GET AUTHENTICATION HELPER");
+            return false;
+        }
+        UserInfo info = authenticationHelper.getUserInfo("dodws");
+        if (info == null) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "COULD NOT GET DODWS USER INFO");
+            return false;
+        }
+        if (info.getCcid() <= 0) {
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "COULD NOT GET DODWS CCID");
+            return false;
+        }
+        return createEGroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, instanceName, info.getCcid(), false)
+                            && addEgroupAsMember(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName, egroup)
+                            && addEgroupAsMember(DODConstants.OEM_EGROUP, DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
     }
     
     /**
@@ -334,7 +353,8 @@ public class EGroupHelper {
      * @return true if the operation is successful
      */
     public boolean removeEgroupFromOEM(String instanceName) {
-        return deleteEgroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
+        return removeEgroupAsMember(DODConstants.OEM_EGROUP, DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName)
+                && deleteEgroup(DODConstants.OEM_PDB_EGROUP_PREFIX + instanceName);
     }
     
     /**
