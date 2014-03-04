@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="egroupName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="EmailProperties" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EmailPropertiesType"/>
+ *         &lt;element name="emailProperties" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EmailPropertiesType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,7 +38,7 @@ public class UpdateEmailPropertiesRequest {
 
     @XmlElement(required = true)
     protected String egroupName;
-    @XmlElement(name = "EmailProperties", required = true)
+    @XmlElement(required = true)
     protected EmailPropertiesType emailProperties;
 
     /**

@@ -99,15 +99,13 @@ public class EGroupHelper {
             egroup.setOwner(owner);
             
             //Add members
-            MembersType members = new MembersType();
             if (ownerIsMember) {
                 //User is member
                 MemberType member = new MemberType();
-                member.setID(String.valueOf(userCCID));
+                member.setID(userCCID);
                 member.setType(MemberTypeCode.PERSON);
-                members.getMembers().add(member);
+                egroup.getMembers().add(member);
             }
-            egroup.setMembers(members);
             
             //Group privacy and subscription
             egroup.setPrivacy(PrivacyType.MEMBERS);
@@ -125,17 +123,14 @@ public class EGroupHelper {
                 return false;
             }
             //Check warnings
-            if (resp.getWarnings() != null) {
-                List<ErrorType> warnings = resp.getWarnings().getWarnings();
-                if (warnings != null) {
-                    ListIterator<ErrorType> iter = warnings.listIterator();
-                    while (iter.hasNext()) {
-                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING CREATING EGROUP {0}: {1}", new Object[]{eGroupName, iter.next().getMessage()});
-                    }
+            if (resp.getWarnings() != null && resp.getWarnings().size() > 0) {
+                ListIterator<ErrorType> iter = resp.getWarnings().listIterator();
+                while (iter.hasNext()) {
+                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING CREATING EGROUP {0}: {1}", new Object[]{eGroupName, iter.next().getMessage()});
                 }
                 return false;
             }
-            
+                        
             return true;
 
         } catch (Exception ex) {
@@ -179,6 +174,16 @@ public class EGroupHelper {
     public boolean eGroupExists (String egroup) {
         return findEgroup(egroup) != null;
     }
+    
+    /**
+     * Checks if an e-group has the usage code EGROUPS_ONLY
+     * @param egroup name of the egroup
+     * @return true if the egroup is EGROUPS_ONLY, false otherwise
+     */
+    public boolean isEgroupsOnly (String egroup) {
+        EgroupType e = findEgroup(egroup);
+        return e != null && UsageCode.EGROUPS_ONLY.equals(e.getUsage());
+    }
         
   
     /**
@@ -196,13 +201,10 @@ public class EGroupHelper {
             EgroupType group = (EgroupType) resp.getResult();
             
             //Check warnings (we do not check errors because if the group does not exist an error is returned)
-            if (resp.getWarnings() != null) {
-                List<ErrorType> warnings = resp.getWarnings().getWarnings();
-                if (warnings != null) {
-                    ListIterator<ErrorType> iter = warnings.listIterator();
-                    while (iter.hasNext()) {
-                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING FINDING EGROUP {0}: {1}", new Object[]{egroup, iter.next().getMessage()});
-                    }
+            if (resp.getWarnings() != null && resp.getWarnings().size() > 0) {
+                ListIterator<ErrorType> iter = resp.getWarnings().listIterator();
+                while (iter.hasNext()) {
+                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING FINDING EGROUP {0}: {1}", new Object[]{egroup, iter.next().getMessage()});
                 }
             }
             
@@ -226,15 +228,13 @@ public class EGroupHelper {
 
             if (member != null) {
                 //Add member
-                MembersType members = new MembersType();
                 MemberType m = new MemberType();
-                m.setID(String.valueOf(member.getID()));
+                m.setID(member.getID());
                 m.setType(MemberTypeCode.fromValue(member.getType().value()));
-                members.getMembers().add(m);
                 //Create request
                 AddEgroupMembersRequest req = new AddEgroupMembersRequest();
                 req.setEgroupName(ownerEgroup);
-                req.setMembers(members);
+                req.getMembers().add(m);
                 req.setOverwriteMembers(false);
                 //Get result
                 AddEgroupMembersResponse resp = port.addEgroupMembers(req);
@@ -245,13 +245,10 @@ public class EGroupHelper {
                     return false;
                 }
                 //Check warnings
-                if (resp.getWarnings() != null) {
-                    List<ErrorType> warnings = resp.getWarnings().getWarnings();
-                    if (warnings != null) {
-                        ListIterator<ErrorType> iter = warnings.listIterator();
-                        while (iter.hasNext()) {
-                            Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING ADDING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
-                        }
+                if (resp.getWarnings() != null && resp.getWarnings().size() > 0) {
+                    ListIterator<ErrorType> iter = resp.getWarnings().listIterator();
+                    while (iter.hasNext()) {
+                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING ADDING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
                     }
                     return false;
                 }
@@ -279,32 +276,27 @@ public class EGroupHelper {
 
             if (member != null) {
                 //Remove member
-                MembersType members = new MembersType();
                 MemberType m = new MemberType();
-                m.setID(String.valueOf(member.getID()));
+                m.setID(member.getID());
                 m.setType(MemberTypeCode.fromValue(member.getType().value()));
-                members.getMembers().add(m);
 
                 //Create request
                 RemoveEgroupMembersRequest req = new RemoveEgroupMembersRequest();
                 req.setEgroupName(ownerEgroup);
-                req.setMembers(members);
+                req.getMembers().add(m);
                 //Get result
                 RemoveEgroupMembersResponse resp = port.removeEgroupMembers(req);
 
                 //Check errors
                 if (resp.getError() != null) {
-                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, resp.getError().getMessage()});
+                    Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP {0} FROM EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, resp.getError().getMessage()});
                     return false;
                 }
                 //Check warnings
-                if (resp.getWarnings() != null) {
-                    List<ErrorType> warnings = resp.getWarnings().getWarnings();
-                    if (warnings != null) {
-                        ListIterator<ErrorType> iter = warnings.listIterator();
-                        while (iter.hasNext()) {
-                            Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING REMOVING EGROUP {0} TO EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
-                        }
+                if (resp.getWarnings() != null && resp.getWarnings().size() > 0) {
+                    ListIterator<ErrorType> iter = resp.getWarnings().listIterator();
+                    while (iter.hasNext()) {
+                        Logger.getLogger(EGroupHelper.class.getName()).log(Level.WARNING, "WARNING REMOVING EGROUP {0} FROM EGROUP {1}: {2}", new Object[]{memberEgroup, ownerEgroup, iter.next().getMessage()});
                     }
                     return false;
                 }
@@ -314,7 +306,7 @@ public class EGroupHelper {
             else return false;
 
         } catch (Exception ex) {
-            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP " + memberEgroup + " TO EGROUP " + ownerEgroup, ex);
+            Logger.getLogger(EGroupHelper.class.getName()).log(Level.SEVERE, "ERROR REMOVING EGROUP " + memberEgroup + " FROM EGROUP " + ownerEgroup, ex);
         }
         return false;
     }

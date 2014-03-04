@@ -30,19 +30,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SynchronizeEgroupRequest }
+     * Create an instance of {@link RemoveEgroupEmailMembersRequest }
      * 
      */
-    public SynchronizeEgroupRequest createSynchronizeEgroupRequest() {
-        return new SynchronizeEgroupRequest();
+    public RemoveEgroupEmailMembersRequest createRemoveEgroupEmailMembersRequest() {
+        return new RemoveEgroupEmailMembersRequest();
     }
 
     /**
-     * Create an instance of {@link MemberType }
+     * Create an instance of {@link DeleteEgroupRequest }
      * 
      */
-    public MemberType createMemberType() {
-        return new MemberType();
+    public DeleteEgroupRequest createDeleteEgroupRequest() {
+        return new DeleteEgroupRequest();
     }
 
     /**
@@ -54,19 +54,83 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SynchronizeEgroupResponse }
-     * 
-     */
-    public SynchronizeEgroupResponse createSynchronizeEgroupResponse() {
-        return new SynchronizeEgroupResponse();
-    }
-
-    /**
      * Create an instance of {@link RemoveEgroupMembersRequest }
      * 
      */
     public RemoveEgroupMembersRequest createRemoveEgroupMembersRequest() {
         return new RemoveEgroupMembersRequest();
+    }
+
+    /**
+     * Create an instance of {@link ErrorType }
+     * 
+     */
+    public ErrorType createErrorType() {
+        return new ErrorType();
+    }
+
+    /**
+     * Create an instance of {@link DeleteEgroupResponse }
+     * 
+     */
+    public DeleteEgroupResponse createDeleteEgroupResponse() {
+        return new DeleteEgroupResponse();
+    }
+
+    /**
+     * Create an instance of {@link AddEgroupMembersResponse }
+     * 
+     */
+    public AddEgroupMembersResponse createAddEgroupMembersResponse() {
+        return new AddEgroupMembersResponse();
+    }
+
+    /**
+     * Create an instance of {@link ChangeExternalEmailAddressRequest }
+     * 
+     */
+    public ChangeExternalEmailAddressRequest createChangeExternalEmailAddressRequest() {
+        return new ChangeExternalEmailAddressRequest();
+    }
+
+    /**
+     * Create an instance of {@link MemberType }
+     * 
+     */
+    public MemberType createMemberType() {
+        return new MemberType();
+    }
+
+    /**
+     * Create an instance of {@link AddEgroupMembersRequest }
+     * 
+     */
+    public AddEgroupMembersRequest createAddEgroupMembersRequest() {
+        return new AddEgroupMembersRequest();
+    }
+
+    /**
+     * Create an instance of {@link FindEgroupByNameRequest }
+     * 
+     */
+    public FindEgroupByNameRequest createFindEgroupByNameRequest() {
+        return new FindEgroupByNameRequest();
+    }
+
+    /**
+     * Create an instance of {@link GetEgroupsUserOwnOrManageRequest }
+     * 
+     */
+    public GetEgroupsUserOwnOrManageRequest createGetEgroupsUserOwnOrManageRequest() {
+        return new GetEgroupsUserOwnOrManageRequest();
+    }
+
+    /**
+     * Create an instance of {@link EgroupType }
+     * 
+     */
+    public EgroupType createEgroupType() {
+        return new EgroupType();
     }
 
     /**
@@ -86,67 +150,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MembersType }
+     * Create an instance of {@link GetEgroupsUserOwnOrManageResponse }
      * 
      */
-    public MembersType createMembersType() {
-        return new MembersType();
-    }
-
-    /**
-     * Create an instance of {@link AddEgroupMembersRequest }
-     * 
-     */
-    public AddEgroupMembersRequest createAddEgroupMembersRequest() {
-        return new AddEgroupMembersRequest();
-    }
-
-    /**
-     * Create an instance of {@link EgroupsType }
-     * 
-     */
-    public EgroupsType createEgroupsType() {
-        return new EgroupsType();
-    }
-
-    /**
-     * Create an instance of {@link UpdateEmailPropertiesRequest }
-     * 
-     */
-    public UpdateEmailPropertiesRequest createUpdateEmailPropertiesRequest() {
-        return new UpdateEmailPropertiesRequest();
-    }
-
-    /**
-     * Create an instance of {@link SelfsubscriptionEgroupsType }
-     * 
-     */
-    public SelfsubscriptionEgroupsType createSelfsubscriptionEgroupsType() {
-        return new SelfsubscriptionEgroupsType();
-    }
-
-    /**
-     * Create an instance of {@link DeleteEgroupResponse }
-     * 
-     */
-    public DeleteEgroupResponse createDeleteEgroupResponse() {
-        return new DeleteEgroupResponse();
-    }
-
-    /**
-     * Create an instance of {@link RemoveEgroupEmailMembersResponse }
-     * 
-     */
-    public RemoveEgroupEmailMembersResponse createRemoveEgroupEmailMembersResponse() {
-        return new RemoveEgroupEmailMembersResponse();
-    }
-
-    /**
-     * Create an instance of {@link AddEgroupMembersResponse }
-     * 
-     */
-    public AddEgroupMembersResponse createAddEgroupMembersResponse() {
-        return new AddEgroupMembersResponse();
+    public GetEgroupsUserOwnOrManageResponse createGetEgroupsUserOwnOrManageResponse() {
+        return new GetEgroupsUserOwnOrManageResponse();
     }
 
     /**
@@ -158,75 +166,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link FindEgroupByNameRequest }
+     * Create an instance of {@link SynchronizeEgroupResponse }
      * 
      */
-    public FindEgroupByNameRequest createFindEgroupByNameRequest() {
-        return new FindEgroupByNameRequest();
-    }
-
-    /**
-     * Create an instance of {@link ChangeExternalEmailAddressRequest }
-     * 
-     */
-    public ChangeExternalEmailAddressRequest createChangeExternalEmailAddressRequest() {
-        return new ChangeExternalEmailAddressRequest();
-    }
-
-    /**
-     * Create an instance of {@link GetEgroupsUserOwnOrManageRequest }
-     * 
-     */
-    public GetEgroupsUserOwnOrManageRequest createGetEgroupsUserOwnOrManageRequest() {
-        return new GetEgroupsUserOwnOrManageRequest();
-    }
-
-    /**
-     * Create an instance of {@link AliasesType }
-     * 
-     */
-    public AliasesType createAliasesType() {
-        return new AliasesType();
-    }
-
-    /**
-     * Create an instance of {@link SelfsubscriptionEgroupType }
-     * 
-     */
-    public SelfsubscriptionEgroupType createSelfsubscriptionEgroupType() {
-        return new SelfsubscriptionEgroupType();
-    }
-
-    /**
-     * Create an instance of {@link ErrorType }
-     * 
-     */
-    public ErrorType createErrorType() {
-        return new ErrorType();
-    }
-
-    /**
-     * Create an instance of {@link UserType }
-     * 
-     */
-    public UserType createUserType() {
-        return new UserType();
-    }
-
-    /**
-     * Create an instance of {@link FindEgroupByNameResponse }
-     * 
-     */
-    public FindEgroupByNameResponse createFindEgroupByNameResponse() {
-        return new FindEgroupByNameResponse();
-    }
-
-    /**
-     * Create an instance of {@link WarningsType }
-     * 
-     */
-    public WarningsType createWarningsType() {
-        return new WarningsType();
+    public SynchronizeEgroupResponse createSynchronizeEgroupResponse() {
+        return new SynchronizeEgroupResponse();
     }
 
     /**
@@ -238,43 +182,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AddEgroupEmailMembersResponse }
+     * Create an instance of {@link SelfsubscriptionEgroupType }
      * 
      */
-    public AddEgroupEmailMembersResponse createAddEgroupEmailMembersResponse() {
-        return new AddEgroupEmailMembersResponse();
+    public SelfsubscriptionEgroupType createSelfsubscriptionEgroupType() {
+        return new SelfsubscriptionEgroupType();
     }
 
     /**
-     * Create an instance of {@link DeleteEgroupRequest }
+     * Create an instance of {@link RemoveEgroupMembersResponse }
      * 
      */
-    public DeleteEgroupRequest createDeleteEgroupRequest() {
-        return new DeleteEgroupRequest();
-    }
-
-    /**
-     * Create an instance of {@link RemoveEgroupEmailMembersRequest }
-     * 
-     */
-    public RemoveEgroupEmailMembersRequest createRemoveEgroupEmailMembersRequest() {
-        return new RemoveEgroupEmailMembersRequest();
-    }
-
-    /**
-     * Create an instance of {@link EgroupType }
-     * 
-     */
-    public EgroupType createEgroupType() {
-        return new EgroupType();
-    }
-
-    /**
-     * Create an instance of {@link AddEgroupEmailMembersRequest }
-     * 
-     */
-    public AddEgroupEmailMembersRequest createAddEgroupEmailMembersRequest() {
-        return new AddEgroupEmailMembersRequest();
+    public RemoveEgroupMembersResponse createRemoveEgroupMembersResponse() {
+        return new RemoveEgroupMembersResponse();
     }
 
     /**
@@ -286,6 +206,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link RemoveEgroupEmailMembersResponse }
+     * 
+     */
+    public RemoveEgroupEmailMembersResponse createRemoveEgroupEmailMembersResponse() {
+        return new RemoveEgroupEmailMembersResponse();
+    }
+
+    /**
+     * Create an instance of {@link AddEgroupEmailMembersResponse }
+     * 
+     */
+    public AddEgroupEmailMembersResponse createAddEgroupEmailMembersResponse() {
+        return new AddEgroupEmailMembersResponse();
+    }
+
+    /**
      * Create an instance of {@link MailPostingRestrictionType }
      * 
      */
@@ -294,27 +230,43 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link EmailsType }
+     * Create an instance of {@link SynchronizeEgroupRequest }
      * 
      */
-    public EmailsType createEmailsType() {
-        return new EmailsType();
+    public SynchronizeEgroupRequest createSynchronizeEgroupRequest() {
+        return new SynchronizeEgroupRequest();
     }
 
     /**
-     * Create an instance of {@link GetEgroupsUserOwnOrManageResponse }
+     * Create an instance of {@link UpdateEmailPropertiesRequest }
      * 
      */
-    public GetEgroupsUserOwnOrManageResponse createGetEgroupsUserOwnOrManageResponse() {
-        return new GetEgroupsUserOwnOrManageResponse();
+    public UpdateEmailPropertiesRequest createUpdateEmailPropertiesRequest() {
+        return new UpdateEmailPropertiesRequest();
     }
 
     /**
-     * Create an instance of {@link RemoveEgroupMembersResponse }
+     * Create an instance of {@link UserType }
      * 
      */
-    public RemoveEgroupMembersResponse createRemoveEgroupMembersResponse() {
-        return new RemoveEgroupMembersResponse();
+    public UserType createUserType() {
+        return new UserType();
+    }
+
+    /**
+     * Create an instance of {@link AddEgroupEmailMembersRequest }
+     * 
+     */
+    public AddEgroupEmailMembersRequest createAddEgroupEmailMembersRequest() {
+        return new AddEgroupEmailMembersRequest();
+    }
+
+    /**
+     * Create an instance of {@link FindEgroupByNameResponse }
+     * 
+     */
+    public FindEgroupByNameResponse createFindEgroupByNameResponse() {
+        return new FindEgroupByNameResponse();
     }
 
 }

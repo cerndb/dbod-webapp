@@ -92,7 +92,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //Check for errors in form
         if (isUsernameValid()
                 & FormValidations.isDbNameValid((Textbox) getFellow("dbName"))
-                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())
+                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue(), eGroupHelper)
                 & FormValidations.isCategoryValid((Combobox) getFellow("category"))
                 & FormValidations.isExpiryDateValid((Datebox) getFellow("expiryDate"))
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))
@@ -133,7 +133,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         //Check for errors in form
         if (isUsernameValid()
                 & FormValidations.isDbNameValid((Textbox) getFellow("dbName"))
-                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())
+                & FormValidations.isEGroupValid((Textbox) getFellow("eGroup"), (String)((Combobox)getFellow("dbType")).getSelectedItem().getValue(), eGroupHelper)
                 & FormValidations.isCategoryValid((Combobox) getFellow("category"))
                 & FormValidations.isExpiryDateValid((Datebox) getFellow("expiryDate"))
                 & FormValidations.isDbTypeValid((Combobox) getFellow("dbType"))

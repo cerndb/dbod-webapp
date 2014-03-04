@@ -837,7 +837,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void checkAndEditEGroup() {
         //Check for errors in form
-        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType())) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType(), eGroupHelper)) {
             //If there is an egroup
             if(((Textbox) getFellow("eGroupEdit")).getValue() != null && !((Textbox) getFellow("eGroupEdit")).getValue().isEmpty()) {
                 //Check if e-group exists
@@ -866,7 +866,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     public void editEGroup(boolean eGroupExists) {
         //Check for errors in form
-        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType())) {
+        if (FormValidations.isEGroupValid(((Textbox) getFellow("eGroupEdit")), instance.getDbType(), eGroupHelper)) {
             boolean eGroupCreated = false;
             //If the egroup does not exist create it
             if (!eGroupExists) {
@@ -903,6 +903,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     else {
                         showError(null, DODConstants.ERROR_UPDATING_INSTANCE);
                     }
+                }
+                else {
+                    ((Textbox) getFellow("eGroupEdit")).setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_EDITING));
                 }
             }
             else {

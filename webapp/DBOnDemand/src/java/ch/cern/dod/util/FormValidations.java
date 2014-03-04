@@ -92,7 +92,7 @@ public class FormValidations {
      * @param dbType Type of the DB.
      * @return true if e-group name is valid, false otherwise.
      */
-    public static boolean isEGroupValid(Textbox eGroup, String dbType) {
+    public static boolean isEGroupValid(Textbox eGroup, String dbType, EGroupHelper helper) {
         //If there are no previous errors
         if (eGroup.getErrorMessage() == null || eGroup.getErrorMessage().isEmpty()) {
             //Trim and lowercase
@@ -111,6 +111,11 @@ public class FormValidations {
                 //Only upppercase and lowercase ASCII letters, numbers, dashes, dots and underscores are allowed
                 if (!Pattern.matches("[\\da-z\\.\\-_]*", eGroup.getValue())) {
                     eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_CHARS));
+                    return false;
+                }
+                //Check if egroup is EGORUPS_ONLY
+                if (helper.isEgroupsOnly(eGroup.getValue())) {
+                    eGroup.setErrorMessage(Labels.getLabel(DODConstants.ERROR_E_GROUP_EGROUPS_ONLY));
                     return false;
                 }
             }

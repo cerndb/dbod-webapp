@@ -1,6 +1,8 @@
 
 package ch.cern.dod.ws.egroups;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -20,7 +22,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Aliases" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}AliasesType" minOccurs="0"/>
+ *         &lt;element name="Aliases" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="ID" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="Type" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupTypeCode"/>
  *         &lt;element name="Status" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}StatusCode" minOccurs="0"/>
@@ -34,8 +36,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="AdministratorEgroup" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="Privacy" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}PrivacyType"/>
  *         &lt;element name="Selfsubscription" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionType"/>
- *         &lt;element name="SelfsubscriptionEgroups" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionEgroupsType" minOccurs="0"/>
- *         &lt;element name="Members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}MembersType"/>
+ *         &lt;element name="SelfsubscriptionEgroups" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}SelfsubscriptionEgroupType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}MemberType" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="EmailProperties" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EmailPropertiesType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -71,7 +73,7 @@ public class EgroupType {
     @XmlElement(name = "Name", required = true)
     protected String name;
     @XmlElement(name = "Aliases")
-    protected AliasesType aliases;
+    protected List<String> aliases;
     @XmlElement(name = "ID")
     protected Long id;
     @XmlElement(name = "Type", required = true)
@@ -100,9 +102,9 @@ public class EgroupType {
     @XmlElement(name = "Selfsubscription", required = true)
     protected SelfsubscriptionType selfsubscription;
     @XmlElement(name = "SelfsubscriptionEgroups")
-    protected SelfsubscriptionEgroupsType selfsubscriptionEgroups;
-    @XmlElement(name = "Members", required = true)
-    protected MembersType members;
+    protected List<SelfsubscriptionEgroupType> selfsubscriptionEgroups;
+    @XmlElement(name = "Members")
+    protected List<MemberType> members;
     @XmlElement(name = "EmailProperties")
     protected EmailPropertiesType emailProperties;
 
@@ -133,25 +135,30 @@ public class EgroupType {
     /**
      * Gets the value of the aliases property.
      * 
-     * @return
-     *     possible object is
-     *     {@link AliasesType }
-     *     
-     */
-    public AliasesType getAliases() {
-        return aliases;
-    }
-
-    /**
-     * Sets the value of the aliases property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the aliases property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link AliasesType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAliases().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
      */
-    public void setAliases(AliasesType value) {
-        this.aliases = value;
+    public List<String> getAliases() {
+        if (aliases == null) {
+            aliases = new ArrayList<String>();
+        }
+        return this.aliases;
     }
 
     /**
@@ -469,49 +476,59 @@ public class EgroupType {
     /**
      * Gets the value of the selfsubscriptionEgroups property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SelfsubscriptionEgroupsType }
-     *     
-     */
-    public SelfsubscriptionEgroupsType getSelfsubscriptionEgroups() {
-        return selfsubscriptionEgroups;
-    }
-
-    /**
-     * Sets the value of the selfsubscriptionEgroups property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the selfsubscriptionEgroups property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link SelfsubscriptionEgroupsType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getSelfsubscriptionEgroups().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link SelfsubscriptionEgroupType }
+     * 
+     * 
      */
-    public void setSelfsubscriptionEgroups(SelfsubscriptionEgroupsType value) {
-        this.selfsubscriptionEgroups = value;
+    public List<SelfsubscriptionEgroupType> getSelfsubscriptionEgroups() {
+        if (selfsubscriptionEgroups == null) {
+            selfsubscriptionEgroups = new ArrayList<SelfsubscriptionEgroupType>();
+        }
+        return this.selfsubscriptionEgroups;
     }
 
     /**
      * Gets the value of the members property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MembersType }
-     *     
-     */
-    public MembersType getMembers() {
-        return members;
-    }
-
-    /**
-     * Sets the value of the members property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the members property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MembersType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getMembers().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link MemberType }
+     * 
+     * 
      */
-    public void setMembers(MembersType value) {
-        this.members = value;
+    public List<MemberType> getMembers() {
+        if (members == null) {
+            members = new ArrayList<MemberType>();
+        }
+        return this.members;
     }
 
     /**

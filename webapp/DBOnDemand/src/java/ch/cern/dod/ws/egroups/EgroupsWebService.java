@@ -24,10 +24,9 @@ public class EgroupsWebService
     private final static URL EGROUPSWEBSERVICE_WSDL_LOCATION;
     private final static Logger logger = Logger.getLogger(ch.cern.dod.ws.egroups.EgroupsWebService.class.getName());
 
-    
     static {
         EGROUPSWEBSERVICE_WSDL_LOCATION = ch.cern.dod.ws.egroups.EgroupsWebService.class.getResource("/WEB-INF/wsdl/egroups.wsdl");
-    }
+        }
 
     public EgroupsWebService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);

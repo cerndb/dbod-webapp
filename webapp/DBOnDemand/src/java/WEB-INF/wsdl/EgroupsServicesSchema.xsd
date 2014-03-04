@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sch="https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema" elementFormDefault="qualified" targetNamespace="https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema">
+
+  <xs:element name="UpdateEmailPropertiesRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="emailProperties" type="sch:EmailPropertiesType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateEmailPropertiesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddEgroupEmailMembersRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="overwriteMembers" type="xs:boolean"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="emails" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddEgroupEmailMembersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="AddEgroupMembersRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="overwriteMembers" type="xs:boolean"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="members" type="sch:MemberType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddEgroupMembersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RemoveEgroupEmailMembersRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="emails" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveEgroupEmailMembersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RemoveEgroupMembersRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="members" type="sch:MemberType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveEgroupMembersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="GetEgroupsUserOwnOrManageRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="userName" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEgroupsUserOwnOrManageResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="results" type="sch:EgroupType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ChangeExternalEmailAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="oldEmail" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="newEmail" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeExternalEmailAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="result" type="xs:int"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="FindEgroupByNameRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FindEgroupByNameResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="result" type="sch:EgroupType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="FindEgroupByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="id" type="xs:long"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FindEgroupByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="0" name="result" type="sch:EgroupType"/>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DeleteEgroupRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroupName" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteEgroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SynchronizeEgroupRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="egroup" type="sch:EgroupType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SynchronizeEgroupResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" name="transactionId" type="xs:string"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="error" type="sch:ErrorType"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="warnings" type="sch:ErrorType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="EgroupType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Name" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Aliases" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="ID" type="xs:long"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Type" type="sch:EgroupTypeCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Status" type="sch:StatusCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="BlockingReason" type="sch:BlockingReasonCode"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Usage" type="sch:UsageCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Topic" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Description" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Comments" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="ExpiryDate" type="xs:date"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Owner" type="sch:UserType"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdministratorEgroup" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Privacy" type="sch:PrivacyType"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Selfsubscription" type="sch:SelfsubscriptionType"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="SelfsubscriptionEgroups" type="sch:SelfsubscriptionEgroupType"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Members" type="sch:MemberType"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmailProperties" type="sch:EmailPropertiesType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ErrorType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Code" type="sch:ErrorCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Field" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="EgroupTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="StaticEgroup"/>
+      <xs:enumeration value="DynamicEgroup"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StatusCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Created"/>
+      <xs:enumeration value="Active"/>
+      <xs:enumeration value="Blocked"/>
+      <xs:enumeration value="Deleted"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BlockingReasonCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Manual"/>
+      <xs:enumeration value="Expired"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="UsageCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EgroupsOnly"/>
+      <xs:enumeration value="SecurityMailing"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="UserType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PersonId" type="xs:long"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Name" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="ComputingRulesSigned" type="xs:boolean"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Pem" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="PrimaryGem" type="sch:GemType"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="CernUnit" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="CernDepartment" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="CernGroup" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Telephone1" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Fax" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Building" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Floor" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Room" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Mailbox" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GemType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="EmailAddress" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="DisplayInPhonebook" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:simpleType name="AdministratorTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="StaticEgroup"/>
+      <xs:enumeration value="DynamicEgroup"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrivacyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Members"/>
+      <xs:enumeration value="Open"/>
+      <xs:enumeration value="Administrators"/>
+      <xs:enumeration value="Users"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SelfsubscriptionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Closed"/>
+      <xs:enumeration value="Open"/>
+      <xs:enumeration value="Members"/>
+      <xs:enumeration value="Users"/>
+      <xs:enumeration value="OpenWithAdminApproval"/>
+      <xs:enumeration value="UsersWithAdminApproval"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="SelfsubscriptionEgroupType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="ID" type="xs:long"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="ApprovalNeeded" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MemberType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="ID" type="xs:long"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="Type" type="sch:MemberTypeCode"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Name" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Email" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="PrimaryAccount" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="Comments" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="MemberTypeCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="External"/>
+      <xs:enumeration value="Person"/>
+      <xs:enumeration value="ServiceProvider"/>
+      <xs:enumeration value="StaticEgroup"/>
+      <xs:enumeration value="DynamicEgroup"/>
+      <xs:enumeration value="Account"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="EmailPropertiesType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="MailPostingRestrictions" type="sch:MailPostingRestrictionType"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="SenderAuthenticationEnabled" type="xs:boolean"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="WhoReceivesDeliveryErrors" type="sch:WhoReceivesDeliveryErrorsType"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="MaxMailSize" type="xs:positiveInteger"/>
+      <xs:element maxOccurs="1" minOccurs="1" name="ArchiveProperties" type="sch:ArchivePropertiesType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MailPostingRestrictionType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PostingRestrictions" type="sch:PostingRestrictionType"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="OtherRecipientsAllowedToPost" type="sch:MemberType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="PostingRestrictionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Everyone"/>
+      <xs:enumeration value="CernUsers"/>
+      <xs:enumeration value="OwnerAdminsAndOthers"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="WhoReceivesDeliveryErrorsType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GroupOwner"/>
+      <xs:enumeration value="Sender"/>
+      <xs:enumeration value="None"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ArchivePropertiesType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DoesNotExist"/>
+      <xs:enumeration value="Active"/>
+      <xs:enumeration value="NotActive"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ErrorCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NOT_VALID_USER"/>
+      <xs:enumeration value="NOT_FOUND"/>
+      <xs:enumeration value="EGROUP_NAME_BAD_FORMATED"/>
+      <xs:enumeration value="INSUFFICIENT_PRIVILEGES"/>
+      <xs:enumeration value="PERSON_ID_NOT_FOUND"/>
+      <xs:enumeration value="EXPIRE_DATE_BAD_FORMATTED"/>
+      <xs:enumeration value="NAME_AND_ID_NOT_CORRESPONDS"/>
+      <xs:enumeration value="EGROUP_RECENTLY_DELETED"/>
+      <xs:enumeration value="EMAIL_PROP_ARCHIVE_NOT_VALID"/>
+      <xs:enumeration value="EMAIL_PROP_MAIL_SIZE_NOT_VALID"/>
+      <xs:enumeration value="EXPIRATION_DATE_MANDATORY"/>
+      <xs:enumeration value="EXPIRATION_DATE_NOT_VALID"/>
+      <xs:enumeration value="INTERNAL_DB_ERROR"/>
+      <xs:enumeration value="DATABASE_CONFIGURATION_NOT_FOUND"/>
+      <xs:enumeration value="EGROUP_MEMBER_OF_ANOTHER"/>
+      <xs:enumeration value="NOT_MAILING_SEGURITY_USAGE"/>
+      <xs:enumeration value="IS_ALREADY_MEMBER"/>
+      <xs:enumeration value="TOPIC_ALREADY_EXISTS"/>
+      <xs:enumeration value="ALIAS_MUST_HAVE_HYPHEN"/>
+      <xs:enumeration value="ALIAS_ALREADY_EXISTS"/>
+      <xs:enumeration value="NAME_ALREADY_RESERVED"/>
+      <xs:enumeration value="NAME_TOO_LONG"/>
+      <xs:enumeration value="EGROUP_ALREADY_EXISTS"/>
+      <xs:enumeration value="MEMBER_NOT_FOUND"/>
+      <xs:enumeration value="ALIAS_NOT_FOUND"/>
+      <xs:enumeration value="SELF_EGROUP_ALREADY_EXISTS"/>
+      <xs:enumeration value="ALREADY_ACTIVE"/>
+      <xs:enumeration value="IS_BLOCKED"/>
+      <xs:enumeration value="MUST_BE_MODERATOR"/>
+      <xs:enumeration value="STATUS_CHANGE_NOT_ALLOWED"/>
+      <xs:enumeration value="EXPIRATION_DATE_CANT_BE_PROLONGUED"/>
+      <xs:enumeration value="BLOCKING_REASON_UNDEFINED"/>
+      <xs:enumeration value="USAGE_TYPE_NOT_VALID"/>
+      <xs:enumeration value="NOT_LOGGED"/>
+      <xs:enumeration value="ALREADY_DELETED"/>
+      <xs:enumeration value="NAME_MUST_HAVE_HYPHEN"/>
+      <xs:enumeration value="IS_ALREADY_ALLOWED_TO_POST"/>
+      <xs:enumeration value="OWNER_ID_NOT_FOUND"/>
+      <xs:enumeration value="WARNING"/>
+      <xs:enumeration value="UNEXPECTED_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

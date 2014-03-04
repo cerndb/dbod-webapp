@@ -1,6 +1,8 @@
 
 package ch.cern.dod.ws.egroups;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -19,8 +21,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="egroupName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="members" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EmailsType"/>
  *         &lt;element name="overwriteMembers" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="emails" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,17 +34,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "egroupName",
-    "members",
-    "overwriteMembers"
+    "overwriteMembers",
+    "emails"
 })
 @XmlRootElement(name = "AddEgroupEmailMembersRequest")
 public class AddEgroupEmailMembersRequest {
 
     @XmlElement(required = true)
     protected String egroupName;
-    @XmlElement(required = true)
-    protected EmailsType members;
     protected boolean overwriteMembers;
+    @XmlElement(required = true)
+    protected List<String> emails;
 
     /**
      * Gets the value of the egroupName property.
@@ -69,30 +71,6 @@ public class AddEgroupEmailMembersRequest {
     }
 
     /**
-     * Gets the value of the members property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link EmailsType }
-     *     
-     */
-    public EmailsType getMembers() {
-        return members;
-    }
-
-    /**
-     * Sets the value of the members property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link EmailsType }
-     *     
-     */
-    public void setMembers(EmailsType value) {
-        this.members = value;
-    }
-
-    /**
      * Gets the value of the overwriteMembers property.
      * 
      */
@@ -106,6 +84,35 @@ public class AddEgroupEmailMembersRequest {
      */
     public void setOverwriteMembers(boolean value) {
         this.overwriteMembers = value;
+    }
+
+    /**
+     * Gets the value of the emails property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the emails property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getEmails().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
+     */
+    public List<String> getEmails() {
+        if (emails == null) {
+            emails = new ArrayList<String>();
+        }
+        return this.emails;
     }
 
 }

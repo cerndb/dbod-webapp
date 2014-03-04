@@ -17,7 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Code" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="Code" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}ErrorCode"/>
+ *         &lt;element name="Field" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="Message" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -30,12 +31,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ErrorType", propOrder = {
     "code",
+    "field",
     "message"
 })
 public class ErrorType {
 
     @XmlElement(name = "Code", required = true)
-    protected String code;
+    protected ErrorCode code;
+    @XmlElement(name = "Field")
+    protected String field;
     @XmlElement(name = "Message", required = true)
     protected String message;
 
@@ -44,10 +48,10 @@ public class ErrorType {
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link ErrorCode }
      *     
      */
-    public String getCode() {
+    public ErrorCode getCode() {
         return code;
     }
 
@@ -56,11 +60,35 @@ public class ErrorType {
      * 
      * @param value
      *     allowed object is
+     *     {@link ErrorCode }
+     *     
+     */
+    public void setCode(ErrorCode value) {
+        this.code = value;
+    }
+
+    /**
+     * Gets the value of the field property.
+     * 
+     * @return
+     *     possible object is
      *     {@link String }
      *     
      */
-    public void setCode(String value) {
-        this.code = value;
+    public String getField() {
+        return field;
+    }
+
+    /**
+     * Sets the value of the field property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setField(String value) {
+        this.field = value;
     }
 
     /**

@@ -249,6 +249,8 @@ public class DODConstants {
     public static final String ERROR_DB_NAME_CHARS = "errorDbNameChars";
     public static final String ERROR_E_GROUP_LENGTH = "errorEGroupLength";
     public static final String ERROR_E_GROUP_CREATION = "errorEGroupCreation";
+    public static final String ERROR_E_GROUP_EDITING = "errorEGroupEditing";
+    public static final String ERROR_E_GROUP_EGROUPS_ONLY = "errorEGroupEgroupsOnly";
     public static final String ERROR_E_GROUP_CHARS = "errorEGroupChars";
     public static final String ERROR_E_GROUP_DASH = "errorEGroupDash";
     public static final String ERROR_E_GROUP_SEARCH = "errorEGroupSearch";

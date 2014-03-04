@@ -1,6 +1,8 @@
 
 package ch.cern.dod.ws.egroups;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -21,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="result" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}EgroupType" minOccurs="0"/>
  *         &lt;element name="transactionId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="error" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}ErrorType" minOccurs="0"/>
- *         &lt;element name="warnings" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}WarningsType" minOccurs="0"/>
+ *         &lt;element name="warnings" type="{https://foundservices.cern.ch/ws/egroups/v1/schema/EgroupsServicesSchema}ErrorType" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -44,7 +46,7 @@ public class FindEgroupByIdResponse {
     @XmlElement(required = true)
     protected String transactionId;
     protected ErrorType error;
-    protected WarningsType warnings;
+    protected List<ErrorType> warnings;
 
     /**
      * Gets the value of the result property.
@@ -121,25 +123,30 @@ public class FindEgroupByIdResponse {
     /**
      * Gets the value of the warnings property.
      * 
-     * @return
-     *     possible object is
-     *     {@link WarningsType }
-     *     
-     */
-    public WarningsType getWarnings() {
-        return warnings;
-    }
-
-    /**
-     * Sets the value of the warnings property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the warnings property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link WarningsType }
-     *     
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getWarnings().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link ErrorType }
+     * 
+     * 
      */
-    public void setWarnings(WarningsType value) {
-        this.warnings = value;
+    public List<ErrorType> getWarnings() {
+        if (warnings == null) {
+            warnings = new ArrayList<ErrorType>();
+        }
+        return this.warnings;
     }
 
 }
