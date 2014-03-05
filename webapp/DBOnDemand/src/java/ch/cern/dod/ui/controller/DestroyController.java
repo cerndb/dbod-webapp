@@ -3,9 +3,12 @@ package ch.cern.dod.ui.controller;
 import ch.cern.dod.db.dao.DODInstanceDAO;
 import ch.cern.dod.db.entity.DODInstance;
 import ch.cern.dod.util.DODConstants;
+import ch.cern.dod.util.EGroupHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -32,6 +35,10 @@ public class DestroyController extends Window {
      * DAO to delete instance.
      */
     private DODInstanceDAO instanceDAO;
+    /**
+     * Helper to manage e-groups.
+     */
+    EGroupHelper eGroupHelper;
 
 
     /**
@@ -43,6 +50,11 @@ public class DestroyController extends Window {
     public DestroyController (DODInstance inst, DODInstanceDAO instanceDAO) throws InterruptedException {        
         //Call super constructor
         super();
+        
+        //Get user and password for the web services account
+        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_USER);
+        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(DODConstants.WS_PSWD);
+        eGroupHelper = new EGroupHelper(wsUser, wsPswd);
         
         //Initialize instance and DAO
         this.instance = inst;
@@ -144,6 +156,11 @@ public class DestroyController extends Window {
             showError(DODConstants.ERROR_INSTANCE_ON_FIM);
         }
         else {
+            boolean deleteEgroup = true;
+            //Delete e-group if instance is Oracle 12c
+            if (DODConstants.DB_TYPE_ORA.equals(instance.getDbType())) {
+                deleteEgroup = eGroupHelper.removeEgroupFromOEM(instance.getDbName());
+            }
             ///Delete instance
             if (instanceDAO.delete(instance) == 1) {
                 //Reload the grid

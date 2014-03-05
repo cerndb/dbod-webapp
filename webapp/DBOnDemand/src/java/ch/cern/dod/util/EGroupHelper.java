@@ -2,7 +2,6 @@ package ch.cern.dod.util;
 
 import ch.cern.dod.ws.authentication.UserInfo;
 import ch.cern.dod.ws.egroups.*;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
