@@ -34,7 +34,6 @@ import org.zkoss.zul.Window;
 /**
  * Controller for the config. Creates the window and all its components.
  * @author Daniel Gomez Blanco
- * @version 17/10/2011
  */
 public class FileController extends Window {
 

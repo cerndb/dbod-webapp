@@ -87,7 +87,7 @@ public class DODMonitoringDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Instantiate metric object
             while (result.next()) {
                 DODMetric metric = new DODMetric();
                 metric.setType(result.getString(1));
@@ -119,7 +119,7 @@ public class DODMonitoringDAO {
      * Selects the data for a specific metric.
      * @param instance instance to obtain metric from
      * @param metric metric to obtain
-     * @param days number of days for the metric
+     * @param days number of days for the metric span time
      * @return JSON string with the DataTable representation of the metric.
      */
     public String selectJSONData(DODInstance instance, String host, DODMetric metric, int days) {
@@ -136,7 +136,7 @@ public class DODMonitoringDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            //If the metric is MySQL
+            //Select the metric depending on the type
             switch (metric.getType()) {
                 case DODConstants.MONITORING_TYPE_MYSQL:
                     query.append("SELECT p.valid_from, p.valid_to, p.value"

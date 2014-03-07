@@ -27,7 +27,6 @@ import javax.sql.DataSource;
 /**
  * DAO for DODJob entity.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class DODJobDAO {
 
@@ -107,7 +106,7 @@ public class DODJobDAO {
     /**
      * Selects a log for a specific job.
      * @param job job to obtain the log from.
-     * @return String containing the job.
+     * @return String containing the job log.
      */
     public String selectLogByJob(DODJob job) {
         Connection connection = null;
@@ -162,7 +161,9 @@ public class DODJobDAO {
     }
     
     /**
-     * Inserts a job in the database. It is a single insert, it does not update the instance or insert any parameters.
+     * Inserts a job in the database with a log. This method is used to insert
+     * jobs only for logging purposes, like enabling or disabling backups. It is
+     * a single insert, it does not update the instance or insert any parameters.
      * It simple inserts the job for logging purposes. That is why the job is always in state FINISHED.
      * @param job job to be inserted.
      * @param log log for the job.
@@ -212,10 +213,10 @@ public class DODJobDAO {
     }
 
     /**
-     * Inserts a job in the database.
+     * Inserts a job in the database, to be picked up by the daemon.
      * @param job job to be inserted.
-     * @param params params to be inserted with the job.
-     * @return 1 if the operation was succesful, 0 otherwise.
+     * @param params parameters to be inserted with the job.
+     * @return 1 if the operation was successful, 0 otherwise.
      */
     public int insert(DODJob job, List<DODCommandParam> params) {
         Connection connection = null;
@@ -412,6 +413,7 @@ public class DODJobDAO {
             deleteScheduleStatement.setString(4, username);
             deleteScheduleStatement.setInt(5, admin);
 
+            //Execute
             deleteScheduleResult = deleteScheduleStatement.executeUpdate();
             
             if (deleteScheduleResult != CallableStatement.EXECUTE_FAILED)
@@ -458,7 +460,7 @@ public class DODJobDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Parse the int to return
             if (result.next()) {
                 String intervalStr = result.getString(1);
                 interval = Integer.parseInt(intervalStr.substring(intervalStr.indexOf("INTERVAL=") + 9));
@@ -502,7 +504,7 @@ public class DODJobDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Instantiate date object
             if (result.next()) {
                 date = new java.util.Date(result.getTimestamp(1).getTime());
             }
@@ -549,7 +551,7 @@ public class DODJobDAO {
             createScheduleStatement.setString(4, username);
             createScheduleStatement.setInt(5, admin);
             createScheduleStatement.setTimestamp(6, new java.sql.Timestamp(startDate.getTime()));
-
+            //Execute
             createScheduleResult = createScheduleStatement.executeUpdate();
         }
         catch (NamingException ex) {
@@ -604,7 +606,7 @@ public class DODJobDAO {
             deleteScheduleStatement.setString(3, instance.getDbType());
             deleteScheduleStatement.setString(4, username);
             deleteScheduleStatement.setInt(5, admin);
-
+            //Execute
             deleteScheduleResult = deleteScheduleStatement.executeUpdate();
             
             if (deleteScheduleResult != CallableStatement.EXECUTE_FAILED)

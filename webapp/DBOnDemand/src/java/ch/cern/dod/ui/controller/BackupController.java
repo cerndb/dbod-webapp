@@ -29,9 +29,8 @@ import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 /**
- * Controller for the backup window. Creates the window and all its components.
+ * Controller for the backup management window. Creates the window and all its components.
  * @author Daniel Gomez Blanco
- * @version 24/10/2011
  */
 public class BackupController extends Window {
 
@@ -463,7 +462,7 @@ public class BackupController extends Window {
     
     /**
      * Checks that the configuration parameters are valid
-     * @return 
+     * @return true if the configuration is valid, false otherwise
      */
     public boolean isConfigValid() {
         boolean intervalValid = true;

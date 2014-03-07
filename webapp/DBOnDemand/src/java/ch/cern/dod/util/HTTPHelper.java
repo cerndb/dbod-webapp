@@ -9,13 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Constains methods to manage HTTP operations.
  * @author Daniel Gomez Blanco
- * @version 30/09/2011
  */
 public class HTTPHelper {
 
     /**
      * Redirects to a page specified as a parameter.
      * @param page page to be redirected to
+     * @param request request created by the user
+     * @param response from the server
      */
     public static void redirect(HttpServletRequest request, HttpServletResponse response, String page) {
         try {

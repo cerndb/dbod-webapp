@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Helper to manage snapshots using web services.
+ * Helper to manage snapshots using web services. It uses the web services
+ * implemented in the Syscontrol project
  * @author Daniel Gomez Blanco
- * @version 26/09/2011
  */
 public class SnapshotHelper {
 

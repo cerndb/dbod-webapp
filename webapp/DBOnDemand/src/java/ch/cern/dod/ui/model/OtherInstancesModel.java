@@ -7,7 +7,8 @@ import javax.swing.event.ListDataEvent;
 import org.zkoss.zul.AbstractListModel;
 
 /**
- * Represents a list of instances.
+ * Represents a list of instances. This model is used in the instance view,
+ * where there is a list of instances for quick access.
  * @author Daniel Gomez Blanco
  */
 public class OtherInstancesModel extends AbstractListModel {
@@ -62,7 +63,7 @@ public class OtherInstancesModel extends AbstractListModel {
     }
     
     /**
-     * Filters the instances.
+     * Filters the instances according to a DB name.
      * @param dbName DB name to filter.
      */
     public void filterInstances (String dbName) {

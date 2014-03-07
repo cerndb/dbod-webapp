@@ -5,7 +5,6 @@ import java.util.Date;
 /**
  * Represents a snapshot with its creation date and the file name. 
  * @author Daniel Gomez Blanco
- * @version 24/11/2011
  */
 public class DODSnapshot implements Comparable {
     /**

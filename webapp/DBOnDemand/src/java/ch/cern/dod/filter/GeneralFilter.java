@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
  * This is a filter for general use. It prevents the server from showing an error page in case
  * an uncaught exception is raised.
  * @author Daniel Gomez Blanco
- * @version 30/11/2011
  */
 public class GeneralFilter implements Filter{
 

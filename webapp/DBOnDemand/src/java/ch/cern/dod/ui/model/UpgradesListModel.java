@@ -75,6 +75,11 @@ public class UpgradesListModel extends AbstractListModel implements Sortable {
         fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);
     }
     
+    /**
+     * Obtains the sort direction.
+     * @param cmpr comparator being used
+     * @return ascending or descending
+     */
     @Override
     public String getSortDirection(Comparator cmprtr) {
         if (ascending)

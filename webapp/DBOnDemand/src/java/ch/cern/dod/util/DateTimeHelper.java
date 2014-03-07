@@ -6,6 +6,11 @@ package ch.cern.dod.util;
  */
 public class DateTimeHelper {
     
+    /**
+     * Converts a number of seconds to hours, minutes and seconds
+     * @param seconds number of seconds to convert
+     * @return string with the following format xx h xx m xxs
+     */
     public static String timeToString (int seconds) {
         String toret;
         //If less than a minute

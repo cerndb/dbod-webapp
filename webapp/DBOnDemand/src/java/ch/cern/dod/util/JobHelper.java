@@ -24,7 +24,6 @@ import org.zkoss.zk.ui.event.UploadEvent;
 /**
  * Helper to create jobs.
  * @author Daniel Gomez Blanco
- * @version 27/09/2011
  */
 public class JobHelper {
 
@@ -150,11 +149,10 @@ public class JobHelper {
     }
 
     /**
-     * Uploads a config file and creates the corresponding job to copy the file to the intance.
+     * Uploads a config file and creates the corresponding job to copy the file to the instance.
      * @param instance instance to copy the config file to.
      * @param username requester of this job.
      * @param fileType type of config file to upload.
-     * @param filePath path of config file to upload.
      * @param event upload event to get the data from.
      * @return true if the creation of this job was successful, false otherwise.
      * @throws ConfigFileSizeException if the file to be uploaded is too big.

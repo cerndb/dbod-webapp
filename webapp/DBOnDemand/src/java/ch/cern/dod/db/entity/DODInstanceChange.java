@@ -15,7 +15,7 @@ public class DODInstanceChange {
     private String username;
 
     /**
-     * DB name of the instance (max. 128)
+     * DB name of the instance (max. 8)
      */
     private String dbName;
 

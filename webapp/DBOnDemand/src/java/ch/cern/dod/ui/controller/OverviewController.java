@@ -24,9 +24,9 @@ import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.*;
 
 /**
- * Controller for the overview page
+ * Controller for the overview page. Where all the instances are presented
+ * to the user.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class OverviewController extends Vbox implements BeforeCompose, AfterCompose{
     /**
@@ -330,6 +330,8 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     
     /**
      * Displays all instances in the view (or goes back to normal mold)
+     * 
+     * @param show indicates if all the rows should be displayed or not
      */
     public void showAll(boolean show) {
         Tree tree = (Tree) getFellow("overviewTree");
@@ -373,6 +375,8 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     
     /**
      * Displays all command stats in the view
+     * 
+     * @param show indicates if all the rows should be displayed or not
      */
     public void showAllCommandStats(boolean show) {
         Grid grid = (Grid) getFellow("commandStatsGrid");
@@ -394,6 +398,8 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     
     /**
      * Displays all job stats in the view
+     * 
+     * @param show indicates if all the rows should be displayed or not
      */
     public void showAllJobStats(boolean show) {
         Grid grid = (Grid) getFellow("jobStatsGrid");

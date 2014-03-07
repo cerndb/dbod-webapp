@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Filters requests to only allow admin users to visit admin content.
  * @author Daniel Gomez Blanco
- * @version 30/09/2011
  */
 public class AdminFilter implements Filter{
 

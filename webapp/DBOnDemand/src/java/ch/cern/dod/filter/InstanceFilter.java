@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Filters requests to only allow admin users to manage their own instances.
  * @author Daniel Gomez Blanco
- * @version 30/09/2011
  */
 public class InstanceFilter implements Filter {
 
@@ -36,7 +35,7 @@ public class InstanceFilter implements Filter {
     }
 
     /**
-     * Destroy mehod
+     * Destroy method
      */
     @Override
     public void destroy() {

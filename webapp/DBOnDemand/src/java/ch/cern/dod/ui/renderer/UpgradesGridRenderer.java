@@ -37,9 +37,11 @@ public class UpgradesGridRenderer implements RowRenderer {
     }
     
     /**
-     * Render a given row with the given upgrade data.
-     * @param row row to render
-     * @param data DODUpgrade object to render
+     * Renders a row
+     * @param row object where to place information
+     * @param object object to be rendered
+     * @param i index of the row
+     * @throws Exception in case components cannot be added to the row
      */
     @Override
     public void render(final Row row, Object data, int i) {

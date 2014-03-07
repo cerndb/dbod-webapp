@@ -58,7 +58,7 @@ public class DODStatsDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Instantiate command stat objects
             while (result.next()) {
                 DODCommandStat commandStat = new DODCommandStat();
                 commandStat.setCommandName(result.getString(1));
@@ -123,7 +123,7 @@ public class DODStatsDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Instantiate command stat objects
             while (result.next()) {
                 DODCommandStat commandStat = new DODCommandStat();
                 commandStat.setCommandName(result.getString(1));

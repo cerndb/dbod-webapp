@@ -12,9 +12,9 @@ import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
 
 /**
- * Helper to manage snapshots using web services.
+ * Helper to manage snapshots using web services. This uses the SOAP web services
+ * implemented in the syscontrol project
  * @author Daniel Gomez Blanco
- * @version 22/11/2011
  */
 public class FileHelper {
 
@@ -38,7 +38,7 @@ public class FileHelper {
     }
 
     /**
-     * Gets a configuration file from a specific instance.
+     * Gets a configuration file from a specific MySQL instance.
      * @param instance instance to get the snapshots of.
      * @return configuration file.
      */
@@ -58,7 +58,7 @@ public class FileHelper {
     }
     
     /**
-     * Gets a configuration file from a specific instance.
+     * Gets a configuration file from a specific PostgreSQL instance.
      * @param instance instance to get the snapshots of.
      * @param type type of config file to get.
      * @return configuration file.
@@ -79,7 +79,7 @@ public class FileHelper {
     }
     
     /**
-     * Gets the slow logs for a specific instance.
+     * Gets the slow logs for a specific MySQL instance.
      * @param instance instance to get the slow logs of.
      * @return array of file names corresponding to the slow logs.
      */
@@ -178,6 +178,9 @@ public class FileHelper {
     
     /**
      * Connects to a URL to download a file specified by filePath on the given instance.
+     * This method is created to connect to the DB hosts and get a specific file,
+     * and then serve it to the user, instead of providing the use the download
+     * address (less security and can't be accessed outside CERN)
      * @param urlString URL to download file from.
      * @param filePath file path used to name the file.
      * @param instance instance where this file resides.

@@ -23,7 +23,9 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.*;
 
 /**
- * Renders rows in the overview tree.
+ * Renders rows in the overview tree. It displays all the info and creates
+ * the action buttons. It also manages events in case an instance is checked
+ * or unchecked and the collective action buttons have to be enabled or disabled.
  * @author Daniel Gomez Blanco
  */
 public class OverviewTreeRenderer implements TreeitemRenderer{
@@ -57,8 +59,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
     /**
      * Renders an instance in the tree.
-     * @param item Tree item to render.
+     * @param item Tree item to render components into.
      * @param data Tree node with the instance to render.
+     * @param i index of the node
      * @throws Exception In case instance cannot be rendered.
      */
     @Override
@@ -484,6 +487,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
     /**
      * Displays an error window for the error code provided.
+     * @param item item where the error was generated
+     * @param exception exception to log
      * @param errorCode error code for the message to be displayed.
      */
     private void showError(Treeitem item, Exception exception, String errorCode) {

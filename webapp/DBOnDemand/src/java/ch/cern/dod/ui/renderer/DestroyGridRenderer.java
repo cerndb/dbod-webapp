@@ -38,9 +38,11 @@ public class DestroyGridRenderer implements RowRenderer {
     }
     
     /**
-     * Render a given row with the given instance data.
-     * @param row row to render
-     * @param data DODUpgrade object to render
+     * Renders a row
+     * @param row object where to place information
+     * @param object object to be rendered
+     * @param i index of the row
+     * @throws Exception in case components cannot be added to the row
      */
     @Override
     public void render(final Row row, Object data, int i) {
@@ -108,6 +110,8 @@ public class DestroyGridRenderer implements RowRenderer {
     /**
      * Displays an error window for the error code provided.
      * @param errorCode error code for the message to be displayed.
+     * @param exception exception to be logged
+     * @param row row where the exception occured
      */
     private void showError(Row row, Exception exception, String errorCode) {
         if (exception != null) {

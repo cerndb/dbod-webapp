@@ -16,7 +16,6 @@ import javax.xml.ws.BindingProvider;
  * https://espace.cern.ch/e-groups-help
  *
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class EGroupHelper {
 

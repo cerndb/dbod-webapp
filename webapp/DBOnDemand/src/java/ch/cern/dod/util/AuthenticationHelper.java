@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import javax.xml.ws.BindingProvider;
 
 /**
- * Helper to obtain information and manage user accounts.
+ * Helper to obtain information and manage user accounts. It uses the SOAP
+ * API documented here https://espace.cern.ch/authentication/CERN%20Authentication%20Help/SOAP%20WebServices.aspx
  * @author Daniel Gomez Blanco
- * @version 14/11/2011
  */
 public class AuthenticationHelper {
 
@@ -34,9 +34,10 @@ public class AuthenticationHelper {
     }
 
     /**
-     * 
+     * Gets the connected user information.
      * @param username user to obtain the information from.
      * @return information from user passed as parameter.
+     * @return user information
      */
     public UserInfo getUserInfo(String username) {
         try {

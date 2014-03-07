@@ -10,7 +10,6 @@ import org.zkoss.web.Attributes;
 /**
  * Intercepts requests and configures Locale according to cookies
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class LocaleProvider implements org.zkoss.zk.ui.util.RequestInterceptor
 {

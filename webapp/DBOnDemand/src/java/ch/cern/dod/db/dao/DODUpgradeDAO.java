@@ -60,7 +60,7 @@ public class DODUpgradeDAO {
             //Execute query
             result = statement.executeQuery();
 
-            //Instantiate instance objects
+            //Instantiate upgrade objects
             while (result.next()) {
                 DODUpgrade upgrade = new DODUpgrade();
                 upgrade.setDbType(result.getString(1));
@@ -89,7 +89,15 @@ public class DODUpgradeDAO {
     }
     
     /**
-     * Updates the upgrade_version field of all instances of a specific type.
+     * Inserts a new upgrade in the database. An update is tried first, in case
+     * there is already an upgrade for a version. This is done this way because
+     * upgrades can only be from one version to the next, and we will always
+     * force people to update to the next version.
+     * 
+     * Let's say there is an upgrade for MySQL from 5.5.15 to 5.5.17, and an
+     * upgrade from 5.5.17 to 5.5.30. The usual flow will be to upgrade to
+     * 5.5.17 and 5.5.30 later on. But we might provide a script to upgrade
+     * from 5.5.15 to 5.5.30. Then the owner will have to upgrade to 5.5.30.
      * @param upgrade upgrade object
      * @return true if the operation was successful, false otherwise.
      */
@@ -153,7 +161,7 @@ public class DODUpgradeDAO {
     }
     
     /**
-     * Deletes an upgrade from the table of upgrades
+     * Deletes an upgrade from the table of upgrades.
      * @param upgrade upgrade to delete
      * @return true if it was deleted, false otherwise
      */

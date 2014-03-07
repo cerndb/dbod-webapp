@@ -89,7 +89,8 @@ public class FormValidations {
     /**
      * Validates e-Group name.
      * @param eGroup Textbox with the e-group to validate.
-     * @param dbType Type of the DB.
+     * @param dbType type of the DB.
+     * @param helper helper to check the e-group is SECURITY_MAILING
      * @return true if e-group name is valid, false otherwise.
      */
     public static boolean isEGroupValid(Textbox eGroup, String dbType, EGroupHelper helper) {

@@ -21,7 +21,6 @@ import org.zkoss.zul.*;
 /**
  * Controller for the window that creates a new instance in DBOnDemand
  * @author Daniel Gomez Blanco
- * @version 23/11/2011
  */
 public class NewInstanceController extends Window implements AfterCompose {
     /**
@@ -205,6 +204,10 @@ public class NewInstanceController extends Window implements AfterCompose {
         }
     }
     
+    /**
+     * Checks if the owner of the database is a valid user, and if the account exists.
+     * @return true if the use is valid
+     */
     private boolean isUsernameValid () {
         Textbox username = (Textbox) getFellow("username");
         UserInfo userInfo = FormValidations.isUsernameValid(username, authenticationHelper);

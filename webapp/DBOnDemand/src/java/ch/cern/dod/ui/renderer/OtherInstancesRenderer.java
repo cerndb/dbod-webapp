@@ -14,10 +14,11 @@ import org.zkoss.zul.RowRenderer;
 public class OtherInstancesRenderer implements RowRenderer{
 
     /**
-     * Renders a row in the instances table.
-     * @param row row to render.
-     * @param object instance to render.
-     * @throws Exception 
+     * Renders a row
+     * @param row object where to place information
+     * @param object object to be rendered
+     * @param i index of the row
+     * @throws Exception in case components cannot be added to the row
      */
     @Override
     public void render(Row row, Object object, int i) throws Exception {

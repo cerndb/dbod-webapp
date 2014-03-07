@@ -3,9 +3,10 @@ package ch.cern.dod.db.entity;
 import java.util.Date;
 
 /**
- * Represents a job that has to be carried out on a database, like startup, shutdown, etc.
+ * Represents a parameter job that has to be carried out on a database. In the
+ * parameters we include things like the timestamp for a recovery, the config
+ * file to upload, etc.
  * @author Daniel Gomez Blanco
- * @version 31/08/2011
  */
 
 public class DODCommandParam{
@@ -15,7 +16,7 @@ public class DODCommandParam{
     private String username;
 
     /**
-     * DB name for the instance on which the job is going to be performed (max. 128)
+     * DB name for the instance on which the job is going to be performed (max. 8)
      */
     private String dbName;
 

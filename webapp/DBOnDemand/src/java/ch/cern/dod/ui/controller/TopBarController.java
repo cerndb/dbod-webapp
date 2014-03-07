@@ -17,9 +17,9 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Html;
 
 /**
- * Controller for top bar's actions.
+ * Controller for top bar's actions. It obtains some of the attributes that are
+ * used in the top bar, and it renders the announcement banner when needed.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class TopBarController extends Div implements BeforeCompose, AfterCompose{
     

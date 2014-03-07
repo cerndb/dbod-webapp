@@ -20,7 +20,8 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.*;
 
 /**
- * Controller for the monitoring window.
+ * Controller for the monitoring window in the overview page, where all the
+ * important metrics are displayed.
  * @author Daniel Gomez Blanco
  */
 public class MonitoringOverviewController extends Hbox  implements BeforeCompose, AfterCompose{

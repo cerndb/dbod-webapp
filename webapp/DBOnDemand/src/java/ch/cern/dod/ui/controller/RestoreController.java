@@ -33,9 +33,8 @@ import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 /**
- * Controller for the backup window. Creates the window and all its components.
+ * Controller for the restore window. Creates the window and all its components.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class RestoreController extends Window {
 
@@ -105,7 +104,7 @@ public class RestoreController extends Window {
     private OverviewTreeModel model;
 
     /**
-     * Creates this window, obtains the snapshots from the database and creates child components. Coming from instance view.
+     * Creates this window, obtains the snapshots from the database and creates child components (coming from instance view).
      * @param inst current instance.
      * @param user current authenticated user.
      * @param jobHelper helper to create jobs.
@@ -116,7 +115,7 @@ public class RestoreController extends Window {
     }
     
     /**
-     * Creates this window, obtains the snapshots from the database and creates child components. Coming from list view.
+     * Creates this window, obtains the snapshots from the database and creates child components (coming from list view).
      * @param inst current instance.
      * @param user current authenticated user.
      * @param jobHelper helper to create jobs.
@@ -314,7 +313,7 @@ public class RestoreController extends Window {
     }
 
     /**
-     * Detachs the windows from the page.
+     * Detaches the windows from the page.
      */
     private void doCancel() {
         time.getFellow("restoreWindow").detach();
@@ -400,9 +399,8 @@ public class RestoreController extends Window {
     }
     
     /**
-     * Confirm window
+     * Confirm window to warn the user about the restore operation.
      * @author Daniel Gomez Blanco
-     * @version 02/12/2011
      */
     private class RestoreConfirmWindow extends Window {
         

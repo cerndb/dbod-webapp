@@ -5,7 +5,6 @@ import ch.cern.dod.db.entity.DODMetric;
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
- * @version 22/11/2011
  */
 public class DODConstants {
     

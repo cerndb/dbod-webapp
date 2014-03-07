@@ -3,7 +3,6 @@ package ch.cern.dod.db.entity;
 /**
  * Represents a metric in the system. It is used to render the different metrics that can be obtained from an instance.
  * @author Daniel Gomez Blanco
- * @version 22/11/2011
  */
 public class DODMetric {
     /**

@@ -12,7 +12,6 @@ import org.zkoss.zul.Calendar;
  * Customized calendar to mark days for snapshots (it should be used with the correspondent script
  * markSnapshots.js included in the page).
  * @author Daniel Gomez Blanco
- * @version 26/09/2011
  */
 public class SnapshotCalendar extends Calendar {
 

@@ -644,6 +644,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays all instances in the view (or goes back to normal mold)
+     * 
+     * @param show indicates if all should be displayed or not
      */
     public void showAll(boolean show) {
         Tree tree = (Tree) getFellow("overviewTree");
@@ -665,6 +667,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays all instances to destroy
+     * 
+     * @param show indicates if all should be displayed or not
      */
     public void showAllToDestroy(boolean show) {
         Grid grid = (Grid) getFellow("destroyGrid");
@@ -686,6 +690,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays all upgrades in the view
+     * 
+     * @param show indicates if all should be displayed or not
      */
     public void showAllUpgrades(boolean show) {
         Grid grid = (Grid) getFellow("upgradesGrid");
@@ -707,6 +713,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays all command stats in the view
+     * 
+     * @param show indicates if all should be displayed or not
      */
     public void showAllCommandStats(boolean show) {
         Grid grid = (Grid) getFellow("commandStatsGrid");
@@ -728,6 +736,8 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     
     /**
      * Displays all job stats in the view
+     * 
+     * @param show indicates if all should be displayed or not
      */
     public void showAllJobStats(boolean show) {
         Grid grid = (Grid) getFellow("jobStatsGrid");

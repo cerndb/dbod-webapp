@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Helper to get params from instances.
+ * Helper to get params from instances. It uses the SOAP web services
+ * implemented in the Syscontrol project
  * @author Daniel Gomez Blanco
- * @version 17/10/2011
  */
 public class ParamsHelper {
 

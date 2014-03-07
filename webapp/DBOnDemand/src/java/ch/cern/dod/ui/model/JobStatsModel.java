@@ -113,6 +113,11 @@ public class JobStatsModel extends AbstractListModel implements Sortable {
         sort(comparator, ascending);
     }
     
+    /**
+     * Obtains the sort direction.
+     * @param cmpr comparator being used
+     * @return ascending or descending
+     */
     @Override
     public String getSortDirection(Comparator cmprtr) {
         if (ascending)

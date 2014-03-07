@@ -6,7 +6,6 @@ import java.util.Objects;
 /**
  * Represents a database in the system.
  * @author Daniel Gomez Blanco
- * @version 31/08/2011
  */
 public class DODInstance implements Comparable, Cloneable{
     /**
@@ -15,7 +14,10 @@ public class DODInstance implements Comparable, Cloneable{
     private String username;
 
     /**
-     * DB name for this instance (max. 128)
+     * DB name for this instance (max. 8)
+     * 
+     * The DB name limitation comes from the fact that Oracle SID's can only
+     * be 8 characters
      */
     private String dbName;
 
@@ -100,7 +102,8 @@ public class DODInstance implements Comparable, Cloneable{
     private String state;
     
     /**
-     * If an instance is checked or not in the overview.
+     * If an instance is checked or not in the overview page for admins. If it
+     * is checked it will be counted for collective actions.
      */
     private boolean checked;
 

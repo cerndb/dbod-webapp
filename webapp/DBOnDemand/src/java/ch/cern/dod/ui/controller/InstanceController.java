@@ -35,7 +35,6 @@ import org.zkoss.zul.*;
 /**
  * Controller for the instance page.
  * @author Daniel Gomez Blanco
- * @version 23/09/2011
  */
 public class InstanceController extends Hbox implements AfterCompose, BeforeCompose {
     /**
@@ -834,6 +833,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
 
     /**
      * Checks if an e-group exists, and if it does continues with the editing.
+     * This method was modified to not allow users to create an e-group using
+     * this functionality (the e-group must exist). The functionality is still
+     * there in case needed in the future.
      */
     public void checkAndEditEGroup() {
         //Check for errors in form

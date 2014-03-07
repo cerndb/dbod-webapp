@@ -21,6 +21,8 @@ import org.zkoss.zul.Window;
 
 /**
  * Controller for the shutdown window. Creates the window and all its components.
+ * This window is basically a warning for the user to not shut down the wrong
+ * database.
  * @author Daniel Gomez Blanco
  */
 public class ShutdownController extends Window {

@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 /**
  * DAO for DODInstance entity.
  * @author Daniel Gomez Blanco
- * @version 23/11/2011
  */
 public class DODInstanceDAO {
 
@@ -41,8 +40,9 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Selects all the instances in the database.
-     * @param upgrades upgrades available.
+     * Selects all the instances in the database. It takes the list of available
+     * upgrades in order to decide if an instance needs upgrading or not.
+     * @param upgrades list of available upgrades.
      * @return List of all the instances in the database.
      */
     public List<DODInstance> selectAll(List<DODUpgrade> upgrades) {
@@ -116,7 +116,8 @@ public class DODInstanceDAO {
     }
     
     /**
-     * Selects all the instances to be destroyed.
+     * Selects all the instances to be destroyed. These are the instances with a
+     * status of 0.
      * @return List of all the instances to be destroyed.
      */
     public List<DODInstance> selectToDestroy() {
@@ -182,6 +183,7 @@ public class DODInstanceDAO {
 
     /**
      * Select the instances belonging to a username or to any of their e-groups.
+     * It takes the list of available upgrades in order to decide if an instance needs upgrading or not.
      * @param username username to obtain instances.
      * @param egroups e-groups that the user belongs to.
      * @param upgrades upgrades available.
@@ -283,7 +285,8 @@ public class DODInstanceDAO {
     }
     
     /**
-     * Selects the instances in the database for the specified host.
+     * Selects the instances in the database for the specified host. It takes
+     * the list of available upgrades in order to decide if an instance needs upgrading or not.
      * @param host name of the host.
      * @param upgrades upgrades available.
      * @return List of the instances in the host.
@@ -362,10 +365,11 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Select a specific instance by its DB name.
+     * Select a specific instance by its DB name. It takes the list of available
+     * upgrades in order to decide if an instance needs upgrading or not.
      * @param dbName DB name of the instance.
      * @param upgrades upgrades available.
-     * @return DOD instance for the username and DB name specified.
+     * @return instance for the username and DB name specified.
      */
     public DODInstance selectByDbName(String dbName, List<DODUpgrade> upgrades) {
         Connection connection = null;
@@ -439,9 +443,10 @@ public class DODInstanceDAO {
     }
 
     /**
-     * Inserts a new instance in the database.
+     * Inserts a new instance in the database. It also updates the slave attribute
+     * in the master in case this instance has a master.
      * @param instance instance to be inserted.
-     * @return 1 if the operation was succesful, 0 otherwise.
+     * @return 1 if the operation was successful, 0 otherwise.
      */
     public int insert(DODInstance instance) {
         Connection connection = null;
@@ -573,8 +578,9 @@ public class DODInstanceDAO {
     
     /**
      * Updates an instance with new values.
-     * @param instance instance to update.
-     * @param 
+     * @param oldInstance old values of the instance.
+     * @param newInstance new values of the instance.
+     * @param requester username requesting this, in order to log it.
      * @return 1 if the operation was successful, 0 otherwise.
      */
     public int update(DODInstance oldInstance, DODInstance newInstance, String requester) {
@@ -611,7 +617,7 @@ public class DODInstanceDAO {
             //Execute query
             updateResult = updateStatement.executeUpdate();
             
-            //If update was successful
+            //If update was successful log the change
             if (updateResult > 0) {
                 String insertQuery = "INSERT INTO dod_instance_changes (username, db_name, attribute, change_date, requester, old_value, new_value) VALUES (?,?,?,?,?,?,?)";
                 insertStatement = connection.prepareStatement(insertQuery);
@@ -826,7 +832,8 @@ public class DODInstanceDAO {
     }
     
     /**
-     * Rescues an instance and enables it back again.
+     * Rescues an instance and enables it back again. It changes the status from
+     * 0 to 1.
      * @param instance instance to be deleted.
      * @return 1 if the operation was successful, 0 otherwise.
      */
@@ -905,6 +912,9 @@ public class DODInstanceDAO {
         }
         
         //Return true in any other case
+        //This is required, because an instance cannot be deleted if it is still
+        //in FIM. This is just to check that there were no errors and the instance
+        //is really not in FIM when deleting it permantenly.
         return true;
     }
 }

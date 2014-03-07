@@ -5,7 +5,6 @@ import java.util.Date;
 /**
  * Represents a job that has to be carried out on a database, like startup, shutdown, etc.
  * @author Daniel Gomez Blanco
- * @version 30/08/2011
  */
 
 public class DODJob {
@@ -16,7 +15,7 @@ public class DODJob {
     private String username;
 
     /**
-     * DB name for the instance on which the job is going to be performed (max. 128)
+     * DB name for the instance on which the job is going to be performed (max. 8)
      */
     private String dbName;
 
@@ -46,7 +45,8 @@ public class DODJob {
     private String requester;
 
     /**
-     * Admin flag (0 indicates is not an admin job, 1 indicates is an admin job)
+     * Admin flag (0 indicates is not an admin job, 1 indicates is an admin job,
+     * 2 indicates that it is scheduled job)
      */
     private int adminAction;
 

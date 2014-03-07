@@ -20,6 +20,7 @@ import org.zkoss.zul.Window;
 
 /**
  * Controller for the rescue window. Creates the window and all its components.
+ * This modifies the status of an instance from 0 to 1, bringing it back to life.
  * @author Daniel Gomez Blanco
  */
 public class RescueController extends Window {
