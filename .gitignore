@@ -11,7 +11,5 @@
 *.swp 
 
 # Webap files #
-/webapp/DBOnDemand/nbproject/private/
-/webapp/DBOnDemand/build/
-/webapp/DBOnDemand/dist/DBOnDemand.war
-/webapp/DBOnDemand/web/META-INF/context.xml
+/webapp/DBOnDemand/target/
+/webapp/DBOnDemand/src/main/webapp/META-INF/context.xml

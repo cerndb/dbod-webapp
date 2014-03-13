@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk>
+    <system-config>
+        <disable-event-thread/>
+    </system-config>
+    <!-- Session config -->
+    <session-config>
+        <device-type>ajax</device-type>
+        <automatic-timeout/>
+        <session-timeout>1800</session-timeout>
+        <timer-keep-alive>false</timer-keep-alive>
+        <max-desktops-per-session>15</max-desktops-per-session>
+        <max-requests-per-session>5</max-requests-per-session>
+        <max-pushes-per-session>3</max-pushes-per-session>
+        <timeout-uri>/timeout.zul</timeout-uri>
+    </session-config>
+    
+    <!-- Locale provider -->
+    <listener>
+	<listener-class>ch.cern.dbod.util.LocaleProvider</listener-class>
+    </listener>
+    
+    <library-property>
+        <name>org.zkoss.zul.theme.fontFamilyT</name>
+        <value>'PT Sans', 'Trebuchet MS', Tahoma, sans-serif</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontFamilyC</name>
+        <value>'PT Sans', 'Trebuchet MS', Tahoma, sans-serif</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeM</name>
+        <value>10pt</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeS</name>
+        <value>9pt</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeXS</name>
+        <value>8pt</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.theme.fontSizeXS</name>
+        <value>8pt</value>
+    </library-property>
+</zk>

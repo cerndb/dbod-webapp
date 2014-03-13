@@ -1,0 +1,26 @@
+<?page docType="html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
+&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;" ?>
+<?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
+<?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
+<?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
+<?link href='https://fonts.googleapis.com/css?family=PT+Sans:400' rel='stylesheet' type='text/css'?>
+<?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
+<?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+
+<zk>
+    <!-- Import controllers -->
+    <zscript>
+        <![CDATA[
+            import ch.cern.dbod.ui.controller.TopBarController;
+        ]]>
+    </zscript>
+
+    <!-- Include top bar -->
+    <topBar/>
+
+    <div align="center" style="margin-top:30px;margin-bottom:10px;">
+        <hbox>
+            <label value="${c:l('errorGeneric')}"/>
+        </hbox>
+   </div>
+</zk>

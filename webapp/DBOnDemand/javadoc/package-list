@@ -1,0 +1,12 @@
+ch.cern.dbod.db.dao
+ch.cern.dbod.db.entity
+ch.cern.dbod.exception
+ch.cern.dbod.filter
+ch.cern.dbod.ui.components
+ch.cern.dbod.ui.controller
+ch.cern.dbod.ui.model
+ch.cern.dbod.ui.renderer
+ch.cern.dbod.util
+ch.cern.dbod.ws
+ch.cern.dbod.ws.authentication
+ch.cern.dbod.ws.egroups

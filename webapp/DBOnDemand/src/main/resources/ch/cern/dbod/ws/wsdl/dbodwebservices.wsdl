@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+	targetNamespace="https://syscontrol.cern.ch/Dod/"
+	xmlns:impl="https://syscontrol.cern.ch/Dod/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="https://syscontrol.cern.ch/Dod/">
+
+    <wsdl:message name="GetSnapshotsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetSnapshotsResponse">
+        <wsdl:part name="snapshots" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetOraSnapshotsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOraSnapshotsResponse">
+        <wsdl:part name="snapshots" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetSlowLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetSlowLogsResponse">
+        <wsdl:part name="slowLogs" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetOracleLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOracleLogsResponse">
+        <wsdl:part name="logs" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetOraLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetOraLogsResponse">
+        <wsdl:part name="logs" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetPGLogsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetPGLogsResponse">
+        <wsdl:part name="logs" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetMySQLConfigFileRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetMySQLConfigFileResponse">
+        <wsdl:part name="file" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetPGConfigFileRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+        <wsdl:part name="type" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetPGConfigFileResponse">
+        <wsdl:part name="file" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="ServeFileRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+	<wsdl:part name="filePath" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="ServeFileResponse">
+        <wsdl:part name="url" type="xsd:anyURI" />
+    </wsdl:message>
+
+    <wsdl:message name="GetParamRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+	<wsdl:part name="param" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetParamResponse">
+        <wsdl:part name="paramValue" type="xsd:string" />
+    </wsdl:message>
+    
+    <wsdl:message name="GetHostRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="GetHostResponse">
+        <wsdl:part name="host" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:portType name="DBODWebServicePortType">
+        <wsdl:operation name="GetSnapshots">
+            <wsdl:input message="impl:GetSnapshotsRequest" name="GetSnapshotsRequest" />
+            <wsdl:output message="impl:GetSnapshotsResponse" name="GetSnapshotsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetOraSnapshots">
+            <wsdl:input message="impl:GetOraSnapshotsRequest" name="GetOraSnapshotsRequest" />
+            <wsdl:output message="impl:GetOraSnapshotsResponse" name="GetOraSnapshotsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetSlowLogs">
+            <wsdl:input message="impl:GetSlowLogsRequest" name="GetSlowLogsRequest" />
+            <wsdl:output message="impl:GetSlowLogsResponse" name="GetSlowLogsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetOracleLogs">
+            <wsdl:input message="impl:GetOracleLogsRequest" name="GetOracleLogsRequest" />
+            <wsdl:output message="impl:GetOracleLogsResponse" name="GetOracleLogsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetOraLogs">
+            <wsdl:input message="impl:GetOraLogsRequest" name="GetOraLogsRequest" />
+            <wsdl:output message="impl:GetOraLogsResponse" name="GetOraLogsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetPGLogs">
+            <wsdl:input message="impl:GetPGLogsRequest" name="GetPGLogsRequest" />
+            <wsdl:output message="impl:GetPGLogsResponse" name="GetPGLogsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetMySQLConfigFile">
+            <wsdl:input message="impl:GetMySQLConfigFileRequest" name="GetMySQLConfigFileRequest" />
+            <wsdl:output message="impl:GetMySQLConfigFileResponse" name="GetMySQLConfigFileResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetPGConfigFile">
+            <wsdl:input message="impl:GetPGConfigFileRequest" name="GetPGConfigFileRequest" />
+            <wsdl:output message="impl:GetPGConfigFileResponse" name="GetPGConfigFileResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="ServeFile">
+            <wsdl:input message="impl:ServeFileRequest" name="ServeFileRequest" />
+            <wsdl:output message="impl:ServeFileResponse" name="ServeFileResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetParam">
+            <wsdl:input message="impl:GetParamRequest" name="GetParamRequest" />
+            <wsdl:output message="impl:GetParamResponse" name="GetParamResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="GetHost">
+            <wsdl:input message="impl:GetHostRequest" name="GetHostRequest" />
+            <wsdl:output message="impl:GetHostResponse" name="GetHostResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="DBODWebServiceSoapBinding" type="impl:DBODWebServicePortType">
+        <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="GetSnapshots">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetSnapshots"/>
+            <wsdl:input name="GetSnapshotsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetSnapshotsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOraSnapshots">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOraSnapshots"/>
+            <wsdl:input name="GetOraSnapshotsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetOraSnapshotsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSlowLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetSlowLogs"/>
+            <wsdl:input name="GetSlowLogsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetSlowLogsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOracleLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOracleLogs"/>
+            <wsdl:input name="GetOracleLogsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetOracleLogsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOraLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetOraLogs"/>
+            <wsdl:input name="GetOraLogsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetOraLogsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetPGLogs">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetPGLogs"/>
+            <wsdl:input name="GetPGLogsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetPGLogsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+	<wsdl:operation name="GetMySQLConfigFile">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetMySQLConfigFile"/>
+            <wsdl:input name="GetMySQLConfigFileRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetMySQLConfigFileResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetPGConfigFile">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetPGConfigFile"/>
+            <wsdl:input name="GetPGConfigFileRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetPGConfigFileResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ServeFile">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#ServeFile"/>
+            <wsdl:input name="ServeFileRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="ServeFileResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+	<wsdl:operation name="GetParam">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetParam"/>
+            <wsdl:input name="GetParamRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetParamResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetHost">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#GetHost"/>
+            <wsdl:input name="GetHostRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="GetHostResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="DBODWebService">
+        <wsdl:port binding="impl:DBODWebServiceSoapBinding" name="DBODWebServicePort">
+            <wsdlsoap:address location="https://syscontrol.cern.ch/dod/webservices/dod.cgi" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

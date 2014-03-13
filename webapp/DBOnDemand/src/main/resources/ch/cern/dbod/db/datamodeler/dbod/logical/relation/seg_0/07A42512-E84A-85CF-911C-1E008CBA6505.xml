@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="dod_jobs_definitions" id="07A42512-E84A-85CF-911C-1E008CBA6505" directorySegmentName="seg_0">
+<createdBy>rgaspar</createdBy>
+<createdTime>2011-08-28 12:56:00 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="412D1B6F-4F6D-4D47-C541-BCA4F88B550B" value="false"/>
+</engineerTo>
+<identifying>true</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>84C76706-F93A-0181-576B-5DEE04B4E68E</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>6BD31477-31FB-EC7D-0DFE-BFC3D581868E</targetEntity>
+<transferable>true</transferable>
+</Relation>
