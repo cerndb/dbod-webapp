@@ -132,6 +132,22 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE PROCEDURE insert_backup_logs_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+                                                        type_param IN VARCHAR2, requester_param IN VARCHAR2)
+IS
+	now DATE;
+BEGIN
+	SELECT sysdate
+		INTO now
+		FROM dual;
+	INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)
+		VALUES (username_param, db_name_param, 'BACKUP_LOGS_TO_TAPE', type_param, now, requester_param, 2, 'PENDING');
+        UPDATE dbondemand.dod_instances
+                SET state = 'JOB_PENDING'
+                WHERE username = username_param AND db_name = db_name_param;
+END;
+/
+
 -- Creates a new scheduled job in the database
 CREATE OR REPLACE PROCEDURE create_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
 							start_date_param IN DATE)
@@ -147,6 +163,7 @@ BEGIN
 		FROM dual;
        INSERT INTO dbondemand.dod_jobs (username, db_name, command_name, type, creation_date, completion_date, requester, admin_action, state, log)
 		VALUES (username, db_name, 'ENABLE_BACKUPS_TO_TAPE', 'ALL', now, now, requester, admin_action, 'FINISHED_OK', 'Backups to tape enabled starting on ' || TO_CHAR(start_date_param,'DD/MM/YYYY HH24:MI:SS'));
+
 	-- Initialise name and action
 	name := db_name || '_BACKUP_TO_TAPE';
 	action := 'BEGIN
@@ -186,6 +203,47 @@ BEGIN
 	   	repeat_interval      => 'FREQ=WEEKLY;INTERVAL=1',
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup to tape job for DB On Demand');
+
+        -- Initialise name and action for logs
+	name := db_name || '_BACKUP_LOGS_TO_TAPE';
+	action := 'BEGIN
+			dbondemand.insert_backup_logs_to_tape_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', ' 
+			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
+
+	-- Query for any job with the same name running at the moment
+        job_count := 0;
+        BEGIN
+            SELECT COUNT(*)
+		INTO job_count
+		FROM user_scheduler_jobs
+		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
+
+	-- Quote name to create object
+	name := '"' || db_name || '_BACKUP_LOGS_TO_TAPE"';
+
+	-- If there is previous job, drop it
+	IF job_count > 0
+    	THEN
+        	DBMS_SCHEDULER.DROP_JOB (
+			job_name   =>  name,
+			force      =>  TRUE);
+    	END IF;
+
+	-- Creates the scheduled job (every 12 hours 6 hours after the start date)
+	DBMS_SCHEDULER.CREATE_JOB (
+		job_name             => name,
+	  	job_type             => 'PLSQL_BLOCK',
+	   	job_action           => action,
+	  	start_date           => start_date_param + 6/24,
+	   	repeat_interval      => 'FREQ=HOURLY;INTERVAL=12',
+	   	enabled              =>  TRUE,
+	   	comments             => 'Scheduled backup logs to tape job for DB On Demand');
 END;
 /
 
@@ -221,6 +279,34 @@ BEGIN
 
 	-- Quote name to create object
 	name := '"' || db_name || '_BACKUP_TO_TAPE"';
+
+	-- If there is previous job, drop it
+	IF job_count > 0
+    	THEN
+        	DBMS_SCHEDULER.DROP_JOB (
+			job_name   =>  name,
+			force      =>  TRUE);
+    	END IF;
+
+        -- Initialise name for logs backup
+	name := db_name || '_BACKUP_LOGS_TO_TAPE';
+
+	-- Query for any job with the same name running at the moment
+        job_count := 0;
+        BEGIN
+            SELECT COUNT(*)
+		INTO job_count
+		FROM user_scheduler_jobs
+		WHERE job_name = name;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                job_count := 0;
+            WHEN OTHERS THEN
+                RAISE;
+        END;
+
+	-- Quote name to create object
+	name := '"' || db_name || '_BACKUP_LOGS_TO_TAPE"';
 
 	-- If there is previous job, drop it
 	IF job_count > 0
@@ -290,6 +376,8 @@ IS
     backup_name VARCHAR2 (512);
     tape_count INTEGER;
     tape_name VARCHAR2 (512);
+    tape_logs_count INTEGER;
+    tape_logs_name VARCHAR2 (512);
     cleanup_count INTEGER;
     cleanup_name VARCHAR2 (512);
     instance VARCHAR2(128);
@@ -355,6 +443,33 @@ BEGIN
                     force      =>  TRUE);
     END IF;
 
+     -- Initialise logs to tape name
+    tape_logs_name := instance || '_BACKUP_LOGS_TO_TAPE';
+
+    -- Query for any scheduled log backups to tape with the same name running at the moment
+    BEGIN
+        SELECT COUNT(*)
+            INTO tape_logs_count
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_logs_name;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_logs_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
+
+    -- If there is a scheduled log backup to tape, drop it
+    IF tape_logs_count > 0
+    THEN
+            -- Quote tape name to create object
+            tape_logs_name := '"' || instance || '_BACKUP_LOGS_TO_TAPE"';
+
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_logs_name,
+                    force      =>  TRUE);
+    END IF;
+
     -- Initialise cleanup name
     cleanup_name := instance || '_CLEANUP';
 
@@ -416,6 +531,11 @@ IS
     tape_action VARCHAR2 (1024);
     tape_interval VARCHAR2 (64);
     tape_start_date DATE;
+    tape_logs_count INTEGER;
+    tape_logs_name VARCHAR2 (512);
+    tape_logs_action VARCHAR2 (1024);
+    tape_logs_interval VARCHAR2 (64);
+    tape_logs_start_date DATE;
     cleanup_count INTEGER;
     cleanup_name VARCHAR2 (512);
     cleanup_action VARCHAR2 (1024);
@@ -504,7 +624,47 @@ BEGIN
                     start_date           => tape_start_date,
                     repeat_interval      => tape_interval,
                     enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
+                    comments             => 'Scheduled backup to tape job for DB On Demand');
+    END IF;
+
+    -- Drop and create new log backups to tape in case there were any
+    -- Initialise name
+    tape_logs_name := instance || '_BACKUP_LOGS_TO_TAPE';
+
+    -- Query for any schedule log backups with the same name running at the moment
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO tape_logs_count, tape_logs_action, tape_logs_start_date, tape_logs_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_logs_name
+            GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_logs_count := 0;
+	WHEN OTHERS THEN
+            RAISE;
+    END;
+            
+    -- If there is a scheduled backups to tape
+    IF tape_logs_count > 0
+    THEN
+            -- Quote name for object
+            tape_logs_name := '"' || instance || '_BACKUP_LOGS_TO_TAPE"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_logs_name,
+                    force      =>  TRUE);
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => tape_logs_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(tape_logs_action, '''' || old_user || '''', '''' || new_user || ''''),
+                    start_date           => tape_logs_start_date,
+                    repeat_interval      => tape_logs_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup logs to tape job for DB On Demand');
     END IF;
 
     -- Drop and create new cleanups in case there were any
@@ -831,6 +991,11 @@ IS
     tape_action VARCHAR2 (1024);
     tape_interval VARCHAR2 (64);
     tape_start_date DATE;
+    tape_logs_count INTEGER;
+    tape_logs_name VARCHAR2 (512);
+    tape_logs_action VARCHAR2 (1024);
+    tape_logs_interval VARCHAR2 (64);
+    tape_logs_start_date DATE;
     cleanup_count INTEGER;
     cleanup_name VARCHAR2 (512);
     cleanup_action VARCHAR2 (1024);
@@ -925,7 +1090,50 @@ BEGIN
                     start_date           => tape_start_date,
                     repeat_interval      => tape_interval,
                     enabled              =>  TRUE,
-                    comments             => 'Scheduled backup job for DB On Demand');
+                    comments             => 'Scheduled backup to tape job for DB On Demand');
+    END IF;
+
+    -- Drop and create new backups to tape in case there were any
+    -- Initialise name
+    tape_logs_name := old_instance || '_BACKUP_LOGS_TO_TAPE';
+
+    -- Query for any schedule backups with the same name running at the moment
+    BEGIN
+        SELECT COUNT(*), job_action, start_date, repeat_interval
+            INTO tape_logs_count, tape_logs_action, tape_logs_start_date, tape_logs_interval
+            FROM user_scheduler_jobs
+            WHERE job_name = tape_logs_name
+            GROUP BY job_action, start_date, repeat_interval;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            tape_logs_count := 0;
+        WHEN OTHERS THEN
+            RAISE;
+    END;
+            
+    -- If there is a scheduled backups to tape
+    IF tape_logs_count > 0
+    THEN
+            -- Quote name for object
+            tape_logs_name := '"' || old_instance || '_BACKUP_LOGS_TO_TAPE"';
+
+            -- Drop previous job
+            DBMS_SCHEDULER.DROP_JOB (
+                    job_name   =>  tape_logs_name,
+                    force      =>  TRUE);
+
+            -- Quote name for object
+            tape_logs_name := '"' || new_instance || '_BACKUP_LOGS_TO_TAPE"';
+            
+            -- Create the scheduled job
+            DBMS_SCHEDULER.CREATE_JOB (
+                    job_name             => tape_logs_name,
+                    job_type             => 'PLSQL_BLOCK',
+                    job_action           => REPLACE(tape_logs_action, '''' || old_instance || '''', '''' || new_instance || ''''),
+                    start_date           => tape_logs_start_date,
+                    repeat_interval      => tape_logs_interval,
+                    enabled              =>  TRUE,
+                    comments             => 'Scheduled backup logs to tape job for DB On Demand');
     END IF;
 
     -- Drop and create new cleanups in case there were any

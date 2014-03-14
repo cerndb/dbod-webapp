@@ -134,6 +134,7 @@ public class CommonConstants {
     public static final String JOB_UPLOAD = "UPLOAD_CONFIG";
     public static final String JOB_BACKUP = "BACKUP";
     public static final String JOB_BACKUP_TO_TAPE = "BACKUP_TO_TAPE";
+    public static final String JOB_BACKUP_LOGS_TO_TAPE = "BACKUP_LOGS_TO_TAPE";
     public static final String JOB_ENABLE_BACKUPS_TO_TAPE = "ENABLE_BACKUPS_TO_TAPE";
     public static final String JOB_DISABLE_BACKUPS_TO_TAPE = "DISABLE_BACKUPS_TO_TAPE";
     public static final String JOB_DISABLE_BACKUPS = "DISABLE_AUTOMATIC_BACKUPS";

@@ -5,6 +5,7 @@ INSERT INTO dod_command_definition VALUES ('ENABLE_AUTOMATIC_BACKUPS', 'ALL', NU
 INSERT INTO dod_command_definition VALUES ('ENABLE_BACKUPS_TO_TAPE', 'ALL', NULL);
 INSERT INTO dod_command_definition VALUES ('BACKUP', 'MYSQL', '-debug');
 INSERT INTO dod_command_definition VALUES ('BACKUP_TO_TAPE', 'MYSQL', '-debug');
+INSERT INTO dod_command_definition VALUES ('BACKUP_LOGS_TO_TAPE', 'MYSQL', '-debug');
 INSERT INTO dod_command_definition VALUES ('RESTORE', 'MYSQL', '-r :SNAPSHOT= -t #TIMESTAMP= -debug');
 INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'MYSQL', NULL);
 INSERT INTO dod_command_definition VALUES ('STARTUP', 'MYSQL', NULL);
