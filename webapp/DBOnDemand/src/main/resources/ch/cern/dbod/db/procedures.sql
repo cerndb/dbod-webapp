@@ -235,13 +235,13 @@ BEGIN
 			force      =>  TRUE);
     	END IF;
 
-	-- Creates the scheduled job (every 12 hours 6 hours after the start date)
+	-- Creates the scheduled job (every 24 hours 12 hours after the start date)
 	DBMS_SCHEDULER.CREATE_JOB (
 		job_name             => name,
 	  	job_type             => 'PLSQL_BLOCK',
 	   	job_action           => action,
-	  	start_date           => start_date_param + 6/24,
-	   	repeat_interval      => 'FREQ=HOURLY;INTERVAL=12',
+	  	start_date           => start_date_param + 12/24,
+	   	repeat_interval      => 'FREQ=DAILY;INTERVAL=1',
 	   	enabled              =>  TRUE,
 	   	comments             => 'Scheduled backup logs to tape job for DB On Demand');
 END;
