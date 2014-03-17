@@ -20,6 +20,7 @@ import ch.cern.dbod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dbod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.JobHelper;
+import ch.cern.dbod.util.MonitoringHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,6 +111,11 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     @Override
     public void afterCompose() {
+        try {
+            MonitoringHelper mon = new MonitoringHelper();
+        } catch (Exception ex) {
+            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //Get filters for instances from session
         String filterDbName = (String) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME);
         if (filterDbName != null && !filterDbName.isEmpty()) {
