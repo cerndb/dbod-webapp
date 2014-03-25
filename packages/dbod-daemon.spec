@@ -55,7 +55,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /usr/lib/perl5/site_perl/5.8.8/DBOD.pm
-/usr/lib/perl5/site_perl/5.8.8/DBOD/Templates.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Config.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/MySQL.pm
 /usr/lib/perl5/site_perl/5.8.8/DBOD/Database.pm
@@ -85,14 +84,11 @@ rm -rf $RPM_BUILD_ROOT
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon.conf
 %config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/dbod_daemon_logger.conf
 %config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/dbod_daemon_logger.conf
-%config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/MY_CNF
-%config /usr/lib/perl5/site_perl/5.8.8/auto/dbod_daemon/templates/PG
-%config /usr/lib64/perl5/site_perl/5.8.8/x86_64-linux-thread-multi/auto/dbod_daemon/templates
 
 %changelog
-* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch>
+* Thu Feb 27 2014 Ignacio Coterillo <icoteril@cern.ch> 2.1 
+- Added Oracle 12c Support, Removed configuration templates
+* Wed Sep 18 2013 Ignacio Coterillo <icoteril@cern.ch> 2.0
 - Added Middleware, PostgreSQL support and dbod_daemon_monitor
-* Mon Aug 26 2013 Ignacio Coterillo <icoteril@cern.ch>
-- Added PostgreSQL.pm to file list
-* Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch>
+* Mon Apr 15 2013 Ignacio Coterillo <icoteril@cern.ch> 1.6
 - Initial packaging

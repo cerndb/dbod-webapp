@@ -8,10 +8,10 @@ use DBOD::Config qw( $config );
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger, $job_status_table, $instance_status_table);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw( );
-@EXPORT_OK   = qw( $job_status_table $instance_status_table );
+@EXPORT_OK   = qw( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
@@ -58,6 +58,16 @@ sub copy_to_entity{
     return $?;
 }
 
+sub write_file {
+    my ($clob) = shift;    
+    my ($fh, $filename) = File::Temp::tempfile( DIR => '/tmp' );
+    $logger->debug( "Created temporary file $filename" );
+    chmod(0644, $filename); # Remote user doing the reading will be sysctl
+    open(FP, ">$filename") or $logger->error_die( "Error opening file\n $!" );
+    print FP $clob;
+    close(FP);
+    return $filename;
+}
 
 sub result_code{
     my $log = shift;
@@ -77,6 +87,28 @@ sub result_code{
         # If the command doesn't return any result code, we take it as bad
         return 1;
     }
+}
+
+sub test_instance{
+    my ($entity, $type, $log) = @_;
+    $logger->debug( "Fetching state of entity $entity" );
+    my $cmd = "/etc/init.d/syscontrol -i $entity $type\_ping -debug";
+    my $res = `$cmd`;
+    if (defined $log) {
+        $logger->debug( "\n$res" );
+    }
+    return $res;
+    }
+
+sub state_checker{
+    my ($job, $code, $log) = @_;
+    my $entity = get_entity($job);
+    my $output = test_instance($entity, $job->{'TYPE'}, $log);
+    my $retcode = result_code($output);
+    my $job_state = $job_status_table->{$code};
+    my $instance_state = $instance_status_table->{$retcode};
+    $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
+    return ($job_state, $instance_state);
 }
 
 1;

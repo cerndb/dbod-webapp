@@ -1,20 +1,5 @@
-DBOD version 1.2
-
-Freezing version for upgrade of production system.
-
-- Added support for ORACLE instances
-- 
-
-- TODO:
-    * Complete complex workflows for Shared Instances and Replication pairs
-    * Implement upgrade functionaliy for ORACLE type
-    * Fix the bug that causes a ping to
-        a) be lockable
-        b) hold the main loop locked
-
-
-DBOD version 0.01
-================
+DBOD Daemon version 2.1
+=======================
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -27,7 +12,7 @@ archive can use it get an idea of the modules uses. It is usually a
 good idea to provide version information here so that people can
 decide whether fixes for the module are worth downloading.
 
-INSTALLATION
+INSTALLATION (for development purposes)
 
 To install this module type the following:
 
@@ -38,15 +23,22 @@ To install this module type the following:
 
 DEPENDENCIES
 
-This module requires these other modules and libraries:
+This module requires these other modules and libraries (as extracted from
+the Makefile.PL file:
 
-  blah blah blah
+requires      'Log::Log4perl' => 0;
+requires      'YAML::Syck' => 0;
+requires      'File::ShareDir' => 0;
+requires      'DBI' => 0;
+requires      'DBD::Oracle' => 0;
+requires      'Proc::Daemon' => 0.14;
+requires      'Net::LDAP' => 0;
 
 COPYRIGHT AND LICENCE
 
 Put the correct copyright and licence information here.
 
-Copyright (C) 2011 by A. U. Thor
+Copyright (C) 2011 by CERN
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,

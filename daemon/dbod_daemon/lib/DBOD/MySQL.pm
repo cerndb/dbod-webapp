@@ -8,12 +8,12 @@ use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
 use DBOD::Database;
-use DBOD::All qw( $job_status_table $instance_status_table );
+use DBOD::All;
 use DBOD::LDAP;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
 @EXPORT      = qw();
 @EXPORT_OK   = qw();
@@ -25,15 +25,6 @@ BEGIN{
     $logger = Log::Log4perl::get_logger( 'DBOD.MySQL' );
     $logger->debug( "Logger created" );
 } # BEGIN BLOCK
-
-sub test_instance{
-    my $entity = shift;
-    $logger->debug( "Fetching state of entity $entity" );
-    my $cmd = "/etc/init.d/syscontrol -i $entity MYSQL_ping -debug";
-    my $res = `$cmd`;
-    $logger->debug( "\n$res" );
-    return $res;
-    }
 
 sub get_variable{
     my ($entity, $varname) = @_;
@@ -50,17 +41,6 @@ sub get_version{
     my @buf = split(/-/, $cad); # We have to remove the -log at the end of the version string
     return $buf[0];
     }
-
-sub state_checker{
-    my ($job, $code) = @_;
-    my $entity = DBOD::All::get_entity($job);
-    my $output = test_instance($entity);
-    my $retcode = DBOD::All::result_code($output);
-    my $job_state = $job_status_table->{$code};
-    my $instance_state = $instance_status_table->{$retcode};
-    $logger->debug( "Resulting states are: ($job_state, $instance_state)" );
-    return ($job_state, $instance_state);
-}
 
 sub upgrade_callback{
     my ($job, $dbh) = @_;

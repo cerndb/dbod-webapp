@@ -9,16 +9,15 @@ use DBD::Oracle qw(:ora_types);
 use POSIX qw(strftime);
 
 use DBOD::Config qw( $config );
-use DBOD::Templates;
 
 our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS, $logger,
     $DSN, $DBTAG, $DATEFORMAT, $user, $password, $JOB_MAX_DURATION,
     $JOB_MAX_PENDING);
 
-$VERSION     = 1.7;
+$VERSION     = 2.1;
 @ISA         = qw(Exporter);
-@EXPORT      = qw(getJobList updateJobState updateJobCompletionDate updateJobLog finishJob getDBH);
-@EXPORT_OK   = qw(getDBH);
+@EXPORT      = qw( );
+@EXPORT_OK   = qw( );
 %EXPORT_TAGS = ( );
 
 # Load general configuration
@@ -285,13 +284,13 @@ sub updateJob{
 }
 
 sub finishJob{
-    my ($job, $resultCode, $log, $dbh, $params) = @_;
+    my ($job, $resultCode, $log, $dbh, $no_callback) = @_;
     eval{
         my $state_checker = DBOD::get_state_checker($job);
         if (!defined $state_checker){
             $logger->error( "Not state checker defined for this DB type" );
         }
-        my ($job_state, $instance_state) = $state_checker->($job, $resultCode);
+        my ($job_state, $instance_state) = $state_checker->($job, $resultCode, 1);
         $logger->debug( "Updating job Completion Date" );
         updateJob($job, 'COMPLETION_DATE', 'sysdate', $dbh);
         $logger->debug( "Updating job LOG" );
@@ -299,11 +298,13 @@ sub finishJob{
         $logger->debug( "Updating job STATE" );
         updateJob($job, 'STATE', $job_state, $dbh);
         $logger->debug( "Updating Instance State" );
-        updateInstance($job, 'STATE', $instance_state, $dbh); 
-        my $callback = DBOD::get_callback($job);
-        if (defined $callback){
-            $logger->debug( "Executing callback" );
-            $callback->($job, $dbh);
+        updateInstance($job, 'STATE', $instance_state, $dbh);
+        unless (defined $no_callback) {
+            my $callback = DBOD::get_callback($job);
+            if (defined $callback) {
+                $logger->debug( "Executing callback" );
+                $callback->($job, $dbh);
+            }
         }
         1;
     } or do {

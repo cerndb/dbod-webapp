@@ -12,9 +12,9 @@ use POSIX ':sys_wait_h';
 our ($logger, $lock_file); 
 
 INIT{
-    $logger = Log::Log4perl::get_logger( 'DBOD.StateChecker' );
-    $logger->debug( 'Logger created' );
-    $lock_file = $DBOD::config->{ 'SC_LOCK_FILE'};
+    $logger = Log::Log4perl::get_logger('DBOD.StateChecker');
+    $logger->info('Logger created');
+    $lock_file = $DBOD::config->{'SC_LOCK_FILE'};
 }
 
 sub usage() {
@@ -24,15 +24,15 @@ sub usage() {
 
 sub worker {
     my ($instance, $pdbh) = @_;
-    my $logger = Log::Log4perl::get_logger( "DBOD.worker" );
+    my $logger = Log::Log4perl::get_logger('DBOD.worker_sc');
 
     my $worker_dbh;
     if (defined($pdbh)){
         # Cloning parent process DB handler
-        $logger->debug("Cloning parent DB handler");
+        $logger->info('Cloning parent DB handler');
         $worker_dbh = $pdbh->clone();
-        $logger->debug( "Setting date format: $DBOD::Database::DATEFORMAT" );
-        $worker_dbh->do( "alter session set NLS_DATE_FORMAT='$DBOD::Database::DATEFORMAT'" );
+        $logger->debug("Setting date format: $DBOD::Database::DATEFORMAT");
+        $worker_dbh->do("alter session set NLS_DATE_FORMAT='$DBOD::Database::DATEFORMAT'");
         $pdbh->{InactiveDestroy} = 1;
         undef $pdbh;
     }
@@ -41,11 +41,11 @@ sub worker {
         $worker_dbh = DBOD::Database::getDBH();
     }
 
-    $logger->debug( 'Checking ' . $instance->{ 'DB_NAME' } );
+    $logger->info('Checking ' . $instance->{'DB_NAME'});
     
     my $state_checker = DBOD::get_state_checker($instance);
     if (!defined $state_checker){
-        $logger->error( 'Not state checker defined for this DB type' );
+        $logger->error('Not state checker defined for this DB type');
         exit -1;
     }
 
@@ -54,28 +54,28 @@ sub worker {
         ($instance->{'STATE'} ne 'MAINTENANCE')) {
         my ($buf, $instance_state) = $state_checker->($instance, 0);
         if (($instance->{'STATE'} ne $instance_state)) {
-            $logger->debug( 'Updating STATE to ' . $instance_state . ' for ' . $instance->{ 'DB_NAME' });
+            $logger->debug('Updating STATE to ' . $instance_state . ' for ' . $instance->{ 'DB_NAME' });
             DBOD::Database::updateInstance($instance, 'STATE', $instance_state, $worker_dbh);
         }
     }
     else{
-        $logger->debug( "State untouched for " . $instance->{'DB_NAME'} );
+        $logger->info("State untouched for " . $instance->{'DB_NAME'});
     }
    
     $worker_dbh->disconnect();
     exit 0;
 }
 
-sub Main{
+sub Main {
 
     usage() if (@ARGV != 0);
 
     unless (-e $lock_file){
 
-        $logger->debug( "Creating lock file: $lock_file" );
+        $logger->info("Creating lock file: $lock_file");
         open(LOCKF, ">$lock_file");
         close(LOCKF);
-        $logger->debug( 'Opening DB connection' );
+        $logger->info('Opening DB connection');
         my $dbh = DBOD::Database::getDBH();
         my $rc;
 
@@ -87,26 +87,26 @@ sub Main{
                 if ($#tasks < 32){
                     my $worker_pid = fork();
                     if ($worker_pid){
-                        $logger->debug( "Adding worker ($worker_pid) to pool" );
+                        $logger->info("Adding worker ($worker_pid) to pool");
                         my $task = {};
                         $task->{'pid'} = $worker_pid;
                         $task->{'instance'} = $instance;
                         push(@tasks, $task);
-                        $logger->debug( 'PID:' . $worker_pid . ' Instance ' . $instance->{'DB_NAME'} );
+                        $logger->info('PID:' . $worker_pid . ' Instance ' . $instance->{'DB_NAME'});
                     }                                                                                                 
                     else{
-                        $logger->debug( 'Checking state for instance: ' . $instance->{'DB_NAME'} );
+                        $logger->info('Checking state for instance: ' . $instance->{'DB_NAME'});
                         worker($instance, $dbh);
                         exit 0;
                     }
                 }
                 else { # Waiting in case the workers pool fills
-                    $logger->debug( "Waiting for $#tasks tasks  completion" );
+                    $logger->info("Waiting for $#tasks tasks  completion");
                     foreach my $task (@tasks) {
                         my $tmp = waitpid($task->{'pid'}, 0);
-                        $logger->debug( "Done with worker : $tmp" );
+                        $logger->info( "Done with worker : $tmp" );
                     }
-                    $logger->debug( 'Removing finished workers from pool' );
+                    $logger->info('Removing finished workers from pool');
                     @tasks = grep(waitpid($_->{'pid'}, 0)>=0, @tasks);
                 }
  
@@ -115,16 +115,16 @@ sub Main{
             # Waiting for workers to finish 
             #  - when the number of processes is less than MAX_PARALLEL_PROCS
             
-            $logger->debug( "Waiting for $#tasks tasks  completion" );
+            $logger->info("Waiting for $#tasks tasks  completion");
             foreach my $task (@tasks) {
                 my $tmp = waitpid($task->{'pid'}, 0);
-                $logger->debug( "Done with worker : $tmp" );
+                $logger->info("Done with worker : $tmp");
             }
 
             # Everthing completed successfully
             $rc = 0;
 
-            $logger->debug( 'Disconnecting from DB' );
+            $logger->info( 'Disconnecting from DB' );
             $dbh->disconnect();
         }
         else{
@@ -132,13 +132,13 @@ sub Main{
             $rc = -1;
         }
         
-        $logger->debug( 'Deleting lock file' );
+        $logger->info( 'Deleting lock file' );
         unlink $lock_file ;
 
         exit $rc;
     }
     else{
-        $logger->debug("Another instance of dbod_state_checker is running.\n Skipping execution");
+        $logger->info("Another instance of dbod_state_checker is running.\n Skipping execution");
     }
 
 }
@@ -181,7 +181,7 @@ Expected files are:
 
 =head1 AUTHOR
 
-Ignacio Coterillo <ignacio.coterillo[at]cern[dot]ch> 
+Ignacio Coterillo <ignacio.coterillo@cern.ch> 
 
 IT-DB-DBB
 
