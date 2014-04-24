@@ -55,7 +55,7 @@
     </menubar>
     
     <div id="announcementDiv" width="100%" align="center" visible="false">
-        <groupbox width="1185px" style="margin-top: 30px" contentStyle="overflow: auto" mold="3d">
+        <groupbox width="1200px" style="margin-top: 30px" contentStyle="overflow: auto" mold="3d">
             <caption label=" ">
                 <label value="${c:l('announcementTitle')}" sclass="title" style="float:left;"/>
             </caption>

@@ -44,3 +44,39 @@ function drawGraph (values, divId) {
             document.getElementById(divId).className = document.getElementById(divId).className.replace( /(?:^|\s)preloader(?!\S)/ , '' );
         });
 }
+
+function drawAdminGraph (values, divId) {
+    var annotatedtimeline = new google.visualization.AnnotatedTimeLine(document.getElementById(divId));
+    //If we have data
+    if (values != null) {
+        var data = new google.visualization.DataTable(values);
+        annotatedtimeline.draw(data, {
+            allValuesSuffix: '%',
+            displayExactValues: false, // Do not truncate values (i.e. using K suffix)
+            displayRangeSelector: true, // Do not sow the range selector
+            displayZoomButtons: true, // DO not display the zoom buttons
+            legendPosition: 'newRow', // Can be sameRow
+            thickness: 2,
+            wmode: 'transparent'
+        });
+    }
+    else
+    {
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Date');
+        data.addColumn('number', '');
+        annotatedtimeline.draw(data, {
+            colors: ['green'], // The colors to be used
+            displayExactValues: false, // Do not truncate values (i.e. using K suffix)
+            displayRangeSelector: true, // Do not sow the range selector
+            displayZoomButtons: true, // DO not display the zoom buttons
+            legendPosition: 'newRow', // Can be sameRow
+            thickness: 1, // Make the lines thicker
+            wmode: 'transparent'
+        });
+    }
+    google.visualization.events.addListener(annotatedtimeline, 'ready',
+        function (event) {
+            document.getElementById(divId).className = document.getElementById(divId).className.replace( /(?:^|\s)preloader(?!\S)/ , '' );
+        });
+}

@@ -28,6 +28,10 @@
         <bsh.version>2.0b4</bsh.version>
         <commons-fileupload.version>1.2.2</commons-fileupload.version>
         <commons-io.version>2.1</commons-io.version>
+        
+        <jest.version>0.1.0</jest.version>
+        <log4j.version>1.6.1</log4j.version>
+        <google-visualization.version>1.1.1</google-visualization.version>
     </properties>
     
     <repositories>
@@ -35,6 +39,11 @@
             <id>ZK CE</id>
             <name>ZK CE Repository</name>
             <url>http://mavensync.zkoss.org/maven2</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <name>Sonatype Groups</name>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -89,13 +98,18 @@
         <dependency>
             <groupId>io.searchbox</groupId>
             <artifactId>jest</artifactId>
-            <version>0.1.0</version>
+            <version>${jest.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.visualization</groupId>
+            <artifactId>visualization-datasource</artifactId>
+            <version>${google-visualization.version}</version>
         </dependency>
     </dependencies>
 

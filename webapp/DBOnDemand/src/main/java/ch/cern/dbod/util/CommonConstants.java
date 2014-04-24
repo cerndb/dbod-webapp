@@ -45,6 +45,7 @@ public class CommonConstants {
     public static final String WS_USER_PSWD = "wsUserPswd";
     public static final String WS_USER = "wsUser";
     public static final String WS_PSWD = "wsPswd";
+    public static final String KEYSTORE_PSWD = "keyStorePswd";
     public static final String ADMIN_E_GROUP = "dbondemand-admin";
     public static final String LOCALE_COOKIE = "dbondemand.locale";
     public static final String ADFS_FULLNAME = "ADFS_FULLNAME";
@@ -115,6 +116,10 @@ public class CommonConstants {
     
     public static final String OEM_EGROUP = "oracle-em-test-users";
     public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
+    
+    public static final String IT_ES_URL = "https://dashboards.cern.ch/public";
+    
+    public static final String KEYSTORE_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/dodws.p12";
 
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
