@@ -137,10 +137,16 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
                 Cookie cookie = ssoHelper.getSSOCookie(itESURL.getHost());
                 
                 //Generate memory graph
-                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie, "memoryStats", "mem_in_use", 3) + ", 'memoryGraphDiv');");
+                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie,
+                                        CommonConstants.IT_ES_MEMORY_GROUP,
+                                        CommonConstants.IT_ES_MEMORY_STAT,
+                                        CommonConstants.MONITORING_ADMIN_DAYS) + ", 'memoryGraphDiv');");
                 
                 //Generate CPU graph
-                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie, "CPUutil", "PercUser", 3) + ", 'cpuGraphDiv');");
+                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie,
+                                        CommonConstants.IT_ES_CPU_GROUP,
+                                        CommonConstants.IT_ES_CPU_STAT,
+                                        CommonConstants.MONITORING_ADMIN_DAYS) + ", 'cpuGraphDiv');");
             } catch (IOException ex) {
                 Logger.getLogger(AdminMonitoringController.class.getName()).log(Level.SEVERE, "COULD NOT OBTAIN SSO COOKIE", ex);
             }

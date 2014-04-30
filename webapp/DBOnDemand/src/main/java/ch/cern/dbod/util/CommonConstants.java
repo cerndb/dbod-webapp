@@ -111,13 +111,19 @@ public class CommonConstants {
                                                                 new Metric("n_dead_tup","Estimated number of dead rows","P",null)};
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
-    public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
-    public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
+    public static final int MONITORING_ADMIN_DAYS = 3;
     
+    public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
+    
+    public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
     public static final String OEM_EGROUP = "oracle-em-test-users";
     public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
     
     public static final String IT_ES_URL = "https://dashboards.cern.ch/public";
+    public static final String IT_ES_MEMORY_GROUP = "memoryStats";
+    public static final String IT_ES_MEMORY_STAT = "mem_in_use";
+    public static final String IT_ES_CPU_GROUP = "CPUutil";
+    public static final String IT_ES_CPU_STAT = "PercUser";
     
     public static final String KEYSTORE_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/dodws.p12";
 
