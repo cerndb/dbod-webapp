@@ -435,7 +435,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //If it is an oracle instance, send to OEM
                 if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORA)) {
                     monitorBtn.setTarget("_blank");
-                    monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + "_" + instance.getDbName().toString().toUpperCase());
+                    monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
                 }
                 else {
                     monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
