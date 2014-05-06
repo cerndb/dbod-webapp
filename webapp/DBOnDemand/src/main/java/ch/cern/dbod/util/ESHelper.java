@@ -40,7 +40,7 @@ public class ESHelper {
      */
     public ESHelper(String restAddress) {        
         // Configuration (timeout is increased to allow big queries)
-        HttpClientConfig clientConfig = new HttpClientConfig.Builder(restAddress).connTimeout(10000).multiThreaded(true).build();
+        HttpClientConfig clientConfig = new HttpClientConfig.Builder(restAddress).connTimeout(30000).multiThreaded(true).build();
 
         // Construct a new Jest client according to configuration via factory
         this.factory = new JestClientFactory();
@@ -207,6 +207,6 @@ public class ESHelper {
             client.shutdownClient();
         }
         
-        return "";
+        return null;
     }    
 }
