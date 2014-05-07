@@ -15,6 +15,7 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.A;
 import org.zkoss.zul.Caption;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Datebox;
@@ -242,8 +243,8 @@ public class BackupController extends Window {
         backupToTape = new Checkbox();
         backupToTape.setLabel(Labels.getLabel(CommonConstants.LABEL_BACKUP_TO_TAPE));
         backupToTape.setChecked(prevBackupToTapeEnabled);
-        //Limit tape backups to production databases
-        if (!instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL) && !prevBackupToTapeEnabled) {
+        //Limit tape backups to admins (disable backups enabled for everyone)
+        if (!jobHelper.isAdminMode() && !prevBackupToTapeEnabled) {
             backupToTape.setDisabled(true);
         }
         tapeBox.appendChild(backupToTape);
@@ -269,9 +270,18 @@ public class BackupController extends Window {
         
         //Create warning for backups to tape
         if (!prevBackupToTapeEnabled) {
+            Hbox warningBox = new Hbox();
+            warningBox.setWidth("100%");
             Label backupToTapeWarning = new Label(Labels.getLabel(CommonConstants.LABEL_BACKUP_TO_TAPE_WARNING));
-            backupToTapeWarning.setStyle("margin-left:20px;color:red;font-size:xx-small");
-            configContent.appendChild(backupToTapeWarning);
+            backupToTapeWarning.setStyle("margin-left:25px;color:red;font-size:12px");
+            warningBox.appendChild(backupToTapeWarning);
+            A backupToTapeLink = new A();
+            backupToTapeLink.setHref("https://cern.service-now.com/service-portal/report-ticket.do?name=request&amp;se=database-on-demand");
+            backupToTapeLink.setLabel(Labels.getLabel(CommonConstants.LABEL_BACKUP_TO_TAPE_LINK));
+            backupToTapeLink.setTarget("_blank");
+            backupToTapeLink.setStyle("font-size:12px");
+            warningBox.appendChild(backupToTapeLink);
+            configContent.appendChild(warningBox);
         }
         
         //Apply changes button

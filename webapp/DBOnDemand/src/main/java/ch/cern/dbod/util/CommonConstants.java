@@ -206,6 +206,7 @@ public class CommonConstants {
     public static final String LABEL_BACKUP_CONFIG = "backupConfiguration";
     public static final String LABEL_BACKUP_TO_TAPE = "backupToTape";
     public static final String LABEL_BACKUP_TO_TAPE_WARNING = "backupToTapeWarning";
+    public static final String LABEL_BACKUP_TO_TAPE_LINK = "backupToTapeLink";
     public static final String LABEL_BACKUP_NOW_TITLE = "backupNowTitle";
     public static final String LABEL_BACKUP_NOW = "backupNow";
     public static final String LABEL_INTRODUCTION = "introduction";
