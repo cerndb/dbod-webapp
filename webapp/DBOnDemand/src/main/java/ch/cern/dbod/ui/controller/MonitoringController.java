@@ -69,9 +69,9 @@ public class MonitoringController extends Window {
         ParamsHelper paramsHelper = new ParamsHelper(wsUser, wsPswd);
 
         String hostname = paramsHelper.getHost(instance);
-        if (hostname == null)
-            hostname = "";
-        final String host = hostname.substring(0, hostname.indexOf("."));
+        if (hostname != null)
+            hostname = hostname.substring(0, hostname.indexOf("."));
+        final String host = hostname;
         if (host != null && !host.isEmpty())
            lemonURL = CommonConstants.LEMON_URL + host;
 
