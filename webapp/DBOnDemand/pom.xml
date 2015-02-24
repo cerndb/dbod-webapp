@@ -107,6 +107,18 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.6.4</version>
+        </dependency>
+
+        <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.5</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.visualization</groupId>
             <artifactId>visualization-datasource</artifactId>
             <version>${google-visualization.version}</version>
@@ -165,6 +177,33 @@
                     <show>private</show>
                     <nohelp>true</nohelp>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://localhost:8080/manager/text</url>
+                    <server>tomcat7-local</server>
+                    <path>/dbondemand</path>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>clean-undeploy</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>undeploy</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-deploy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
             </plugin>
         </plugins>
         
