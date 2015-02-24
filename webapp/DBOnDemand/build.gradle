@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'ear'
+apply plugin: 'war'
+
+version = '5.20'
+
+// Sets JDK 1.7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+// 1. Get dependencies from Maven local repository
+// 2. Get dependencies from Maven central repository
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'http://mavensync.zkoss.org/maven2' }
+    maven { url 'https://oss.sonatype.org/content/groups/public' }
+    }
+
+dependencies {
+    compile 'javax:javaee-web-api:7.0'
+    compile 'org.beanshell:bsh:2.0b4'
+    compile 'commons-fileupload:commons-fileupload:1.2.2'
+    compile 'commons-io:commons-io:2.1'
+    compile 'org.zkoss.zk:zhtml:6.5.4'
+    compile 'org.zkoss.zk:zk:6.5.4'
+    compile 'org.zkoss.zk:zkplus:6.5.4'
+    compile 'org.zkoss.zk:zul:6.5.4'
+    compile 'org.zkoss.zk:zkbind:6.5.4'
+    compile 'io.searchbox:jest:0.1.0'
+    compile 'org.slf4j:slf4j-log4j12:1.6.1'
+    compile 'org.slf4j:slf4j-simple:1.6.1'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'com.google.visualization:visualization-datasource:1.1.1'
+    compile 'com.google.guava:guava:16.0.1'
+}
+
+
