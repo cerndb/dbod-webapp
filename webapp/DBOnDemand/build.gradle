@@ -1,6 +1,6 @@
 apply plugin: 'java'
-apply plugin: 'ear'
 apply plugin: 'war'
+apply plugin: 'com.bmuschko.cargo' // For Tomcat deployments
 
 version = '5.20'
 
@@ -8,16 +8,23 @@ version = '5.20'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+// For Cargo plugin
+buildscript {
+    repositories { jcenter() }
+    dependencies { classpath 'com.bmuschko:gradle-cargo-plugin:2.0.3' }
+}
+
 // 1. Get dependencies from Maven local repository
 // 2. Get dependencies from Maven central repository
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'http://mavensync.zkoss.org/maven2' }
+    maven { url 'http://mavensync.zkoss.org/maven2' } // ZK Framework
     maven { url 'https://oss.sonatype.org/content/groups/public' }
     }
 
 dependencies {
+
     compile 'javax:javaee-web-api:7.0'
     compile 'org.beanshell:bsh:2.0b4'
     compile 'commons-fileupload:commons-fileupload:1.2.2'
@@ -35,4 +42,25 @@ dependencies {
     compile 'com.google.guava:guava:16.0.1'
 }
 
+cargo {
+    containerId = 'tomcat7x'
+    port = 8080
 
+    deployable { context = name }
+
+    local {
+        homeDir = file(System.env.TOMCAT_HOME)
+        outputFile = file('build/output.log')
+    }
+
+    remote {
+        hostname = 'XXXXXX'
+        username = 'XXXXXXXX'
+        password = 'XXXXXXXX'
+    }
+}
+
+// Run this task to re-generate the wrapper
+task wrapper (type: Wrapper) {
+    gradleVersion = '2.0'
+}
