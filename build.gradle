@@ -48,11 +48,6 @@ cargo {
 
     deployable { context = name }
 
-    local {
-        homeDir = file(System.env.TOMCAT_HOME)
-        outputFile = file('build/output.log')
-    }
-
     remote {
         hostname = 'XXXXXX'
         username = 'XXXXXXXX'
