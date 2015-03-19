@@ -91,6 +91,7 @@ DECLARE
    message VARCHAR2 (3072);
    os_user VARCHAR2 (32);
    hostname VARCHAR2 (64);
+   module VARCHAR2 (64);
    ip VARCHAR2 (32);
    sid NUMBER;
    db_name VARCHAR2 (8);
@@ -108,6 +109,7 @@ BEGIN
   SELECT SYS_CONTEXT('USERENV','IP_ADDRESS') INTO ip from DUAL;
   SELECT SYS_CONTEXT('USERENV','SID') INTO sid from DUAL;
   SELECT SYS_CONTEXT('USERENV','DB_NAME') INTO db_name from DUAL;
+  SELECT SYS_CONTEXT('USERENV','MODULE') INTO module from DUAL;
 
   message := '<html>
                     <body>
@@ -140,12 +142,13 @@ BEGIN
                         </p>
                     </body>
                 </html>';
-
-    UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
-        recipients => 'dbondemand-admin@cern.ch',
-        subject => 'DBOD: CRITICAL: Error in management database ' || db_name,
-        message => message,
-        mime_type => 'text/html');
+    IF module <> 'SQL Developer' THEN
+        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-admin@cern.ch',
+            subject => 'DBOD: CRITICAL: Error in management database ' || db_name,
+            message => message,
+            mime_type => 'text/html');
+    END IF;
 END;
 /
 
