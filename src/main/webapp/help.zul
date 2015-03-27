@@ -34,8 +34,7 @@
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
                     </div>
                 </caption>
-                <iframe id="tree" width="300px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemand?template=viewplain"/>
-                <iframe id="content" name="dbodhelpcontent" width="880px" height="700px" src="https://twiki.cern.ch/twiki/bin/view/DB/DBOnDemandManifesto?template=viewplain"/>
+                <iframe id="content" name="dbodhelpcontent" width="1180px" height="700px" src="https://dbod-user-guide.web.cern.ch/dbod-user-guide"/>
             </groupbox>
         </hbox>
     </vbox>
