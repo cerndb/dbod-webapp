@@ -153,13 +153,14 @@ public class JobHelper {
      * @param instance instance to copy the config file to.
      * @param username requester of this job.
      * @param fileType type of config file to upload.
+     * @param reloadConfig make server processes to reload the uploaded config file
      * @param event upload event to get the data from.
      * @return true if the creation of this job was successful, false otherwise.
      * @throws ConfigFileSizeException if the file to be uploaded is too big.
      * @throws UnsupportedEncodingException if the enconding is not supported.
      * @throws IOException if there is an error reading the file.
      */
-    public boolean doUpload(Instance instance, String username, String fileType, UploadEvent event) throws ConfigFileSizeException, UnsupportedEncodingException, IOException {
+    public boolean doUpload(Instance instance, String username, String fileType, boolean reloadConfig, UploadEvent event) throws ConfigFileSizeException, UnsupportedEncodingException, IOException {
         //Get config file
         Media media = event.getMedia();
         if (media != null) {
@@ -200,6 +201,23 @@ public class JobHelper {
                 path.setName(CommonConstants.PARAM_CONFIG_TYPE);
                 path.setValue(fileType);
                 params.add(path);
+
+                // If DB type is PG, pass config reload param
+                if (instance.getDbType().equals(CommonConstants.DB_TYPE_PG)) {
+                    CommandParam reloadCfg = new CommandParam();
+                    reloadCfg.setUsername(instance.getUsername());
+                    reloadCfg.setDbName(instance.getDbName());
+                    reloadCfg.setCommandName(CommonConstants.JOB_UPLOAD);
+                    reloadCfg.setType(instance.getDbType());
+                    reloadCfg.setCreationDate(now);
+                    reloadCfg.setName(CommonConstants.PARAM_RELOAD_CONFIG);
+                    if (reloadConfig == true) { 
+                        reloadCfg.setValue(CommonConstants.CONFIG_RELOAD_TRUE);
+                    } else {
+                        reloadCfg.setValue(CommonConstants.CONFIG_RELOAD_FALSE);
+                    }
+                    params.add(reloadCfg);
+                }
 
                 int result = jobDAO.insert(job, params);
                 //If everything went OK update instance object

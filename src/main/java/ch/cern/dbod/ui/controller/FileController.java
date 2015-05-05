@@ -20,6 +20,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zul.Caption;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
@@ -70,7 +71,12 @@ public class FileController extends Window {
      * Model of the tree (null if we are in list view).
      */
     private OverviewTreeModel model;
-
+    /**
+     * Checkbox to indicate if config file should be reloaded without restarting
+     * the database.
+     */
+    private Checkbox reloadConfigFile;
+    
     /**
      * Constructor for this window (coming from instance view)
      * @param inst instance to be managed.
@@ -134,9 +140,9 @@ public class FileController extends Window {
             //Config files message
             Label configMessage = new Label(Labels.getLabel(CommonConstants.LABEL_CONFIG_MESSAGE));
             config.appendChild(configMessage);
-
+            
             //Box containing the file selector and buttons
-            Hbox configBox =  new Hbox();
+            Hbox configBox = new Hbox();
             configBox.setStyle("margin-top:10px;margin-bottom:10px;margin-left:20px");
             configBox.setAlign("bottom");
             //Create combobox for file selector
@@ -158,7 +164,7 @@ public class FileController extends Window {
                         if (isTypeValid()) {
                             //Create new job and update instance status
                             String fileType = (String) type.getSelectedItem().getValue();
-                            boolean result = jobHelper.doUpload(instance, username, fileType, (UploadEvent) event);
+                            boolean result = jobHelper.doUpload(instance, username, fileType, reloadConfigFile.isChecked(), (UploadEvent) event);
                             //Depending on the result
                             if (result) {
                                 //If we are in the overview page
@@ -229,6 +235,18 @@ public class FileController extends Window {
             });
             configBox.appendChild(downloadDiv);
             config.appendChild(configBox);
+
+            //Box containing the checkbox for reloading config files
+            Hbox reloadConfigBox;
+            reloadConfigBox = new Hbox();
+            reloadConfigBox.setAlign("bottom");
+            //Create checkbox to reload config files without restarting the DB
+            reloadConfigFile = new Checkbox();
+            reloadConfigFile.setLabel(Labels.getLabel(CommonConstants.LABEL_RELOAD_CONFIG_FILE));
+            //reloadConfigFile.setChecked(prevBackupEnabled);
+            reloadConfigFile.setChecked(false);
+            reloadConfigBox.appendChild(reloadConfigFile);
+            config.appendChild(reloadConfigBox);
             mainBox.appendChild(config);
         }
         

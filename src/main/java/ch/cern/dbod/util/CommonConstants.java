@@ -127,6 +127,9 @@ public class CommonConstants {
     
     public static final String KEYSTORE_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/dodws.p12";
 
+    public static final String CONFIG_RELOAD_TRUE = "1";
+    public static final String CONFIG_RELOAD_FALSE = "0";
+    
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
     public static final String INSTANCE_STATE_JOB_PENDING = "JOB_PENDING";
@@ -174,6 +177,7 @@ public class CommonConstants {
     public static final String PARAM_VERSION_FROM = "VERSION_FROM";
     public static final String PARAM_VERSION_TO = "VERSION_TO";
     public static final String PARAM_LISTENER_BOOLEAN = "LISTENER_BOOLEAN";
+    public static final String PARAM_RELOAD_CONFIG = "RELOAD_CONFIG";
 
     //Pages
     public static final String PAGE_INSTANCE = "/instance.zul";
@@ -216,6 +220,7 @@ public class CommonConstants {
     public static final String LABEL_CATEGORY = "category";
     public static final String LABEL_CONFIG_TITLE = "configTitle";
     public static final String LABEL_CONFIG_MESSAGE = "configMessage";
+    public static final String LABEL_RELOAD_CONFIG_FILE = "automaticReloadConfig";
     public static final String LABEL_CONFIG_UPLOAD = "configUpload";
     public static final String LABEL_CONFIG_DOWNLOAD = "configDownload";
     public static final String LABEL_CONFIG = "config";

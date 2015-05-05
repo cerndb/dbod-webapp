@@ -28,4 +28,4 @@ INSERT INTO dod_command_definition VALUES ('RESTORE', 'PG', '-r :SNAPSHOT= -t #T
 INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'PG', NULL);
 INSERT INTO dod_command_definition VALUES ('STARTUP', 'PG', NULL);
 INSERT INTO dod_command_definition VALUES ('UPGRADE', 'PG', '-to :VERSION_TO=');
-INSERT INTO dod_command_definition VALUES ('UPLOAD_CONFIG', 'PG', '-file :CONFIG_FILE= -type :CONFIG_TYPE=');
+INSERT INTO dod_command_definition VALUES ('UPLOAD_CONFIG', 'PG', '-file :CONFIG_FILE= -type :CONFIG_TYPE= -reload #RELOAD_CONFIG=');

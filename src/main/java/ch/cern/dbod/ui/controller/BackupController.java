@@ -111,7 +111,7 @@ public class BackupController extends Window {
      * Model of the tree (null if we are in list view).
      */
     private OverviewTreeModel model;
-    
+
     /**
      * Constructor for this window (coming from instance view)
      * @param inst instance to be managed.
@@ -267,7 +267,11 @@ public class BackupController extends Window {
             tapeDay.setValue(now);
             tapeTime.setValue(now);
         }
-        
+        //Limit change tapeDay and tapeTime only to admins
+        if (!jobHelper.isAdminMode()) {
+            tapeDay.setDisabled(true);
+            tapeTime.setDisabled(true);
+        }
         //Create warning for backups to tape
         if (!prevBackupToTapeEnabled) {
             Hbox warningBox = new Hbox();
