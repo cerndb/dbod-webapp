@@ -23,6 +23,8 @@ INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'ORA', '-debug');
 INSERT INTO dod_command_definition VALUES ('STARTUP', 'ORA', '-debug');
 INSERT INTO dod_command_definition VALUES ('UPGRADE', 'ORA', '-from :VERSION_FROM= -to :VERSION_TO=');
 INSERT INTO dod_command_definition VALUES ('BACKUP', 'PG', '-debug');
+INSERT INTO dod_command_definition VALUES ('BACKUP_TO_TAPE', 'PG', '-debug');
+INSERT INTO dod_command_definition VALUES ('BACKUP_LOGS_TO_TAPE', 'PG', '-debug');
 INSERT INTO dod_command_definition VALUES ('CLEANUP', 'PG', '-debug');
 INSERT INTO dod_command_definition VALUES ('RESTORE', 'PG', '-r :SNAPSHOT= -t #TIMESTAMP= -debug');
 INSERT INTO dod_command_definition VALUES ('SHUTDOWN', 'PG', NULL);
