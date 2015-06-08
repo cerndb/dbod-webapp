@@ -50,6 +50,9 @@ BEFORE UPDATE OF state ON dod_jobs
 FOR EACH ROW
 DECLARE
     message VARCHAR2 (1024);
+    max_attachment_size Number:= 32767;
+    attachment VARCHAR2(32767);
+    attachment_size Number ;
 BEGIN
     IF :NEW.state = 'FINISHED_FAIL' OR :NEW.state = 'FINISHED_WARNING'
     THEN
@@ -69,12 +72,17 @@ BEGIN
                             </ul>
                         </body>
                     </html>';
-        
-        UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
+        attachment_size := LENGTH(:NEW.log); 
+        IF attachment_size > max_attachment_size
+        THEN attachment := '[...] ' || DBMS_LOB.SUBSTR(:NEW.log,max_attachment_size-6,attachment_size-max_attachment_size+6+1);
+        ELSE attachment := CAST(:NEW.log AS VARCHAR2);
+        END IF;
+        UTL_MAIL.send_ATTACH_VARCHAR2(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
             subject => 'DBOD: CRITICAL: Failed job on "' || :NEW.db_name || '"',
             message => message,
-            mime_type => 'text/html');
+            mime_type => 'text/html',
+            attachment => attachment);
 
         :NEW.email_sent := sysdate;
     END IF;
