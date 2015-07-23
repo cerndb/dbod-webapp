@@ -51,7 +51,7 @@ public class ParamsHelper {
     }
     
     /**
-     * Gets th host of an instance.
+     * Gets the host of an instance.
      * @param instance instance to get the host of.
      * @return host value.
      */
@@ -65,5 +65,32 @@ public class ParamsHelper {
             Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING HOST OF INSTANCE " + instance.getDbName(), ex.getMessage());
         }
         return host;
+    }
+    
+    /**
+     * Check if an instance has the AppDynamics enabled or not
+     * @param instance instance to get the host of.
+     * @return host value.
+     */
+    public Boolean checkAppDynamics(Instance instance) {
+        Boolean has_appdyn = false;
+        try {
+            DBODWebService service = new DBODWebService();
+            DBODWebServicePortType port = service.getDBODWebServicePort();
+            switch(instance.getDbType())
+            {
+                case CommonConstants.DB_TYPE_MYSQL:
+                    has_appdyn = port.checkMYSQLAppDynamics(CommonConstants.PREFIX_INSTANCE_NAME + instance.getDbName()) == 0;
+                    break;
+                case CommonConstants.DB_TYPE_PG:
+                    has_appdyn = port.checkPGAppDynamics(CommonConstants.PREFIX_INSTANCE_NAME + instance.getDbName()) == 0;
+                    break;
+                default:
+                    has_appdyn = false;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ParamsHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING STATUS OF APPDYNAMICS ON INSTANCE " + instance.getDbName(), ex.getMessage());
+        }
+        return has_appdyn;
     }
 }
