@@ -1,5 +1,6 @@
 package ch.cern.dbod.ui.renderer;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.controller.BackupController;
@@ -15,8 +16,10 @@ import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -437,7 +440,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
                 }
-                else {
+                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE))
+                {
                     monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                         @Override
                         public void onEvent(Event event) {
@@ -454,6 +458,15 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         }
                     });
                 }
+                else {
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    String date = dateFormat.format(new Date());
+                    String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + instance.getDbName() + ":" + date);
+                    String appdynURL = ConfigLoader.getDBTunaPath() + instance.getDbName() + "&sec_token=" + sec_token;
+
+                    monitorBtn.setTarget("_blank");
+                    monitorBtn.setHref(appdynURL);
+                }
 
                 //Only disable button if the instance is awaiting approval
                 if (instance.getState().equals(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
@@ -461,6 +474,25 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
                 } else {
                     monitorBtn.setZclass(CommonConstants.STYLE_BUTTON);
+                }
+                
+                //Host monitoring button
+                final Toolbarbutton hostMonitorBtn = new Toolbarbutton();
+                hostMonitorBtn.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_JOB + CommonConstants.JOB_HOSTMONITOR));
+                hostMonitorBtn.setImage(CommonConstants.IMG_HOSTMONITOR);
+                hostMonitorBtn.setParent(box);
+                
+                String kibanaURL = ConfigLoader.getKibanaDashboard() + instance.getHost();
+
+                hostMonitorBtn.setTarget("_blank");
+                hostMonitorBtn.setHref(kibanaURL);
+
+                //Only disable button if the instance is awaiting approval
+                if (instance.getState().equals(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
+                    hostMonitorBtn.setDisabled(true);
+                    hostMonitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
+                } else {
+                    hostMonitorBtn.setZclass(CommonConstants.STYLE_BUTTON);
                 }
 
                 //Add box to row

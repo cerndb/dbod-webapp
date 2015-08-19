@@ -56,6 +56,9 @@
                         <div width="52px" height="52px">
                             <toolbarbutton id="monitor" image="/img/monitor_big.png" tooltiptext="${c:l('jobActionMONITOR')}"/>
                         </div>
+                        <div width="52px" height="52px">
+                            <toolbarbutton id="hostmonitor" image="/img/server_monitor.png" tooltiptext="${c:l('jobActionHOSTMONITOR')}"/>
+                        </div>
                     </vbox>
                 </groupbox>
                 <!-- Groupbox for instance selection (only displayed when user can manage other instances)-->

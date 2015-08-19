@@ -98,6 +98,22 @@
     <wsdl:message name="GetHostResponse">
         <wsdl:part name="host" type="xsd:string" />
     </wsdl:message>
+    
+    <wsdl:message name="CheckMYSQLAppDynamicsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="CheckMYSQLAppDynamicsResponse">
+        <wsdl:part name="status" type="xsd:int" />
+    </wsdl:message>
+    
+    <wsdl:message name="CheckPGAppDynamicsRequest">
+        <wsdl:part name="instance" type="xsd:string" />
+    </wsdl:message>
+
+    <wsdl:message name="CheckPGAppDynamicsResponse">
+        <wsdl:part name="status" type="xsd:int" />
+    </wsdl:message>
 
     <wsdl:portType name="DBODWebServicePortType">
         <wsdl:operation name="GetSnapshots">
@@ -143,6 +159,14 @@
         <wsdl:operation name="GetHost">
             <wsdl:input message="impl:GetHostRequest" name="GetHostRequest" />
             <wsdl:output message="impl:GetHostResponse" name="GetHostResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="CheckMYSQLAppDynamics">
+            <wsdl:input message="impl:CheckMYSQLAppDynamicsRequest" name="CheckMYSQLAppDynamicsRequest" />
+            <wsdl:output message="impl:CheckMYSQLAppDynamicsResponse" name="CheckMYSQLAppDynamicsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="CheckPGAppDynamics">
+            <wsdl:input message="impl:CheckPGAppDynamicsRequest" name="CheckPGAppDynamicsRequest" />
+            <wsdl:output message="impl:CheckPGAppDynamicsResponse" name="CheckPGAppDynamicsResponse" />
         </wsdl:operation>
     </wsdl:portType>
 
@@ -244,6 +268,24 @@
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:input>
             <wsdl:output name="GetHostResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CheckMYSQLAppDynamics">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#CheckMYSQLAppDynamics"/>
+            <wsdl:input name="CheckMYSQLAppDynamicsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="CheckMYSQLAppDynamicsResponse">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CheckPGAppDynamics">
+            <wsdlsoap:operation soapAction="https://syscontrol.cern.ch/Dod/#CheckPGAppDynamics"/>
+            <wsdl:input name="CheckPGAppDynamicsRequest">
+                <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
+            </wsdl:input>
+            <wsdl:output name="CheckPGAppDynamicsResponse">
                 <wsdlsoap:body namespace="https://syscontrol.cern.ch/Dod/" use="literal" />
             </wsdl:output>
         </wsdl:operation>

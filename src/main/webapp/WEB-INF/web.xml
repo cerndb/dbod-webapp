@@ -41,6 +41,10 @@
         <load-on-startup>1</load-on-startup>
         <!-- Must -->
     </servlet>
+    <servlet>
+        <servlet-name>doProxy</servlet-name>
+        <servlet-class>ch.cern.dbod.appservlet.doProxy</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>zkLoader</servlet-name>
         <url-pattern>*.zul</url-pattern>
@@ -103,6 +107,10 @@
     <!-- //// -->
     <!-- /////////// -->
     <!-- [Optional] Session timeout -->
+    <servlet-mapping>
+        <servlet-name>doProxy</servlet-name>
+        <url-pattern>/appdyn/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>
@@ -191,7 +199,7 @@
     <filter>
         <filter-name>GeneralFilter</filter-name>
         <filter-class>ch.cern.dbod.filter.GeneralFilter</filter-class>
-        <description>Prevents the server from showing an error page in case an uncaught exception is raised..</description>
+        <description>Prevents the server from showing an error page in case an uncaught exception is raised</description>
     </filter>
     <filter-mapping>
         <filter-name>GeneralFilter</filter-name>
@@ -201,7 +209,7 @@
     <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>ch.cern.dbod.filter.AdminFilter</filter-class>
-        <description>Filters requests to only allow admin users to visit admin content.</description>
+        <description>Filters requests to only allow admin users to visit admin content</description>
     </filter>
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
@@ -211,7 +219,7 @@
     <filter>
         <filter-name>InstanceFilter</filter-name>
         <filter-class>ch.cern.dbod.filter.InstanceFilter</filter-class>
-        <description>Filters requests to only allow admin users to manage their own instances.</description>
+        <description>Filters requests to only allow admin users to manage their own instances</description>
     </filter>
     <filter-mapping>
         <filter-name>InstanceFilter</filter-name>

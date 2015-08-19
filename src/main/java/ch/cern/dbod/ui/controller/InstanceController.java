@@ -1,5 +1,6 @@
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
@@ -16,10 +17,12 @@ import ch.cern.dbod.util.FormValidations;
 import ch.cern.dbod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -526,7 +529,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             monitorBtn.setTarget("_blank");
             monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
         }
-        else {
+        else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
             monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                         @Override
                         public void onEvent(Event event) {
@@ -534,6 +537,31 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                         }
                     });
         }
+        else {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            String date = dateFormat.format(new Date());
+            String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + instance.getDbName() + ":" + date);
+            String appdynURL = ConfigLoader.getDBTunaPath() + instance.getDbName() + "&sec_token=" + sec_token;
+  
+            monitorBtn.setTarget("_blank");
+            monitorBtn.setHref(appdynURL);
+        }
+        
+        //Host monitoring button
+        final Toolbarbutton hostMonitorBtn = (Toolbarbutton) getFellow("hostmonitor");
+        //Only enable button if the instance is not awaiting approval
+        if (instance.getState().equals(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
+            hostMonitorBtn.setDisabled(true);
+            hostMonitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
+        } else {
+            hostMonitorBtn.setDisabled(false);
+            hostMonitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON);
+        }
+
+        String kibanaURL = ConfigLoader.getKibanaDashboard() + instance.getHost();
+
+        hostMonitorBtn.setTarget("_blank");
+        hostMonitorBtn.setHref(kibanaURL);
     }
 
      /**
@@ -784,7 +812,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             if (this.getRoot().getFellowIfAny(monitoringController.getId()) == null) {
                 monitoringController.setParent(this.getRoot());
                 monitoringController.doModal();
-            }
+    }
         } catch (InterruptedException ex) {
             showError(ex, CommonConstants.ERROR_DISPATCHING_JOB);
         }

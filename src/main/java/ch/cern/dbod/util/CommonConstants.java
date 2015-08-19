@@ -126,6 +126,7 @@ public class CommonConstants {
     public static final String IT_ES_CPU_STAT = "PercUser";
     
     public static final String KEYSTORE_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/dodws.p12";
+    public static final String CONFIG_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/proxy.dat";
 
     public static final String CONFIG_RELOAD_TRUE = "1";
     public static final String CONFIG_RELOAD_FALSE = "0";
@@ -156,6 +157,7 @@ public class CommonConstants {
     public static final String JOB_RESTORE = "RESTORE";
     public static final String JOB_UPGRADE = "UPGRADE";
     public static final String JOB_MONITOR = "MONITOR";
+    public static final String JOB_HOSTMONITOR = "HOSTMONITOR";
     public static final String JOB_CLEANUP = "CLEANUP";
     public static final String DB_TYPE_ORA = "ORA";
     public static final String DB_TYPE_ORACLE = "ORACLE";
@@ -345,6 +347,7 @@ public class CommonConstants {
     public static final String IMG_RESTORE = "/img/restore.png";
     public static final String IMG_UPGRADE = "/img/upgrade.png";
     public static final String IMG_MONITOR = "/img/monitor.png";
+    public static final String IMG_HOSTMONITOR = "/img/server_monitor.png";
     public static final String IMG_DESTROY = "/img/destroy.png";
     public static final String IMG_CANCEL = "/img/cancel.png";
     public static final String IMG_ACCEPT = "/img/accept.png";
