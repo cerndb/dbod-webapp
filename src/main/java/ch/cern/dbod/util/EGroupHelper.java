@@ -64,7 +64,7 @@ public class EGroupHelper {
             StringTokenizer tokenizer = new StringTokenizer(groups, ";");
             while (tokenizer.hasMoreTokens()) {
                 String token = tokenizer.nextToken();
-                if (token.equals(group)) {
+                if (token.equalsIgnoreCase(group)) {
                     return true;
                 }
             }
