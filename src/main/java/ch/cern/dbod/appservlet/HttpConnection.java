@@ -43,11 +43,11 @@ public class HttpConnection {
         Date now = new Date();
         
         if (last_session_day == null)
-            last_session_day = now.getMinutes();
-        else if (last_session_day != now.getMinutes())
+            last_session_day = now.getDay();
+        else if (last_session_day != now.getDay())
         {
             SESSIONS.clear();
-            last_session_day = now.getMinutes();
+            last_session_day = now.getDay();
         }
     }
     
