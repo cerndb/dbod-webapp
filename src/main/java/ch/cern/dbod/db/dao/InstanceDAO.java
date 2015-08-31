@@ -206,7 +206,7 @@ public class InstanceDAO {
             StringTokenizer tokenizer = new StringTokenizer("");
             if (egroups != null && !egroups.isEmpty()) {
                 query.append("AND (username = ? ");
-                tokenizer = new StringTokenizer(egroups, ";");
+                tokenizer = new StringTokenizer(egroups.toLowerCase(), ";");
                 int tokens = tokenizer.countTokens();
                 if (tokens > 0) {
                     query.append("OR ( e_group IS NOT NULL AND e_group IN (");
@@ -229,7 +229,7 @@ public class InstanceDAO {
                 statement.setString(i, tokenizer.nextToken());
                 i++;
             }
-           
+
             //Execute query
             result = statement.executeQuery();
 
