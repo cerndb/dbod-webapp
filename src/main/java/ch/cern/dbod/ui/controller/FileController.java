@@ -235,18 +235,23 @@ public class FileController extends Window {
             });
             configBox.appendChild(downloadDiv);
             config.appendChild(configBox);
-
-            //Box containing the checkbox for reloading config files
-            Hbox reloadConfigBox;
-            reloadConfigBox = new Hbox();
-            reloadConfigBox.setAlign("bottom");
+            
             //Create checkbox to reload config files without restarting the DB
             reloadConfigFile = new Checkbox();
             reloadConfigFile.setLabel(Labels.getLabel(CommonConstants.LABEL_RELOAD_CONFIG_FILE));
-            //reloadConfigFile.setChecked(prevBackupEnabled);
             reloadConfigFile.setChecked(false);
-            reloadConfigBox.appendChild(reloadConfigFile);
-            config.appendChild(reloadConfigBox);
+
+            //Box containing the checkbox for reloading config files
+            //Only show it for PG instances
+            if (instance.getDbType().equals(CommonConstants.DB_TYPE_PG))
+            {
+                Hbox reloadConfigBox;
+                reloadConfigBox = new Hbox();
+                reloadConfigBox.setAlign("bottom");
+                reloadConfigBox.appendChild(reloadConfigFile);
+                config.appendChild(reloadConfigBox);
+            }
+            
             mainBox.appendChild(config);
         }
         
