@@ -523,7 +523,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         else {
             tree.setMold("paging");
-            tree.setPageSize(10);
+            tree.setPageSize(20);
             showAll.setStyle("display:block");
             paging.setStyle("display:none");
         }

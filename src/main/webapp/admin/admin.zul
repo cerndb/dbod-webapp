@@ -58,7 +58,7 @@
                             <vbox width="100%" align="right">
                                 <vbox width="100%" align="left" xmlns:c="http://www.zkoss.org/2005/zk/client">
                                     <!-- Overview tree (only shown when there are instances) -->
-                                    <tree id="overviewTree" mold="paging" pageSize="10" style="display:none" width="1185px">
+                                    <tree id="overviewTree" mold="paging" pageSize="20" style="display:none" width="1185px">
                                         <auxhead sclass="category-center">
                                             <auxheader colspan="1">
                                             </auxheader>
