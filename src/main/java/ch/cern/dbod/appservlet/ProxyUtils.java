@@ -2,10 +2,7 @@ package ch.cern.dbod.appservlet;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
