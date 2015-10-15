@@ -11,5 +11,5 @@
 *.swp 
 
 # Webap files #
-/webapp/DBOnDemand/target/
-/webapp/DBOnDemand/src/main/webapp/META-INF/context.xml
+/target/
+/src/main/webapp/META-INF/context.xml
