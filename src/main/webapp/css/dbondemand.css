@@ -119,8 +119,8 @@
     font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
 }
 
-a{
-color: blue;
+a {
+    color: blue;
 }
 
 .preloader {
@@ -134,4 +134,10 @@ color: blue;
 
 .z-caption-content {
     display: inline !important;
+}
+
+.z-menuitem-text {
+    font-size: 12pt;
+    color: #3861AA;
+    font-family: "PT Sans","Trebuchet MS","Tahoma","sans-serif";
 }
