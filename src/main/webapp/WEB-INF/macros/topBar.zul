@@ -48,10 +48,10 @@
         </hbox>
     </div>
     <menubar sclass="toolbar" style="padding-left:90px">
-        <menuitem label="${c:l('home')}" sclass="title" href="/index.zul" />
-        <menuitem label="${c:l('admin')}" sclass="title" href="/admin/admin.zul" if="${topBarController.admin}"/>
-        <menuitem label="${c:l('help')}" sclass="title" href="/help.zul"/>
-        <menuitem label="${c:l('adminHelp')}" sclass="title" href="/admin/admin_help.zul" if="${topBarController.admin}"/>
+        <menuitem label="${c:l('home')}" href="/index.zul" />
+        <menuitem label="${c:l('admin')}" href="/admin/admin.zul" if="${topBarController.admin}"/>
+        <menuitem label="${c:l('help')}" href="/help.zul"/>
+        <menuitem label="${c:l('adminHelp')}" href="/admin/admin_help.zul" if="${topBarController.admin}"/>
     </menubar>
     
     <div id="announcementDiv" width="100%" align="center" visible="false">

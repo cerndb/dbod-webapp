@@ -119,8 +119,8 @@
     font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
 }
 
-a{
-color: blue;
+a {
+    color: blue;
 }
 
 .preloader {
@@ -130,4 +130,22 @@ color: blue;
 
 .metricGroup td{
     color: green !important;
+}
+
+.z-caption-content {
+    display: inline !important;
+}
+
+.z-menuitem-text {
+    font-size: 12pt;
+    color: #3861AA;
+    font-family: "PT Sans","Trebuchet MS","Tahoma","sans-serif";
+}
+
+.z-menubar-horizontal li {
+    margin: 0px 10px 0px 0px;
+}
+
+.z-caption {
+    white-space: normal;
 }
