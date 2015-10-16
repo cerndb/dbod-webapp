@@ -131,3 +131,7 @@ color: blue;
 .metricGroup td{
     color: green !important;
 }
+
+.z-caption-content {
+    display: inline !important;
+}
