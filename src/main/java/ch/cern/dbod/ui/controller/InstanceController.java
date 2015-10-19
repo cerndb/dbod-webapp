@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -205,10 +206,18 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     @Override
     public void afterCompose() {
+        //Maximum date to set the expiry date for the instance (6 months)
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, 6);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String errorMsg = Labels.getLabel(CommonConstants.ERROR_EXPIRY_DATE_FUTURE);
+        
         //Configure input fields
         ((Textbox) getFellow("eGroupEdit")).setMaxlength(CommonConstants.MAX_E_GROUP_LENGTH);
         ((Datebox) getFellow("expiryDateEdit")).setFormat(CommonConstants.DATE_FORMAT);
         ((Datebox) getFellow("expiryDateEdit")).setTimeZonesReadonly(true);
+        ((Datebox) getFellow("expiryDateEdit")).setConstraint("no past, before " + dateFormat.format(cal.getTime()) + ": " + errorMsg);
         ((Textbox) getFellow("projectEdit")).setMaxlength(CommonConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(CommonConstants.MAX_DESCRIPTION_LENGTH);
         if (admin) {
