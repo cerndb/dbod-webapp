@@ -11,25 +11,26 @@ package ch.cern.dbod.ui.model;
 
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.util.CommonConstants;
+import ch.cern.dbod.util.TreeNodeComparator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import org.zkoss.zul.AbstractTreeModel;
-import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Tree;
+import org.zkoss.zul.*;
 import org.zkoss.zul.event.TreeDataEvent;
+import org.zkoss.zul.ext.Sortable;
 
 /**
  * Model for overview tree.
  * @author Daniel Gomez Blanco
  */
-public class OverviewTreeModel extends AbstractTreeModel{
+public class OverviewTreeModel extends AbstractTreeModel implements Sortable {
     
     /**
      * Tree where this is displayed
      */
     Tree tree;
+    private Comparator _sorting;
     
     /**
      * Constructor of this class.
@@ -40,6 +41,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
         //Call super-constructor
         super(new OverviewTreeNode(null, new ArrayList<OverviewTreeNode>()));
         this.tree = tree;
+        _sorting = new TreeNodeComparator(true, "STATE");
         setInstances(instances);
     }
     
@@ -90,7 +92,7 @@ public class OverviewTreeModel extends AbstractTreeModel{
         }
         
         //Sort node list
-        Collections.sort(nodeList);
+        Collections.sort(nodeList, _sorting);
         
         return nodeList;
     }
@@ -270,5 +272,27 @@ public class OverviewTreeModel extends AbstractTreeModel{
         int[] path = getPath(node.getParent());
         int index = node.getParent().getIndex(node);
         fireEvent(TreeDataEvent.CONTENTS_CHANGED, path, index, index);
+    }
+
+    @Override
+    public void sort(Comparator cmprtr, boolean bln) {
+        _sorting = cmprtr;
+        
+        //Sort node list
+        List<OverviewTreeNode> children = ((OverviewTreeNode)this.getRoot()).getChildren();
+        List<OverviewTreeNode> copy = new ArrayList(children);
+        Collections.sort(copy, cmprtr);
+        children.removeAll(children);
+        children.addAll(copy);
+        
+        fireEvent(TreeDataEvent.CONTENTS_CHANGED, new int[0], 0, children.size()-1);
+    }
+
+    @Override
+    public String getSortDirection(Comparator cmprtr) {
+        if (cmprtr == _sorting && cmprtr != null)
+            return ((TreeNodeComparator)cmprtr).isAsc() ? "ascending" : "descending";
+        else
+            return "natural";
     }
 }
