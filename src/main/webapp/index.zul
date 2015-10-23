@@ -14,6 +14,22 @@
         <![CDATA[
             import ch.cern.dbod.ui.controller.OverviewController;
             import ch.cern.dbod.ui.controller.TopBarController;
+            import ch.cern.dbod.util.TreeNodeComparator;
+            
+            Comparator compStateAsc = new TreeNodeComparator(true, "STATE");
+            Comparator compStateDsc = new TreeNodeComparator(false, "STATE");
+            Comparator compUsernameAsc = new TreeNodeComparator(true, "USERNAME");
+            Comparator compUsernameDsc = new TreeNodeComparator(false, "USERNAME");
+            Comparator compCreationDateAsc = new TreeNodeComparator(true, "CREATIONDATE");
+            Comparator compCreationDateDsc = new TreeNodeComparator(false, "CREATIONDATE");
+            Comparator compHostAsc = new TreeNodeComparator(true, "HOST");
+            Comparator compHostDsc = new TreeNodeComparator(false, "HOST");
+            Comparator compCategoryAsc = new TreeNodeComparator(true, "CATEGORY");
+            Comparator compCategoryDsc = new TreeNodeComparator(false, "CATEGORY");
+            Comparator compDbTypeAsc = new TreeNodeComparator(true, "DBTYPE");
+            Comparator compDbTypeDsc = new TreeNodeComparator(false, "DBTYPE");
+            Comparator compNameAsc = new TreeNodeComparator(true, "NAME");
+            Comparator compNameDsc = new TreeNodeComparator(false, "NAME");
         ]]>
     </zscript>
 
@@ -103,16 +119,16 @@
                             </auxheader>
                         </auxhead>
                         <treecols>
-                            <treecol label="${c:l('dbName')}" width="120px"/>
-                            <treecol label="${c:l('host')}" width="120px"/>
-                            <treecol label="${c:l('username')}" width="90px"/>
+                            <treecol label="${c:l('dbName')}" width="120px" sortAscending="${compNameAsc}" sortDescending="${compNameDsc}"/>
+                            <treecol label="${c:l('host')}" width="120px" sortAscending="${compHostAsc}" sortDescending="${compHostDsc}"/>
+                            <treecol label="${c:l('username')}" width="90px" sortAscending="${compUsernameAsc}" sortDescending="${compUsernameDsc}"/>
                             <treecol label="${c:l('eGroup')}"  width="165px"/>
-                            <treecol label="${c:l('category')}" width="75px"/>
+                            <treecol label="${c:l('category')}" width="75px" sortAscending="${compCategoryAsc}" sortDescending="${compCategoryDsc}"/>
                             <treecol label="${c:l('project')}" width="160px"/>
-                            <treecol label="${c:l('dbType')}" width="70px"/>
+                            <treecol label="${c:l('dbType')}" width="70px" sortAscending="${compDbTypeAsc}" sortDescending="${compDbTypeDsc}"/>
                             <treecol label="${c:l('dbSize')}" width="65px"/>
                             <treecol label="${c:l('noConn')}" width="70px"/>
-                            <treecol label="${c:l('state')}" width="45px" align="center"/>
+                            <treecol label="${c:l('state')}" width="45px" sortAscending="${compStateAsc}" sortDescending="${compStateDsc}"/>
                             <treecol label="${c:l('actions')}" align="center"/>
                         </treecols>
                         <treefoot id="footer" style="display:none">
