@@ -1,7 +1,7 @@
 # dbod-webapp
 
 [![Build Status](https://travis-ci.org/cerndb/dbod-webapp.svg?branch=master)](https://travis-ci.org/cerndb/dbod-webapp)
-
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/6661/badge.svg)](https://scan.coverity.com/projects/cerndb-dbod-webapp)
 ## Introduction
 
 This repository contains the Web Interface used in the CERN Database On 
