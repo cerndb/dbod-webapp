@@ -41,7 +41,11 @@ public class doProxy extends HttpServlet {
         {
             // Generate the full URL, relative to AppDynamics
             String pathInfo = request.getPathInfo();
-            String url = HttpConnection.generateUrlRelative(pathInfo);
+            String url;
+            if (request.getParameter("type") != null && request.getParameter("type").equalsIgnoreCase("PG"))
+                url = HttpConnection.generateUrlRelative(pathInfo);
+            else
+                url = HttpConnection.generateUrlRelative(pathInfo);
             
             if (url == null)
             {
@@ -89,8 +93,12 @@ public class doProxy extends HttpServlet {
     {
         String pathInfo = request.getPathInfo();
         
+        String url;
         // Generate the full URL, relative to AppDynamics
-        String url = HttpConnection.generateUrlRelative(pathInfo);
+        if (request.getParameter("type") != null && request.getParameter("type").equalsIgnoreCase("PG"))
+            url = HttpConnection.generateUrlRelative(pathInfo);
+        else
+            url = HttpConnection.generateUrlRelative(pathInfo);
         
         HttpConnection.doPostStream(url, request, response);
     }

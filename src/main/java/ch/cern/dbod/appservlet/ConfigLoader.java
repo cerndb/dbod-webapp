@@ -50,6 +50,11 @@ public class ConfigLoader {
         return propertiesFile.getProperty("appdyn_dbtuna_path");
     }
     
+    public static String getDBTuna4PgPath()
+    {
+        return propertiesFile.getProperty("appdynn_dbtuna4pg_path");
+    }
+    
     private static Properties init()
     {
         Properties prop = new Properties();

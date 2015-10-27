@@ -559,7 +559,11 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(new Date());
             String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + instance.getDbName() + ":" + date);
-            String appdynURL = ConfigLoader.getDBTunaPath() + instance.getDbName() + "&sec_token=" + sec_token;
+            String appdynURL; 
+            if (instance.getDbType().equals(CommonConstants.DB_TYPE_PG))
+                appdynURL = ConfigLoader.getDBTuna4PgPath() + instance.getDbName() + "&sec_token=" + sec_token;
+            else
+                appdynURL = ConfigLoader.getDBTunaPath() + instance.getDbName() + "&sec_token=" + sec_token;
   
             monitorBtn.setTarget("_blank");
             monitorBtn.setHref(appdynURL);
