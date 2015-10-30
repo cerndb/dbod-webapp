@@ -14,7 +14,7 @@
 
             </head>
             <body>
-                <div id="cern-toolbar" style="margin-left:-5px;margin-right:-5px">
+                <div id="cern-toolbar">
                     <h1><a href="http://cern.ch" title="CERN">CERN <span>Accelerating science</span></a></h1>
 
                     <ul class="cern-signedin">
