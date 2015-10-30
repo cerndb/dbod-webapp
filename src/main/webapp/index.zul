@@ -126,8 +126,6 @@
                             <treecol label="${c:l('category')}" width="75px" sortAscending="${compCategoryAsc}" sortDescending="${compCategoryDsc}"/>
                             <treecol label="${c:l('project')}" width="160px"/>
                             <treecol label="${c:l('dbType')}" width="70px" sortAscending="${compDbTypeAsc}" sortDescending="${compDbTypeDsc}"/>
-                            <treecol label="${c:l('dbSize')}" width="65px"/>
-                            <treecol label="${c:l('noConn')}" width="70px"/>
                             <treecol label="${c:l('state')}" width="45px" sortAscending="${compStateAsc}" sortDescending="${compStateDsc}"/>
                             <treecol label="${c:l('actions')}" align="center"/>
                         </treecols>
