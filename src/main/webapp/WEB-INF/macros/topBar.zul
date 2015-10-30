@@ -43,7 +43,7 @@
             </vbox>
         </hbox>
     </div>
-    <menubar sclass="toolbar" >
+    <menubar sclass="toolbar" style="padding-left:5%;">
         <menuitem label="${c:l('home')}" href="/index.zul" />
         <menuitem label="${c:l('admin')}" href="/admin/admin.zul" if="${topBarController.admin}"/>
         <menuitem label="${c:l('help')}" href="/help.zul"/>
