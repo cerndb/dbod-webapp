@@ -160,14 +160,14 @@
                 </caption>
                 <hbox hflex="1">
                     <!-- Groupbox for command stats -->
-                    <groupbox hflex="1" mold="3d" closable="false" style="margin-right:5px">
+                    <groupbox hflex="3" mold="3d" closable="false" style="margin-right:5px">
                         <caption label=" ">
                             <label value="${c:l('commandStats')}" sclass="title" style="float:left;"/>
                         </caption>
                         <vbox hflex="1" align="right">
                             <vbox hflex="1" align="left">
                                 <!-- Commmand stats grid (only shown when there are stats) -->
-                                <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
+                                <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
                                     <columns>
                                         <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="12"/>
                                         <column label="${c:l('statsCount')}" sort="auto(count)" hflex="3"/>
@@ -196,35 +196,35 @@
                         </vbox>
                     </groupbox>
                     <!-- Groupbox for job stats -->
-                    <groupbox hflex="1" mold="3d" closable="false" style="margin-left:5px">
+                    <groupbox hflex="4" mold="3d" closable="false" style="margin-left:5px">
                         <caption label=" ">
                             <label value="${c:l('jobStats')}" sclass="title" style="float:left;"/>
                         </caption>
                         <vbox hflex="1" align="right">
                             <vbox hflex="1" align="left">
                                 <!-- Job stats grid (only shown when there are stats) -->
-                                <grid id="jobStatsGrid" mold="paging" pageSize="10" style="display:none">
+                                <grid id="jobStatsGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
                                     <auxhead sclass="category-center">
                                         <auxheader colspan="1">
                                             <hbox align="bottom">
                                                 <image src="/img/filter.png" width="18px" height="18px"/>
-                                                <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
+                                                <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="100%" />
                                             </hbox>
                                         </auxheader>
                                         <auxheader colspan="1">
                                             <hbox align="bottom">
                                                 <image src="/img/filter.png" width="18px" height="18px"/>
-                                                <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
+                                                <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="100%" />
                                             </hbox>
                                         </auxheader>
                                         <auxheader colspan="2">
                                         </auxheader>
                                     </auxhead>
                                     <columns>
-                                        <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="30"/>
-                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="40"/>
-                                        <column label="${c:l('statsCount')}" sort="auto(count)" hflex="10"/>
-                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" hflex="20"/>
+                                        <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="4"/>
+                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="8"/>
+                                        <column label="${c:l('statsCount')}" sort="auto(count)" hflex="2"/>
+                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" hflex="4"/>
                                     </columns>
                                     <foot id="jobStatsFooter" style="display:none">
                                         <footer span="4">
