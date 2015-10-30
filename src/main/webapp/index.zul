@@ -39,7 +39,7 @@
     <!-- Main container for the databases overview (calls init method when created)-->
     <vbox use="OverviewController" id="controller" style="margin-top:30px;margin-bottom:10px;" align="center" hflex="1">
         <!-- Groupbox forthe instances overview -->
-        <groupbox hflex="1" mold="3d" closable="false" style="max-width: 1200px; min-width: 800px;">
+        <groupbox hflex="1" mold="3d" closable="false" sclass="boxing">
             <caption label=" ">
                 <label value="${c:l('overview')}" sclass="title" style="float:left;"></label>
                 <hbox height="24px" style="float:right" align="bottom">

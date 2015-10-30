@@ -62,6 +62,11 @@
     padding: 2px !important;
 }
 
+.boxing {
+    max-width: 1200px;
+    min-width: 800px;
+}
+
 .appTitle {
     color: #3861AA;
     font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
