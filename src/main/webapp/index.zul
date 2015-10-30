@@ -154,32 +154,32 @@
             </groupbox>
 
             <!-- Groupbox for stats -->
-            <groupbox width="1200px" mold="3d" closable="false" style="margin-top:20px">
+            <groupbox hflex="1" sclass="boxing" mold="3d" closable="false" style="margin-top:20px;">
                 <caption label=" ">
                     <label value="${c:l('statisticsTitle')}" sclass="title" style="float:left;"/>
                 </caption>
-                <hbox>
+                <hbox hflex="1">
                     <!-- Groupbox for command stats -->
-                    <groupbox width="580px" mold="3d" closable="false" style="margin-right:5px">
+                    <groupbox hflex="1" mold="3d" closable="false" style="margin-right:5px">
                         <caption label=" ">
                             <label value="${c:l('commandStats')}" sclass="title" style="float:left;"/>
                         </caption>
-                        <vbox width="100%" align="right">
-                            <vbox width="100%" align="left">
+                        <vbox hflex="1" align="right">
+                            <vbox hflex="1" align="left">
                                 <!-- Commmand stats grid (only shown when there are stats) -->
                                 <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
                                     <columns>
-                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="330px"/>
-                                        <column label="${c:l('statsCount')}" sort="auto(count)" width="80px"/>
-                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="150px"/>
+                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="12"/>
+                                        <column label="${c:l('statsCount')}" sort="auto(count)" hflex="3"/>
+                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" hflex="6"/>
                                     </columns>
                                     <foot id="commandStatsFooter" style="display:none">
                                         <footer span="3">
-                                            <hbox height="24px" width="300px" align="bottom" id="showAllCommandStats" style="display:none">
+                                            <hbox height="24px" hflex="1" align="bottom" id="showAllCommandStats" style="display:none">
                                                 <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats(true);"/>
                                                 <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(true);"/>                               
                                             </hbox>
-                                            <hbox height="24px" width="300px" align="bottom" id="pagingCommandStats" style="display:none">
+                                            <hbox height="24px" hflex="1" align="bottom" id="pagingCommandStats" style="display:none">
                                                 <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllCommandStats(false);"/>
                                                 <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(false);"/>                               
                                             </hbox>
@@ -196,12 +196,12 @@
                         </vbox>
                     </groupbox>
                     <!-- Groupbox for job stats -->
-                    <groupbox width="580px" mold="3d" closable="false" style="margin-left:5px">
+                    <groupbox hflex="1" mold="3d" closable="false" style="margin-left:5px">
                         <caption label=" ">
                             <label value="${c:l('jobStats')}" sclass="title" style="float:left;"/>
                         </caption>
-                        <vbox width="100%" align="right">
-                            <vbox width="100%" align="left">
+                        <vbox hflex="1" align="right">
+                            <vbox hflex="1" align="left">
                                 <!-- Job stats grid (only shown when there are stats) -->
                                 <grid id="jobStatsGrid" mold="paging" pageSize="10" style="display:none">
                                     <auxhead sclass="category-center">
@@ -221,18 +221,18 @@
                                         </auxheader>
                                     </auxhead>
                                     <columns>
-                                        <column label="${c:l('dbName')}" sort="auto(dbName)" width="170px"/>
-                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="215px"/>
-                                        <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
-                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
+                                        <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="30"/>
+                                        <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="40"/>
+                                        <column label="${c:l('statsCount')}" sort="auto(count)" hflex="10"/>
+                                        <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" hflex="20"/>
                                     </columns>
                                     <foot id="jobStatsFooter" style="display:none">
                                         <footer span="4">
-                                            <hbox height="24px" width="300px" align="bottom" id="showAllJobStats" style="display:none">
+                                            <hbox height="24px" hflex="1" align="bottom" id="showAllJobStats" style="display:none">
                                                 <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats(true);"/>
                                                 <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(true);"/>                               
                                             </hbox>
-                                            <hbox height="24px" width="300px" align="bottom" id="pagingJobStats" style="display:none">
+                                            <hbox height="24px" hflex="1" align="bottom" id="pagingJobStats" style="display:none">
                                                 <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllJobStats(false);"/>
                                                 <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(false);"/>                               
                                             </hbox>
