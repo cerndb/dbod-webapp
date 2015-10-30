@@ -204,20 +204,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 dbTypeCell.appendChild(new Label(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + instance.getDbType())));
                 row.appendChild(dbTypeCell);
 
-                //Render db size
-                Treecell dbSizeCell = new Treecell();
-                dbSizeCell.appendChild(getFormattedLabel(instance.getDbSize() + " GB", 10));
-                row.appendChild(dbSizeCell);
-
-                //Render number of connections (if any)
-                Treecell noConnectionsCell = new Treecell();
-                if (instance.getNoConnections() > 0) {
-                    noConnectionsCell.appendChild(getFormattedLabel(String.valueOf(instance.getNoConnections()), 10));
-                } else {
-                    noConnectionsCell.appendChild(new Label("-"));
-                }
-                row.appendChild(noConnectionsCell);
-
                 //Render state as an image with tooltiptext
                 Image state = new Image();
                 state.setWidth("20px");
