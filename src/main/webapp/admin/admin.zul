@@ -41,19 +41,20 @@
     <topBar/>
 
     <!-- Main container for the databases overview (calls init method when created)-->
-    <div width="100%" align="center">
-        <tabbox style="margin-top:30px;margin-bottom:10px;margin-left:5px" width="1220px">
+    <div>
+        <vbox align="center" hflex="1">
+        <tabbox hflex="1" style="margin-top:30px;margin-bottom:10px;margin-left:5px" sclass="boxing">
             <tabs>
                 <tab id="tabInstances" label="${c:l('tabInstances')}" />
                 <tab id="tabMonitoring" label="${c:l('tabMonitoring')}" />
             </tabs>
             <tabpanels>
                 <tabpanel>
-                    <vbox use="AdminController" id="controller" align="center" width="100%">
+                    <vbox use="AdminController" id="controller" align="center" hflex="1">
                         <!-- Timer to update the instances every minute -->
                         <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
                         <!-- Groupbox for the instances overview -->
-                        <groupbox width="1200px" mold="3d" closable="false">
+                        <groupbox hflex="1" mold="3d" closable="false" sclass="boxing">
                             <caption label=" ">
                                 <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
                                 <hbox height="24px" style="float:right" align="bottom">
@@ -71,10 +72,10 @@
                                     <toolbarbutton tooltiptext="${c:l('refreshInstances')}" zclass="button" image="/img/refresh.png" onClick="controller.refreshInstances();"/>
                                 </hbox>
                             </caption>
-                            <vbox width="100%" align="right">
-                                <vbox width="100%" align="left" xmlns:c="http://www.zkoss.org/2005/zk/client">
+                            <vbox hflex="1" align="right">
+                                <vbox hflex="1" align="left" xmlns:c="http://www.zkoss.org/2005/zk/client">
                                     <!-- Overview tree (only shown when there are instances) -->
-                                    <tree id="overviewTree" mold="paging" pageSize="20" style="display:none" width="1185px">
+                                    <tree id="overviewTree" mold="paging" pageSize="20" style="display:none" hflex="1" span="true">
                                         <auxhead sclass="category-center">
                                             <auxheader colspan="1">
                                             </auxheader>
@@ -131,7 +132,7 @@
                                                     </combobox>
                                                 </hbox>
                                             </auxheader>
-                                            <auxheader colspan="3" />
+                                            <auxheader colspan="1"/>
                                             <auxheader colspan="1">
                                                 <hbox align="bottom">
                                                     <image src="/img/filter.png" width="18px" height="18px"/>
@@ -148,15 +149,15 @@
                                             <treecol width="70px">
                                                 <checkbox id="checkAll" onCheck="controller.checkAll()" style="margin-left:15px"/>
                                             </treecol>
-                                            <treecol label="${c:l('dbName')}" width="120px" sortAscending="${compNameAsc}" sortDescending="${compNameDsc}"/>
-                                            <treecol label="${c:l('host')}" width="120px" sortAscending="${compHostAsc}" sortDescending="${compHostDsc}"/>
-                                            <treecol label="${c:l('username')}" width="90px" sortAscending="${compUsernameAsc}" sortDescending="${compUsernameDsc}"/>
-                                            <treecol label="${c:l('eGroup')}" width="150px"/>
-                                            <treecol label="${c:l('category')}" width="65px" sortAscending="${compCategoryAsc}" sortDescending="${compCategoryDsc}"/>
-                                            <treecol label="${c:l('project')}" width="130px"/>
-                                            <treecol label="${c:l('dbType')}" width="75px" sortAscending="${compDbTypeAsc}" sortDescending="${compDbTypeDsc}"/>
-                                            <treecol label="${c:l('state')}" width="45px" sortAscending="${compStateAsc}" sortDescending="${compStateDsc}"/>
-                                            <treecol label="${c:l('actions')}" align="center"/>
+                                            <treecol label="${c:l('dbName')}" hflex="10" sortAscending="${compNameAsc}" sortDescending="${compNameDsc}"/>
+                                            <treecol label="${c:l('host')}" hflex="10" sortAscending="${compHostAsc}" sortDescending="${compHostDsc}"/>
+                                            <treecol label="${c:l('username')}" hflex="10" sortAscending="${compUsernameAsc}" sortDescending="${compUsernameDsc}"/>
+                                            <treecol label="${c:l('eGroup')}" hflex="15"/>
+                                            <treecol label="${c:l('category')}" hflex="10" sortAscending="${compCategoryAsc}" sortDescending="${compCategoryDsc}"/>
+                                            <treecol label="${c:l('project')}" hflex="15"/>
+                                            <treecol label="${c:l('dbType')}" hflex="10" sortAscending="${compDbTypeAsc}" sortDescending="${compDbTypeDsc}"/>
+                                            <treecol label="${c:l('state')}" hflex="5" sortAscending="${compStateAsc}" sortDescending="${compStateDsc}"/>
+                                            <treecol label="${c:l('actions')}" width="200px" align="center"/>
                                         </treecols>
                                         <treefoot id="footer" style="display:none">
                                             <treefooter span="12">
@@ -189,12 +190,12 @@
                         <!-- Hbox for upgades and instances to destroy -->
                         <hbox>
                             <!-- Groupbox for instances to destroy -->
-                            <groupbox width="595px" mold="3d" closable="false" style="margin-top:20px">
+                            <groupbox hflex="1" mold="3d" closable="false" style="margin-top:20px">
                                 <caption label=" ">
                                     <label value="${c:l('toDestroy')}" sclass="title" style="float:left;"/>
                                 </caption>
-                                <vbox width="100%" align="right">
-                                    <vbox width="100%" align="left">
+                                <vbox hflex="1" align="right">
+                                    <vbox hflex="1" align="left">
                                         <!-- Destroy grid (only shown when there are instances to destroy) -->
                                         <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none">
                                             <columns>
@@ -225,12 +226,12 @@
                             </groupbox>
 
                             <!-- Groupbox for upgrades -->
-                            <groupbox width="595px" mold="3d" closable="false" style="margin-top:20px;margin-left:10px">
+                            <groupbox hflex="1" mold="3d" closable="false" style="margin-top:20px;margin-left:10px">
                                 <caption label=" ">
                                     <label value="${c:l('availableUpgrades')}" sclass="title" style="float:left;"/>
                                 </caption>
-                                <vbox width="100%" align="right">
-                                    <vbox width="100%" align="left">
+                                <vbox hflex="1" align="right">
+                                    <vbox hflex="1" align="left">
                                         <!-- Upgrades grid (only shown when there are upgrades) -->
                                         <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none">
                                             <columns>
@@ -387,6 +388,7 @@
                 </tabpanel>
             </tabpanels>
         </tabbox>
+        </vbox>
     </div>
     
     <!-- Popup to create a new request -->
