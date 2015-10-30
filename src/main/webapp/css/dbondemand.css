@@ -2,6 +2,10 @@
     margin-right: 200px;
 }
 
+body {
+    padding: 0;
+}
+
 .button,
 .buttonDisabled {
    width: 20px !important;
@@ -64,7 +68,7 @@
 
 .boxing {
     max-width: 1200px;
-    min-width: 800px;
+    min-width: 850px;
 }
 
 .appTitle {

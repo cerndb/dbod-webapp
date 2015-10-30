@@ -1,4 +1,4 @@
-<div use="TopBarController" id="topBarController" width="100%" style="min-height:120px;min-width:900px;">
+<div use="TopBarController" id="topBarController" width="100%" style="min-height:120px;min-width:850px;">
     <div width="100%" xmlns:h="http://www.w3.org/1999/xhtml">
         <html>
             <![CDATA[
