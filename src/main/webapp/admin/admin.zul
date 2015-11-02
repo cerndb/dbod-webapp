@@ -43,7 +43,7 @@
     <!-- Main container for the databases overview (calls init method when created)-->
     <div>
         <vbox align="center" hflex="1">
-        <tabbox hflex="1" style="margin-top:30px;margin-bottom:10px;margin-left:5px" sclass="boxing">
+        <tabbox hflex="1" style="margin-top:30px;margin-bottom:10px;" sclass="boxing">
             <tabs>
                 <tab id="tabInstances" label="${c:l('tabInstances')}" />
                 <tab id="tabMonitoring" label="${c:l('tabMonitoring')}" />
@@ -54,7 +54,7 @@
                         <!-- Timer to update the instances every minute -->
                         <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
                         <!-- Groupbox for the instances overview -->
-                        <groupbox hflex="1" mold="3d" closable="false" sclass="boxing">
+                        <groupbox hflex="1" mold="3d" closable="false">
                             <caption label=" ">
                                 <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
                                 <hbox height="24px" style="float:right" align="bottom">
@@ -146,7 +146,7 @@
                                             </auxheader>
                                         </auxhead>
                                         <treecols>
-                                            <treecol width="70px">
+                                            <treecol width="50px">
                                                 <checkbox id="checkAll" onCheck="controller.checkAll()" style="margin-left:15px"/>
                                             </treecol>
                                             <treecol label="${c:l('dbName')}" hflex="10" sortAscending="${compNameAsc}" sortDescending="${compNameDsc}"/>
@@ -188,7 +188,7 @@
                         </groupbox>
 
                         <!-- Hbox for upgades and instances to destroy -->
-                        <hbox>
+                        <hbox hflex="1">
                             <!-- Groupbox for instances to destroy -->
                             <groupbox hflex="1" mold="3d" closable="false" style="margin-top:20px">
                                 <caption label=" ">
@@ -197,10 +197,10 @@
                                 <vbox hflex="1" align="right">
                                     <vbox hflex="1" align="left">
                                         <!-- Destroy grid (only shown when there are instances to destroy) -->
-                                        <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none">
+                                        <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
                                             <columns>
-                                                <column label="${c:l('dbName')}" sort="auto(dbName)" width="520px"/>
-                                                <column label="" width="60px"/>
+                                                <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="9"/>
+                                                <column label="" hflex="1"/>
                                             </columns>
                                             <foot id="footerDestroy" style="display:none">
                                                 <footer span="5">
@@ -233,12 +233,12 @@
                                 <vbox hflex="1" align="right">
                                     <vbox hflex="1" align="left">
                                         <!-- Upgrades grid (only shown when there are upgrades) -->
-                                        <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none">
+                                        <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
                                             <columns>
-                                                <column label="${c:l('dbType')}" sort="auto(dbType)" width="100px"/>
-                                                <column label="${c:l('category')}" sort="auto(category)" width="100px"/>
-                                                <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" width="170px"/>
-                                                <column label="${c:l('versionTo')}" sort="auto(versionTo)" width="170px"/>
+                                                <column label="${c:l('dbType')}" sort="auto(dbType)" hflex="2"/>
+                                                <column label="${c:l('category')}" sort="auto(category)" hflex="2"/>
+                                                <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" hflex="3"/>
+                                                <column label="${c:l('versionTo')}" sort="auto(versionTo)" hflex="3"/>
                                                 <column label="" width="40px"/>
                                             </columns>
                                             <foot id="footerUpgrades" style="display:none">
@@ -271,121 +271,7 @@
                         </hbox>
                     </vbox>
                 </tabpanel>
-                <tabpanel fulfill="tabMonitoring.onSelect">
-                    <vbox use="AdminMonitoringController" id="monitoringController" align="center" width="100%">
-                        <!-- hbox for server stats -->
-                        <hbox>
-                            <vbox align="center" width="600px">
-                                <label value="${c:l('monitoringMemory')}" sclass="title" />
-                                <html>
-                                    <![CDATA[
-                                        <div id="memoryGraphDiv" style="width:560px; height:auto; min-height: 300px" class="preloader"></div>
-                                    ]]>
-                                </html>
-                            </vbox>
-                            <vbox align="center" width="600px">
-                                <label value="${c:l('monitoringCPU')}" sclass="title" />
-                                <html>
-                                    <![CDATA[
-                                        <div id="cpuGraphDiv" style="width:560px; height:auto; min-height: 300px" class="preloader"></div>
-                                    ]]>
-                                </html>
-                            </vbox>
-                        </hbox>
-                        <!-- hbox for execution stats -->
-                        <hbox style="margin-top: 10px">
-                            <!-- Groupbox for command stats -->
-                            <groupbox width="580px" mold="3d" closable="false" style="margin-right:10px">
-                                <caption label=" ">
-                                    <label value="${c:l('commandStats')}" sclass="title" style="float:left;"/>
-                                </caption>
-                                <vbox width="100%" align="right">
-                                    <vbox width="100%" align="left">
-                                        <!-- Commmand stats grid (only shown when there are stats) -->
-                                        <grid id="commandStatsGrid" mold="paging" pageSize="10" style="display:none">
-                                            <columns>
-                                                <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="330px"/>
-                                                <column label="${c:l('statsCount')}" sort="auto(count)" width="80px"/>
-                                                <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="150px"/>
-                                            </columns>
-                                            <foot id="commandStatsFooter" style="display:none">
-                                                <footer span="3">
-                                                    <hbox height="24px" width="300px" align="bottom" id="showAllCommandStats" style="display:none">
-                                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats(true);"/>
-                                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(true);"/>                               
-                                                    </hbox>
-                                                    <hbox height="24px" width="300px" align="bottom" id="pagingCommandStats" style="display:none">
-                                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllCommandStats(false);"/>
-                                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(false);"/>                               
-                                                    </hbox>
-                                                </footer>
-                                            </foot>
-                                        </grid>
-                                    </vbox>
-                                    <!--Show a message in case there no stats  -->
-                                    <div id="emptyCommandStatsMsg" style="display:none">
-                                        <div style="padding-right:170px">
-                                            <label value="${c:l('emptyCommandStatsList')}"/>
-                                        </div>
-                                    </div>
-                                </vbox>
-                            </groupbox>
-                            <!-- Groupbox for job stats -->
-                            <groupbox width="580px" mold="3d" closable="false" style="margin-left:10px">
-                                <caption label=" ">
-                                    <label value="${c:l('jobStats')}" sclass="title" style="float:left;"/>
-                                </caption>
-                                <vbox width="100%" align="right">
-                                    <vbox width="100%" align="left">
-                                        <!-- Job stats grid (only shown when there are stats) -->
-                                        <grid id="jobStatsGrid" mold="paging" pageSize="10" style="display:none">
-                                            <auxhead sclass="category-center">
-                                                <auxheader colspan="1">
-                                                    <hbox align="bottom">
-                                                        <image src="/img/filter.png" width="18px" height="18px"/>
-                                                        <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
-                                                    </hbox>
-                                                </auxheader>
-                                                <auxheader colspan="1">
-                                                    <hbox align="bottom">
-                                                        <image src="/img/filter.png" width="18px" height="18px"/>
-                                                        <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
-                                                    </hbox>
-                                                </auxheader>
-                                                <auxheader colspan="2">
-                                                </auxheader>
-                                            </auxhead>
-                                            <columns>
-                                                <column label="${c:l('dbName')}" sort="auto(dbName)" width="170px"/>
-                                                <column label="${c:l('statsCommandName')}" sort="auto(commandName)" width="215px"/>
-                                                <column label="${c:l('statsCount')}" sort="auto(count)" width="60px"/>
-                                                <column label="${c:l('statsMeanDuration')}" sort="auto(meanDuration)" width="120px"/>
-                                            </columns>
-                                            <foot id="jobStatsFooter" style="display:none">
-                                                <footer span="4">
-                                                    <hbox height="24px" width="300px" align="bottom" id="showAllJobStats" style="display:none">
-                                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats(true);"/>
-                                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(true);"/>                               
-                                                    </hbox>
-                                                    <hbox height="24px" width="300px" align="bottom" id="pagingJobStats" style="display:none">
-                                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllJobStats(false);"/>
-                                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(false);"/>                               
-                                                    </hbox>
-                                                </footer>
-                                            </foot>
-                                        </grid>
-                                    </vbox>
-                                    <!--Show a message in case there no stats  -->
-                                    <div id="emptyJobStatsMsg" style="display:none">
-                                        <div style="padding-right:180px">
-                                            <label value="${c:l('emptyJobStatsList')}"/>
-                                        </div>
-                                    </div>
-                                </vbox>
-                            </groupbox>
-                        </hbox>
-                    </vbox>
-                </tabpanel>
+                
             </tabpanels>
         </tabbox>
         </vbox>
