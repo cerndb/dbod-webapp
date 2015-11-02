@@ -7,6 +7,7 @@
 <?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
 <?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
+<?component name="jobsTab" inline="true" macroURI="/WEB-INF/macros/jobsTab.zul"?>
 
 <zk>
     <!-- Import controllers -->
@@ -271,7 +272,7 @@
                         </hbox>
                     </vbox>
                 </tabpanel>
-                
+                <jobsTab/>
             </tabpanels>
         </tabbox>
         </vbox>

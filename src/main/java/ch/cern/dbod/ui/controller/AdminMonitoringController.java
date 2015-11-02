@@ -59,10 +59,6 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
      */
     private List<JobStat> jobStats;
     /**
-     * URL to connect to ES
-     */
-    URL itESURL;
-    /**
      * Helper to obtain monitoring data from ElasticSearch
      */
     private ESHelper esHelper;
@@ -80,19 +76,6 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
         statsDAO = new StatsDAO();
         commandStats = statsDAO.selectCommandStats();
         jobStats = statsDAO.selectJobStats();
-        
-        //Get password for keystore
-        String keystorePswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.KEYSTORE_PSWD);
-        
-        try {
-            //Initialise helpers
-            itESURL = new URL(CommonConstants.IT_ES_URL);
-            ssoHelper = new SSOHelper(CommonConstants.KEYSTORE_LOCATION, keystorePswd);
-            esHelper = new ESHelper(itESURL.toString());
-            
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException | KeyManagementException | UnrecoverableKeyException ex) {
-            Logger.getLogger(AdminMonitoringController.class.getName()).log(Level.SEVERE, "COULD NOT INITIALISE ELASTIC SEARCH", ex);
-        }
     }
 
     /**
@@ -137,28 +120,6 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
         }
         else {
             showAllCommandStats(false);
-        }
-        
-        //Generate graphs for instances
-        if (itESURL != null && ssoHelper != null && esHelper != null) {
-            try {
-                //Get SSO cookie
-                Cookie cookie = ssoHelper.getSSOCookie(itESURL.getHost());
-                
-                //Generate memory graph
-                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie,
-                                        CommonConstants.IT_ES_MEMORY_GROUP,
-                                        CommonConstants.IT_ES_MEMORY_STAT,
-                                        CommonConstants.MONITORING_ADMIN_DAYS) + ", 'memoryGraphDiv');");
-                
-                //Generate CPU graph
-                Clients.evalJavaScript("drawAdminGraph(" + esHelper.getTopBottomJSONMetrics(cookie,
-                                        CommonConstants.IT_ES_CPU_GROUP,
-                                        CommonConstants.IT_ES_CPU_STAT,
-                                        CommonConstants.MONITORING_ADMIN_DAYS) + ", 'cpuGraphDiv');");
-            } catch (IOException ex) {
-                Logger.getLogger(AdminMonitoringController.class.getName()).log(Level.SEVERE, "COULD NOT OBTAIN SSO COOKIE", ex);
-            }
         }
     }
     
