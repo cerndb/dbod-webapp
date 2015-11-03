@@ -52,8 +52,8 @@
         </menubar>
     </div>
     
-    <vbox align="center" hflex="1" style="margin-top:30px;">
-        <div id="announcementDiv" visible="false" sclass="boxing">
+    <vbox align="center" hflex="1">
+        <div id="announcementDiv" visible="false" sclass="boxing" style="margin-top:30px;">
             <groupbox contentStyle="overflow:auto" mold="3d">
                 <caption label=" ">
                     <label value="${c:l('announcementTitle')}" sclass="title" style="float:left;"/>
