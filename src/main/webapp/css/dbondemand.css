@@ -157,3 +157,7 @@ a {
 .z-caption {
     white-space: normal;
 }
+
+.z-treecell-content span:not(:first-child).z-tree-spacer {
+    width: 0;
+}
