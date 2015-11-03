@@ -1,0 +1,5 @@
+<tabpanel fulfill="tabUpgrades.onSelect">
+    <vbox id="upgradesController" align="center" hflex="1">
+        WIP
+    </vbox>
+</tabpanel>

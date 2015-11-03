@@ -19,12 +19,12 @@
                             <foot id="commandStatsFooter" style="display:none">
                                 <footer span="3">
                                     <hbox height="24px" width="300px" align="bottom" id="showAllCommandStats" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllCommandStats(true);"/>
-                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(true);"/>                               
+                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="monitoringController.showAllCommandStats(true);"/>
+                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="monitoringController.showAllCommandStats(true);"/>                               
                                     </hbox>
                                     <hbox height="24px" width="300px" align="bottom" id="pagingCommandStats" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllCommandStats(false);"/>
-                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllCommandStats(false);"/>                               
+                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="monitoringController.showAllCommandStats(false);"/>
+                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="monitoringController.showAllCommandStats(false);"/>                               
                                     </hbox>
                                 </footer>
                             </foot>
@@ -51,13 +51,13 @@
                                 <auxheader colspan="1">
                                     <hbox align="bottom">
                                         <image src="/img/filter.png" width="18px" height="18px"/>
-                                        <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
+                                        <textbox id="jobStatsDBNameFilter" onChanging="self.value = event.value; monitoringController.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="130px" />
                                     </hbox>
                                 </auxheader>
                                 <auxheader colspan="1">
                                     <hbox align="bottom">
                                         <image src="/img/filter.png" width="18px" height="18px"/>
-                                        <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; controller.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
+                                        <textbox id="jobStatsCommandFilter" onChanging="self.value = event.value; monitoringController.filterJobStats(); self.focus(); self.setSelectionRange(self.value.length(),self.value.length())" width="175px" />
                                     </hbox>
                                 </auxheader>
                                 <auxheader colspan="2">
@@ -72,12 +72,12 @@
                             <foot id="jobStatsFooter" style="display:none">
                                 <footer span="4">
                                     <hbox height="24px" width="300px" align="bottom" id="showAllJobStats" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="controller.showAllJobStats(true);"/>
-                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(true);"/>                               
+                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="monitoringController.showAllJobStats(true);"/>
+                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="monitoringController.showAllJobStats(true);"/>                               
                                     </hbox>
                                     <hbox height="24px" width="300px" align="bottom" id="pagingJobStats" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="controller.showAllJobStats(false);"/>
-                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="controller.showAllJobStats(false);"/>                               
+                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="monitoringController.showAllJobStats(false);"/>
+                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="monitoringController.showAllJobStats(false);"/>                               
                                     </hbox>
                                 </footer>
                             </foot>

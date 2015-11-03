@@ -9,6 +9,8 @@
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
 <?component name="jobsTab" inline="true" macroURI="/WEB-INF/macros/jobsTab.zul"?>
 <?component name="instancesTab" inline="true" macroURI="/WEB-INF/macros/instancesTab.zul"?>
+<?component name="expiredTab" inline="true" macroURI="/WEB-INF/macros/expiredTab.zul"?>
+<?component name="upgradesTab" inline="true" macroURI="/WEB-INF/macros/upgradesTab.zul"?>
 
 <zk>
     <!-- Import controllers -->
@@ -47,12 +49,16 @@
         <vbox align="center" hflex="1">
         <tabbox hflex="1" style="margin-top:30px;margin-bottom:10px;" sclass="boxing">
             <tabs>
-                <tab id="tabInstances" label="${c:l('tabInstances')}" />
-                <tab id="tabJobs" label="${c:l('tabJobs')}" />
+                <tab id="tabInstances" label="${c:l('tabInstances')}"/>
+                <tab id="tabJobs" label="${c:l('tabJobs')}"/>
+                <tab id="tabExpired" label="${c:l('tabExpired')}"/>
+                <tab id="tabUpgrades" label="${c:l('tabUpgrades')}"/>
             </tabs>
             <tabpanels>
                 <instancesTab/>
                 <jobsTab/>
+                <expiredTab/>
+                <upgradesTab/>
             </tabpanels>
         </tabbox>
         </vbox>

@@ -1,0 +1,5 @@
+<tabpanel fulfill="tabExpired.onSelect">
+    <vbox id="expiredController" align="center" hflex="1">
+        WIP
+    </vbox>
+</tabpanel>
