@@ -1,4 +1,4 @@
-<tabpanel fulfill="tabMonitoring.onSelect">
+<tabpanel fulfill="tabJobs.onSelect">
     <vbox use="AdminMonitoringController" id="monitoringController" align="center" hflex="1">
         <!-- hbox for execution stats -->
         <hbox style="margin-top: 10px">
