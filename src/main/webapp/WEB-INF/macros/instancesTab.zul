@@ -3,7 +3,7 @@
         <!-- Timer to update the instances every minute -->
         <timer id="refresh" delay="60000" repeats="true" onTimer="adminController.refreshInstances();"/>
         <!-- Groupbox for the instances overview -->
-        <groupbox hflex="1" mold="3d" closable="false">
+        <groupbox hflex="1" mold="3d" closable="false" style="margin-top:-5px">
             <caption label=" ">
                 <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
                 <hbox height="24px" style="float:right" align="bottom">

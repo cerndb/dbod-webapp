@@ -1,7 +1,7 @@
 <tabpanel fulfill="tabJobs.onSelect">
     <vbox use="AdminMonitoringController" id="monitoringController" align="center" hflex="1">
         <!-- hbox for execution stats -->
-        <hbox style="margin-top:10px" hflex="1">
+        <hbox hflex="1">
             <!-- Groupbox for command stats -->
             <groupbox hflex="3" mold="3d" closable="false" style="margin-right:5px">
                 <caption label=" ">
