@@ -20,6 +20,7 @@
             import ch.cern.dbod.ui.controller.AdminMonitoringController;
             import ch.cern.dbod.ui.controller.TopBarController;
             import ch.cern.dbod.ui.controller.NewInstanceController;
+            import ch.cern.dbod.ui.controller.UpgradesController;
             import ch.cern.dbod.util.CommonConstants;
             import ch.cern.dbod.util.TreeNodeComparator;
             import org.zkoss.util.resource.Labels;

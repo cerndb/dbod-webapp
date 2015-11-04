@@ -174,49 +174,7 @@
                 </vbox>
             </groupbox>
 
-            <!-- Groupbox for upgrades -->
-            <groupbox hflex="1" mold="3d" closable="false" style="margin-top:20px;margin-left:10px">
-                <caption label=" ">
-                    <label value="${c:l('availableUpgrades')}" sclass="title" style="float:left;"/>
-                </caption>
-                <vbox hflex="1" align="right">
-                    <vbox hflex="1" align="left">
-                        <!-- Upgrades grid (only shown when there are upgrades) -->
-                        <grid id="upgradesGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
-                            <columns>
-                                <column label="${c:l('dbType')}" sort="auto(dbType)" hflex="2"/>
-                                <column label="${c:l('category')}" sort="auto(category)" hflex="2"/>
-                                <column label="${c:l('versionFrom')}" sort="auto(versionFrom)" hflex="3"/>
-                                <column label="${c:l('versionTo')}" sort="auto(versionTo)" hflex="3"/>
-                                <column label="" width="40px"/>
-                            </columns>
-                            <foot id="footerUpgrades" style="display:none">
-                                <footer span="5">
-                                    <hbox height="24px" width="300px" align="bottom" id="showAllUpgrades" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="adminController.showAllUpgrades(true);"/>
-                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="adminController.showAllUpgrades(true);"/>                               
-                                    </hbox>
-                                    <hbox height="24px" width="300px" align="bottom" id="pagingUpgrades" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="adminController.showAllUpgrades(false);"/>
-                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="adminController.showAllUpgrades(false);"/>                               
-                                    </hbox>
-                                </footer>
-                            </foot>
-                        </grid>
-                    </vbox>
-                    <!--Show a message in case there no upgrades  -->
-                    <div id="emptyUpgradesMsg" style="display:none">
-                        <div style="padding-right:200px">
-                            <label value="${c:l('emptyUpgradesList')}"/>
-                        </div>
-                    </div>
-                    <!--Button to add new upgrade  -->
-                    <hbox height="24px" align="bottom">
-                        <label sclass="title" value="${c:l('addUpgradeTitle')}" style="font-size:10pt !important;cursor:pointer;" onClick="adminController.openAddUpgrade();"/>
-                        <toolbarbutton tooltiptext="${c:l('addUpgradeTitle')}" zclass="button" image="/img/add_upgrade.png" onClick="adminController.openAddUpgrade();"/>
-                    </hbox>
-                </vbox>
-            </groupbox>
+            
         </hbox>
     </vbox>
 </tabpanel>

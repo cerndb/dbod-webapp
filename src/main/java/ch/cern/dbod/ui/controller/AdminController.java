@@ -142,12 +142,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         Tree overviewTree = (Tree) getFellow("overviewTree");
         overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
-        
-        //Upgrades grid
-        Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        upgradesGrid.setModel(new UpgradesListModel(upgrades));
-        upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
-        
+
         //Destroy grid
         Grid destroyGrid = (Grid) getFellow("destroyGrid");
         destroyGrid.setModel(new DestroyListModel(toDestroy));
@@ -169,13 +164,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         else {
             showAllToDestroy(false);
-        }
-        Boolean showAllUpgrades = (Boolean) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES);
-        if (showAllUpgrades != null && showAllUpgrades) {
-            showAllUpgrades(showAllUpgrades);
-        }
-        else {
-            showAllUpgrades(false);
         }
     }
     
@@ -199,22 +187,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Tree) getFellow("overviewTree")).setStyle("display:none");
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
             ((Treefoot) getFellow("footer")).setStyle("display:none");
-        }
-        
-        if (upgrades != null && upgrades.size() > 0) {
-            ((Grid) getFellow("upgradesGrid")).setStyle("display:block");
-            ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:none");
-            if (upgrades.size() > 10) {
-                ((Foot) getFellow("footerUpgrades")).setStyle("display:block");
-            }
-            else {
-                ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
-            }
-        }
-        else {
-            ((Grid) getFellow("upgradesGrid")).setStyle("display:none");
-            ((Div) getFellow("emptyUpgradesMsg")).setStyle("display:block");
-            ((Foot) getFellow("footerUpgrades")).setStyle("display:none");
         }
         
         if (toDestroy != null && toDestroy.size() > 0) {
@@ -298,27 +270,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         try {
             if (destroyGrid.getMold().equals("paging")) {
                 destroyGrid.setActivePage(activePage);
-            }
-        }
-        catch (WrongValueException ex) {}
-        
-        //Set the new upgrades
-        Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        if (upgradesGrid.getMold().equals("paging")) {
-            activePage = upgradesGrid.getActivePage();
-        }
-        if (upgrades != null && upgrades.size() > 0) {
-            if (upgradesGrid.getModel() != null) {
-                ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
-            }
-            else {
-                upgradesGrid.setModel(new UpgradesListModel(upgrades));
-                upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
-            }
-        }
-        try {
-            if (upgradesGrid.getMold().equals("paging")) {
-                upgradesGrid.setActivePage(activePage);
             }
         }
         catch (WrongValueException ex) {}
@@ -561,30 +512,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY, show);
     }
-    
-    /**
-     * Displays all upgrades in the view
-     * 
-     * @param show indicates if all should be displayed or not
-     */
-    public void showAllUpgrades(boolean show) {
-        Grid grid = (Grid) getFellow("upgradesGrid");
-        Hbox showAll = (Hbox) getFellow("showAllUpgrades");
-        Hbox paging = (Hbox) getFellow("pagingUpgrades");
-        if (show) {
-            grid.setMold("default");
-            showAll.setStyle("display:none");
-            paging.setStyle("display:block");
-        }
-        else {
-            grid.setMold("paging");
-            grid.setPageSize(10);
-            showAll.setStyle("display:block");
-            paging.setStyle("display:none");
-        }
-        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES, show);
-    }
-    
+
     /**
      * Re-renders the tree in order to filter instances.
      */
