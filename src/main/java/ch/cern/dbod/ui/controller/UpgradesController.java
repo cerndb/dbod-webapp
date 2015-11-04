@@ -10,7 +10,6 @@
 package ch.cern.dbod.ui.controller;
 
 import ch.cern.dbod.db.dao.UpgradeDAO;
-import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Upgrade;
 import ch.cern.dbod.ui.model.UpgradesListModel;
 import ch.cern.dbod.ui.renderer.UpgradesGridRenderer;
@@ -28,7 +27,7 @@ import org.zkoss.zul.*;
 
 /**
  * Controller for the admin overview of instances. It allows the admins to manage every instance.
- * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class UpgradesController extends Vbox implements BeforeCompose, AfterCompose{
     /**
@@ -39,10 +38,6 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
      * List of upgrades.
      */
     private List<Upgrade> upgrades;
-    /**
-     * List of instances to be destroyed.
-     */
-    private List<Instance> toDestroy;
 
     /**
      * Method executed before the page is composed. Obtains instances from DB.
