@@ -1,5 +1,42 @@
 <tabpanel fulfill="tabExpired.onSelect">
-    <vbox id="expiredController" align="center" hflex="1">
-        WIP
+    <vbox use="ExpiredController" id="expiredController" align="center" hflex="1">
+        <!-- Hbox for upgades and instances to destroy -->
+        <hbox hflex="1">
+            <!-- Groupbox for instances to destroy -->
+            <groupbox hflex="1" mold="3d" closable="false">
+                <caption label=" ">
+                    <label value="${c:l('toDestroy')}" sclass="title" style="float:left;"/>
+                </caption>
+                <vbox hflex="1" align="right">
+                    <vbox hflex="1" align="left">
+                        <!-- Destroy grid (only shown when there are instances to destroy) -->
+                        <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
+                            <columns>
+                                <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="9"/>
+                                <column label="" hflex="1"/>
+                            </columns>
+                            <foot id="footerDestroy" style="display:none">
+                                <footer span="5">
+                                    <hbox height="24px" width="300px" align="bottom" id="showAllToDestroy" style="display:none">
+                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="adminController.showAllToDestroy(true);"/>
+                                        <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="expiredController.showAllToDestroy(true);"/>                               
+                                    </hbox>
+                                    <hbox height="24px" width="300px" align="bottom" id="pagingToDestroy" style="display:none">
+                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="adminController.showAllToDestroy(false);"/>
+                                        <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="expiredController.showAllToDestroy(false);"/>                               
+                                    </hbox>
+                                </footer>
+                            </foot>
+                        </grid>
+                    </vbox>
+                    <!--Show a message in case there no instances to destroy  -->
+                    <div id="emptyDestroyMsg" style="display:none">
+                        <div style="padding-right:200px">
+                            <label value="${c:l('emptyToDestroyList')}"/>
+                        </div>
+                    </div>
+                </vbox>
+            </groupbox>
+        </hbox>
     </vbox>
 </tabpanel>

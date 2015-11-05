@@ -18,6 +18,7 @@
         <![CDATA[
             import ch.cern.dbod.ui.controller.AdminController;
             import ch.cern.dbod.ui.controller.AdminMonitoringController;
+            import ch.cern.dbod.ui.controller.ExpiredController;
             import ch.cern.dbod.ui.controller.TopBarController;
             import ch.cern.dbod.ui.controller.NewInstanceController;
             import ch.cern.dbod.ui.controller.UpgradesController;
