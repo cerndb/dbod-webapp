@@ -12,8 +12,13 @@
                         <!-- Destroy grid (only shown when there are instances to destroy) -->
                         <grid id="destroyGrid" mold="paging" pageSize="10" style="display:none" hflex="1" span="true">
                             <columns>
-                                <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="9"/>
-                                <column label="" hflex="1"/>
+                                <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="1"/>
+                                <column label="Username" sort="auto(username)" hflex="1"/>
+                                <column label="Host" sort="auto(host)" hflex="1"/>
+                                <column label="Category" sort="auto(category)" hflex="1"/>
+                                <column label="DB Type" sort="auto(dbType)" hflex="1"/>
+                                <column label="Expiry Date" sort="auto(expiryDate)" hflex="1"/>
+                                <column label="" width="70px"/>
                             </columns>
                             <foot id="footerDestroy" style="display:none">
                                 <footer span="5">
