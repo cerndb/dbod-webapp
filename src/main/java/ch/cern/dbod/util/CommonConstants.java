@@ -14,6 +14,7 @@ import ch.cern.dbod.db.entity.Metric;
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class CommonConstants {
     
@@ -183,7 +184,6 @@ public class CommonConstants {
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
     public static final String PARAM_PITR_TIME = "TIMESTAMP";
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";
-    public static final String CATEGORY_PERSONAL = "PERSONAL";
     public static final String CATEGORY_TEST = "TEST";
     public static final String PARAM_VERSION_FROM = "VERSION_FROM";
     public static final String PARAM_VERSION_TO = "VERSION_TO";
