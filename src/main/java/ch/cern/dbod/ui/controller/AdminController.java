@@ -13,13 +13,9 @@ import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Upgrade;
-import ch.cern.dbod.ui.model.DestroyListModel;
 import ch.cern.dbod.ui.model.OverviewTreeModel;
 import ch.cern.dbod.ui.model.OverviewTreeNode;
-import ch.cern.dbod.ui.model.UpgradesListModel;
-import ch.cern.dbod.ui.renderer.DestroyGridRenderer;
 import ch.cern.dbod.ui.renderer.OverviewTreeRenderer;
-import ch.cern.dbod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.JobHelper;
 import java.util.List;
@@ -58,10 +54,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      */
     private List<Upgrade> upgrades;
     /**
-     * List of instances to be destroyed.
-     */
-    private List<Instance> toDestroy;
-    /**
      * Job helper to perform admin actions.
      */
     private JobHelper jobHelper;
@@ -86,7 +78,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         //Select instances
         instanceDAO = new InstanceDAO();
         instances = instanceDAO.selectAll(upgrades);
-        toDestroy = instanceDAO.selectToDestroy();
     }
 
     /**
@@ -143,11 +134,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         overviewTree.setModel(new OverviewTreeModel(instances, overviewTree));
         overviewTree.setItemRenderer(new OverviewTreeRenderer(true));
 
-        //Destroy grid
-        Grid destroyGrid = (Grid) getFellow("destroyGrid");
-        destroyGrid.setModel(new DestroyListModel(toDestroy));
-        destroyGrid.setRowRenderer(new DestroyGridRenderer(instanceDAO));
-        
         displayOrHideAreas();
         
         //Get show all from session
@@ -157,13 +143,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         else{
             showAll(false);
-        }
-        Boolean showAllToDestroy = (Boolean) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY);
-        if (showAllToDestroy != null && showAllToDestroy) {
-            showAllToDestroy(showAllToDestroy);
-        }
-        else {
-            showAllToDestroy(false);
         }
     }
     
@@ -188,22 +167,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             ((Div) getFellow("emptyInstancesMsg")).setStyle("display:block");
             ((Treefoot) getFellow("footer")).setStyle("display:none");
         }
-        
-        if (toDestroy != null && toDestroy.size() > 0) {
-            ((Grid) getFellow("destroyGrid")).setStyle("display:block");
-            ((Div) getFellow("emptyDestroyMsg")).setStyle("display:none");
-            if (toDestroy.size() > 10) {
-                ((Foot) getFellow("footerDestroy")).setStyle("display:block");
-            }
-            else {
-                ((Foot) getFellow("footerDestroy")).setStyle("display:none");
-            }
-        }
-        else {
-            ((Grid) getFellow("destroyGrid")).setStyle("display:none");
-            ((Div) getFellow("emptyDestroyMsg")).setStyle("display:block");
-            ((Foot) getFellow("footerDestroy")).setStyle("display:none");
-        }
     }
 
     /**
@@ -227,9 +190,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         instances = newInstances;
         
-        //Get instances to destroy
-        toDestroy = instanceDAO.selectToDestroy();
-        
         //Refresh tree
         Tree tree = (Tree) getFellow("overviewTree");
         int activePage = 0;
@@ -249,27 +209,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         try {
             if (tree.getMold().equals("paging")) {
                 tree.setActivePage(activePage);
-            }
-        }
-        catch (WrongValueException ex) {}
-        
-        //Set the new instances to be destroyed
-        Grid destroyGrid = (Grid) getFellow("destroyGrid");
-        if (destroyGrid.getMold().equals("paging")) {
-            activePage = destroyGrid.getActivePage();
-        }
-        if (toDestroy != null && toDestroy.size() > 0) {
-            if (destroyGrid.getModel() != null) {
-                ((DestroyListModel)destroyGrid.getModel()).setInstances(toDestroy);
-            }
-            else {
-                destroyGrid.setModel(new DestroyListModel(toDestroy));
-                destroyGrid.setRowRenderer(new DestroyGridRenderer(instanceDAO));
-            }
-        }
-        try {
-            if (destroyGrid.getMold().equals("paging")) {
-                destroyGrid.setActivePage(activePage);
             }
         }
         catch (WrongValueException ex) {}
@@ -451,23 +390,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     }
     
     /**
-     * Opens the add upgrade window.
-     */
-    public void openAddUpgrade(){
-        try {
-            AddUpgradeController upgradeController = new AddUpgradeController();
-            //Only show window if it is not already being diplayed
-            if (getFellowIfAny(upgradeController.getId()) == null) {
-                upgradeController.setParent(this);
-                upgradeController.doModal();
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, "ERROR OPENING ADD UPGRADE WINDOW", ex);
-            showError(CommonConstants.ERROR_OPENING_ADD_UPGRADE);
-        }
-    }
-    
-    /**
      * Displays all instances in the view (or goes back to normal mold)
      * 
      * @param show indicates if all should be displayed or not
@@ -488,29 +410,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
             paging.setStyle("display:none");
         }
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL, show);
-    }
-    
-    /**
-     * Displays all instances to destroy
-     * 
-     * @param show indicates if all should be displayed or not
-     */
-    public void showAllToDestroy(boolean show) {
-        Grid grid = (Grid) getFellow("destroyGrid");
-        Hbox showAll = (Hbox) getFellow("showAllToDestroy");
-        Hbox paging = (Hbox) getFellow("pagingToDestroy");
-        if (show) {
-            grid.setMold("default");
-            showAll.setStyle("display:none");
-            paging.setStyle("display:block");
-        }
-        else {
-            grid.setMold("paging");
-            grid.setPageSize(10);
-            showAll.setStyle("display:block");
-            paging.setStyle("display:none");
-        }
-        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY, show);
     }
 
     /**
