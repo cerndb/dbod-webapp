@@ -30,6 +30,7 @@ import org.zkoss.zul.*;
 /**
  * Controller for the window that creates a new instance in DBOnDemand
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class NewInstanceController extends Window implements AfterCompose {
     /**
@@ -72,8 +73,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Textbox) getFellow("dbName")).setMaxlength(CommonConstants.MAX_DB_NAME_LENGTH);
         ((Textbox) getFellow("eGroup")).setMaxlength(CommonConstants.MAX_E_GROUP_LENGTH);
         ((Combobox) getFellow("category")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
-        ((Combobox) getFellow("category")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_PERSONAL);
-        ((Combobox) getFellow("category")).getItemAtIndex(2).setValue(CommonConstants.CATEGORY_TEST);
+        ((Combobox) getFellow("category")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_TEST);
         ((Combobox) getFellow("category")).setSelectedIndex(0);
         ((Datebox) getFellow("expiryDate")).setFormat(CommonConstants.DATE_FORMAT);
         ((Datebox) getFellow("expiryDate")).setTimeZonesReadonly(true);

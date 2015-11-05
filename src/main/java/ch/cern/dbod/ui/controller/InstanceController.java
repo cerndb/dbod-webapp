@@ -48,6 +48,7 @@ import org.zkoss.zul.*;
 /**
  * Controller for the instance page.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class InstanceController extends Hbox implements AfterCompose, BeforeCompose {
     /**
@@ -423,17 +424,13 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
             //Values for edit boxes
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
-            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_PERSONAL);
-            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(2).setValue(CommonConstants.CATEGORY_TEST);
+            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_TEST);
             switch (instance.getCategory()) {
                 case CommonConstants.CATEGORY_OFFICIAL:
                     ((Combobox) getFellow("categoryEdit")).setSelectedIndex(0);
                     break;
-                case CommonConstants.CATEGORY_PERSONAL:
-                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
-                    break;
                 case CommonConstants.CATEGORY_TEST:
-                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(2);
+                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
                     break;
             }
             ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));

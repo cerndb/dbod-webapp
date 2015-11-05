@@ -58,7 +58,6 @@
                                     <combobox id="categoryFilter" width="70px" mold="rounded" readonly="true" onSelect="adminController.filterInstances();">
                                         <comboitem label="${c:l('all')}" value=""/>
                                         <comboitem label="${c:l('categoryOFFICIAL')}" value="OFFICIAL"/>
-                                        <comboitem label="${c:l('categoryPERSONAL')}" value="PERSONAL"/>
                                         <comboitem label="${c:l('categoryTEST')}" value="TEST"/>
                                     </combobox>
                                 </hbox>

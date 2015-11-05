@@ -22,6 +22,7 @@ import org.zkoss.zul.Textbox;
 /**
  * Implements static functions to validate fields.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class FormValidations {
     /**
@@ -157,7 +158,6 @@ public class FormValidations {
             }
             //Check category
             if (!category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_OFFICIAL)
-                    && !category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_PERSONAL)
                     && !category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_TEST)) {
                 category.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_CATEGORY_LIST));
                 return false;
