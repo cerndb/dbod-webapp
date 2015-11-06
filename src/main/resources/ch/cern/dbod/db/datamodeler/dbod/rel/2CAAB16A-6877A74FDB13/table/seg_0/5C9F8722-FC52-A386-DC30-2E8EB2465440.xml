@@ -1,0 +1,162 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5C9F8722-FC52-A386-DC30-2E8EB2465440" name="DOD_INSTANCE_CHANGES">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_INSTANCE_CHANGES</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="USERNAME" id="BC3D70C1-D3D0-E83F-A015-A3A38D113320">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>USERNAME</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+<delegate>4A87B602-09CD-718F-3A44-FEA9AC8B2286</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6DCBB3E9-FF78-B3A1-15D2-49B1BF1DDD5F" referredColumn="4A87B602-09CD-718F-3A44-FEA9AC8B2286"/>
+</associations>
+</Column>
+<Column name="DB_NAME" id="A114F2D3-9625-3538-6B85-C0263D045988">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>DB_NAME</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 BYTE</dataTypeSize>
+<delegate>8B04A866-695A-62BC-4428-EE96862699CF</delegate>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6DCBB3E9-FF78-B3A1-15D2-49B1BF1DDD5F" referredColumn="8B04A866-695A-62BC-4428-EE96862699CF"/>
+</associations>
+</Column>
+<Column name="ATTRIBUTE" id="98F220E5-153D-053A-A85D-12F3276681FD">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>ATTRIBUTE</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CHANGE_DATE" id="D7184273-6EA0-1D43-F432-D15B1D57F9AF">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>CHANGE_DATE</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="REQUESTER" id="ABE83C50-18A6-1BC0-7E1E-C4036F3F3B87">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>REQUESTER</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="OLD_VALUE" id="4DE928B5-522C-8735-802C-FAB759AAADE8">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>OLD_VALUE</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 BYTE</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NEW_VALUE" id="07E17236-FE86-B394-BD12-FCA24368BD70">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
+<sourceObjName>NEW_VALUE</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 BYTE</dataTypeSize>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="84E8D670-4E73-C2EB-7013-21F2CF84771C" name="PK_INSTANCE_CHANGES">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>PK_INSTANCE_CHANGES</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
+<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
+<colUsage columnID="98F220E5-153D-053A-A85D-12F3276681FD"/>
+<colUsage columnID="D7184273-6EA0-1D43-F432-D15B1D57F9AF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="77B2A2BE-092F-20CB-44F4-E0BE31BEF3AE" name="PK_INSTANCE_CHANGES">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>PK_INSTANCE_CHANGES</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
+<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
+<colUsage columnID="98F220E5-153D-053A-A85D-12F3276681FD"/>
+<colUsage columnID="D7184273-6EA0-1D43-F432-D15B1D57F9AF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2A4E07D7-EA8C-12B5-A1D2-9BCAD38F8B68" name="DOD_INSTANCES_CHANGES">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
+<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

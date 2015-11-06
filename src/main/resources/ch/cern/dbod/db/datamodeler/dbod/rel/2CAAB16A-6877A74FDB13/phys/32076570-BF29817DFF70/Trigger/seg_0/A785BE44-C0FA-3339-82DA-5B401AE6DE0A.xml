@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="DOD_JOBS_INSERT" directorySegmentName="seg_0" id="A785BE44-C0FA-3339-82DA-5B401AE6DE0A">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_JOBS_INSERT</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<actions>INSERT</actions>
+<body>DECLARE&lt;br/&gt;    pending INTEGER;&lt;br/&gt;BEGIN&lt;br/&gt;    SELECT COUNT(*) INTO pending&lt;br/&gt;    FROM dod_instances&lt;br/&gt;    WHERE username = :NEW.username&lt;br/&gt;        AND db_name = :NEW.db_name&lt;br/&gt;        AND (state = &apos;JOB_PENDING&apos; OR state = &apos;AWAITING_APPROVAL&apos; OR state = &apos;MAINTENANCE&apos;);&lt;br/&gt;&lt;br/&gt;    IF pending &gt; 0 AND :NEW.admin_action = 0&lt;br/&gt;    THEN&lt;br/&gt;        raise_application_error(-20000,&apos;INSTANCE PENDING JOB, AWAITING APPROVAL OR UNDER MAINTENANCE&apos;);&lt;br/&gt;    END IF;&lt;br/&gt;END;</body>
+<triggerTime>BEFORE</triggerTime>
+<owner>CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4</owner>
+<table>50FFE09F-DA98-01E8-51C3-44D37CE14858</table>
+</TriggerOraclev10g>

@@ -1179,3 +1179,40 @@ BEGIN
     END IF;
 END;
 /
+
+-- Inserts the number of instances created so far this month
+CREATE OR REPLACE PROCEDURE merge_stats_monthly_instances
+IS
+  p_agg_num_instances NUMBER;
+  p_inst_last_month NUMBER;
+  p_inst_this_month NUMBER;
+  p_last_month_date DATE;
+  p_this_month_date DATE;
+BEGIN
+  -- Get start date of current month
+  p_this_month_date:=trunc(sysdate,'MM');
+
+  -- Get start date of previous month
+  p_last_month_date:=trunc(ADD_MONTHS(sysdate,-1),'MON');
+
+  -- Query the number of instances created so far this month
+  SELECT COUNT(*) INTO p_inst_this_month
+  FROM dod_instances 
+  WHERE creation_date >= p_this_month_date 
+    and (expiry_date>=TRUNC(SYSDATE) OR expiry_date IS NULL);
+
+  -- Query the number of instances aggregated until last month
+  SELECT agg_num_instances INTO p_agg_num_instances
+  FROM stats_monthly_instances
+  WHERE monthly_date = p_last_month_date;
+
+  -- Insert or update row with monthly instances
+  MERGE INTO stats_monthly_instances 
+  USING dual ON (monthly_date=p_this_month_date)
+    WHEN MATCHED THEN 
+      UPDATE SET num_instances=p_inst_this_month, agg_num_instances=p_agg_num_instances+p_inst_this_month
+    WHEN NOT MATCHED THEN 
+      INSERT (monthly_date, num_instances, agg_num_instances) VALUES (p_this_month_date, p_inst_this_month, p_agg_num_instances+p_inst_this_month);
+END;
+/
+

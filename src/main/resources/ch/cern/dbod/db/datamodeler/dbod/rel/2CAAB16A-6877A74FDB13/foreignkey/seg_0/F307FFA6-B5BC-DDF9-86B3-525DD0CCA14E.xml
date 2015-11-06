@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F307FFA6-B5BC-DDF9-86B3-525DD0CCA14E" name="DOD_JOBS_DEFINITIONS">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_JOBS_DEFINITIONS</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<containerWithKeyObject>50FFE09F-DA98-01E8-51C3-44D37CE14858</containerWithKeyObject>
+<deleteRule>CASCADE</deleteRule>
+<localFKIndex>AEC71E73-632E-ED93-20EE-570CDB13053C</localFKIndex>
+<keyObject>27F6CC94-3F53-AD4F-693D-06A1FB44D769</keyObject>
+<mandatory>true</mandatory>
+<transferable>true</transferable>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

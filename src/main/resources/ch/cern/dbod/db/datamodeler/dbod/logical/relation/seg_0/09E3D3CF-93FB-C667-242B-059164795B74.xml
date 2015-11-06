@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="DOD_PARAMS_JOBS" directorySegmentName="seg_0" id="09E3D3CF-93FB-C667-242B-059164795B74">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>770EDAFA-7A49-527A-3CD1-D1E079965B36</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<sourcePk>9A9B33CD-61DB-025B-32B4-FA221CF617A8</sourcePk>
+<identifying>true</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>2DB67723-2805-9A69-92EF-0ACB6E2D9DC6</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>63050820-85BC-154A-F29A-A59946CEDA03</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

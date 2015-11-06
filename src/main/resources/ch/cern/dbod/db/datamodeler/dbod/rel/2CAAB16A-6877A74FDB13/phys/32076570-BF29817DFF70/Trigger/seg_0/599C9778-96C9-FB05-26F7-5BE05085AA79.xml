@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="DOD_INSTANCES_DELETE" directorySegmentName="seg_0" id="599C9778-96C9-FB05-26F7-5BE05085AA79">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_INSTANCES_DELETE</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<actions>UPDATE</actions>
+<body>DECLARE&lt;br/&gt;    message VARCHAR2 (1024);&lt;br/&gt;BEGIN&lt;br/&gt;    IF :NEW.status = &apos;0&apos;&lt;br/&gt;    THEN&lt;br/&gt;        message := &apos;&lt;html&gt;&lt;br/&gt;                        &lt;body&gt;&lt;br/&gt;                            &lt;p&gt;&lt;br/&gt;                                Instance &lt;b&gt;&apos; || :NEW.db_name || &apos;&lt;/b&gt; has been removed from FIM, or has expired, and has been marked for deletion.&lt;br/&gt;                            &lt;/p&gt;&lt;br/&gt;                            &lt;p&gt;&lt;br/&gt;                                The database will still be running until manually stopped. Please take the necessary actions to free the allocated resources&lt;br/&gt;                                as documented in the corresponding &lt;a href=&quot;https://twiki.cern.ch/twiki/bin/viewauth/DB/Private/DBOnDemandDeletion&quot;&gt;TWiki article&lt;/a&gt;.&lt;br/&gt;                            &lt;/p&gt;&lt;br/&gt;                        &lt;/body&gt;&lt;br/&gt;                    &lt;/html&gt;&apos;;&lt;br/&gt;&lt;br/&gt;        UTL_MAIL.send(sender =&gt; &apos;dbondemand-admin@cern.ch&apos;,&lt;br/&gt;            recipients =&gt; &apos;dbondemand-admin@cern.ch&apos;,&lt;br/&gt;            subject =&gt; &apos;DBOD: INFO: &quot;&apos; || :NEW.db_name || &apos;&quot; marked for deletion&apos;,&lt;br/&gt;            message =&gt; message,&lt;br/&gt;            mime_type =&gt; &apos;text/html&apos;);&lt;br/&gt;    END IF;&lt;br/&gt;END;</body>
+<triggerTime>AFTER</triggerTime>
+<columns>200F7FCB-4F66-E312-AF06-7659B90E4242</columns>
+<owner>CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4</owner>
+<table>775DF4A6-4BCC-2A90-11B6-DB61A7C5A87F</table>
+</TriggerOraclev10g>

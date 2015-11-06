@@ -1,0 +1,52 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="DOD_COMMAND_DEFINITION" directorySegmentName="seg_0" id="DCC9D86A-6161-4852-65FB-A1C8E5CCAC0D">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>2B6B96D2-5578-FF84-C884-C0A8E20C21CC</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_DOD_COMMAND_DEFINITION" id="51C127AD-5672-EB0B-A675-800884C68985">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+</IndexProxy>
+</indexProxies>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="EXEC" id="135D9549-AC23-0AE1-5CEF-0A10E0ABD342">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TYPE" id="C7B7D585-CEE0-029F-FA6C-B245A6EC29D8">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="COMMAND_NAME" id="E73D9C13-BD39-E46E-D36F-825C3688B82C">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_DOD_COMMAND_DEFINITION" id="27F6CC94-3F53-AD4F-693D-06A1FB44D769">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+<existingIndex>51C127AD-5672-EB0B-A675-800884C68985</existingIndex>
+<indexSegment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

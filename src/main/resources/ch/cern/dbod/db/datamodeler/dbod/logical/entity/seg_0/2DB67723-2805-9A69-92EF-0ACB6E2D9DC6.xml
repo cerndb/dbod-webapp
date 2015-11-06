@@ -1,0 +1,204 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2DB67723-2805-9A69-92EF-0ACB6E2D9DC6" name="DOD JOBS">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>50FFE09F-DA98-01E8-51C3-44D37CE14858</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="USERNAME" id="25916EF9-4767-D61F-33BE-770AAA1E5AD0">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>E94E8748-AFE5-7D48-4085-7E18043BAE09</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>00BF44E0-BDAA-327E-C503-240F07885662</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="DB NAME" id="D4679205-95DB-E194-F430-CAF3E952A56D">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>E94E8748-AFE5-7D48-4085-7E18043BAE09</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>91F685A2-EFD7-9F0F-AD27-D0885E4A868E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="COMMAND NAME" id="E54396C8-4773-5FEA-4299-A4014E671F4F">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>D118FDDA-260E-4586-7801-F720CA2B00B1</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>797A149D-F9CA-BA6E-1893-FF5F3A3C2589</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="TYPE" id="638619B2-080D-D775-60C6-2BEAE5233690">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>D118FDDA-260E-4586-7801-F720CA2B00B1</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>80DD46AA-37C5-CFA7-0410-A2322D8540F5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="CREATION DATE" id="9028F371-0385-7219-49CA-DC71515C0605">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>1797C4FC-9905-E1CF-D858-D0D0784B48EF</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+</Attribute>
+<Attribute name="COMPLETION DATE" id="57BB25BC-401B-9024-DB56-BC18831C4353">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>2984B59A-9618-4B88-DBD9-4FD70E1C5055</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+</Attribute>
+<Attribute name="REQUESTER" id="5FA5BDD2-ACD6-DF04-0B9F-6F06D3C6F35E">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>E1F35006-ABAC-7E0A-1105-8E91A5991566</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="ADMIN ACTION" id="C0524248-C13B-EE36-1001-5785B65C4EC0">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>B1F6E8CC-2319-5C4E-69D0-1FB299C7D8A8</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+</Attribute>
+<Attribute name="STATE" id="FB396EA8-5731-36A7-F208-A4F1DD08E5A7">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>C1C30987-AED6-56BB-077D-BADE2505D16F</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="LOG" id="8193AC5F-9CDF-4C30-4093-BCE724D41442">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>C0EB54F1-AE35-2831-DA18-77740156217C</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<dataTypeSize>4000</dataTypeSize>
+</Attribute>
+<Attribute name="RESULT" id="1A7502FE-A5AD-6CFF-922E-062D661B2592">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>18154B4C-7B04-947A-4114-F102CE8042D8</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>2048 BYTE</dataTypeSize>
+</Attribute>
+<Attribute name="EMAIL SENT" id="46B241DB-DDD2-E201-03E1-7920F58B8078">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>4162751B-99DF-CF90-4E53-2384199D43F2</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9A9B33CD-61DB-025B-32B4-FA221CF617A8" name="PK DOD JOBS">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>AA3E2054-B9CC-B5D1-2F7D-4864A2BA905D</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>25916EF9-4767-D61F-33BE-770AAA1E5AD0</attributeRef>
+<attributeRef>D4679205-95DB-E194-F430-CAF3E952A56D</attributeRef>
+<attributeRef>E54396C8-4773-5FEA-4299-A4014E671F4F</attributeRef>
+<attributeRef>638619B2-080D-D775-60C6-2BEAE5233690</attributeRef>
+<attributeRef>9028F371-0385-7219-49CA-DC71515C0605</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
