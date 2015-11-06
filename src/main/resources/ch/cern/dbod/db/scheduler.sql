@@ -39,5 +39,13 @@ BEGIN
         repeat_interval      => 'FREQ=DAILY;',
         enabled              =>  TRUE,
         comments             => 'Checks for expired instances');
+
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name             => 'STATS_MONTHLY_INSTANCES_JOB',
+        job_type             => 'PLSQL_BLOCK',
+        job_action           => 'BEGIN dbondemand.merge_stats_monthly_instances; END;',
+        repeat_interval      => 'FREQ=DAILY;',
+        enabled              =>  TRUE,
+        comments             => 'Updates the number of instances created so far this month');
 END;
 /

@@ -1,0 +1,143 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="DOD_INSTANCES" directorySegmentName="seg_0" id="775DF4A6-4BCC-2A90-11B6-DB61A7C5A87F">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>2B6B96D2-5578-FF84-C884-C0A8E20C21CC</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="UNIQUE_DB_NAME" id="080DF43A-7857-AC37-B4DB-0BF822900B5D">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_DOD_INSTANCES" id="7A60060E-1276-ACC4-BFE0-EB854C790ED9">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+</IndexProxy>
+</indexProxies>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="VERSION" id="0765B03F-8D5C-3752-45EB-3B5774E720E7">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CATEGORY" id="13A0D06B-7AC0-DCF8-E62E-DED6AD0511DC">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="STATUS" id="200F7FCB-4F66-E312-AF06-7659B90E4242">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DESCRIPTION" id="222D92AD-CFBA-0828-BF81-95D8F58FBBCC">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="USERNAME" id="4A87B602-09CD-718F-3A44-FEA9AC8B2286">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="STATE" id="57C4871B-B297-E566-A8DB-7FEDF7E1DAB8">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SLAVE" id="7F5027A6-605B-B333-2FC9-F519369EEB05">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PROJECT" id="88AB1114-2830-B768-E85C-A5023879495C">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DB_NAME" id="8B04A866-695A-62BC-4428-EE96862699CF">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DB_TYPE" id="90346486-B8E6-D9B7-0E6D-1DA4B324BD2B">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="HOST" id="A080E259-AD5A-98FD-0A1D-5F84F82F3693">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="E_GROUP" id="A8C87794-ECD9-1E3C-3011-15D5C1C72CD2">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CREATION_DATE" id="AAEB0BA0-8DD5-3872-59AA-04CCA0C76268">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NO_CONNECTIONS" id="B576B92A-3628-4114-FDBB-050E84B96D4B">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DB_SIZE" id="C3882BEB-2119-275E-FEEE-4F2274AE359B">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="MASTER" id="C79F6ADB-F0E7-40C0-E091-48996C590642">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EXPIRY_DATE" id="ED1C0C84-4E90-F4F7-CFC8-03B1FA57ACBD">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_DOD_INSTANCES" id="76364257-5DB5-492D-D5DB-FA6EE4634C6C">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+<existingIndex>7A60060E-1276-ACC4-BFE0-EB854C790ED9</existingIndex>
+<indexSegment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UNIQUE_DB_NAME" id="CE4861A0-635F-4236-0F1E-69FCB9158801">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+<existingIndex>080DF43A-7857-AC37-B4DB-0BF822900B5D</existingIndex>
+<indexSegment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev11g>

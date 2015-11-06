@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="DOD_INSTANCES_CHANGES" directorySegmentName="seg_0" id="F671917F-1D63-AF8A-5B56-F330DD92D0F9">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>6DCBB3E9-FF78-B3A1-15D2-49B1BF1DDD5F</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<sourcePk>12476AF2-EB0E-212D-BC46-45A816796C45</sourcePk>
+<identifying>true</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>3F11E612-47CD-212C-338A-CFEFDA4EEB37</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>5C206098-CB73-0DCB-1F6B-75576C190B09</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

@@ -1,13 +1,14 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <oracle.dbtools.crest.model.design.logical.LogicalDesign>
-   <object objectType="Entity" objectID="84C76706-F93A-0181-576B-5DEE04B4E68E" name="dod_command_definition" seqName="seg_0"/>
-   <object objectType="Entity" objectID="C228877D-3551-9634-33DA-99DCD4958D4E" name="dod_command_params" seqName="seg_0"/>
-   <object objectType="Entity" objectID="08C83D8E-6E76-D1E3-C50F-28480BBF5AF2" name="dod_instance_changes" seqName="seg_0"/>
-   <object objectType="Entity" objectID="523EA051-C080-603B-E8A7-4FE23691A07D" name="dod_instances" seqName="seg_0"/>
-   <object objectType="Entity" objectID="6BD31477-31FB-EC7D-0DFE-BFC3D581868E" name="dod_jobs" seqName="seg_0"/>
-   <object objectType="Entity" objectID="7AF06A35-24E6-77B3-6A38-D918431A6B17" name="dod_upgrades" seqName="seg_0"/>
-   <object objectType="Relation" objectID="246AFFF8-8DEF-CB69-F498-B569DB85B61D" name="dod_instances_changes" seqName="seg_0"/>
-   <object objectType="Relation" objectID="07A42512-E84A-85CF-911C-1E008CBA6505" name="dod_jobs_definitions" seqName="seg_0"/>
-   <object objectType="Relation" objectID="7B28F948-B8B2-79AD-59C0-C046F02742AD" name="dod_jobs_instances" seqName="seg_0"/>
-   <object objectType="Relation" objectID="526A5B98-C374-9F84-CEF6-685516A781CB" name="dod_params_jobs" seqName="seg_0"/>
+   <object objectType="Entity" objectID="1B60BA94-34E5-7CBB-E068-2F3E7B2EF6FF" name="DOD COMMAND DEFINITION" seqName="seg_0"/>
+   <object objectType="Entity" objectID="63050820-85BC-154A-F29A-A59946CEDA03" name="DOD COMMAND PARAMS" seqName="seg_0"/>
+   <object objectType="Entity" objectID="5C206098-CB73-0DCB-1F6B-75576C190B09" name="DOD INSTANCE CHANGES" seqName="seg_0"/>
+   <object objectType="Entity" objectID="3F11E612-47CD-212C-338A-CFEFDA4EEB37" name="DOD INSTANCES" seqName="seg_0"/>
+   <object objectType="Entity" objectID="2DB67723-2805-9A69-92EF-0ACB6E2D9DC6" name="DOD JOBS" seqName="seg_0"/>
+   <object objectType="Entity" objectID="1EE317CE-D67F-F0BC-4CC2-D7C0998D0086" name="DOD UPGRADES" seqName="seg_0"/>
+   <object objectType="Entity" objectID="6B1F4A23-953B-702E-59F7-216813756E7A" name="STATS MONTHLY INSTANCES" seqName="seg_0"/>
+   <object objectType="Relation" objectID="F671917F-1D63-AF8A-5B56-F330DD92D0F9" name="DOD_INSTANCES_CHANGES" seqName="seg_0"/>
+   <object objectType="Relation" objectID="D118FDDA-260E-4586-7801-F720CA2B00B1" name="DOD_JOBS_DEFINITIONS" seqName="seg_0"/>
+   <object objectType="Relation" objectID="E94E8748-AFE5-7D48-4085-7E18043BAE09" name="DOD_JOBS_INSTANCES" seqName="seg_0"/>
+   <object objectType="Relation" objectID="09E3D3CF-93FB-C667-242B-059164795B74" name="DOD_PARAMS_JOBS" seqName="seg_0"/>
 </oracle.dbtools.crest.model.design.logical.LogicalDesign>

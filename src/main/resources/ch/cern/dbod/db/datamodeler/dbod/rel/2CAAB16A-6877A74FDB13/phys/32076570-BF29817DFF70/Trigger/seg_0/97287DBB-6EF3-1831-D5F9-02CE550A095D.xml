@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="DOD_JOBS_UPDATE_USERNAME" directorySegmentName="seg_0" id="97287DBB-6EF3-1831-D5F9-02CE550A095D">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_JOBS_UPDATE_USERNAME</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<actions>UPDATE</actions>
+<body>BEGIN&lt;br/&gt;    UPDATE dod_command_params&lt;br/&gt;        SET username = :NEW.username, db_name = :NEW.db_name&lt;br/&gt;        WHERE username = :OLD.username AND db_name = :OLD.db_name;&lt;br/&gt;END;</body>
+<triggerTime>AFTER</triggerTime>
+<columns>4ADF0D24-3BCA-C11C-3296-9C526A1EC434, 10913B65-468E-A169-B14A-74E9D309BF88</columns>
+<owner>CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4</owner>
+<table>50FFE09F-DA98-01E8-51C3-44D37CE14858</table>
+</TriggerOraclev10g>

@@ -1,0 +1,9 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<UserOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UserOraclev10g" name="DBONDEMAND" directorySegmentName="seg_0" id="CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjName>DBONDEMAND</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+</UserOraclev10g>
