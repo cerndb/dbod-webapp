@@ -74,7 +74,7 @@
                         </caption>
                         <hbox align="bottom" height="24px">
                             <!-- State -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('state')}: " style="font-weight:bold"/>
                                 <label id="stateLabel"/>
                                 <image id="stateImage"/>
@@ -82,19 +82,19 @@
                                 <toolbarbutton id="unsetMaintenanceBtn" tooltiptext="${c:l('unsetMaintenance')}" zclass="button" image="/img/unset_maintenance.png" onClick="controller.setMaintenance(false);" if="${controller.admin}"/>
                             </hbox>
                             <!-- Username -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('username')}: " style="font-weight:bold"/>
                                 <label id="username"/>
                             </hbox>
                         </hbox>  
                         <hbox align="bottom" height="24px">
                             <!-- DB type -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('dbType')}: " style="font-weight:bold"/>
                                 <label id="dbType"/>
                             </hbox>
                             <!-- e-group -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('eGroup')}: " style="font-weight:bold"/>
                                 <hbox id="eGroupBox" align="bottom">
                                     <label id="eGroup"/>
@@ -108,12 +108,12 @@
                         </hbox>
                         <hbox align="bottom" height="24px">
                             <!-- Creation date -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
                                 <label id="creationDate"/>
                             </hbox>
                             <!-- Expiry date -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('expiryDate')}: " style="font-weight:bold"/>
                                 <hbox id="expiryDateBox" align="bottom">
                                     <label id="expiryDate"/>
@@ -127,7 +127,7 @@
                         </hbox>
                         <hbox align="bottom" height="24px">
                             <!-- Category -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('category')}: " style="font-weight:bold"/>
                                 <hbox id="categoryBox" align="bottom">
                                     <label id="category"/>
@@ -143,7 +143,7 @@
                                 </hbox>
                             </hbox>
                             <!-- Project -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('project')}: " style="font-weight:bold"/>
                                 <hbox id="projectBox" align="bottom">
                                     <label id="project" maxlength="35"/>
@@ -157,7 +157,7 @@
                         </hbox>
                         <hbox align="bottom" height="24px">
                             <!-- Number of connections -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
                                 <hbox id="noConnectionsBox" align="bottom">
                                     <label id="noConnections"/>
@@ -169,7 +169,7 @@
                                 </hbox>
                             </hbox>
                             <!-- DB size -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
                                 <hbox id="dbSizeBox" align="bottom">
                                     <label id="dbSize"/>
@@ -183,7 +183,7 @@
                         </hbox>
                         <hbox align="bottom" height="24px">
                             <!-- Version -->
-                            <hbox hflex="1" align="bottom">
+                            <hbox width="400px" align="bottom">
                                 <label value="${c:l('version')}: " style="font-weight:bold"/>
                                 <hbox id="versionBox" align="bottom">
                                     <label id="version" maxlength="35"/>
@@ -195,7 +195,7 @@
                                 </hbox>
                             </hbox>
                             <!-- Host and Master/slave -->
-                            <hbox hflex="1" align="bottom" id="hostArea">
+                            <hbox width="400px" align="bottom" id="hostArea">
                                 <label value="${c:l('host')}: " style="font-weight:bold"/>
                                 <hbox id="hostBox" align="bottom">
                                     <label id="host" maxlength="35"/>
@@ -220,11 +220,10 @@
                                     <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
                                 </hbox>
                             </hbox>
-
                         </hbox>
                         <hbox align="bottom">
                             <!-- Description -->
-                            <hbox width="1000px">
+                            <hbox width="400px">
                                 <div style="margin-top:8px">
                                     <label value="${c:l('description')}: " style="font-weight:bold;"/>
                                 </div>
