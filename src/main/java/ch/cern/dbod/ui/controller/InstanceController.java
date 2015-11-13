@@ -698,21 +698,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             //Show the popup with the information
             window.setVisible(true);
         }
-        //Clean the interface if no job is selected
-        /*else {
-            ((Label) getFellow("jobRequester")).setValue("-");
-            ((Image) getFellow("jobStateImage")).setSrc("");
-            ((Image) getFellow("jobStateImage")).setTooltiptext("");
-            ((Label) getFellow("jobStateLabel")).setValue("-");
-            ((Label) getFellow("jobCreationDate")).setValue("-");
-            ((Label) getFellow("jobCompletionDate")).setValue("-");
-            ((Textbox) getFellow("log")).setValue("-");
-
-            //Update groupbox properties
-            Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
-            jobInfo.setOpen(false);
-            jobInfo.setClosable(false);
-        }*/
     }
 
     /**
