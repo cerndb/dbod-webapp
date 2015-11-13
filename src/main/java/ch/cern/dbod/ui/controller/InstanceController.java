@@ -578,7 +578,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         jobs = jobDAO.selectByInstance(instance);
 
         //Get selected job (if any)
-        Combobox jobSelector = (Combobox) getFellow("jobSelector");
+        Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
         Job selected = null;
         if (jobSelector.getSelectedItem() != null) {
             selected = (Job) jobSelector.getSelectedItem().getValue();
@@ -589,14 +589,14 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
 
         //If there are jobs
         if (jobs != null && jobs.size() > 0) {
-            //Insert items in combobox
-            Comboitem selectOne = new Comboitem();
+            //Insert items in listbox
+            Listitem selectOne = new Listitem();
             selectOne.setValue(null);
             selectOne.setLabel(Labels.getLabel(CommonConstants.LABEL_SELECT_ONE));
             jobSelector.appendChild(selectOne);
             for (int i = 0; i < jobs.size(); i++) {
                 Job job = jobs.get(i);
-                Comboitem item = new Comboitem();
+                Listitem item = new Listitem();
                 item.setValue(job);
                 String label = Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName()) + " " + dateTimeFormatter.format(job.getCreationDate());
                 item.setLabel(label);
@@ -648,15 +648,17 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      */
     private void loadJob() {
         //Get job
-        Combobox jobSelector = (Combobox) getFellow("jobSelector");
+        Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
         Job job = (Job) jobSelector.getSelectedItem().getValue();
 
         //If a job is selected
         if (job != null) {
+            Window window = ((Window) getFellow("jobInfoWindow"));
+            
             //Load job general info
-            ((Label) getFellow("jobRequester")).setValue(job.getRequester());
-            Image stateImage = (Image) getFellow("jobStateImage");
-            Label stateLabel = (Label) getFellow("jobStateLabel");
+            ((Label) window.getFellow("jobRequester")).setValue(job.getRequester());
+            Image stateImage = (Image) window.getFellow("jobStateImage");
+            Label stateLabel = (Label) window.getFellow("jobStateLabel");
             stateImage.setWidth("20px");
             stateImage.setHeight("20px");
             stateLabel.setValue(Labels.getLabel(CommonConstants.LABEL_JOB_STATE + job.getState()));
@@ -678,23 +680,21 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                     stateImage.setSrc(CommonConstants.IMG_BUSY);
                     break;
             }
-            ((Label) getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
+            ((Label) window.getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
             if (job.getCompletionDate() != null) {
-                ((Label) getFellow("jobCompletionDate")).setValue(dateTimeFormatter.format(job.getCompletionDate()));
+                ((Label) window.getFellow("jobCompletionDate")).setValue(dateTimeFormatter.format(job.getCompletionDate()));
             } else {
-                ((Label) getFellow("jobCompletionDate")).setValue("-");
+                ((Label) window.getFellow("jobCompletionDate")).setValue("-");
             }
 
             //Load log
-            ((Textbox) getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
+            ((Textbox) window.getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
 
-            //Update groupbox properties
-            Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
-            jobInfo.setClosable(true);
-            jobInfo.setOpen(true);
+            //Show the popup with the information
+            window.setVisible(true);
         }
         //Clean the interface if no job is selected
-        else {
+        /*else {
             ((Label) getFellow("jobRequester")).setValue("-");
             ((Image) getFellow("jobStateImage")).setSrc("");
             ((Image) getFellow("jobStateImage")).setTooltiptext("");
@@ -707,7 +707,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
             jobInfo.setOpen(false);
             jobInfo.setClosable(false);
-        }
+        }*/
     }
 
     /**
