@@ -17,9 +17,7 @@ import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.InstanceChange;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.db.entity.Upgrade;
-import ch.cern.dbod.ui.model.OtherInstancesModel;
 import ch.cern.dbod.ui.renderer.InstanceChangesRenderer;
-import ch.cern.dbod.ui.renderer.OtherInstancesRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.FormValidations;
@@ -238,8 +236,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
-            //Load other isntances
-            loadOtherInstances();
             //Load changes
             loadChanges();
         }
@@ -259,13 +255,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
-        //Other instances
-        if (otherInstances != null && !otherInstances.isEmpty()) {
-            ((Groupbox) getFellow("otherInstancesBox")).setVisible(true);
-        }
-        else {
-            ((Groupbox) getFellow("otherInstancesBox")).setVisible(false);
-        }
     }
     
     /**
@@ -293,8 +282,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
-            //Load other instances
-            loadOtherInstances();
             //Load changes
             loadChanges();
         }
@@ -657,28 +644,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
     }
     
     /**
-     * Load the instances the user is allowed to manage
-     */
-    private void loadOtherInstances() {
-        Grid grid = (Grid) getFellow("otherInstances");
-        if (grid != null && grid.getModel() == null) {
-            grid.setModel(new OtherInstancesModel(otherInstances));
-            grid.setRowRenderer(new OtherInstancesRenderer());
-        }
-        else if (grid != null) {
-            ((OtherInstancesModel) grid.getModel()).setInstances(otherInstances);
-        }
-    }
-    
-    /**
-     * Filters the instances the user is allowed to manage
-     */
-    public void filterOtherInstances () {
-        Grid grid = (Grid) getFellow("otherInstances");
-        ((OtherInstancesModel) grid.getModel()).filterInstances(((Textbox) getFellow("otherInstancesFilter")).getValue());
-    }
-    
-    /**
      * Loads the information for the selected job
      */
     private void loadJob() {
@@ -870,7 +835,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             loadInstanceInfo();
             loadButtons();
             loadJobs();
-            loadOtherInstances();
             loadChanges();
         }
         else {
