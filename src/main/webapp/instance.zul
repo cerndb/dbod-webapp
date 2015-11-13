@@ -252,21 +252,15 @@
                                         <caption label=" ">
                                             <div align="center" style="float:left">
                                                 <label value="${c:l('jobInfo')} " sclass="titleSmall"/>
-                                                <!-- Job Selector -->
-                                                <combobox id="jobSelector" width="350px" mold="rounded" readonly="true" onSelect="controller.refreshInfo();" onClick="event.stopPropagation();return false;" style="margin-left:10px"/>
                                             </div>
                                         </caption>
                                         <listbox id="jobGridSelector" style="padding:0px" mold="paging" pageSize="10" onSelect="controller.refreshInfo();">
-                                            <attribute name="onClick"><![CDATA[
-                                                win.position = self.selectedItem.value;
-                                                win.visible = true;
-                                            ]]></attribute>
                                             <listhead>
-                                                <listheader sort="auto(changeDate)" width="150px">${c:l('changeDate')}</listheader>
-                                                <listheader sort="auto(attribute)" width="100px">${c:l('changeAttribute')}</listheader>
-                                                <listheader sort="auto(requester)" width="100px">${c:l('changeRequester')}</listheader>
-                                                <listheader sort="auto(oldValue)">${c:l('changeOldValue')}</listheader>
-                                                <listheader sort="auto(newValue)">${c:l('changeNewValue')}</listheader>
+                                                <listheader width="60px">${c:l('state')}</listheader>
+                                                <listheader hflex="5">${c:l('statsCommandName')}</listheader>
+                                                <listheader hflex="2">${c:l('requester')}</listheader>
+                                                <listheader hflex="3">${c:l('creationDate')}</listheader>
+                                                <listheader hflex="3">${c:l('completionDate')}</listheader>
                                             </listhead>
                                         </listbox>
                                     </groupbox>
