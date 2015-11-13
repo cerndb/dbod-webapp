@@ -590,35 +590,48 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         //If there are jobs
         if (jobs != null && jobs.size() > 0) {
             //Insert items in listbox
-            Listitem selectOne = new Listitem();
-            selectOne.setValue(null);
-            selectOne.setLabel(Labels.getLabel(CommonConstants.LABEL_SELECT_ONE));
-            jobSelector.appendChild(selectOne);
             for (int i = 0; i < jobs.size(); i++) {
-                Job job = jobs.get(i);
                 Listitem item = new Listitem();
+                Listcell statecell = new Listcell();
+                Listcell requestercell = new Listcell();
+                Listcell commandcell = new Listcell();
+                Listcell datecell = new Listcell();
+                Listcell completioncell = new Listcell();
+                
+                Job job = jobs.get(i);
                 item.setValue(job);
-                String label = Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName()) + " " + dateTimeFormatter.format(job.getCreationDate());
-                item.setLabel(label);
-                item.setSclass(CommonConstants.STYLE_JOB_STATE);
+
+                statecell.setSclass(CommonConstants.STYLE_JOB_STATE);
+                requestercell.setLabel(job.getRequester());
+                commandcell.setLabel(Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName()));
+                datecell.setLabel(dateTimeFormatter.format(job.getCreationDate()));
+                completioncell.setLabel(dateTimeFormatter.format(job.getCompletionDate()));
+                
                 switch (job.getState()) {
                     case CommonConstants.JOB_STATE_FINISHED_OK:
-                        item.setImage(CommonConstants.IMG_RUNNING);
+                        statecell.setImage(CommonConstants.IMG_RUNNING);
                         break;
                     case CommonConstants.JOB_STATE_RUNNING:
-                        item.setImage(CommonConstants.IMG_PENDING);
+                        statecell.setImage(CommonConstants.IMG_PENDING);
                         break;
                     case CommonConstants.JOB_STATE_FINISHED_FAIL:
-                        item.setImage(CommonConstants.IMG_STOPPED);
+                        statecell.setImage(CommonConstants.IMG_STOPPED);
                         break;
                     case CommonConstants.JOB_STATE_FINISHED_WARNING: 
-                        item.setImage(CommonConstants.IMG_BUSY);
+                        statecell.setImage(CommonConstants.IMG_BUSY);
                         break;
                     case CommonConstants.JOB_STATE_PENDING:
-                        item.setImage(CommonConstants.IMG_AWAITING_APPROVAL);
+                        statecell.setImage(CommonConstants.IMG_AWAITING_APPROVAL);
                         break;
                 }
+                
+                item.appendChild(statecell);
+                item.appendChild(commandcell);
+                item.appendChild(requestercell);
+                item.appendChild(datecell);
+                item.appendChild(completioncell);
                 jobSelector.appendChild(item);
+                
                 //If it was the selected one, select it again
                 if (selected != null && job.getUsername().equals(selected.getUsername()) && job.getDbName().equals(selected.getDbName())
                         && job.getCommandName().equals(selected.getCommandName()) && job.getType().equals(selected.getType())
@@ -626,17 +639,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                     jobSelector.setSelectedItem(item);
                 }
             }
-        }
-        else {
-            Comboitem selectOne = new Comboitem();
-            selectOne.setValue(null);
-            selectOne.setLabel(Labels.getLabel(CommonConstants.LABEL_NO_JOBS));
-            jobSelector.appendChild(selectOne);
-        }
-
-        //If there is not a selected item select the first
-        if (selected == null) {
-            jobSelector.setSelectedIndex(0);
         }
 
         //Load information for the selected item
@@ -649,6 +651,9 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
     private void loadJob() {
         //Get job
         Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
+        if (jobSelector == null || jobSelector.getSelectedItem() == null)
+            return;
+        
         Job job = (Job) jobSelector.getSelectedItem().getValue();
 
         //If a job is selected
