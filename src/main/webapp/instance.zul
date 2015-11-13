@@ -315,38 +315,47 @@
             </window>
             
             <!-- Popup to show job information -->
-            <window id="jobInfoWindow" title="${c:l('jobInfo')}" border="normal" mode="overlapped" visible="false" position="center" width="1000px"
-                    closable="true" onClose="self.visible = false; jobGridSelector.selectItem(null); event.stopPropagation();" maximizable="true"
-                    onMaximize='log.setWidth((Integer.parseInt(self.getWidth().substring(0, self.getWidth().length()-2))-20).toString()+"px");'
-                    onSize='log.setWidth((Integer.parseInt(self.getWidth().substring(0, self.getWidth().length()-2))-20).toString()+"px");'
-                    sizable="true">
-                <hlayout height="24px">
+            <window id="jobInfoWindow" title="${c:l('jobInfo')}" border="normal" mode="overlapped" visible="false" position="center" width="1000px" minwidth="850"
+                    closable="true" onClose="self.visible = false; jobGridSelector.selectItem(null); event.stopPropagation();" 
+                    maximizable="true" onMaximize='resizeWindow(self, log); event.stopPropagation();'
+                    sizable="true" onSize='resizeWindow(self, log); event.stopPropagation();'>
+                <zscript deferred="true">
+                    <![CDATA[
+                        void resizeWindow(Window win, Textbox log) {
+                            Integer winw = win.getWidth() != null && win.getWidth().length() != 0 ? Integer.parseInt(win.getWidth().substring(0, win.getWidth().length()-2)) : 1000;
+                            Integer winh = win.getHeight() != null && win.getHeight().length() != 0 ? Integer.parseInt(win.getHeight().substring(0, win.getHeight().length()-2)) : 650;
+                            log.setWidth((winw-20).toString()+"px");
+                            log.setHeight((winh-130).toString()+"px");
+                        }
+                    ]]>
+                </zscript>
+                <hlayout height="24px" style="margin-top:2px">
                     <!-- State -->
-                    <hlayout>
+                    <hlayout hflex="1">
                         <label value="${c:l('state')}: " style="font-weight:bold"/>
                         <label id="jobStateLabel" value="-"/>
                         <image id="jobStateImage"/>
                     </hlayout>
                     <!-- Requester -->
-                    <hlayout>
+                    <hlayout hflex="1">
                         <label value="${c:l('requester')}: " style="font-weight:bold"/>
                         <label id="jobRequester" value="-"/>
                     </hlayout>
                 </hlayout>
                 <hlayout height="24px">
                     <!-- Creation date -->
-                    <hlayout>
+                    <hlayout hflex="1">
                         <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
                         <label id="jobCreationDate" value="-"/>
                     </hlayout>
                     <!-- Completion date -->
-                    <hlayout>
+                    <hlayout hflex="1">
                         <label value="${c:l('completionDate')}: " style="font-weight:bold"/>
                         <label id="jobCompletionDate" value="-"/>
                     </hlayout>
                 </hlayout>
                 <!-- Log -->
-                <vlayout style="background-color:red;margin-top:8px">
+                <vlayout style="margin-top:8px">
                     <label value="${c:l('log')}:" style="font-weight:bold"/>
                     <textbox id="log" width="980px" height="500px" multiline="true" readonly="true" style="resize:none;font-family: 'Lucida Console', Monaco, monospace; font-size: 9pt"/>
                 </vlayout>
