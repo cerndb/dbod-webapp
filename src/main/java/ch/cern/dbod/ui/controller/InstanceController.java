@@ -50,7 +50,7 @@ import org.zkoss.zul.*;
  * @author Daniel Gomez Blanco
  * @author Jose Andres Cordero Benitez
  */
-public class InstanceController extends Hbox implements AfterCompose, BeforeCompose {
+public class InstanceController extends Vbox implements AfterCompose, BeforeCompose {
     /**
      * Upgrade DAO
      */
