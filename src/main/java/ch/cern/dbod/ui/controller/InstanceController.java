@@ -248,13 +248,18 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         //Master area
         if (master != null)
             ((Hbox) getFellow("masterArea")).setVisible(true);
-        else 
+        else
             ((Hbox) getFellow("masterArea")).setVisible(false);
         //Slave area
         if (slave != null)
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
+        //Empty area
+        if (master == null && slave == null)
+            ((Hbox) getFellow("emptyArea")).setVisible(true);
+        else
+            ((Hbox) getFellow("emptyArea")).setVisible(false);
     }
     
     /**
@@ -1124,6 +1129,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 instance.setMaster(master.getDbName());
                 instance.setSlave(null);
                 ((Hbox) getFellow("masterArea")).setVisible(true);
+                ((Hbox) getFellow("emptyArea")).setVisible(false);
                 ((Hbox) getFellow("slaveArea")).setVisible(false);
                 ((Label) getFellow("master")).setValue(master.getDbName());
                 ((Label) getFellow("slave")).setValue(null);
@@ -1140,6 +1146,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 instance.setMaster(null);
                 instance.setSlave(slave.getDbName());
                 ((Hbox) getFellow("masterArea")).setVisible(false);
+                ((Hbox) getFellow("emptyArea")).setVisible(false);
                 ((Hbox) getFellow("slaveArea")).setVisible(true);
                 ((Label) getFellow("master")).setValue(null);
                 ((Label) getFellow("slave")).setValue(slave.getDbName());
