@@ -72,62 +72,29 @@
                                 <toolbarbutton tooltiptext="${c:l('refreshInstance')}" zclass="button" image="/img/refresh.png" onClick="controller.refreshInfo();"/>
                             </hbox>
                         </caption>
-                        <hbox align="bottom" height="24px">
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- State -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('state')}: " style="font-weight:bold"/>
                                 <label id="stateLabel"/>
                                 <image id="stateImage"/>
                                 <toolbarbutton id="setMaintenanceBtn" tooltiptext="${c:l('setMaintenance')}" zclass="button" image="/img/set_maintenance.png" onClick="controller.setMaintenance(true);" if="${controller.admin}"/>
                                 <toolbarbutton id="unsetMaintenanceBtn" tooltiptext="${c:l('unsetMaintenance')}" zclass="button" image="/img/unset_maintenance.png" onClick="controller.setMaintenance(false);" if="${controller.admin}"/>
                             </hbox>
+                            <!-- DB type -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('dbType')}: " style="font-weight:bold"/>
+                                <label id="dbType"/>
+                            </hbox>
                             <!-- Username -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('username')}: " style="font-weight:bold"/>
                                 <label id="username"/>
                             </hbox>
                         </hbox>  
-                        <hbox align="bottom" height="24px">
-                            <!-- DB type -->
-                            <hbox width="400px" align="bottom">
-                                <label value="${c:l('dbType')}: " style="font-weight:bold"/>
-                                <label id="dbType"/>
-                            </hbox>
-                            <!-- e-group -->
-                            <hbox width="400px" align="bottom">
-                                <label value="${c:l('eGroup')}: " style="font-weight:bold"/>
-                                <hbox id="eGroupBox" align="bottom">
-                                    <label id="eGroup"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="eGroupBox.setVisible(false);eGroupEditBox.setVisible(true);"/>
-                                </hbox>
-                                <hbox id="eGroupEditBox" visible="false" align="bottom">
-                                    <textbox id="eGroupEdit" width="219px" onOK="controller.checkAndEditEGroup();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.checkAndEditEGroup();"/>
-                                </hbox>
-                            </hbox>
-                        </hbox>
-                        <hbox align="bottom" height="24px">
-                            <!-- Creation date -->
-                            <hbox width="400px" align="bottom">
-                                <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
-                                <label id="creationDate"/>
-                            </hbox>
-                            <!-- Expiry date -->
-                            <hbox width="400px" align="bottom">
-                                <label value="${c:l('expiryDate')}: " style="font-weight:bold"/>
-                                <hbox id="expiryDateBox" align="bottom">
-                                    <label id="expiryDate"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="expiryDateBox.setVisible(false);expiryDateEditBox.setVisible(true);"/>
-                                </hbox>
-                                <hbox id="expiryDateEditBox" visible="false" align="bottom">
-                                    <datebox id="expiryDateEdit" width="203px" onOK="controller.editExpiryDate();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
-                                </hbox>
-                            </hbox>
-                        </hbox>
-                        <hbox align="bottom" height="24px">
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- Category -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('category')}: " style="font-weight:bold"/>
                                 <hbox id="categoryBox" align="bottom">
                                     <label id="category"/>
@@ -142,8 +109,51 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editCategory();"/>
                                 </hbox>
                             </hbox>
+                            <!-- e-group -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('eGroup')}: " style="font-weight:bold"/>
+                                <hbox id="eGroupBox" align="bottom">
+                                    <label id="eGroup"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="eGroupBox.setVisible(false);eGroupEditBox.setVisible(true);"/>
+                                </hbox>
+                                <hbox id="eGroupEditBox" visible="false" align="bottom">
+                                    <textbox id="eGroupEdit" width="219px" onOK="controller.checkAndEditEGroup();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.checkAndEditEGroup();"/>
+                                </hbox>
+                            </hbox>
+                            <!-- User's email -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('email')}: " style="font-weight:bold"/>
+                                <label id="email"/>
+                            </hbox>
+                        </hbox>
+                        <hbox width="100%" align="bottom" height="24px">
+                            <!-- Creation date -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
+                                <label id="creationDate"/>
+                            </hbox>
+                            <!-- Expiry date -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('expiryDate')}: " style="font-weight:bold"/>
+                                <hbox id="expiryDateBox" align="bottom">
+                                    <label id="expiryDate"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="expiryDateBox.setVisible(false);expiryDateEditBox.setVisible(true);"/>
+                                </hbox>
+                                <hbox id="expiryDateEditBox" visible="false" align="bottom">
+                                    <datebox id="expiryDateEdit" width="203px" onOK="controller.editExpiryDate();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
+                                </hbox>
+                            </hbox>
+                            <!-- User's fullname -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('fullname')}: " style="font-weight:bold"/>
+                                <label id="fullname"/>
+                            </hbox>
+                        </hbox>
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- Project -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('project')}: " style="font-weight:bold"/>
                                 <hbox id="projectBox" align="bottom">
                                     <label id="project" maxlength="35"/>
@@ -154,10 +164,20 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
                                 </hbox>
                             </hbox>
+                            <!-- OrgUnit -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
+                                <label id="orgunit"/>
+                            </hbox>
+                            <!-- Phone -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('telephone')}: " style="font-weight:bold"/>
+                                <label id="telephone"/>
+                            </hbox>
                         </hbox>
-                        <hbox align="bottom" height="24px">
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- Number of connections -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
                                 <hbox id="noConnectionsBox" align="bottom">
                                     <label id="noConnections"/>
@@ -169,7 +189,7 @@
                                 </hbox>
                             </hbox>
                             <!-- DB size -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
                                 <hbox id="dbSizeBox" align="bottom">
                                     <label id="dbSize"/>
@@ -180,10 +200,14 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
                                 </hbox>
                             </hbox>
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('port')}: " style="font-weight:bold"/>
+                                <label id="port"/>
+                            </hbox>
                         </hbox>
-                        <hbox align="bottom" height="24px">
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- Version -->
-                            <hbox width="400px" align="bottom">
+                            <hbox hflex="1" align="bottom">
                                 <label value="${c:l('version')}: " style="font-weight:bold"/>
                                 <hbox id="versionBox" align="bottom">
                                     <label id="version" maxlength="35"/>
@@ -195,7 +219,7 @@
                                 </hbox>
                             </hbox>
                             <!-- Host and Master/slave -->
-                            <hbox width="400px" align="bottom" id="hostArea">
+                            <hbox hflex="1" align="bottom" id="hostArea">
                                 <label value="${c:l('host')}: " style="font-weight:bold"/>
                                 <hbox id="hostBox" align="bottom">
                                     <label id="host" maxlength="35"/>
@@ -206,20 +230,21 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
                                 </hbox>
                             </hbox>
-                            <hbox width="150px" align="bottom" id="masterArea" visible="false">
+                            <hbox hflex="1" align="bottom" id="masterArea" visible="false">
                                 <label value="${c:l('master')}: " style="font-weight:bold"/>
                                 <hbox id="masterBox" align="bottom">
                                     <label id="master"/>
                                     <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
                                 </hbox>
                             </hbox>
-                            <hbox width="150px" align="bottom" id="slaveArea" visible="false">
+                            <hbox hflex="1" align="bottom" id="slaveArea" visible="false">
                                 <label value="${c:l('slave')}: " style="font-weight:bold"/>
                                 <hbox id="slaveBox" align="bottom">
                                     <label id="slave"/>
                                     <toolbarbutton tooltiptext="${c:l('swapMasterSlave')}" zclass="button" image="/img/swap.png" onClick="controller.swapMasterSlave();"/>
                                 </hbox>
                             </hbox>
+                            <hbox hflex="1" align="bottom" id="emptyArea" visible="true"/>
                         </hbox>
                         <hbox align="bottom">
                             <!-- Description -->
