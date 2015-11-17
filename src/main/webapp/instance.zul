@@ -164,10 +164,17 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
                                 </hbox>
                             </hbox>
-                            <!-- OrgUnit -->
+                            <!-- DB size -->
                             <hbox hflex="1" align="bottom">
-                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
-                                <label id="orgunit"/>
+                                <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
+                                <hbox id="dbSizeBox" align="bottom">
+                                    <label id="dbSize"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
+                                </hbox>
+                                <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
+                                    <textbox id="dbSizeEdit" width="221px" onOK="controller.editDbSize();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
+                                </hbox>
                             </hbox>
                             <!-- Phone -->
                             <hbox hflex="1" align="bottom">
@@ -188,21 +195,15 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editNoConnections();"/>
                                 </hbox>
                             </hbox>
-                            <!-- DB size -->
-                            <hbox hflex="1" align="bottom">
-                                <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
-                                <hbox id="dbSizeBox" align="bottom">
-                                    <label id="dbSize"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
-                                </hbox>
-                                <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
-                                    <textbox id="dbSizeEdit" width="221px" onOK="controller.editDbSize();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
-                                </hbox>
-                            </hbox>
+                            <!-- Port -->
                             <hbox hflex="1" align="bottom">
                                 <label value="${c:l('port')}: " style="font-weight:bold"/>
                                 <label id="port"/>
+                            </hbox>
+                            <!-- OrgUnit -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
+                                <label id="orgunit"/>
                             </hbox>
                         </hbox>
                         <hbox width="100%" align="bottom" height="24px">
