@@ -247,9 +247,9 @@
                             </hbox>
                             <hbox hflex="1" align="bottom" id="emptyArea" visible="true"/>
                         </hbox>
-                        <hbox align="bottom">
+                        <hbox width="100%" align="bottom">
                             <!-- Description -->
-                            <hbox width="400px">
+                            <hbox hflex="1">
                                 <div style="margin-top:8px">
                                     <label value="${c:l('description')}: " style="font-weight:bold;"/>
                                 </div>
