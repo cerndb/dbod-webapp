@@ -21,6 +21,11 @@ public class Instance implements Comparable, Cloneable{
      * Username creator of this instance (max. 32)
      */
     private String username;
+    
+    /**
+     * Information about the owner of this instance.
+     */
+    private User user;
 
     /**
      * DB name for this instance (max. 8)
@@ -140,6 +145,13 @@ public class Instance implements Comparable, Cloneable{
         this.eGroup = eGroup;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getCategory() {
         return category;
