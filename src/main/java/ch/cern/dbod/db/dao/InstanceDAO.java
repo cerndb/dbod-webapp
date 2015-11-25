@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.json.JSONObject;
 
 /**
  * DAO for Instance entity.
@@ -381,73 +383,62 @@ public class InstanceDAO {
      * @return instance for the username and DB name specified.
      */
     public Instance selectByDbName(String dbName, List<Upgrade> upgrades) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        String json = InstanceREST.selectByDbName(dbName);
+        if (json == null)
+            return null;
+        
         Instance instance = null;
-        try {
-            //Get connection
-            connection = getConnection();
+        
+        try
+        {
+            JSONObject j = new JSONObject(json);
+            JSONObject jsonInstance = j.getJSONObject("instance");
+            JSONObject jsonUser = j.getJSONObject("user");
 
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE db_name = ? AND status = '1'");
-            statement = connection.prepareStatement(query.toString());
-
-            //Assign values to variables
-            statement.setString(1, dbName);
-
-            //Execute query
-            result = statement.executeQuery();
+            System.out.println(jsonInstance);
+            System.out.println(jsonUser);
 
             //Instantiate instance object
-            if (result.next()) {
-                instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
-                //Check if instance needs upgrade
-                if (upgrades != null) {
-                    for (int i=0; i < upgrades.size(); i++) {
-                        Upgrade upgrade = upgrades.get(i);
-                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                                && upgrade.getVersionFrom().equals(instance.getVersion()))
-                            instance.setUpgradeTo(upgrade.getVersionTo());
-                    }
+            instance = new Instance();
+            instance.setUsername(jsonInstance.getString("USERNAME"));
+            instance.setDbName(jsonInstance.getString("DB_NAME"));
+            instance.setEGroup(jsonInstance.getString("E_GROUP"));
+            instance.setCategory(jsonInstance.getString("CATEGORY"));
+            instance.setCreationDate(formatter.parse(jsonInstance.getString("CREATION_DATE")));
+            System.out.println(jsonInstance.get("EXPIRY_DATE"));
+            System.out.println(jsonInstance.get("EXPIRY_DATE") == null);
+            System.out.println(jsonInstance.get("EXPIRY_DATE") != null);
+            if (!jsonInstance.isNull("EXPIRY_DATE"))
+                instance.setExpiryDate(formatter.parse(jsonInstance.getString("EXPIRY_DATE")));
+            instance.setDbType(jsonInstance.getString("DB_TYPE"));
+            instance.setDbSize(jsonInstance.getInt("DB_SIZE"));
+            instance.setNoConnections(jsonInstance.getInt("NO_CONNECTIONS"));
+            instance.setProject(jsonInstance.getString("PROJECT"));
+            instance.setDescription(jsonInstance.getString("DESCRIPTION"));
+            instance.setVersion(jsonInstance.getString("VERSION"));
+            instance.setState(jsonInstance.getString("STATE"));
+            instance.setStatus(jsonInstance.getString("STATUS").equals("1"));
+            if (!jsonInstance.isNull("MASTER"))
+                instance.setMaster(jsonInstance.getString("MASTER"));
+            if (!jsonInstance.isNull("SLAVE"))
+                instance.setSlave(jsonInstance.getString("SLAVE"));
+            instance.setHost(jsonInstance.getString("HOST"));
+            //Check if instance needs upgrade
+            if (upgrades != null) {
+                for (int i=0; i < upgrades.size(); i++) {
+                    Upgrade upgrade = upgrades.get(i);
+                    if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
+                            && upgrade.getVersionFrom().equals(instance.getVersion()))
+                        instance.setUpgradeTo(upgrade.getVersionTo());
                 }
             }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCE FOR DB NAME " + dbName ,ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
         }
+        catch (ParseException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return instance;
     }
 
