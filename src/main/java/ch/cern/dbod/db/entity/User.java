@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 
 /**
@@ -19,41 +20,61 @@ public class User implements Comparable, Cloneable{
     /**
      * First name.
      */
+    @SerializedName("OWNER_FIRST_NAME")
     private String firstName;
 
     /**
      * Last name.
      */
+    @SerializedName("OWNER_LAST_NAME")
     private String lastName;
 
     /**
      * Login of the user (max. 8)
      */
+    @SerializedName("OWNER_LOGIN")
     private String login;
 
     /**
      * Email.
      */
+    @SerializedName("OWNER_MAIL")
     private String email;
 
     /**
      * Phone 1.
      */
+    @SerializedName("OWNER_PHONE1")
     private Integer phone1;
 
     /**
      * Phone 2.
      */
+    @SerializedName("OWNER_PHONE2")
     private Integer phone2;
 
     /**
      * Portable phone.
      */
+    @SerializedName("OWNER_PORTABLE_PHONE")
     private Integer portable;
 
     /**
-     * Department, group, section.
+     * Department.
      */
+    @SerializedName("OWNER_DEPARTMENT")
+    private String department;
+    
+    /**
+     * Group.
+     */
+    @SerializedName("OWNER_GROUP")
+    private String group;
+    
+    /**
+     * Section.
+     */
+    @SerializedName("OWNER_SECTION")
     private String section;
 
     public String getFirstName() {
