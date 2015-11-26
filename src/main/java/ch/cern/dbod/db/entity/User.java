@@ -133,6 +133,26 @@ public class User implements Comparable, Cloneable{
         this.portable = portable;
     }
 
+    public String getDepartment()
+    {
+        return department;
+    }
+
+    public void setDepartment(String department)
+    {
+        this.department = department;
+    }
+
+    public String getGroup()
+    {
+        return group;
+    }
+
+    public void setGroup(String group)
+    {
+        this.group = group;
+    }
+
     public String getSection() {
         return section;
     }
