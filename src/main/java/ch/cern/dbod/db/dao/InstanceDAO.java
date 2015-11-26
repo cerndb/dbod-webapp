@@ -12,7 +12,9 @@ package ch.cern.dbod.db.dao;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.InstanceChange;
 import ch.cern.dbod.db.entity.Upgrade;
+import ch.cern.dbod.util.BooleanSerializer;
 import ch.cern.dbod.util.CommonConstants;
+import com.google.gson.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -383,48 +385,25 @@ public class InstanceDAO {
      * @return instance for the username and DB name specified.
      */
     public Instance selectByDbName(String dbName, List<Upgrade> upgrades) {
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-        String json = InstanceREST.selectByDbName(dbName);
-        if (json == null)
-            return null;
-        
         Instance instance = null;
         
         try
         {
-            JSONObject j = new JSONObject(json);
-            JSONObject jsonInstance = j.getJSONObject("instance");
-            JSONObject jsonUser = j.getJSONObject("user");
-
-            System.out.println(jsonInstance);
-            System.out.println(jsonUser);
-
-            //Instantiate instance object
-            instance = new Instance();
-            instance.setUsername(jsonInstance.getString("USERNAME"));
-            instance.setDbName(jsonInstance.getString("DB_NAME"));
-            instance.setEGroup(jsonInstance.getString("E_GROUP"));
-            instance.setCategory(jsonInstance.getString("CATEGORY"));
-            instance.setCreationDate(formatter.parse(jsonInstance.getString("CREATION_DATE")));
-            System.out.println(jsonInstance.get("EXPIRY_DATE"));
-            System.out.println(jsonInstance.get("EXPIRY_DATE") == null);
-            System.out.println(jsonInstance.get("EXPIRY_DATE") != null);
-            if (!jsonInstance.isNull("EXPIRY_DATE"))
-                instance.setExpiryDate(formatter.parse(jsonInstance.getString("EXPIRY_DATE")));
-            instance.setDbType(jsonInstance.getString("DB_TYPE"));
-            instance.setDbSize(jsonInstance.getInt("DB_SIZE"));
-            instance.setNoConnections(jsonInstance.getInt("NO_CONNECTIONS"));
-            instance.setProject(jsonInstance.getString("PROJECT"));
-            instance.setDescription(jsonInstance.getString("DESCRIPTION"));
-            instance.setVersion(jsonInstance.getString("VERSION"));
-            instance.setState(jsonInstance.getString("STATE"));
-            instance.setStatus(jsonInstance.getString("STATUS").equals("1"));
-            if (!jsonInstance.isNull("MASTER"))
-                instance.setMaster(jsonInstance.getString("MASTER"));
-            if (!jsonInstance.isNull("SLAVE"))
-                instance.setSlave(jsonInstance.getString("SLAVE"));
-            instance.setHost(jsonInstance.getString("HOST"));
+            //Get database information from REST API
+            String json = InstanceREST.selectByDbName(dbName);
+            if (json == null)
+                return null;
+            
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+            
+            Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(boolean.class, new BooleanSerializer())
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                        .create();
+            
+            instance = gson.fromJson(jsonObject, Instance.class);
+            
             //Check if instance needs upgrade
             if (upgrades != null) {
                 for (int i=0; i < upgrades.size(); i++) {
@@ -435,7 +414,7 @@ public class InstanceDAO {
                 }
             }
         }
-        catch (ParseException ex) {
+        catch (Exception ex) {
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
