@@ -164,4 +164,10 @@ public class User implements Comparable, Cloneable{
         hash = 29 * hash + Objects.hashCode(this.section);
         return hash;
     }
+
+    @Override
+    public String toString()
+    {
+        return "User{" + "firstName=" + firstName + ", lastName=" + lastName + ", login=" + login + ", email=" + email + ", phone1=" + phone1 + ", phone2=" + phone2 + ", portable=" + portable + ", section=" + section + '}';
+    }
 }
