@@ -6,8 +6,11 @@
  * granted to it by virtue of its status as Intergovernmental Organization
  * or submit itself to any jurisdiction.
  */
-package ch.cern.dbod.db.dao;
+package ch.cern.dbod.util;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.db.entity.Instance;
+import com.google.gson.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.*;
@@ -22,33 +25,46 @@ import org.apache.http.util.EntityUtils;
 /**
  * @author Jose Andres Cordero Benitez
  */
-public class InstanceREST {
+public class RestHelper {
     
-    /*HttpPost p;
-    HttpDelete d;
-    HttpGet g;
-    HttpPut u;*/
-    
-    public static String selectByDbName(String db_name)
+    private static Gson init()
     {
+        Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(boolean.class, new BooleanSerializer())
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create();
+            
+        return gson;
+    }
+    
+    public static JsonElement parse(String json)
+    {
+        JsonParser parser = new JsonParser();
+        return parser.parse(json).getAsJsonObject();
+    }
+    
+    public static <T> T getObjectFromRestApi(String path, Class<T> object)
+    {
+        Gson gson = init();
+        
         try {
             // Do not do this in production!!!
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             HttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
             
-            HttpGet request = new HttpGet("https://dbodtests.cern.ch:5443/api/v1/entity/" + db_name);
+            HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {
-                String json = EntityUtils.toString(response.getEntity());
-                System.out.println("==== RESPONSE ====");
-                System.out.println(json);
-                return json;
+                String resp = EntityUtils.toString(response.getEntity());
+                JsonElement json = parse(resp);
+                
+                T instance = gson.fromJson(json, object);
+                return instance;
             }
 
         } catch (NoSuchAlgorithmException | IOException | ParseException e) {
-            System.out.println("\nError while calling Crunchify REST Service");
-            System.out.println(e);
+            
         }
         
         return null;

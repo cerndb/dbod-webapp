@@ -9,18 +9,16 @@
 
 package ch.cern.dbod.db.dao;
 
+import ch.cern.dbod.util.RestHelper;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.InstanceChange;
 import ch.cern.dbod.db.entity.Upgrade;
-import ch.cern.dbod.util.BooleanSerializer;
 import ch.cern.dbod.util.CommonConstants;
-import com.google.gson.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +29,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.json.JSONObject;
 
 /**
  * DAO for Instance entity.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class InstanceDAO {
 
@@ -390,22 +388,10 @@ public class InstanceDAO {
         try
         {
             //Get database information from REST API
-            String json = InstanceREST.selectByDbName(dbName);
-            if (json == null)
-                return null;
-            
-            JsonParser parser = new JsonParser();
-            JsonObject jsonObject = parser.parse(json).getAsJsonObject();
-            
-            Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(boolean.class, new BooleanSerializer())
-                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                        .create();
-            
-            instance = gson.fromJson(jsonObject, Instance.class);
-            
+            instance = RestHelper.getObjectFromRestApi("/entity/" + dbName, Instance.class);
+
             //Check if instance needs upgrade
-            if (upgrades != null) {
+            if (instance != null && upgrades != null) {
                 for (int i=0; i < upgrades.size(); i++) {
                     Upgrade upgrade = upgrades.get(i);
                     if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
