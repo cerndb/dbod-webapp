@@ -270,6 +270,8 @@ public class CommonConstants {
     public static final String LABEL_METRICS = "metrics";
     public static final String LABEL_RESCUE_TITLE = "rescueTitle";
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
+    public static final String LABEL_PHONE = "telephone";
+    public static final String LABEL_PORTABLE = "portable";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
