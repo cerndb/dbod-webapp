@@ -13,10 +13,7 @@ import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
-import ch.cern.dbod.db.entity.Instance;
-import ch.cern.dbod.db.entity.InstanceChange;
-import ch.cern.dbod.db.entity.Job;
-import ch.cern.dbod.db.entity.Upgrade;
+import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.ui.renderer.InstanceChangesRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
@@ -401,6 +398,53 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             case CommonConstants.INSTANCE_STATE_UNKNOWN:
                 stateImage.setSrc(CommonConstants.IMG_UNKNOWN);
                 break;
+        }
+        
+        //User information extracted from FIM
+        User user = instance.getUser();
+        if (user != null)
+        {
+            ((Label) getFellow("email")).setValue(user.getEmail());
+            ((Label) getFellow("fullname")).setValue(user.getFirstName() + " " + user.getLastName());
+            String telephone = "";
+            String phoneLabel = "";
+            if (user.getPhone1() != null)
+            {
+                phoneLabel = Labels.getLabel(CommonConstants.LABEL_PHONE);
+                telephone += user.getPhone1();
+                if (user.getPhone2() != null)
+                {
+                    phoneLabel += " / " + Labels.getLabel(CommonConstants.LABEL_PHONE) + " 2";
+                    telephone += " / " + user.getPhone2();
+                }
+                if (user.getPortable() != null)
+                {
+                    phoneLabel += " (" + Labels.getLabel(CommonConstants.LABEL_PORTABLE) + ")";
+                    telephone += " (" + user.getPortable() + ")";
+                }
+            }
+            else if (user.getPortable() != null)
+            {
+                phoneLabel = Labels.getLabel(CommonConstants.LABEL_PORTABLE);
+                telephone += user.getPortable();
+            }
+            if (!phoneLabel.isEmpty())
+            {
+                ((Label) getFellow("phoneLabel")).setValue(phoneLabel + ":");
+                ((Label) getFellow("telephone")).setValue(telephone);
+            }
+            String orgunit = "-";
+            if (user.getDepartment() != null)
+            {
+                orgunit = user.getDepartment();
+                if (user.getGroup() != null)
+                {
+                    orgunit += "-" + user.getGroup();
+                    if (user.getSection() != null)
+                        orgunit += "-" + user.getSection();
+                }
+            }
+            ((Label) getFellow("orgunit")).setValue(orgunit);
         }
         
         //If the user is an admin

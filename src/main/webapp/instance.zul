@@ -176,10 +176,10 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
                                 </hbox>
                             </hbox>
-                            <!-- Phone -->
+                            <!-- OrgUnit -->
                             <hbox hflex="1" align="bottom">
-                                <label value="${c:l('telephone')}: " style="font-weight:bold"/>
-                                <label id="telephone"/>
+                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
+                                <label id="orgunit"/>
                             </hbox>
                         </hbox>
                         <hbox width="100%" align="bottom" height="24px">
@@ -200,10 +200,10 @@
                                 <label value="${c:l('port')}: " style="font-weight:bold"/>
                                 <label id="port"/>
                             </hbox>
-                            <!-- OrgUnit -->
+                            <!-- Phone -->
                             <hbox hflex="1" align="bottom">
-                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
-                                <label id="orgunit"/>
+                                <label id="phoneLabel" value="" style="font-weight:bold"/>
+                                <label id="telephone"/>
                             </hbox>
                         </hbox>
                         <hbox width="100%" align="bottom" height="24px">
