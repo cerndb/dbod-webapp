@@ -340,6 +340,8 @@ public class CommonConstants {
     public static final String ERROR_DESTROYING_INSTANCE = "errorDestroyingInstance";
     public static final String ERROR_RESCUING_INSTANCE = "errorRescuingInstance";
     public static final String ERROR_INSTANCE_ON_FIM = "errorInstanceOnFIM";
+    public static final String ERROR_NO_INSTANCE_ON_FIM = "errorNoInstanceOnFIM";
+    public static final String ERROR_NO_USER_ON_FIM = "errorNoUserOnFIM";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";
