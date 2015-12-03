@@ -65,7 +65,7 @@
 
                     <!-- Instance info -->
                     <groupbox mold="3d" hflex="1" closable="false" style="margin-left:5px">
-                        <caption label=" ">
+                        <caption id="instanceCaption" label=" ">
                             <label id="instanceTitle" sclass="title" style="float:left;"/>
                             <hbox height="24px" style="float:right" align="bottom">
                                 <label sclass="title" value="${c:l('refreshInstance')}" style="font-size:10pt !important;cursor:pointer;" onClick="controller.refreshInfo();"/>
