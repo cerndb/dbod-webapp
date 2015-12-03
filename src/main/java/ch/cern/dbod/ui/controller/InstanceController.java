@@ -111,10 +111,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Indicates if the user is admin
      */
     private boolean admin;
-    /**
-     * List of instances the user is authorise to manage
-     */
-    private List<Instance> otherInstances;
     
     /**
      * Method executed before composing the page. It instantiates the necessary attributes.
@@ -169,19 +165,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         
         //Load master and slave
         if (instance != null) {
-            //Get list of other instances
-            if (admin) {
-                otherInstances = instanceDAO.selectAll(upgrades);
-            }
-            else {
-                Execution execution = Executions.getCurrent();
-                String eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
-                otherInstances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
-            }
-            if (otherInstances != null) {
-                otherInstances.remove(instance);
-            }
-            
             if (instance.getMaster() != null && !instance.getMaster().isEmpty())
                 master = instanceDAO.selectByDbName(instance.getMaster(), upgrades);
             else
