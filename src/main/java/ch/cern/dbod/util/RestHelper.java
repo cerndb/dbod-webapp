@@ -13,6 +13,8 @@ import ch.cern.dbod.db.entity.Instance;
 import com.google.gson.*;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -37,10 +39,16 @@ public class RestHelper {
         return gson;
     }
     
-    public static JsonElement parse(String json)
+    public static JsonElement parseObject(String json)
     {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonObject();
+    }
+    
+    public static JsonElement parseList(String json)
+    {
+        JsonParser parser = new JsonParser();
+        return parser.parse(json).getAsJsonArray();
     }
     
     public static <T> T getObjectFromRestApi(String path, Class<T> object)
@@ -57,14 +65,41 @@ public class RestHelper {
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonElement json = parse(resp);
+                JsonElement json = parseObject(resp);
                 
-                T instance = gson.fromJson(json, object);
-                return instance;
+                T result = gson.fromJson(json, object);
+                return result;
             }
 
         } catch (NoSuchAlgorithmException | IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
+    public static <T> T getObjectListFromRestApi(String path, Class<T> object)
+    {
+        Gson gson = init();
+        
+        try {
+            // Do not do this in production!!!
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            HttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
             
+            HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                String resp = EntityUtils.toString(response.getEntity());
+                JsonElement json = parseList(resp);
+                
+                T result = gson.fromJson(json, object);
+                return result;
+            }
+
+        } catch (NoSuchAlgorithmException | IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
         return null;
