@@ -55,13 +55,13 @@ public class InstanceDAO {
      * @return List of all the instances in the database.
      */
     public List<Instance> selectAll(List<Upgrade> upgrades) {
-        
-        List<Instance> instances = null;
-        
+        List<Instance> instances = new ArrayList<>();
         try
         {
             //Get database information from REST API
-            instances = Arrays.asList(RestHelper.getObjectListFromRestApi("/entity/all/", Instance[].class));
+            Instance[] array = null;RestHelper.getObjectListFromRestApi("/entity/all/", Instance[].class);
+            if (array != null)
+                instances = Arrays.asList(array);
 
             //Check if instance needs upgrade
             if (upgrades != null) {
