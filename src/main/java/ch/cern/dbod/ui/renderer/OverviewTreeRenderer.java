@@ -154,9 +154,17 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Render DB name as a link
                 Treecell dbNameCell = new Treecell();
                 Html dbName = new Html();
-                dbName.setContent("<a style=\"text-decoration:none;color:blue\" class=\"z-label\" href=\""
+                
+                //Admin view and the instance is not in FIM
+                if (checkboxes && instance.getUser() == null)
+                    dbName.setContent("<a style=\"text-decoration:none;color:red\" class=\"z-label\" href=\""
                                     + Executions.encodeURL(CommonConstants.PAGE_INSTANCE + "?" + CommonConstants.INSTANCE + "=" + instance.getDbName()) 
                                     +"\">" + instance.getDbName() + "</a>");
+                else
+                    dbName.setContent("<a style=\"text-decoration:none;color:blue\" class=\"z-label\" href=\""
+                                    + Executions.encodeURL(CommonConstants.PAGE_INSTANCE + "?" + CommonConstants.INSTANCE + "=" + instance.getDbName()) 
+                                    +"\">" + instance.getDbName() + "</a>");
+                
                 dbNameCell.appendChild(dbName);
                 //If instance is master append (M) to name
                 if (((OverviewTreeNode) node).getChildCount() > 0)
@@ -174,6 +182,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 //Render username
                 Treecell usernameCell = new Treecell();
                 usernameCell.appendChild(getFormattedLabel(instance.getUsername(), 10));
+                //Admin view and the instance's user doesn't match with FIM
+                if (checkboxes && instance.getUser() != null && !instance.getUsername().equals(instance.getUser().getLogin()))
+                    usernameCell.setStyle("color:red;");
                 row.appendChild(usernameCell);
 
                 //Render e-group (if any)
