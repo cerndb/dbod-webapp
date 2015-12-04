@@ -20,9 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -57,72 +55,29 @@ public class InstanceDAO {
      * @return List of all the instances in the database.
      */
     public List<Instance> selectAll(List<Upgrade> upgrades) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<Instance> instances = new ArrayList<>();
-        try {
-            //Get connection
-            connection = getConnection();
+        
+        List<Instance> instances = null;
+        
+        try
+        {
+            //Get database information from REST API
+            instances = Arrays.asList(RestHelper.getObjectListFromRestApi("/entity/all/", Instance[].class));
 
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE status = '1'"
-                            + " ORDER BY db_name");
-            statement = connection.prepareStatement(query.toString());
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Instance instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
-                //Check if instance needs upgrade
-                if (upgrades != null) {
-                    for (int i=0; i < upgrades.size(); i++) {
-                        Upgrade upgrade = upgrades.get(i);
+            //Check if instance needs upgrade
+            if (upgrades != null) {
+                for (Instance instance : instances) {
+                    for (Upgrade upgrade : upgrades) {
                         if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                                && upgrade.getVersionFrom().equals(instance.getVersion()))
+                            && upgrade.getVersionFrom().equals(instance.getVersion()))
                             instance.setUpgradeTo(upgrade.getVersionTo());
                     }
                 }
-                instances.add(instance);
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
             }
         }
+        catch (Exception ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return instances;
     }
     
