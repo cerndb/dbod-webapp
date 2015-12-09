@@ -59,7 +59,7 @@ public class InstanceDAO {
         try
         {
             //Get database information from REST API
-            Instance[] array = null;RestHelper.getObjectListFromRestApi("/entity/all/", Instance[].class);
+            Instance[] array = RestHelper.getObjectListFromRestApi("/entity/all/", Instance[].class);
             if (array != null)
                 instances = Arrays.asList(array);
 
