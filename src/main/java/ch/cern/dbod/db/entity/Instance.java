@@ -85,7 +85,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Project
      */
-    @SerializedName("PROOJECT")
+    @SerializedName("PROJECT")
     private String project;
 
     /**
