@@ -2,6 +2,10 @@
     margin-right: 200px;
 }
 
+body {
+    padding: 0;
+}
+
 .button,
 .buttonDisabled {
    width: 20px !important;
@@ -62,6 +66,11 @@
     padding: 2px !important;
 }
 
+.boxing {
+    max-width: 1200px;
+    min-width: 860px;
+}
+
 .appTitle {
     color: #3861AA;
     font-family: 'PT Sans', 'Trebuchet MS', Tahoma, sans-serif;
@@ -104,7 +113,6 @@
 .toolbar {
     border: 0px;
     border-bottom: 1px solid #D8D8D8;
-    padding-left: 30px;
     margin-top: 10px;
 }
 
@@ -148,4 +156,8 @@ a {
 
 .z-caption {
     white-space: normal;
+}
+
+.z-treecell-content span:not(:first-child).z-tree-spacer {
+    width: 0;
 }

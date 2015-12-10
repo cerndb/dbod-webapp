@@ -38,6 +38,7 @@ import org.zkoss.zul.Window;
 /**
  * Controller for the add upgrade window. Creates the window and all its components.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class AddUpgradeController extends Window {
 
@@ -157,8 +158,6 @@ public class AddUpgradeController extends Window {
         official.setLabel(Labels.getLabel(CommonConstants.LABEL_CATEGORY + CommonConstants.CATEGORY_OFFICIAL));
         category.appendChild(official);
         Comboitem personal = new Comboitem();
-        personal.setValue(CommonConstants.CATEGORY_PERSONAL);
-        personal.setLabel(Labels.getLabel(CommonConstants.LABEL_CATEGORY + CommonConstants.CATEGORY_PERSONAL));
         category.appendChild(personal);
         Comboitem test = new Comboitem();
         test.setValue(CommonConstants.CATEGORY_TEST);
@@ -274,7 +273,7 @@ public class AddUpgradeController extends Window {
             upgrade.setVersionFrom(versionFrom.getValue());
             upgrade.setVersionTo(versionTo.getValue());
             if (upgradeDAO.insert(upgrade)) {
-                ((AdminController)this.getRoot().getFellow("controller")).refreshInstances();
+                ((UpgradesController)this.getRoot().getFellow("upgradesController")).refreshInstances();
             } else {
                 showError(CommonConstants.ERROR_ADDING_UPGRADE);
             }

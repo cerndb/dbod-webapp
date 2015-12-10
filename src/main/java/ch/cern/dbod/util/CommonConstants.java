@@ -14,6 +14,7 @@ import ch.cern.dbod.db.entity.Metric;
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class CommonConstants {
     
@@ -183,7 +184,6 @@ public class CommonConstants {
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
     public static final String PARAM_PITR_TIME = "TIMESTAMP";
     public static final String CATEGORY_OFFICIAL = "OFFICIAL";
-    public static final String CATEGORY_PERSONAL = "PERSONAL";
     public static final String CATEGORY_TEST = "TEST";
     public static final String PARAM_VERSION_FROM = "VERSION_FROM";
     public static final String PARAM_VERSION_TO = "VERSION_TO";
@@ -270,6 +270,8 @@ public class CommonConstants {
     public static final String LABEL_METRICS = "metrics";
     public static final String LABEL_RESCUE_TITLE = "rescueTitle";
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
+    public static final String LABEL_PHONE = "telephone";
+    public static final String LABEL_PORTABLE = "portable";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -338,6 +340,8 @@ public class CommonConstants {
     public static final String ERROR_DESTROYING_INSTANCE = "errorDestroyingInstance";
     public static final String ERROR_RESCUING_INSTANCE = "errorRescuingInstance";
     public static final String ERROR_INSTANCE_ON_FIM = "errorInstanceOnFIM";
+    public static final String ERROR_NO_INSTANCE_ON_FIM = "errorNoInstanceOnFIM";
+    public static final String ERROR_NO_USER_ON_FIM = "errorNoUserOnFIM";
 
     //Images
     public static final String IMG_MAINTENANCE = "/img/maintenance.png";

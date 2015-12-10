@@ -13,13 +13,8 @@ import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
-import ch.cern.dbod.db.entity.Instance;
-import ch.cern.dbod.db.entity.InstanceChange;
-import ch.cern.dbod.db.entity.Job;
-import ch.cern.dbod.db.entity.Upgrade;
-import ch.cern.dbod.ui.model.OtherInstancesModel;
+import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.ui.renderer.InstanceChangesRenderer;
-import ch.cern.dbod.ui.renderer.OtherInstancesRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.FormValidations;
@@ -45,8 +40,9 @@ import org.zkoss.zul.*;
 /**
  * Controller for the instance page.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
-public class InstanceController extends Hbox implements AfterCompose, BeforeCompose {
+public class InstanceController extends Vbox implements AfterCompose, BeforeCompose {
     /**
      * Upgrade DAO
      */
@@ -112,10 +108,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      * Indicates if the user is admin
      */
     private boolean admin;
-    /**
-     * List of instances the user is authorise to manage
-     */
-    private List<Instance> otherInstances;
     
     /**
      * Method executed before composing the page. It instantiates the necessary attributes.
@@ -170,19 +162,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         
         //Load master and slave
         if (instance != null) {
-            //Get list of other instances
-            if (admin) {
-                otherInstances = instanceDAO.selectAll(upgrades);
-            }
-            else {
-                Execution execution = Executions.getCurrent();
-                String eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
-                otherInstances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
-            }
-            if (otherInstances != null) {
-                otherInstances.remove(instance);
-            }
-            
             if (instance.getMaster() != null && !instance.getMaster().isEmpty())
                 master = instanceDAO.selectByDbName(instance.getMaster(), upgrades);
             else
@@ -234,8 +213,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
-            //Load other isntances
-            loadOtherInstances();
             //Load changes
             loadChanges();
         }
@@ -248,20 +225,18 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         //Master area
         if (master != null)
             ((Hbox) getFellow("masterArea")).setVisible(true);
-        else 
+        else
             ((Hbox) getFellow("masterArea")).setVisible(false);
         //Slave area
         if (slave != null)
             ((Hbox) getFellow("slaveArea")).setVisible(true);
         else
             ((Hbox) getFellow("slaveArea")).setVisible(false);
-        //Other instances
-        if (otherInstances != null && !otherInstances.isEmpty()) {
-            ((Groupbox) getFellow("otherInstancesBox")).setVisible(true);
-        }
-        else {
-            ((Groupbox) getFellow("otherInstancesBox")).setVisible(false);
-        }
+        //Empty area
+        if (master == null && slave == null)
+            ((Hbox) getFellow("emptyArea")).setVisible(true);
+        else
+            ((Hbox) getFellow("emptyArea")).setVisible(false);
     }
     
     /**
@@ -289,8 +264,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadButtons();
             //Load jobs
             loadJobs();
-            //Load other instances
-            loadOtherInstances();
             //Load changes
             loadChanges();
         }
@@ -412,6 +385,53 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 break;
         }
         
+        //User information extracted from FIM
+        User user = instance.getUser();
+        if (user != null)
+        {
+            ((Label) getFellow("email")).setValue(user.getEmail());
+            ((Label) getFellow("fullname")).setValue(user.getFirstName() + " " + user.getLastName());
+            String telephone = "";
+            String phoneLabel = "";
+            if (user.getPhone1() != null)
+            {
+                phoneLabel = Labels.getLabel(CommonConstants.LABEL_PHONE);
+                telephone += user.getPhone1();
+                if (user.getPhone2() != null)
+                {
+                    phoneLabel += " / " + Labels.getLabel(CommonConstants.LABEL_PHONE) + " 2";
+                    telephone += " / " + user.getPhone2();
+                }
+                if (user.getPortable() != null)
+                {
+                    phoneLabel += " (" + Labels.getLabel(CommonConstants.LABEL_PORTABLE) + ")";
+                    telephone += " (" + user.getPortable() + ")";
+                }
+            }
+            else if (user.getPortable() != null)
+            {
+                phoneLabel = Labels.getLabel(CommonConstants.LABEL_PORTABLE);
+                telephone += user.getPortable();
+            }
+            if (!phoneLabel.isEmpty())
+            {
+                ((Label) getFellow("phoneLabel")).setValue(phoneLabel + ":");
+                ((Label) getFellow("telephone")).setValue(telephone);
+            }
+            String orgunit = "-";
+            if (user.getDepartment() != null)
+            {
+                orgunit = user.getDepartment();
+                if (user.getGroup() != null)
+                {
+                    orgunit += "-" + user.getGroup();
+                    if (user.getSection() != null)
+                        orgunit += "-" + user.getSection();
+                }
+            }
+            ((Label) getFellow("orgunit")).setValue(orgunit);
+        }
+        
         //If the user is an admin
         if (admin) {
             //Maintenance button
@@ -425,17 +445,13 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             }
             //Values for edit boxes
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
-            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_PERSONAL);
-            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(2).setValue(CommonConstants.CATEGORY_TEST);
+            ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_TEST);
             switch (instance.getCategory()) {
                 case CommonConstants.CATEGORY_OFFICIAL:
                     ((Combobox) getFellow("categoryEdit")).setSelectedIndex(0);
                     break;
-                case CommonConstants.CATEGORY_PERSONAL:
-                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
-                    break;
                 case CommonConstants.CATEGORY_TEST:
-                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(2);
+                    ((Combobox) getFellow("categoryEdit")).setSelectedIndex(1);
                     break;
             }
             ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));
@@ -444,6 +460,21 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             if (instance.getVersion() != null && !instance.getVersion().isEmpty())
                 ((Textbox) getFellow("versionEdit")).setValue(String.valueOf(instance.getVersion()));
             ((Textbox) getFellow("hostEdit")).setValue(String.valueOf(instance.getHost()));
+            
+            //If the user couldn't be found, the instance is not in FIM
+            if (user == null)
+            {
+                ((Caption) getFellow("instanceCaption")).setImage("/img/warning-small.png");
+                ((Label) getFellow("instanceTitle")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_INSTANCE_ON_FIM));
+                ((Label) getFellow("instanceTitle")).setStyle("text-decoration-line:underline; text-decoration-style:dashed; text-decoration-color:red;");
+            }
+            //If the username saved in the instance doesn't match the user saved in FIM
+            else if (!instance.getUsername().equalsIgnoreCase(user.getLogin()))
+            {
+                ((Label) getFellow("username")).setValue(instance.getUsername() + " (" + user.getLogin() + ")");
+                ((Label) getFellow("username")).setStyle("color:red !important;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:red;");
+                ((Label) getFellow("username")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_USER_ON_FIM));
+            }
         }
     }
 
@@ -596,7 +627,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
         jobs = jobDAO.selectByInstance(instance);
 
         //Get selected job (if any)
-        Combobox jobSelector = (Combobox) getFellow("jobSelector");
+        Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
         Job selected = null;
         if (jobSelector.getSelectedItem() != null) {
             selected = (Job) jobSelector.getSelectedItem().getValue();
@@ -607,36 +638,52 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
 
         //If there are jobs
         if (jobs != null && jobs.size() > 0) {
-            //Insert items in combobox
-            Comboitem selectOne = new Comboitem();
-            selectOne.setValue(null);
-            selectOne.setLabel(Labels.getLabel(CommonConstants.LABEL_SELECT_ONE));
-            jobSelector.appendChild(selectOne);
+            //Insert items in listbox
             for (int i = 0; i < jobs.size(); i++) {
+                Listitem item = new Listitem();
+                Listcell statecell = new Listcell();
+                Listcell requestercell = new Listcell();
+                Listcell commandcell = new Listcell();
+                Listcell datecell = new Listcell();
+                Listcell completioncell = new Listcell();
+                
                 Job job = jobs.get(i);
-                Comboitem item = new Comboitem();
                 item.setValue(job);
-                String label = Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName()) + " " + dateTimeFormatter.format(job.getCreationDate());
-                item.setLabel(label);
-                item.setSclass(CommonConstants.STYLE_JOB_STATE);
+
+                statecell.setSclass(CommonConstants.STYLE_JOB_STATE);
+                requestercell.setLabel(job.getRequester());
+                commandcell.setLabel(Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName()));
+                datecell.setLabel(dateTimeFormatter.format(job.getCreationDate()));
+                if (job.getCompletionDate() != null)
+                    completioncell.setLabel(dateTimeFormatter.format(job.getCompletionDate()));
+                else
+                    completioncell.setLabel("-");
+                
                 switch (job.getState()) {
                     case CommonConstants.JOB_STATE_FINISHED_OK:
-                        item.setImage(CommonConstants.IMG_RUNNING);
+                        statecell.setImage(CommonConstants.IMG_RUNNING);
                         break;
                     case CommonConstants.JOB_STATE_RUNNING:
-                        item.setImage(CommonConstants.IMG_PENDING);
+                        statecell.setImage(CommonConstants.IMG_PENDING);
                         break;
                     case CommonConstants.JOB_STATE_FINISHED_FAIL:
-                        item.setImage(CommonConstants.IMG_STOPPED);
+                        statecell.setImage(CommonConstants.IMG_STOPPED);
                         break;
                     case CommonConstants.JOB_STATE_FINISHED_WARNING: 
-                        item.setImage(CommonConstants.IMG_BUSY);
+                        statecell.setImage(CommonConstants.IMG_BUSY);
                         break;
                     case CommonConstants.JOB_STATE_PENDING:
-                        item.setImage(CommonConstants.IMG_AWAITING_APPROVAL);
+                        statecell.setImage(CommonConstants.IMG_AWAITING_APPROVAL);
                         break;
                 }
+                
+                item.appendChild(statecell);
+                item.appendChild(commandcell);
+                item.appendChild(requestercell);
+                item.appendChild(datecell);
+                item.appendChild(completioncell);
                 jobSelector.appendChild(item);
+                
                 //If it was the selected one, select it again
                 if (selected != null && job.getUsername().equals(selected.getUsername()) && job.getDbName().equals(selected.getDbName())
                         && job.getCommandName().equals(selected.getCommandName()) && job.getType().equals(selected.getType())
@@ -645,42 +692,9 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 }
             }
         }
-        else {
-            Comboitem selectOne = new Comboitem();
-            selectOne.setValue(null);
-            selectOne.setLabel(Labels.getLabel(CommonConstants.LABEL_NO_JOBS));
-            jobSelector.appendChild(selectOne);
-        }
-
-        //If there is not a selected item select the first
-        if (selected == null) {
-            jobSelector.setSelectedIndex(0);
-        }
 
         //Load information for the selected item
         loadJob();
-    }
-    
-    /**
-     * Load the instances the user is allowed to manage
-     */
-    private void loadOtherInstances() {
-        Grid grid = (Grid) getFellow("otherInstances");
-        if (grid != null && grid.getModel() == null) {
-            grid.setModel(new OtherInstancesModel(otherInstances));
-            grid.setRowRenderer(new OtherInstancesRenderer());
-        }
-        else if (grid != null) {
-            ((OtherInstancesModel) grid.getModel()).setInstances(otherInstances);
-        }
-    }
-    
-    /**
-     * Filters the instances the user is allowed to manage
-     */
-    public void filterOtherInstances () {
-        Grid grid = (Grid) getFellow("otherInstances");
-        ((OtherInstancesModel) grid.getModel()).filterInstances(((Textbox) getFellow("otherInstancesFilter")).getValue());
     }
     
     /**
@@ -688,15 +702,20 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
      */
     private void loadJob() {
         //Get job
-        Combobox jobSelector = (Combobox) getFellow("jobSelector");
+        Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
+        if (jobSelector == null || jobSelector.getSelectedItem() == null)
+            return;
+        
         Job job = (Job) jobSelector.getSelectedItem().getValue();
 
         //If a job is selected
         if (job != null) {
+            Window window = ((Window) getFellow("jobInfoWindow"));
+            
             //Load job general info
-            ((Label) getFellow("jobRequester")).setValue(job.getRequester());
-            Image stateImage = (Image) getFellow("jobStateImage");
-            Label stateLabel = (Label) getFellow("jobStateLabel");
+            ((Label) window.getFellow("jobRequester")).setValue(job.getRequester());
+            Image stateImage = (Image) window.getFellow("jobStateImage");
+            Label stateLabel = (Label) window.getFellow("jobStateLabel");
             stateImage.setWidth("20px");
             stateImage.setHeight("20px");
             stateLabel.setValue(Labels.getLabel(CommonConstants.LABEL_JOB_STATE + job.getState()));
@@ -718,35 +737,18 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                     stateImage.setSrc(CommonConstants.IMG_BUSY);
                     break;
             }
-            ((Label) getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
+            ((Label) window.getFellow("jobCreationDate")).setValue(dateTimeFormatter.format(job.getCreationDate()));
             if (job.getCompletionDate() != null) {
-                ((Label) getFellow("jobCompletionDate")).setValue(dateTimeFormatter.format(job.getCompletionDate()));
+                ((Label) window.getFellow("jobCompletionDate")).setValue(dateTimeFormatter.format(job.getCompletionDate()));
             } else {
-                ((Label) getFellow("jobCompletionDate")).setValue("-");
+                ((Label) window.getFellow("jobCompletionDate")).setValue("-");
             }
 
             //Load log
-            ((Textbox) getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
+            ((Textbox) window.getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
 
-            //Update groupbox properties
-            Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
-            jobInfo.setClosable(true);
-            jobInfo.setOpen(true);
-        }
-        //Clean the interface if no job is selected
-        else {
-            ((Label) getFellow("jobRequester")).setValue("-");
-            ((Image) getFellow("jobStateImage")).setSrc("");
-            ((Image) getFellow("jobStateImage")).setTooltiptext("");
-            ((Label) getFellow("jobStateLabel")).setValue("-");
-            ((Label) getFellow("jobCreationDate")).setValue("-");
-            ((Label) getFellow("jobCompletionDate")).setValue("-");
-            ((Textbox) getFellow("log")).setValue("-");
-
-            //Update groupbox properties
-            Groupbox jobInfo = (Groupbox) getFellow("jobInfo");
-            jobInfo.setOpen(false);
-            jobInfo.setClosable(false);
+            //Show the popup with the information
+            window.setVisible(true);
         }
     }
 
@@ -875,7 +877,6 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
             loadInstanceInfo();
             loadButtons();
             loadJobs();
-            loadOtherInstances();
             loadChanges();
         }
         else {
@@ -1172,6 +1173,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 instance.setMaster(master.getDbName());
                 instance.setSlave(null);
                 ((Hbox) getFellow("masterArea")).setVisible(true);
+                ((Hbox) getFellow("emptyArea")).setVisible(false);
                 ((Hbox) getFellow("slaveArea")).setVisible(false);
                 ((Label) getFellow("master")).setValue(master.getDbName());
                 ((Label) getFellow("slave")).setValue(null);
@@ -1188,6 +1190,7 @@ public class InstanceController extends Hbox implements AfterCompose, BeforeComp
                 instance.setMaster(null);
                 instance.setSlave(slave.getDbName());
                 ((Hbox) getFellow("masterArea")).setVisible(false);
+                ((Hbox) getFellow("emptyArea")).setVisible(false);
                 ((Hbox) getFellow("slaveArea")).setVisible(true);
                 ((Label) getFellow("master")).setValue(null);
                 ((Label) getFellow("slave")).setValue(slave.getDbName());

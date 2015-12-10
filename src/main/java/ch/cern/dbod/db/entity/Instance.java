@@ -9,18 +9,27 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * Represents a database in the system.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class Instance implements Comparable, Cloneable{
     /**
      * Username creator of this instance (max. 32)
      */
+    @SerializedName("USERNAME")
     private String username;
+    
+    /**
+     * Information about the owner of this instance.
+     */
+    @SerializedName("USER")
+    private User user;
 
     /**
      * DB name for this instance (max. 8)
@@ -28,56 +37,67 @@ public class Instance implements Comparable, Cloneable{
      * The DB name limitation comes from the fact that Oracle SID's can only
      * be 8 characters
      */
+    @SerializedName("DB_NAME")
     private String dbName;
 
     /**
      * DB e-Group (max. 256)
      */
+    @SerializedName("E_GROUP")
     private String eGroup;
 
     /**
      * Category of the instances (personal, test or official, max. 32)
      */
+    @SerializedName("CATEGORY")
     private String category;
 
     /**
      * Creation date
      */
+    @SerializedName("CREATION_DATE")
     private Date creationDate;
 
     /**
      * Expiration date
      */
+    @SerializedName("EXPIRY_DATE")
     private Date expiryDate;
 
     /**
      * Database type (Oracle, MySQL, etc)
      */
+    @SerializedName("DB_TYPE")
     private String dbType;
 
     /**
      * Database size (in GB)
      */
+    @SerializedName("DB_SIZE")
     private int dbSize;
 
     /**
      * Number of connections
      */
+    @SerializedName("NO_CONNECTIONS")
     private int noConnections;
 
     /**
      * Project
      */
+    @SerializedName("PROJECT")
     private String project;
 
     /**
      * Database description (max. 1024)
      */
+    @SerializedName("DESCRIPTION")
     private String description;
     
     /**
      * Version of the database (max. 128)
      */
+    @SerializedName("VERSION")
     private String version;
     
     /**
@@ -88,26 +108,31 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Logical status (active or inactive)
      */
+    @SerializedName("STATUS")
     private boolean status;
     
     /**
      * DB name of the master (if slave)
      */
+    @SerializedName("MASTER")
     private String master;
     
     /**
      * DB name of the slave (if master)
      */
+    @SerializedName("SLAVE")
     private String slave;
     
     /**
      * Host where instance is running
      */
+    @SerializedName("HOST")
     private String host;
 
     /**
      * State (On Creation, Running, Stopped, etc)
      */
+    @SerializedName("STATE")
     private String state;
     
     /**
@@ -122,6 +147,14 @@ public class Instance implements Comparable, Cloneable{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getDbName() {
@@ -139,7 +172,6 @@ public class Instance implements Comparable, Cloneable{
     public void setEGroup(String eGroup) {
         this.eGroup = eGroup;
     }
-
 
     public String getCategory() {
         return category;
@@ -193,7 +225,6 @@ public class Instance implements Comparable, Cloneable{
         return project;
     }
 
-
     public void setProject(String project) {
         this.project = project;
     }
@@ -205,7 +236,7 @@ public class Instance implements Comparable, Cloneable{
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public String getVersion() {
         return version;
     }
@@ -213,7 +244,6 @@ public class Instance implements Comparable, Cloneable{
     public void setVersion(String version) {
         this.version = version;
     }
-    
 
     public String getUpgradeTo() {
         return upgradeTo;
@@ -229,14 +259,6 @@ public class Instance implements Comparable, Cloneable{
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public String getMaster() {
@@ -261,6 +283,14 @@ public class Instance implements Comparable, Cloneable{
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public boolean isChecked() {
@@ -344,5 +374,10 @@ public class Instance implements Comparable, Cloneable{
         hash = 29 * hash + Objects.hashCode(this.state);
         hash = 29 * hash + (this.checked ? 1 : 0);
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Instance{" + "username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + '}';
     }
 }

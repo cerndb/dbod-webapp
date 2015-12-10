@@ -14,6 +14,8 @@ import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.controller.DestroyController;
 import ch.cern.dbod.ui.controller.RescueController;
 import ch.cern.dbod.util.CommonConstants;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -31,6 +33,7 @@ import org.zkoss.zul.Window;
 /**
  * Renderer for instances to be destroyed
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class DestroyGridRenderer implements RowRenderer {
     /**
@@ -61,6 +64,27 @@ public class DestroyGridRenderer implements RowRenderer {
         
         //Info
         row.appendChild(new Label(instance.getDbName()));
+        
+        //Username
+        row.appendChild(new Label(instance.getUsername()));
+        
+        //Host
+        row.appendChild(new Label(instance.getHost()));
+        
+        //Category
+        row.appendChild(new Label(instance.getCategory()));
+        
+        //DB Type
+        row.appendChild(new Label(instance.getDbType()));
+
+        //Create date formatter
+        DateFormat dateFormatter = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
+        
+        //Expiry date
+        if (instance.getExpiryDate() != null)
+            row.appendChild(new Label(dateFormatter.format(instance.getExpiryDate())));
+        else
+            row.appendChild(new Label("-"));
         
         Hbox box = new Hbox();
         box.setWidth("100%");
