@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="DOD_JOBS_DEFINITIONS" directorySegmentName="seg_0" id="D118FDDA-260E-4586-7801-F720CA2B00B1">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>F307FFA6-B5BC-DDF9-86B3-525DD0CCA14E</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<sourcePk>561FEFD1-3B80-7192-68F6-189779D7078B</sourcePk>
+<identifying>true</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>1B60BA94-34E5-7CBB-E068-2F3E7B2EF6FF</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>2DB67723-2805-9A69-92EF-0ACB6E2D9DC6</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

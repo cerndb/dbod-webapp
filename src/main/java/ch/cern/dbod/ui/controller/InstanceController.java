@@ -29,10 +29,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Execution;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Sessions;
-import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.*;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -309,7 +306,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         //Expiry date (if any)
         if (instance.getExpiryDate() != null) {
             ((Label) getFellow("expiryDate")).setValue(dateFormatter.format(instance.getExpiryDate()));
-            ((Datebox) getFellow("expiryDateEdit")).setValue(instance.getExpiryDate());
+            try {
+                ((Datebox) getFellow("expiryDateEdit")).setValue(instance.getExpiryDate());
+            }
+            catch (WrongValueException ex) {
+                ((Label) getFellow("expiryDate")).setValue("Incorrect date");
+            }
         } else {
             ((Label) getFellow("expiryDate")).setValue("-");
         }

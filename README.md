@@ -7,7 +7,7 @@
 This repository contains the Web Interface used in the CERN Database On 
 Demand Service.
 
-It's implemented in Java and using the [ZK 7.0.2](http://www.zkoss.org/) 
+It's implemented in Java and using the [ZK 7.0.3](http://www.zkoss.org/) 
 framework. The project uses [Maven](https://maven.apache.org/) as a project
 and dependency management tool.
 

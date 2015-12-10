@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="DOD_UPGRADE_PERFORMED" directorySegmentName="seg_0" id="771B3311-383C-414B-BAE8-FD604FA44712">
+<sourceConnName>DBONDEMAND PROD</sourceConnName>
+<sourceObjSchema>DBONDEMAND</sourceObjSchema>
+<sourceObjName>DOD_UPGRADE_PERFORMED</sourceObjName>
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<actions>UPDATE</actions>
+<body>DECLARE&lt;br/&gt;    message VARCHAR2 (1024);&lt;br/&gt;BEGIN&lt;br/&gt;    IF :NEW.COMMAND_NAME = &apos;UPGRADE&apos; AND :NEW.state = &apos;FINISHED_OK&apos;&lt;br/&gt;    THEN&lt;br/&gt;        message := &apos;&lt;html&gt;&lt;br/&gt;                        &lt;body&gt;&lt;br/&gt;                            Instance &lt;b&gt;&apos; || :NEW.db_name || &apos;&lt;/b&gt; has been successfully upgraded to the latest version!&lt;br/&gt;                        &lt;/body&gt;&lt;br/&gt;                    &lt;/html&gt;&apos;;&lt;br/&gt;&lt;br/&gt;        UTL_MAIL.send(sender =&gt; &apos;dbondemand-admin@cern.ch&apos;,&lt;br/&gt;            recipients =&gt; &apos;dbondemand-admin@cern.ch&apos;,&lt;br/&gt;            subject =&gt; &apos;DBOD: INFO: &quot;&apos; || :NEW.db_name || &apos;&quot; has been upgraded&apos;,&lt;br/&gt;            message =&gt; message,&lt;br/&gt;            mime_type =&gt; &apos;text/html&apos;);&lt;br/&gt;    END IF;&lt;br/&gt;END;</body>
+<triggerTime>AFTER</triggerTime>
+<columns>C1C30987-AED6-56BB-077D-BADE2505D16F</columns>
+<owner>CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4</owner>
+<table>50FFE09F-DA98-01E8-51C3-44D37CE14858</table>
+</TriggerOraclev10g>

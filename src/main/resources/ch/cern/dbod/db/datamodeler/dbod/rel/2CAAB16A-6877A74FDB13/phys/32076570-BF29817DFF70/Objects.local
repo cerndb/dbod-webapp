@@ -1,0 +1,25 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.storage.oracle.v11g.StorageDesignOraclev11g>
+   <object objectType="TSpace" objectID="8E233E66-076B-AFBF-7B57-C1166A8C4BF5" name="DATA01" seqName="seg_0"/>
+   <object objectType="User" objectID="CAB88FE4-3E0C-C88B-7B12-C5D629EEEFB4" name="DBONDEMAND" seqName="seg_0"/>
+   <object objectType="User" objectID="MDSYS" name="MDSYS" seqName="seg_0"/>
+   <object objectType="User" objectID="PUBLIC" name="PUBLIC" seqName="seg_0"/>
+   <object objectType="SType" objectID="47E390DE-0671-C4B1-8428-0F45CBEE18F8" name="SDO_GEOMETRY" seqName="seg_0"/>
+   <object objectType="SType" objectID="F72C39E0-D1CA-8821-2AD7-A1E95A37D3D1" name="XMLTYPE" seqName="seg_0"/>
+   <object objectType="Table" objectID="0BD3232B-9B50-698E-DDFE-8475B0EF8D38" name="DOD_COMMAND_PARAMS" seqName="seg_0"/>
+   <object objectType="Table" objectID="40904ECF-5054-07B1-57AE-91FF821B126D" name="DOD_UPGRADES" seqName="seg_0"/>
+   <object objectType="Table" objectID="50FFE09F-DA98-01E8-51C3-44D37CE14858" name="DOD_JOBS" seqName="seg_0"/>
+   <object objectType="Table" objectID="5C9F8722-FC52-A386-DC30-2E8EB2465440" name="DOD_INSTANCE_CHANGES" seqName="seg_0"/>
+   <object objectType="Table" objectID="775DF4A6-4BCC-2A90-11B6-DB61A7C5A87F" name="DOD_INSTANCES" seqName="seg_0"/>
+   <object objectType="Table" objectID="DCC9D86A-6161-4852-65FB-A1C8E5CCAC0D" name="DOD_COMMAND_DEFINITION" seqName="seg_0"/>
+   <object objectType="Table" objectID="FF717ED0-E710-0C93-9707-F8AFE733B22D" name="STATS_MONTHLY_INSTANCES" seqName="seg_0"/>
+   <object objectType="Segment" objectID="2B6B96D2-5578-FF84-C884-C0A8E20C21CC" name="Storage1" seqName="seg_0"/>
+   <object objectType="Segment" objectID="4625D976-8EE5-BC0D-38B4-1A9F767D5E83" name="Storage5" seqName="seg_0"/>
+   <object objectType="Segment" objectID="F1B75514-CF86-6D9E-991C-915FDA2F84C9" name="Storage8" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="599C9778-96C9-FB05-26F7-5BE05085AA79" name="DOD_INSTANCES_DELETE" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="C036D8DD-49C7-A8D4-E798-F1F7F52D89B7" name="DOD_INSTANCES_UPDATE_USERNAME" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="A785BE44-C0FA-3339-82DA-5B401AE6DE0A" name="DOD_JOBS_INSERT" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="A6084AE5-F9E7-A620-88A0-6CC7ECB94588" name="DOD_JOBS_MONITOR_FAIL" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="97287DBB-6EF3-1831-D5F9-02CE550A095D" name="DOD_JOBS_UPDATE_USERNAME" seqName="seg_0"/>
+   <object objectType="Trigger" objectID="771B3311-383C-414B-BAE8-FD604FA44712" name="DOD_UPGRADE_PERFORMED" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.storage.oracle.v11g.StorageDesignOraclev11g>
