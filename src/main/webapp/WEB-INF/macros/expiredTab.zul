@@ -23,11 +23,11 @@
                             <foot id="footerDestroy" style="display:none">
                                 <footer span="5">
                                     <hbox height="24px" width="300px" align="bottom" id="showAllToDestroy" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="adminController.showAllToDestroy(true);"/>
+                                        <toolbarbutton tooltiptext="${c:l('showAll')}" zclass="button" image="/img/showAll.png" onClick="expiredController.showAllToDestroy(true);"/>
                                         <label value="${c:l('showAll')}" style="!important;cursor:pointer;" onClick="expiredController.showAllToDestroy(true);"/>                               
                                     </hbox>
                                     <hbox height="24px" width="300px" align="bottom" id="pagingToDestroy" style="display:none">
-                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="adminController.showAllToDestroy(false);"/>
+                                        <toolbarbutton tooltiptext="${c:l('paging')}" zclass="button" image="/img/paging.png" onClick="expiredController.showAllToDestroy(false);"/>
                                         <label value="${c:l('paging')}" style="!important;cursor:pointer;" onClick="expiredController.showAllToDestroy(false);"/>                               
                                     </hbox>
                                 </footer>
