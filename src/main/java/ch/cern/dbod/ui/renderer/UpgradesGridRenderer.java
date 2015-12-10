@@ -11,7 +11,7 @@ package ch.cern.dbod.ui.renderer;
 
 import ch.cern.dbod.db.dao.UpgradeDAO;
 import ch.cern.dbod.db.entity.Upgrade;
-import ch.cern.dbod.ui.controller.AdminController;
+import ch.cern.dbod.ui.controller.UpgradesController;
 import ch.cern.dbod.util.CommonConstants;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,7 +78,7 @@ public class UpgradesGridRenderer implements RowRenderer {
             public void onEvent(Event event) {
                 try {
                     if (upgradeDAO.delete(upgrade)) {
-                        ((AdminController)row.getGrid().getRoot().getFellow("controller")).refreshInstances();
+                        ((UpgradesController)row.getGrid().getRoot().getFellow("upgradesController")).refreshInstances();
                     }
                     else {
                         showError(row, null, CommonConstants.ERROR_DELETING_UPGRADE);

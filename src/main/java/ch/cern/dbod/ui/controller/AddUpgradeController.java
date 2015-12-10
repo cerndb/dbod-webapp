@@ -273,7 +273,7 @@ public class AddUpgradeController extends Window {
             upgrade.setVersionFrom(versionFrom.getValue());
             upgrade.setVersionTo(versionTo.getValue());
             if (upgradeDAO.insert(upgrade)) {
-                ((AdminController)this.getRoot().getFellow("controller")).refreshInstances();
+                ((UpgradesController)this.getRoot().getFellow("upgradesController")).refreshInstances();
             } else {
                 showError(CommonConstants.ERROR_ADDING_UPGRADE);
             }
