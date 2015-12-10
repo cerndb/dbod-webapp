@@ -56,9 +56,7 @@ public class RestHelper {
         Gson gson = init();
         
         try {
-            // Do not do this in production!!!
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            HttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+            HttpClient httpclient = HttpClientBuilder.create().build();
             
             HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
             HttpResponse response = httpclient.execute(request);
@@ -71,7 +69,7 @@ public class RestHelper {
                 return result;
             }
 
-        } catch (NoSuchAlgorithmException | IOException | ParseException e) {
+        } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
@@ -83,9 +81,7 @@ public class RestHelper {
         Gson gson = init();
         
         try {
-            // Do not do this in production!!!
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            HttpClient httpclient = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+            HttpClient httpclient = HttpClientBuilder.create().build();
             
             HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
             HttpResponse response = httpclient.execute(request);
@@ -98,7 +94,7 @@ public class RestHelper {
                 return result;
             }
 
-        } catch (NoSuchAlgorithmException | IOException | ParseException e) {
+        } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
