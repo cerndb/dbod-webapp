@@ -9,18 +9,14 @@
 package ch.cern.dbod.util;
 
 import ch.cern.dbod.appservlet.ConfigLoader;
-import ch.cern.dbod.db.entity.Instance;
 import com.google.gson.*;
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -64,11 +60,11 @@ public class RestHelper {
             {
                 String resp = EntityUtils.toString(response.getEntity());
                 JsonElement json = parseObject(resp);
+                EntityUtils.consume(response.getEntity());
                 
                 T result = gson.fromJson(json, object);
                 return result;
             }
-
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -91,9 +87,9 @@ public class RestHelper {
                 JsonElement json = parseList(resp);
                 
                 T result = gson.fromJson(json, object);
+                EntityUtils.consume(response.getEntity());
                 return result;
             }
-
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
