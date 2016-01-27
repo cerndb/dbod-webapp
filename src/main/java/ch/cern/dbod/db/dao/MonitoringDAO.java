@@ -30,6 +30,7 @@ import javax.sql.DataSource;
 /**
  * DAO for monitoring.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class MonitoringDAO {
     
@@ -52,16 +53,13 @@ public class MonitoringDAO {
      * @return List of metrics.
      */
     public List<Metric> selectAvailableMetrics(Instance instance) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
         ArrayList<Metric> metrics = new ArrayList<>();
-        try {
-            //Get connection
-            connection = getConnection();
-
+        
+        //Get connection
+        try (Connection connection = getConnection()) {
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
+            PreparedStatement statement = null;
             switch (instance.getDbType()) {
                 case CommonConstants.DB_TYPE_MYSQL:
                     query.append("SELECT target_type, parameter_code, parameter_name, unit"
@@ -91,35 +89,26 @@ public class MonitoringDAO {
                     statement.setString(1, CommonConstants.MONITORING_TYPE_PG);
                     statement.setString(2, CommonConstants.MONITORING_TYPE_NODE);
                     break;
+                default:
+                    return metrics;
             }
 
             //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate metric object
-            while (result.next()) {
-                Metric metric = new Metric();
-                metric.setType(result.getString(1));
-                metric.setCode(result.getString(2));
-                metric.setName(result.getString(3));
-                metric.setUnit(result.getString(4));
-                metrics.add(metric);
+            try (ResultSet result = statement.executeQuery()) {
+                //Instantiate metric object
+                while (result.next()) {
+                    Metric metric = new Metric();
+                    metric.setType(result.getString(1));
+                    metric.setCode(result.getString(2));
+                    metric.setName(result.getString(3));
+                    metric.setUnit(result.getString(4));
+                    metrics.add(metric);
+                }
+            } finally {
+                statement.close();
             }
         } catch (NamingException | SQLException ex) {
             Logger.getLogger(MonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING AVAILABLE METRICS",ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
         }
         return metrics;
     }
@@ -132,19 +121,15 @@ public class MonitoringDAO {
      * @return JSON string with the DataTable representation of the metric.
      */
     public String selectJSONData(Instance instance, String host, Metric metric, int days) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        StringBuilder json = new StringBuilder();
-        try {
+        //Get connection
+        try (Connection connection = getConnection()) {
             //Adjust beginning
             Date now = new Date();
             Timestamp start = new Timestamp(now.getTime() - (days * 86400000));
-            //Get connection
-            connection = getConnection();
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
+            PreparedStatement statement = null;
             //Select the metric depending on the type
             switch (metric.getType()) {
                 case CommonConstants.MONITORING_TYPE_MYSQL:
@@ -207,113 +192,102 @@ public class MonitoringDAO {
             }
 
             //Execute query
-            result = statement.executeQuery();
-
-            //Build JSON object
-            if (result.next()) {
-                //If there is no end date use now
-                Timestamp end = result.getTimestamp(2);
-                if (end == null) {
-                    end = new Timestamp(now.getTime());
-                }
-                
-                //Store value to build delta
-                Float value1 = Float.parseFloat(result.getString(3));
-                
-                //Initialise object
-                json.append("{cols: [{id: 'date', label: 'Date', type: 'datetime'}, {id: 'value', label: 'Cumulative', type: 'number'}, {id: 'value', label: 'Delta', type: 'number'}], rows: [");
-                
-                //Start date (with delta 0)
-                json.append("{c: [{v: new Date(");
-                json.append(start.getTime());
-                json.append(")}, {v: ");
-                json.append(value1);
-                json.append("}, {v: 0}]}");
-                
-                //End date (no delta)
-                json.append(", {c: [{v: new Date(");
-                json.append(end.getTime());
-                json.append(")}, {v: ");
-                json.append(value1);
-                json.append("}]}");
-                
-                //If the next point is after more than 7 minutes add delta 0 (not for Oracle)
-                if (!instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)
-                        && start.getTime() + 420000 < end.getTime()) {
-                    json.append(", {c: [{v: new Date(");
-                    json.append(end.getTime() - 360000);
-                    json.append(")}, {}, {v:0}]}");
-                }
-
-                //Fetch rest of rows
-                while (result.next()) {
+            try (ResultSet result = statement.executeQuery()) {
+                //Build JSON object
+                if (result.next()) {
                     //If there is no end date use now
-                    end = result.getTimestamp(2);
+                    Timestamp end = result.getTimestamp(2);
                     if (end == null) {
                         end = new Timestamp(now.getTime());
                     }
-                    
-                    //Store new value to build delta
-                    Float value2 = Float.parseFloat(result.getString(3));
-                    
-                    //Start date
-                    json.append(", {c: [{v: new Date(");
-                    json.append(result.getTimestamp(1).getTime());
+
+                    //Store value to build delta
+                    Float value1 = Float.parseFloat(result.getString(3));
+                    StringBuilder json = new StringBuilder();
+
+                    //Initialise object
+                    json.append("{cols: [{id: 'date', label: 'Date', type: 'datetime'}, {id: 'value', label: 'Cumulative', type: 'number'}, {id: 'value', label: 'Delta', type: 'number'}], rows: [");
+
+                    //Start date (with delta 0)
+                    json.append("{c: [{v: new Date(");
+                    json.append(start.getTime());
                     json.append(")}, {v: ");
-                    json.append(value2);
-                    json.append("}, {v: ");
-                    json.append(value2 - value1);
-                    json.append("}]}");
-                    
+                    json.append(value1);
+                    json.append("}, {v: 0}]}");
+
                     //End date (no delta)
                     json.append(", {c: [{v: new Date(");
                     json.append(end.getTime());
                     json.append(")}, {v: ");
-                    json.append(value2);
+                    json.append(value1);
                     json.append("}]}");
-                    
-                    //If the next point is after more than 7 minutes add delta 0
+
+                    //If the next point is after more than 7 minutes add delta 0 (not for Oracle)
                     if (!instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)
-                            && result.getTimestamp(1).getTime() + 420000 < end.getTime()) {
-                        json.append(", {c: [{v: new Date(");
-                        json.append(result.getTimestamp(1).getTime() + 360000);
-                        json.append(")}, {}, {v:0}]}");
+                            && start.getTime() + 420000 < end.getTime()) {
                         json.append(", {c: [{v: new Date(");
                         json.append(end.getTime() - 360000);
                         json.append(")}, {}, {v:0}]}");
                     }
+
+                    //Fetch rest of rows
+                    while (result.next()) {
+                        //If there is no end date use now
+                        end = result.getTimestamp(2);
+                        if (end == null) {
+                            end = new Timestamp(now.getTime());
+                        }
+
+                        //Store new value to build delta
+                        Float value2 = Float.parseFloat(result.getString(3));
+
+                        //Start date
+                        json.append(", {c: [{v: new Date(");
+                        json.append(result.getTimestamp(1).getTime());
+                        json.append(")}, {v: ");
+                        json.append(value2);
+                        json.append("}, {v: ");
+                        json.append(value2 - value1);
+                        json.append("}]}");
+
+                        //End date (no delta)
+                        json.append(", {c: [{v: new Date(");
+                        json.append(end.getTime());
+                        json.append(")}, {v: ");
+                        json.append(value2);
+                        json.append("}]}");
+
+                        //If the next point is after more than 7 minutes add delta 0
+                        if (!instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)
+                                && result.getTimestamp(1).getTime() + 420000 < end.getTime()) {
+                            json.append(", {c: [{v: new Date(");
+                            json.append(result.getTimestamp(1).getTime() + 360000);
+                            json.append(")}, {}, {v:0}]}");
+                            json.append(", {c: [{v: new Date(");
+                            json.append(end.getTime() - 360000);
+                            json.append(")}, {}, {v:0}]}");
+                        }
+
+                        //Resest first value
+                        value1 = value2;
+                    }
+
+                    //Add delta 0 for the end point
+                    json.append(", {c: [{v: new Date(");
+                    json.append(end.getTime());
+                    json.append(")}, {}, {v: 0}]}");
+
+                    //Close object
+                    json.append("]}");
                     
-                    //Resest first value
-                    value1 = value2;
+                    if (json.length() > 0)
+                        return json.toString();
                 }
-                
-                //Add delta 0 for the end point
-                json.append(", {c: [{v: new Date(");
-                json.append(end.getTime());
-                json.append(")}, {}, {v: 0}]}");
-                
-                //Close object
-                json.append("]}");
             }
         } catch (NamingException | SQLException ex) {
             Logger.getLogger(MonitoringDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING METRIC DATA",ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
         }
-        if (json.length() > 0)
-            return json.toString();
-        else
-            return "null";
+        
+        return "null";
     }
 }
