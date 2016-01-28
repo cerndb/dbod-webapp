@@ -41,11 +41,7 @@ public class ProxyServlet extends HttpServlet {
         {
             // Generate the full URL, relative to AppDynamics
             String pathInfo = request.getPathInfo();
-            String url;
-            if (request.getParameter("type") != null && request.getParameter("type").equalsIgnoreCase("PG"))
-                url = HttpConnection.generateUrlRelative(pathInfo);
-            else
-                url = HttpConnection.generateUrlRelative(pathInfo);
+            String url = HttpConnection.generateUrlRelative(pathInfo);
             
             if (url == null)
             {
