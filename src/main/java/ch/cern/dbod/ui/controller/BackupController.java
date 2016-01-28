@@ -449,9 +449,9 @@ public class BackupController extends Window {
                     //If automatic backups are checked
                     if (automatic.isChecked()) {
                         if (jobHelper.isAdminMode())
-                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue().intValue(), 1);
+                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue(), 1);
                         else
-                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue().intValue(), 0);
+                            result = jobDAO.createScheduledBackup(instance, username, backupStartDate, interval.getValue(), 0);
                     }
                     //If automatic backups are not checked disable them
                     else {
