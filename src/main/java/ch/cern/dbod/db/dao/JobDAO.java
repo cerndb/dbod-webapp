@@ -280,7 +280,7 @@ public class JobDAO {
                     insertParamsResult = results.length;
                     for (int i=0; i<results.length; i++){
                         if (results[i] == PreparedStatement.EXECUTE_FAILED) {
-                            insertParamsResult = 0;
+                            insertParamsResult = PreparedStatement.EXECUTE_FAILED;
                             break;
                         }
                     }
