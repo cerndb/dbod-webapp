@@ -21,21 +21,17 @@
     <!-- Include top bar -->
     <topBar/>
 
-    <vbox style="margin-top:30px;margin-bottom:10px;" align="center" width="100%">
-        <!-- Main container for the help page (calls init method when created)-->
-        <hbox align="top">
-            <!-- Error window -->
-            <error/>
-
-            <!-- Groupbox for the  tree -->
-            <groupbox mold="3d" closable="false" width="1200px">
+    <div>
+        <vbox hflex="1" style="margin-top:30px;margin-bottom:10px;" use="HelpController" align="center">
+            <!-- Main container for the help page (calls init method when created)-->
+            <groupbox hflex="1" mold="3d" closable="false" sclass="boxing">
                 <caption label=" ">
                     <div height="24px">
                         <label value="${c:l('helpContents')}" sclass="title" style="float:left;"/>
                     </div>
                 </caption>
-                <iframe id="content" name="dbodhelpcontent" width="1180px" height="700px" src="https://dbod-user-guide.web.cern.ch/dbod-user-guide"/>
+                <iframe hflex="1" id="user_help" name="dbodhelpcontent" height="700px" src="https://dbod-user-guide.web.cern.ch/dbod-user-guide"/>
             </groupbox>
-        </hbox>
-    </vbox>
+        </vbox>
+    </div>
 </zk>
