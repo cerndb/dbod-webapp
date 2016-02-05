@@ -4,7 +4,7 @@
 
     <groupId>ch.cern</groupId>
     <artifactId>DBOnDemand</artifactId>
-    <version>5.5.10</version>
+    <version>5.5.12</version>
     <packaging>war</packaging>
 
     <name>DBOnDemand</name>
