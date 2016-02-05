@@ -42,8 +42,8 @@
         <!-- Must -->
     </servlet>
     <servlet>
-        <servlet-name>doProxy</servlet-name>
-        <servlet-class>ch.cern.dbod.appservlet.doProxy</servlet-class>
+        <servlet-name>ProxyServlet</servlet-name>
+        <servlet-class>ch.cern.dbod.appservlet.ProxyServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>zkLoader</servlet-name>
@@ -108,7 +108,7 @@
     <!-- /////////// -->
     <!-- [Optional] Session timeout -->
     <servlet-mapping>
-        <servlet-name>doProxy</servlet-name>
+        <servlet-name>ProxyServlet</servlet-name>
         <url-pattern>/appdyn/*</url-pattern>
     </servlet-mapping>
     <session-config>

@@ -250,7 +250,6 @@ public class HttpConnection {
             // Get sessionid from received Cookies
             String appdynid = ProxyUtils.getSessionFromCookies(request);
             
-            HttpClient client = HttpClientBuilder.create().build();
             HttpGet httprequest = new HttpGet(url);
             
             // Do all the security checks
@@ -268,6 +267,7 @@ public class HttpConnection {
             httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
 
             // Execute the request
+            HttpClient client = HttpClientBuilder.create().build();
             HttpResponse httpresponse = client.execute(httprequest);
             
             response.setContentType("text/html;charset=UTF-8");
@@ -277,12 +277,14 @@ public class HttpConnection {
                 if (appdynid == null)
                     ProxyUtils.getAndProcessCookies(httpresponse, response, SESSIONS);
             }
-            // Get the reader of the received page and the writer for the output
-            BufferedReader rd = new BufferedReader(new InputStreamReader(httpresponse.getEntity().getContent()));
-            PrintWriter out = response.getWriter();
             
-            // Parse and do the needed replaces in the received code
-            parseAndReplaceCode(request.getContextPath(), rd, out, mimetype);
+            // Get the reader of the received page and the writer for the output
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(httpresponse.getEntity().getContent()))) {
+                PrintWriter out = response.getWriter();
+                
+                // Parse and do the needed replaces in the received code
+                parseAndReplaceCode(request.getContextPath(), rd, out, mimetype);
+            }
         }
         catch(IOException | IllegalStateException ex)
         {
@@ -331,27 +333,25 @@ public class HttpConnection {
      * @param mimetype
      * @param response Response of the Servlet
      */
-    public static void doGetStream(String url, String mimetype, HttpServletResponse response)
-    {
-        try
-        {
+    public static void doGetStream(String url, String mimetype, HttpServletResponse response) {
+        try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpGet httprequest = new HttpGet(url);
             
             response.setContentType(mimetype);
-            OutputStream outstr = response.getOutputStream();
 
             // Add authentication headers
             httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
             HttpResponse httpresponse = client.execute(httprequest);
 
             // Read the resource and resend it
-            BufferedInputStream bis = new BufferedInputStream(httpresponse.getEntity().getContent());             
-            for (int data; (data = bis.read()) > -1;)
-                outstr.write(data);
+            try (BufferedInputStream bis = new BufferedInputStream(httpresponse.getEntity().getContent());
+                 OutputStream outstr = response.getOutputStream()) {
+                for (int data; (data = bis.read()) > -1;)
+                    outstr.write(data);
+            }
         }
-        catch(IOException | IllegalStateException ex)
-        {
+        catch(IOException | IllegalStateException ex) {
             Logger.getLogger(HttpConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

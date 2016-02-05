@@ -229,10 +229,8 @@ public class OverviewTreeModel extends AbstractTreeModel implements Sortable {
      */
     public void updateInstance (Instance instance) {
         OverviewTreeNode node = searchNode((OverviewTreeNode)this.getRoot(),instance);
-        
-        node.setData(instance);
-        
         if (node != null) {
+            node.setData(instance);
             updateNode(node);
         }
     }
