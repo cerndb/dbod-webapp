@@ -94,6 +94,7 @@
                     <label value="${c:l('category')}"/>
                     <combobox id="category" width="200px" mold="rounded" readonly="true">
                         <comboitem label="${c:l('categoryOFFICIAL')}" />
+                        <comboitem label="${c:l('categoryREFERENCE')}" />
                         <comboitem label="${c:l('categoryTEST')}" />
                     </combobox>
                 </row>
