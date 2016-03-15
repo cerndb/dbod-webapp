@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="5C206098-CB73-0DCB-1F6B-75576C190B09" name="DOD INSTANCE CHANGES">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="5C206098-CB73-0DCB-1F6B-75576C190B09" name="INSTANCE CHANGE">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>5C9F8722-FC52-A386-DC30-2E8EB2465440</generatorID>
@@ -16,33 +16,17 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="USERNAME" id="A579C583-B675-29FE-87FE-CB638247E74F">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>F671917F-1D63-AF8A-5B56-F330DD92D0F9</generatorID>
+<Attribute name="ID" id="7B696D45-81F4-CEEC-459D-F9692839388F">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-04 16:22:40 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
-<referedAttribute>00BF44E0-BDAA-327E-C503-240F07885662</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="DB NAME" id="07D7F2B6-B455-90DD-BD67-734444171B4F">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>F671917F-1D63-AF8A-5B56-F330DD92D0F9</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>91F685A2-EFD7-9F0F-AD27-D0885E4A868E</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="ATTRIBUTE" id="35F2E017-2A02-4B21-2715-D044821DDA7B">
 <createdBy>dcollado</createdBy>
@@ -56,6 +40,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="CHANGE DATE" id="DC6DBCFA-1972-7221-1B8F-20C01E949CE0">
 <createdBy>dcollado</createdBy>
@@ -68,7 +53,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="REQUESTER" id="999B0FD7-9297-A4D6-2E4F-5CBCFCEC1499">
 <createdBy>dcollado</createdBy>
@@ -82,6 +67,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="OLD VALUE" id="37891DB8-938A-B235-36A6-03AA6589FD3E">
 <createdBy>dcollado</createdBy>
@@ -96,6 +82,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>1024 BYTE</dataTypeSize>
+<ownDataTypeParameters>1024 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="NEW VALUE" id="CECBA8B0-CD1E-EF53-C1E6-179CE819DB47">
 <createdBy>dcollado</createdBy>
@@ -110,23 +97,36 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>1024 BYTE</dataTypeSize>
+<ownDataTypeParameters>1024 BYTE,,</ownDataTypeParameters>
 </Attribute>
-</attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="9AD8BBCD-F9D2-B921-697F-73C31E0FC822" name="PK INSTANCE CHANGES">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>84E8D670-4E73-C2EB-7013-21F2CF84771C</generatorID>
+<Attribute name="INSTANCE ID" id="7AE1A70E-99BC-7D9B-1C81-59FBE93FFB95">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 12:47:21 UTC</createdTime>
+<generatorID>F6893680-8663-C346-E146-27DE008AC9C9</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
+<referedAttribute>AB701D0E-04C9-C313-1726-84E583718C10</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9AD8BBCD-F9D2-B921-697F-73C31E0FC822" name="INSTANCE_CHANGE_PK">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>84E8D670-4E73-C2EB-7013-21F2CF84771C</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="false"/>
+</engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>A579C583-B675-29FE-87FE-CB638247E74F</attributeRef>
-<attributeRef>07D7F2B6-B455-90DD-BD67-734444171B4F</attributeRef>
-<attributeRef>35F2E017-2A02-4B21-2715-D044821DDA7B</attributeRef>
-<attributeRef>DC6DBCFA-1972-7221-1B8F-20C01E949CE0</attributeRef>
+<attributeRef>7B696D45-81F4-CEEC-459D-F9692839388F</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

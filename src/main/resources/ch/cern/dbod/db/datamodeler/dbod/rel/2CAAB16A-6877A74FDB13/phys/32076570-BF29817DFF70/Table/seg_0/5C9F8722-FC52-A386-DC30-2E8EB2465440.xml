@@ -9,25 +9,25 @@
 <segment>2B6B96D2-5578-FF84-C884-C0A8E20C21CC</segment>
 <tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
 <temporaryChanged>false</temporaryChanged>
-<indexProxies>
-<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_INSTANCE_CHANGES" id="77B2A2BE-092F-20CB-44F4-E0BE31BEF3AE">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
-<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
-<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
-</IndexProxy>
-</indexProxies>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
 <ColumnProxy name="NEW_VALUE" id="07E17236-FE86-B394-BD12-FCA24368BD70">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 </ColumnProxy>
+<ColumnProxy name="INSTANCE_ID" id="44A76E72-AB8D-F406-965B-9443FEA75F75">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
 <ColumnProxy name="OLD_VALUE" id="4DE928B5-522C-8735-802C-FAB759AAADE8">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID" id="561B9B71-696D-2766-DDB6-49E67C3E5115">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="ATTRIBUTE" id="98F220E5-153D-053A-A85D-12F3276681FD">
@@ -38,6 +38,11 @@
 <ColumnProxy name="DB_NAME" id="A114F2D3-9625-3538-6B85-C0263D045988">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID1" id="AA124289-DFAB-1A73-7869-A5DB1B99F062">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="REQUESTER" id="ABE83C50-18A6-1BC0-7E1E-C4036F3F3B87">
@@ -56,6 +61,16 @@
 <ownerDesignName>dbod</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_INSTANCE_CHANGES" id="77B2A2BE-092F-20CB-44F4-E0BE31BEF3AE">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+</IndexProxy>
+</indexProxies>
 <foreignKeys>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="DOD_INSTANCES_CHANGES" id="2A4E07D7-EA8C-12B5-A1D2-9BCAD38F8B68">
 <createdBy>dcollado</createdBy>
@@ -64,7 +79,7 @@
 </ForeignKey>
 </foreignKeys>
 <primaryKeys>
-<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_INSTANCE_CHANGES" id="84E8D670-4E73-C2EB-7013-21F2CF84771C">
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="DOD_INSTANCE_CHANGES_PK" id="84E8D670-4E73-C2EB-7013-21F2CF84771C">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>

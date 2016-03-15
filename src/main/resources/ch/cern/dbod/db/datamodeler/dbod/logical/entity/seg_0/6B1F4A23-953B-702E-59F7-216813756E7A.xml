@@ -28,6 +28,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
 <dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="NUM INSTANCES" id="15C6099E-BBDF-0A3F-C828-75BBA6E96CDF">
 <createdBy>dcollado</createdBy>
@@ -41,6 +42,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="AGG NUM INSTANCES" id="77488BA9-E456-88AE-9B11-74FC56887809">
 <createdBy>dcollado</createdBy>
@@ -54,10 +56,11 @@
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="814655ED-1A63-84F7-FF80-BA8D48CFAC71" name="PK STATS MONTHLY INSTANCES">
+<identifier id="814655ED-1A63-84F7-FF80-BA8D48CFAC71" name="STATS_MONTHLY_INSTANCES_PK">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>2C26931E-6714-1397-2443-65B85C197954</generatorID>

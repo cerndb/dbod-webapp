@@ -1,14 +1,14 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="40904ECF-5054-07B1-57AE-91FF821B126D" name="DOD_UPGRADES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="40904ECF-5054-07B1-57AE-91FF821B126D" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="UPGRADE">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>DOD_UPGRADES</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
 <Column name="DB_TYPE" id="98BEB321-D09C-2395-4DF7-BF111D34A0E7">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
@@ -21,6 +21,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="CATEGORY" id="6FD4E408-B9F4-3F0F-A6A5-CE0C856227FF">
@@ -34,6 +35,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="VERSION_FROM" id="490CFB5B-6913-0D92-A9E2-E3E449DCC10F">
@@ -47,6 +49,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="VERSION_TO" id="8C5D689B-0942-6134-CBD6-5311207BDF1D">
@@ -60,11 +63,12 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="21382900-E753-DE49-10B8-D34E381A2ABE" name="PK_DOD_UPGRADES">
+<ind_PK_UK id="21382900-E753-DE49-10B8-D34E381A2ABE" name="UPGRADE_PK">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_UPGRADES</sourceObjName>
@@ -80,7 +84,7 @@
 <colUsage columnID="490CFB5B-6913-0D92-A9E2-E3E449DCC10F"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="4DC1E6DC-3DCF-FCAB-F8B8-446D88CBE4D3" name="PK_DOD_UPGRADES">
+<ind_PK_UK id="4DC1E6DC-3DCF-FCAB-F8B8-446D88CBE4D3" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="PK_DOD_UPGRADES">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_UPGRADES</sourceObjName>
@@ -88,7 +92,6 @@
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Unique Plain Index</indexState>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="98BEB321-D09C-2395-4DF7-BF111D34A0E7"/>

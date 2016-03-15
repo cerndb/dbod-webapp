@@ -1,16 +1,26 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DCC9D86A-6161-4852-65FB-A1C8E5CCAC0D" name="DOD_COMMAND_DEFINITION">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DCC9D86A-6161-4852-65FB-A1C8E5CCAC0D" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="COMMAND_DEFINITION">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>DOD_COMMAND_DEFINITION</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="COMMAND_NAME" id="E73D9C13-BD39-E46E-D36F-825C3688B82C">
+<Column name="ID" id="C7E5ABD6-67C4-3CA2-DC41-D960B0ABC9BD">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-03 14:43:06 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="E73D9C13-BD39-E46E-D36F-825C3688B82C">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DOD_COMMAND_DEFINITION</sourceObjSchema>
 <sourceObjName>COMMAND_NAME</sourceObjName>
@@ -21,6 +31,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 BYTE</dataTypeSize>
+<ownDataTypeParameters>64 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="TYPE" id="C7B7D585-CEE0-029F-FA6C-B245A6EC29D8">
@@ -34,6 +45,18 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 BYTE</dataTypeSize>
+<ownDataTypeParameters>64 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CATEGORY" id="0C36652C-FDBF-EA82-F2FE-FB9F16F9ACA7">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-03 14:44:11 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>16 BYTE</dataTypeSize>
+<ownDataTypeParameters>16 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="EXEC" id="135D9549-AC23-0AE1-5CEF-0A10E0ABD342">
@@ -48,26 +71,49 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>2048 BYTE</dataTypeSize>
+<ownDataTypeParameters>2048 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="27F6CC94-3F53-AD4F-693D-06A1FB44D769" name="PK_DOD_COMMAND_DEFINITION">
+<ind_PK_UK id="FDB47E94-8625-E765-A797-6D2E649BEFA8" name="COMMAND_DEFINITION_PK">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
+<generatorID>97E4AD69-9176-DFEE-C728-85BBB820404A</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C7E5ABD6-67C4-3CA2-DC41-D960B0ABC9BD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="27F6CC94-3F53-AD4F-693D-06A1FB44D769" name="COM_DEF_NAME_TYPE_CATEGORY_UN">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_COMMAND_DEFINITION</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<pk>true</pk>
-<indexState>Primary Constraint</indexState>
+<indexState>Unique Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="E73D9C13-BD39-E46E-D36F-825C3688B82C"/>
 <colUsage columnID="C7B7D585-CEE0-029F-FA6C-B245A6EC29D8"/>
+<colUsage columnID="0C36652C-FDBF-EA82-F2FE-FB9F16F9ACA7"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="51C127AD-5672-EB0B-A675-800884C68985" name="PK_DOD_COMMAND_DEFINITION">
+<ind_PK_UK id="1EF5BD33-2BED-309C-51E6-C8C5A7EC62D5" name="PK_COM_DEF">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-15 10:33:56 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C7E5ABD6-67C4-3CA2-DC41-D960B0ABC9BD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="51C127AD-5672-EB0B-A675-800884C68985" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="COM_DEF_NAM_TYP_CAT_IDX">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_COMMAND_DEFINITION</sourceObjName>
@@ -75,11 +121,11 @@
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Unique Plain Index</indexState>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="E73D9C13-BD39-E46E-D36F-825C3688B82C"/>
 <colUsage columnID="C7B7D585-CEE0-029F-FA6C-B245A6EC29D8"/>
+<colUsage columnID="0C36652C-FDBF-EA82-F2FE-FB9F16F9ACA7"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

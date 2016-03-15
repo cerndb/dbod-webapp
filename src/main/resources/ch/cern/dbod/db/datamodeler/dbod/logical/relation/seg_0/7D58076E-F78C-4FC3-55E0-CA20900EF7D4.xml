@@ -1,14 +1,14 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="DOD_PARAMS_JOBS" directorySegmentName="seg_0" id="09E3D3CF-93FB-C667-242B-059164795B74">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>770EDAFA-7A49-527A-3CD1-D1E079965B36</generatorID>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="COMMAND PARAM JOB FK" directorySegmentName="seg_0" id="7D58076E-F78C-4FC3-55E0-CA20900EF7D4">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:08:09 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
 <sourcePk>9A9B33CD-61DB-025B-32B4-FA221CF617A8</sourcePk>
-<identifying>true</identifying>
+<targetPk>B0452254-F56E-1E80-A5A1-044ADC06971D</targetPk>
+<identifying>false</identifying>
 <optionalSource>false</optionalSource>
 <optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>

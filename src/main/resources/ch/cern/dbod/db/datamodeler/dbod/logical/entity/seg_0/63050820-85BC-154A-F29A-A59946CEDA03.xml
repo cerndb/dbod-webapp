@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="63050820-85BC-154A-F29A-A59946CEDA03" name="DOD COMMAND PARAMS">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="63050820-85BC-154A-F29A-A59946CEDA03" name="COMMAND PARAM">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>0BD3232B-9B50-698E-DDFE-8475B0EF8D38</generatorID>
@@ -16,75 +16,17 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="USERNAME" id="B9050BB2-4F62-6867-158A-C96FE57C9535">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>09E3D3CF-93FB-C667-242B-059164795B74</generatorID>
+<Attribute name="ID" id="26F6EFA0-B8F6-7D60-F946-EC81A85CAA22">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-08 13:31:32 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
-<referedAttribute>25916EF9-4767-D61F-33BE-770AAA1E5AD0</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="DB NAME" id="9A39F28B-A921-0995-8FC1-BB49E09CEA98">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>09E3D3CF-93FB-C667-242B-059164795B74</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>D4679205-95DB-E194-F430-CAF3E952A56D</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="COMMAND NAME" id="356ADAB7-6897-0F86-E489-E06012E51489">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>09E3D3CF-93FB-C667-242B-059164795B74</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>E54396C8-4773-5FEA-4299-A4014E671F4F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="TYPE" id="CD5F985E-DE63-0602-96C8-9D6D9C698B32">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>09E3D3CF-93FB-C667-242B-059164795B74</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>638619B2-080D-D775-60C6-2BEAE5233690</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="CREATION DATE" id="190CA6CC-9852-A276-6A60-7E07A39307AE">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>09E3D3CF-93FB-C667-242B-059164795B74</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>9028F371-0385-7219-49CA-DC71515C0605</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="NAME" id="D8A7CD85-3F94-66FA-79E5-4E8CF69D3424">
 <createdBy>dcollado</createdBy>
@@ -98,6 +40,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 BYTE</dataTypeSize>
+<ownDataTypeParameters>64 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="VALUE" id="FF46D319-591A-6989-3421-4D14E5FF6882">
 <createdBy>dcollado</createdBy>
@@ -111,26 +54,37 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT028</logicalDatatype>
-<dataTypeSize>4000</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-</attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="B0452254-F56E-1E80-A5A1-044ADC06971D" name="PK DOD COMMAND PARAMS">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>2D9E16C7-9AA9-F93E-4F72-C0CAEBF81A9D</generatorID>
+<Attribute name="JOB ID" id="D23F3AF2-31F5-00A3-A97C-DA0B0DBEF372">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:08:09 UTC</createdTime>
+<generatorID>7D58076E-F78C-4FC3-55E0-CA20900EF7D4</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
+<referedAttribute>DD00205E-F52A-7346-49DC-EDB89DC1DB7E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="B0452254-F56E-1E80-A5A1-044ADC06971D" name="COMMAND_PARAM_PK">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>2D9E16C7-9AA9-F93E-4F72-C0CAEBF81A9D</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="false"/>
+</engineerTo>
 <pk>true</pk>
+<newElementsIDs>26F6EFA0-B8F6-7D60-F946-EC81A85CAA22</newElementsIDs>
 <usedAttributes>
-<attributeRef>B9050BB2-4F62-6867-158A-C96FE57C9535</attributeRef>
-<attributeRef>9A39F28B-A921-0995-8FC1-BB49E09CEA98</attributeRef>
-<attributeRef>356ADAB7-6897-0F86-E489-E06012E51489</attributeRef>
-<attributeRef>CD5F985E-DE63-0602-96C8-9D6D9C698B32</attributeRef>
-<attributeRef>190CA6CC-9852-A276-6A60-7E07A39307AE</attributeRef>
-<attributeRef>D8A7CD85-3F94-66FA-79E5-4E8CF69D3424</attributeRef>
+<attributeRef>26F6EFA0-B8F6-7D60-F946-EC81A85CAA22</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
