@@ -23,10 +23,10 @@
 <identityColumn>true</identityColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="NAME" id="535F33EA-887A-3527-15AA-10AD0A8DCFCC">
+<Column name="INSTANCE_ID" id="3B902580-69DE-E3E0-7926-F625AA2788F8">
 <createdBy>jocorder</createdBy>
-<createdTime>2016-03-14 12:44:33 UTC</createdTime>
-<generatorID>A4A611E8-0E90-D9E2-9E85-96A7E6C8F96D</generatorID>
+<createdTime>2016-03-14 16:10:58 UTC</createdTime>
+<generatorID>DE7BDF50-E88C-9EB5-B8D9-8035FB4DDFE8</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -34,6 +34,24 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="15658745-2590-38F2-8347-D7E429DDB2F9" referredColumn="28BB5490-863C-C7EF-7A0A-36ABAB6B4689"/>
+</associations>
+</Column>
+<Column name="COMMAND_ID" id="1DEE8305-DD08-9988-A783-6F50AE0C887E">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:10:58 UTC</createdTime>
+<generatorID>7872E17D-0489-13BA-93E6-622EDE2210B4</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C60478A8-5D51-24A3-0CE2-271AE97E77BE" referredColumn="C7E5ABD6-67C4-3CA2-DC41-D960B0ABC9BD"/>
+</associations>
 </Column>
 <Column name="CREATION_DATE" id="1797C4FC-9905-E1CF-D858-D0D0784B48EF">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
@@ -146,47 +164,6 @@
 <logicalDatatype>LOGDT007</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="DOD_COMMAND_DEFINITION_ID" id="88CA64EE-94A4-9298-F885-664C5AD3BF38">
-<createdBy>jocorder</createdBy>
-<createdTime>2016-03-14 15:04:06 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="COMMAND_DEFINITION_ID" id="1DEE8305-DD08-9988-A783-6F50AE0C887E">
-<createdBy>jocorder</createdBy>
-<createdTime>2016-03-14 16:10:58 UTC</createdTime>
-<generatorID>7872E17D-0489-13BA-93E6-622EDE2210B4</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="C60478A8-5D51-24A3-0CE2-271AE97E77BE" referredColumn="C7E5ABD6-67C4-3CA2-DC41-D960B0ABC9BD"/>
-</associations>
-</Column>
-<Column name="INSTANCE_ID" id="3B902580-69DE-E3E0-7926-F625AA2788F8">
-<createdBy>jocorder</createdBy>
-<createdTime>2016-03-14 16:10:58 UTC</createdTime>
-<generatorID>DE7BDF50-E88C-9EB5-B8D9-8035FB4DDFE8</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="15658745-2590-38F2-8347-D7E429DDB2F9" referredColumn="28BB5490-863C-C7EF-7A0A-36ABAB6B4689"/>
-</associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
