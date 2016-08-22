@@ -173,6 +173,7 @@ public class CommonConstants {
     public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String DB_TYPE_PG = "PG";
+    public static final String DB_TYPE_INFLUX = "InfluxDB";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";
     public static final String PREFIX_INSTANCE_NAME = "dod_";
     public static final String PARAM_SNAPSHOT = "SNAPSHOT";

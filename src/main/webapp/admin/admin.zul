@@ -116,6 +116,7 @@
                         <comboitem label="${c:l('dbTypeORACLE')}" />
                         <comboitem label="${c:l('dbTypeORA')}" />
                         <comboitem label="${c:l('dbTypePG')}" />
+                        <comboitem label="${c:l('dbTypeInfluxDB')}" />
                     </combobox>
                 </row>
                 <!-- Version -->

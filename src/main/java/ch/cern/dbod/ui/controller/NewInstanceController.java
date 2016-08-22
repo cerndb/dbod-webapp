@@ -81,6 +81,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Combobox) getFellow("dbType")).getItemAtIndex(1).setValue(CommonConstants.DB_TYPE_ORACLE);
         ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(CommonConstants.DB_TYPE_ORA);
         ((Combobox) getFellow("dbType")).getItemAtIndex(3).setValue(CommonConstants.DB_TYPE_PG);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(4).setValue(CommonConstants.DB_TYPE_INFLUX);
         ((Combobox) getFellow("dbType")).setSelectedIndex(0);
         ((Slider) getFellow("dbSizeSlider")).setMaxpos(CommonConstants.MAX_DB_SIZE);
         ((Textbox) getFellow("dbSize")).setMaxlength(String.valueOf(CommonConstants.MAX_DB_SIZE).length());

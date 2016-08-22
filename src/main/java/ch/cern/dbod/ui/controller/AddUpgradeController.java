@@ -135,6 +135,10 @@ public class AddUpgradeController extends Window {
         pg.setValue(CommonConstants.DB_TYPE_PG);
         pg.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_PG));
         dbType.appendChild(pg);
+        Comboitem influx = new Comboitem();
+        influx.setValue(CommonConstants.DB_TYPE_INFLUX);
+        influx.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_INFLUX));
+        dbType.appendChild(influx);
         dbType.setSelectedIndex(0);
         typeRow.appendChild(dbType);
         rows.appendChild(typeRow);

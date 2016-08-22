@@ -213,7 +213,8 @@ public class FormValidations {
             if (!dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORA)
                     && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORACLE)
                     && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_MYSQL)
-                    && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_PG)) {
+                    && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_PG)
+                    && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_INFLUX)) {
                 dbType.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_DB_TYPE_LIST));
                 return false;
             }

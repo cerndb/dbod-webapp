@@ -464,6 +464,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         }
                     });
                 }
+                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
+                    monitorBtn.setDisabled(true);
+                }
                 else {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     String date = dateFormat.format(new Date());

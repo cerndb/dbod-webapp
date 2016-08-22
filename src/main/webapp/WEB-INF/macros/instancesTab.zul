@@ -78,6 +78,7 @@
                                         <comboitem label="${c:l('dbTypeORACLE')}" value="ORACLE"/>
                                         <comboitem label="${c:l('dbTypeORA')}" value="ORA"/>
                                         <comboitem label="${c:l('dbTypePG')}" value="PG"/>
+                                        <comboitem label="${c:l('dbTypeInfluxDB')}" value="InfluxDB"/>
                                     </combobox>
                                 </hbox>
                             </auxheader>
