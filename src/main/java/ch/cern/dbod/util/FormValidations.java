@@ -158,7 +158,8 @@ public class FormValidations {
             }
             //Check category
             if (!category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_OFFICIAL)
-                    && !category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_TEST)) {
+                    && !category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_TEST)
+                    && !category.getSelectedItem().getValue().equals(CommonConstants.CATEGORY_REFERENCE)) {
                 category.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_CATEGORY_LIST));
                 return false;
             }

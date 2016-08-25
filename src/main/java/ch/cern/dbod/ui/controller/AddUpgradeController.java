@@ -161,8 +161,10 @@ public class AddUpgradeController extends Window {
         official.setValue(CommonConstants.CATEGORY_OFFICIAL);
         official.setLabel(Labels.getLabel(CommonConstants.LABEL_CATEGORY + CommonConstants.CATEGORY_OFFICIAL));
         category.appendChild(official);
-        Comboitem personal = new Comboitem();
-        category.appendChild(personal);
+        Comboitem reference = new Comboitem();
+        reference.setValue(CommonConstants.CATEGORY_REFERENCE);
+        reference.setLabel(Labels.getLabel(CommonConstants.LABEL_CATEGORY + CommonConstants.CATEGORY_REFERENCE));
+        category.appendChild(reference);
         Comboitem test = new Comboitem();
         test.setValue(CommonConstants.CATEGORY_TEST);
         test.setLabel(Labels.getLabel(CommonConstants.LABEL_CATEGORY + CommonConstants.CATEGORY_TEST));

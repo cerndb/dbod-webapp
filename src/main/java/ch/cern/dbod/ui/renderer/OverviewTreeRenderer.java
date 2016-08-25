@@ -528,7 +528,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
     private Label getFormattedLabel(String text, int maxLength) {
         Label toret = new Label(text);
         toret.setMaxlength(maxLength);
-        if (text.length() > maxLength) {
+        if (text != null && text.length() > maxLength) {
             toret.setTooltiptext(text);
         }
         toret.setStyle("hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;");
