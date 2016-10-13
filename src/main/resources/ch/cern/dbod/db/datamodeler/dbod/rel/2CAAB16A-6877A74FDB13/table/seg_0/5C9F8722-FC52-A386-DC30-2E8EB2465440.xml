@@ -1,47 +1,42 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5C9F8722-FC52-A386-DC30-2E8EB2465440" name="DOD_INSTANCE_CHANGES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5C9F8722-FC52-A386-DC30-2E8EB2465440" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="INSTANCE_CHANGE">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>DOD_INSTANCE_CHANGES</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<ordsAlias>dod_instance_changes</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="USERNAME" id="BC3D70C1-D3D0-E83F-A015-A3A38D113320">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
-<sourceObjName>USERNAME</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<Column name="ID" id="561B9B71-696D-2766-DDB6-49E67C3E5115">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
+<generatorID>7B696D45-81F4-CEEC-459D-F9692839388F</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-<delegate>4A87B602-09CD-718F-3A44-FEA9AC8B2286</delegate>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="6DCBB3E9-FF78-B3A1-15D2-49B1BF1DDD5F" referredColumn="4A87B602-09CD-718F-3A44-FEA9AC8B2286"/>
-</associations>
 </Column>
-<Column name="DB_NAME" id="A114F2D3-9625-3538-6B85-C0263D045988">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_INSTANCE_CHANGES</sourceObjSchema>
-<sourceObjName>DB_NAME</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<Column name="INSTANCE_ID" id="A99EE506-1992-BE00-889D-463641E6E80B">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 12:48:31 UTC</createdTime>
+<generatorID>7AE1A70E-99BC-7D9B-1C81-59FBE93FFB95</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
-<delegate>8B04A866-695A-62BC-4428-EE96862699CF</delegate>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="6DCBB3E9-FF78-B3A1-15D2-49B1BF1DDD5F" referredColumn="8B04A866-695A-62BC-4428-EE96862699CF"/>
+<colAssociation fkAssociation="4152BEC4-DBFA-3705-0694-2539556ABE30" referredColumn="28BB5490-863C-C7EF-7A0A-36ABAB6B4689"/>
 </associations>
 </Column>
 <Column name="ATTRIBUTE" id="98F220E5-153D-053A-A85D-12F3276681FD">
@@ -55,6 +50,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="CHANGE_DATE" id="D7184273-6EA0-1D43-F432-D15B1D57F9AF">
@@ -67,7 +63,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="REQUESTER" id="ABE83C50-18A6-1BC0-7E1E-C4036F3F3B87">
@@ -81,6 +77,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="OLD_VALUE" id="4DE928B5-522C-8735-802C-FAB759AAADE8">
@@ -95,6 +92,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>1024 BYTE</dataTypeSize>
+<ownDataTypeParameters>1024 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="NEW_VALUE" id="07E17236-FE86-B394-BD12-FCA24368BD70">
@@ -109,11 +107,12 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>1024 BYTE</dataTypeSize>
+<ownDataTypeParameters>1024 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="84E8D670-4E73-C2EB-7013-21F2CF84771C" name="PK_INSTANCE_CHANGES">
+<ind_PK_UK id="84E8D670-4E73-C2EB-7013-21F2CF84771C" name="INSTANCE_CHANGE_PK">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_INSTANCE_CHANGES</sourceObjName>
@@ -124,38 +123,37 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
-<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
-<colUsage columnID="98F220E5-153D-053A-A85D-12F3276681FD"/>
-<colUsage columnID="D7184273-6EA0-1D43-F432-D15B1D57F9AF"/>
+<colUsage columnID="561B9B71-696D-2766-DDB6-49E67C3E5115"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="77B2A2BE-092F-20CB-44F4-E0BE31BEF3AE" name="PK_INSTANCE_CHANGES">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DBONDEMAND</sourceObjSchema>
-<sourceObjName>PK_INSTANCE_CHANGES</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ind_PK_UK id="A14197FA-B83D-1222-5ADB-9AECFDC970C7" name="PK_INSTANCE_CHANGE_ID">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-15 10:27:40 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Unique Plain Index</indexState>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
-<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
-<colUsage columnID="98F220E5-153D-053A-A85D-12F3276681FD"/>
-<colUsage columnID="D7184273-6EA0-1D43-F432-D15B1D57F9AF"/>
+<colUsage columnID="561B9B71-696D-2766-DDB6-49E67C3E5115"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="2A4E07D7-EA8C-12B5-A1D2-9BCAD38F8B68" name="DOD_INSTANCES_CHANGES">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ind_PK_UK id="A65AC3F3-34A3-9786-38DA-CA85C9F183D3" name="INS_CHA_INSTANCE_ID_IDX">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-15 10:27:40 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A99EE506-1992-BE00-889D-463641E6E80B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AA54B206-092B-9716-30DB-BA39BCC2167E" name="INSTANCE_CHANGE_INSTANCE_FK">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 12:48:31 UTC</createdTime>
+<generatorID>F6893680-8663-C346-E146-27DE008AC9C9</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="BC3D70C1-D3D0-E83F-A015-A3A38D113320"/>
-<colUsage columnID="A114F2D3-9625-3538-6B85-C0263D045988"/>
+<colUsage columnID="A99EE506-1992-BE00-889D-463641E6E80B"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

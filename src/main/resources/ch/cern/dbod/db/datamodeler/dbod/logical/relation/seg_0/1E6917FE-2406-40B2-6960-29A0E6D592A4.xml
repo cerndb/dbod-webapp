@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="JOB INSTANCE FK" directorySegmentName="seg_0" id="1E6917FE-2406-40B2-6960-29A0E6D592A4">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:10:11 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<sourcePk>12476AF2-EB0E-212D-BC46-45A816796C45</sourcePk>
+<targetPk>9A9B33CD-61DB-025B-32B4-FA221CF617A8</targetPk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>3F11E612-47CD-212C-338A-CFEFDA4EEB37</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>2DB67723-2805-9A69-92EF-0ACB6E2D9DC6</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

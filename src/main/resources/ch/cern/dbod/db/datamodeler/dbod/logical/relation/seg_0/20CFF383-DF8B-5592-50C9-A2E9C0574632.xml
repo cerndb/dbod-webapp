@@ -1,18 +1,18 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="DOD_JOBS_INSTANCES" directorySegmentName="seg_0" id="E94E8748-AFE5-7D48-4085-7E18043BAE09">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>B6D1A2C4-3810-5389-D218-071D7E751C23</generatorID>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="JOB COMMAND DEFINITION FK" directorySegmentName="seg_0" id="20CFF383-DF8B-5592-50C9-A2E9C0574632">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:09:09 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
-<sourcePk>12476AF2-EB0E-212D-BC46-45A816796C45</sourcePk>
-<identifying>true</identifying>
+<sourcePk>97E4AD69-9176-DFEE-C728-85BBB820404A</sourcePk>
+<targetPk>9A9B33CD-61DB-025B-32B4-FA221CF617A8</targetPk>
+<identifying>false</identifying>
 <optionalSource>false</optionalSource>
 <optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
-<sourceEntity>3F11E612-47CD-212C-338A-CFEFDA4EEB37</sourceEntity>
+<sourceEntity>1B60BA94-34E5-7CBB-E068-2F3E7B2EF6FF</sourceEntity>
 <targetCardinalityString>*</targetCardinalityString>
 <targetEntity>2DB67723-2805-9A69-92EF-0ACB6E2D9DC6</targetEntity>
 <transferable>true</transferable>

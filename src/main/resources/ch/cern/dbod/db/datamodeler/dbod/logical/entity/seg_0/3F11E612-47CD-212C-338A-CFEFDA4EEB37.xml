@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3F11E612-47CD-212C-338A-CFEFDA4EEB37" name="DOD INSTANCES">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3F11E612-47CD-212C-338A-CFEFDA4EEB37" name="INSTANCE">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>775DF4A6-4BCC-2A90-11B6-DB61A7C5A87F</generatorID>
@@ -16,6 +16,18 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ID" id="AB701D0E-04C9-C313-1726-84E583718C10">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-04 16:21:13 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="USERNAME" id="00BF44E0-BDAA-327E-C503-240F07885662">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
@@ -28,6 +40,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="DB NAME" id="91F685A2-EFD7-9F0F-AD27-D0885E4A868E">
 <createdBy>dcollado</createdBy>
@@ -41,6 +54,21 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="HOST" id="EA9E21AA-319A-C50F-D814-6263E96BF9A7">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>A080E259-AD5A-98FD-0A1D-5F84F82F3693</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="E GROUP" id="C7AEE3DB-670A-BA7F-612E-33601A92310A">
 <createdBy>dcollado</createdBy>
@@ -55,6 +83,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>256 BYTE</dataTypeSize>
+<ownDataTypeParameters>256 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="CATEGORY" id="DC450281-016D-4126-68D2-C309CFBCB37A">
 <createdBy>dcollado</createdBy>
@@ -68,6 +97,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="CREATION DATE" id="A04CA06F-F0E6-0D13-C8CE-25FD6E02BE87">
 <createdBy>dcollado</createdBy>
@@ -80,7 +110,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="EXPIRY DATE" id="09F4148D-0854-1446-9E7A-2CC2B67342B1">
 <createdBy>dcollado</createdBy>
@@ -94,7 +124,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="DB TYPE" id="C4B5CE62-8EF7-3FCE-84C5-9394502FC116">
 <createdBy>dcollado</createdBy>
@@ -108,91 +138,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="DB SIZE" id="3F8FEB9B-A1E1-BC73-76EB-82B9D9334141">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>C3882BEB-2119-275E-FEEE-4F2274AE359B</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>*</dataTypePrecision>
-<dataTypeScale>0</dataTypeScale>
-</Attribute>
-<Attribute name="NO CONNECTIONS" id="47BEE62B-7ADD-B1DE-CFF9-14D6D71AF5E0">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>B576B92A-3628-4114-FDBB-050E84B96D4B</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>*</dataTypePrecision>
-<dataTypeScale>0</dataTypeScale>
-</Attribute>
-<Attribute name="PROJECT" id="54E8DA52-CD8B-1D98-6116-A4AE40444EEA">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>88AB1114-2830-B768-E85C-A5023879495C</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="DESCRIPTION" id="957822F9-6D40-99B6-F667-2E2A45CE31AE">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>222D92AD-CFBA-0828-BF81-95D8F58FBBCC</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1024 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="STATE" id="3BCF9CE2-DDEF-DEFD-E030-9BA7725E9619">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>57C4871B-B297-E566-A8DB-7FEDF7E1DAB8</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="STATUS" id="A88CEE81-62E1-8900-641C-68A614A829F4">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>200F7FCB-4F66-E312-AF06-7659B90E4242</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT025</logicalDatatype>
-<dataTypeSize>1 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="VERSION" id="916D43B7-1B26-3B07-03DA-553AFD315266">
 <createdBy>dcollado</createdBy>
@@ -207,6 +153,65 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PROJECT" id="54E8DA52-CD8B-1D98-6116-A4AE40444EEA">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>88AB1114-2830-B768-E85C-A5023879495C</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>128 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="DESCRIPTION" id="957822F9-6D40-99B6-F667-2E2A45CE31AE">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>222D92AD-CFBA-0828-BF81-95D8F58FBBCC</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 BYTE</dataTypeSize>
+<ownDataTypeParameters>1024 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="STATE" id="3BCF9CE2-DDEF-DEFD-E030-9BA7725E9619">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>57C4871B-B297-E566-A8DB-7FEDF7E1DAB8</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="STATUS" id="A88CEE81-62E1-8900-641C-68A614A829F4">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>200F7FCB-4F66-E312-AF06-7659B90E4242</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1 BYTE</dataTypeSize>
+<ownDataTypeParameters>1 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="MASTER" id="AE87D9C7-BC26-0567-3B2A-E0B65EDFC1A8">
 <createdBy>dcollado</createdBy>
@@ -221,6 +226,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="SLAVE" id="84A119A5-E0EF-7C88-2732-B39477439F4E">
 <createdBy>dcollado</createdBy>
@@ -235,43 +241,32 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="HOST" id="EA9E21AA-319A-C50F-D814-6263E96BF9A7">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>A080E259-AD5A-98FD-0A1D-5F84F82F3693</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="12476AF2-EB0E-212D-BC46-45A816796C45" name="PK DOD INSTANCES">
+<identifier id="12476AF2-EB0E-212D-BC46-45A816796C45" name="INSTANCE_PK">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>76364257-5DB5-492D-D5DB-FA6EE4634C6C</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>00BF44E0-BDAA-327E-C503-240F07885662</attributeRef>
-<attributeRef>91F685A2-EFD7-9F0F-AD27-D0885E4A868E</attributeRef>
+<attributeRef>AB701D0E-04C9-C313-1726-84E583718C10</attributeRef>
 </usedAttributes>
 </identifier>
-<identifier id="7C61E21E-ED3A-B98E-41E5-7067E37673A5" name="UNIQUE DB NAME">
+<identifier id="7C61E21E-ED3A-B98E-41E5-7067E37673A5" name="INSTANCE_DB_NAME_UN">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>CE4861A0-635F-4236-0F1E-69FCB9158801</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="false"/>
 </engineerTo>
 <usedAttributes>
 <attributeRef>91F685A2-EFD7-9F0F-AD27-D0885E4A868E</attributeRef>

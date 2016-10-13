@@ -173,6 +173,7 @@ public class CommonConstants {
     public static final String DB_TYPE_ORACLE = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String DB_TYPE_PG = "PG";
+    public static final String DB_TYPE_INFLUX = "InfluxDB";
     public static final String PARAM_INSTANCE_NAME = "INSTANCE_NAME";
     public static final String PREFIX_INSTANCE_NAME = "dod_";
     public static final String PARAM_SNAPSHOT = "SNAPSHOT";
@@ -183,7 +184,8 @@ public class CommonConstants {
     public static final String CONFIG_FILE_PG_HBA = "HBA";
     public static final String PARAM_BACKUP_INTERVAL = "BACKUP_INTERVAL";
     public static final String PARAM_PITR_TIME = "TIMESTAMP";
-    public static final String CATEGORY_OFFICIAL = "OFFICIAL";
+    public static final String CATEGORY_OFFICIAL = "PROD";
+    public static final String CATEGORY_REFERENCE = "REF";
     public static final String CATEGORY_TEST = "TEST";
     public static final String PARAM_VERSION_FROM = "VERSION_FROM";
     public static final String PARAM_VERSION_TO = "VERSION_TO";

@@ -1,14 +1,14 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FF717ED0-E710-0C93-9707-F8AFE733B22D" name="STATS_MONTHLY_INSTANCES">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FF717ED0-E710-0C93-9707-F8AFE733B22D" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="STATS_MONTHLY_INSTANCES">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>STATS_MONTHLY_INSTANCES</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
 <Column name="MONTHLY_DATE" id="847AA7E9-C3DE-B939-45CF-6CEA2FB4A481">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
@@ -21,6 +21,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
 <dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="NUM_INSTANCES" id="50414148-5D5B-EFAF-1659-C54E7628655D">
@@ -34,6 +35,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="AGG_NUM_INSTANCES" id="F430ACE2-FCD0-946B-7AB4-3BCA7F16634E">
@@ -47,11 +49,12 @@
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="2C26931E-6714-1397-2443-65B85C197954" name="PK_STATS_MONTHLY_INSTANCES">
+<ind_PK_UK id="2C26931E-6714-1397-2443-65B85C197954" name="STATS_MONTHLY_INSTANCES_PK">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_STATS_MONTHLY_INSTANCES</sourceObjName>
@@ -65,7 +68,7 @@
 <colUsage columnID="847AA7E9-C3DE-B939-45CF-6CEA2FB4A481"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="E2184D62-798F-6906-8331-CD75BE05F0EB" name="PK_STATS_MONTHLY_INSTANCES">
+<ind_PK_UK id="E2184D62-798F-6906-8331-CD75BE05F0EB" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="PK_STATS_MONTHLY_INSTANCES">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_STATS_MONTHLY_INSTANCES</sourceObjName>
@@ -73,7 +76,6 @@
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Unique Plain Index</indexState>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="847AA7E9-C3DE-B939-45CF-6CEA2FB4A481"/>

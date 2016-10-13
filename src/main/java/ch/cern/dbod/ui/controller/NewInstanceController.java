@@ -73,7 +73,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Textbox) getFellow("dbName")).setMaxlength(CommonConstants.MAX_DB_NAME_LENGTH);
         ((Textbox) getFellow("eGroup")).setMaxlength(CommonConstants.MAX_E_GROUP_LENGTH);
         ((Combobox) getFellow("category")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
-        ((Combobox) getFellow("category")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_TEST);
+        ((Combobox) getFellow("category")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_REFERENCE);
+        ((Combobox) getFellow("category")).getItemAtIndex(2).setValue(CommonConstants.CATEGORY_TEST);
         ((Combobox) getFellow("category")).setSelectedIndex(0);
         ((Datebox) getFellow("expiryDate")).setFormat(CommonConstants.DATE_FORMAT);
         ((Datebox) getFellow("expiryDate")).setTimeZonesReadonly(true);
@@ -81,6 +82,7 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Combobox) getFellow("dbType")).getItemAtIndex(1).setValue(CommonConstants.DB_TYPE_ORACLE);
         ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(CommonConstants.DB_TYPE_ORA);
         ((Combobox) getFellow("dbType")).getItemAtIndex(3).setValue(CommonConstants.DB_TYPE_PG);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(4).setValue(CommonConstants.DB_TYPE_INFLUX);
         ((Combobox) getFellow("dbType")).setSelectedIndex(0);
         ((Slider) getFellow("dbSizeSlider")).setMaxpos(CommonConstants.MAX_DB_SIZE);
         ((Textbox) getFellow("dbSize")).setMaxlength(String.valueOf(CommonConstants.MAX_DB_SIZE).length());

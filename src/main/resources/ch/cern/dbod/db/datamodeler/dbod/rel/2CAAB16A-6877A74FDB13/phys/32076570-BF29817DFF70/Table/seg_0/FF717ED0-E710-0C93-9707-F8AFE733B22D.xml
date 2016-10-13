@@ -9,16 +9,6 @@
 <segment>2B6B96D2-5578-FF84-C884-C0A8E20C21CC</segment>
 <tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
 <temporaryChanged>false</temporaryChanged>
-<indexProxies>
-<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_STATS_MONTHLY_INSTANCES" id="E2184D62-798F-6906-8331-CD75BE05F0EB">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
-<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
-<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
-</IndexProxy>
-</indexProxies>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
 <ColumnProxy name="NUM_INSTANCES" id="50414148-5D5B-EFAF-1659-C54E7628655D">
 <createdBy>dcollado</createdBy>
@@ -38,8 +28,18 @@
 <defaultValue>0</defaultValue>
 </ColumnProxy>
 </columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_STATS_MONTHLY_INSTANCES" id="E2184D62-798F-6906-8331-CD75BE05F0EB">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
+<segment>F1B75514-CF86-6D9E-991C-915FDA2F84C9</segment>
+<tableSpace>8E233E66-076B-AFBF-7B57-C1166A8C4BF5</tableSpace>
+</IndexProxy>
+</indexProxies>
 <primaryKeys>
-<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_STATS_MONTHLY_INSTANCES" id="2C26931E-6714-1397-2443-65B85C197954">
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="STATS_MONTHLY_INSTANCES_PK" id="2C26931E-6714-1397-2443-65B85C197954">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>

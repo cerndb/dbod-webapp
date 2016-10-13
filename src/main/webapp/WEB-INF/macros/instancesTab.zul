@@ -57,7 +57,8 @@
                                     <image src="/img/filter.png" width="18px" height="18px"/>
                                     <combobox id="categoryFilter" width="70px" mold="rounded" readonly="true" onSelect="adminController.filterInstances();">
                                         <comboitem label="${c:l('all')}" value=""/>
-                                        <comboitem label="${c:l('categoryOFFICIAL')}" value="OFFICIAL"/>
+                                        <comboitem label="${c:l('categoryPROD')}" value="PROD"/>
+                                        <comboitem label="${c:l('categoryREF')}" value="REF"/>
                                         <comboitem label="${c:l('categoryTEST')}" value="TEST"/>
                                     </combobox>
                                 </hbox>
@@ -77,6 +78,7 @@
                                         <comboitem label="${c:l('dbTypeORACLE')}" value="ORACLE"/>
                                         <comboitem label="${c:l('dbTypeORA')}" value="ORA"/>
                                         <comboitem label="${c:l('dbTypePG')}" value="PG"/>
+                                        <comboitem label="${c:l('dbTypeInfluxDB')}" value="InfluxDB"/>
                                     </combobox>
                                 </hbox>
                             </auxheader>

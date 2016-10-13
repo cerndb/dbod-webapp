@@ -1,98 +1,41 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0BD3232B-9B50-698E-DDFE-8475B0EF8D38" name="DOD_COMMAND_PARAMS">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0BD3232B-9B50-698E-DDFE-8475B0EF8D38" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="COMMAND_PARAM">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>DOD_COMMAND_PARAMS</sourceObjName>
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="USERNAME" id="81035474-0557-2C16-F64C-55B7A2C22FE7">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_COMMAND_PARAMS</sourceObjSchema>
-<sourceObjName>USERNAME</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<Column name="ID" id="83C1CAA9-DC54-B73E-F783-EB523EDAEABA">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 09:28:36 UTC</createdTime>
+<generatorID>26F6EFA0-B8F6-7D60-F946-EC81A85CAA22</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-<delegate>10913B65-468E-A169-B14A-74E9D309BF88</delegate>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="770EDAFA-7A49-527A-3CD1-D1E079965B36" referredColumn="10913B65-468E-A169-B14A-74E9D309BF88"/>
-</associations>
 </Column>
-<Column name="DB_NAME" id="A481BDFF-3393-9F36-A800-B1D18CCE202C">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_COMMAND_PARAMS</sourceObjSchema>
-<sourceObjName>DB_NAME</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<Column name="JOB_ID" id="7B6861CF-2697-748A-D9E6-2EAAC5603048">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:10:58 UTC</createdTime>
+<generatorID>D23F3AF2-31F5-00A3-A97C-DA0B0DBEF372</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
-<delegate>4ADF0D24-3BCA-C11C-3296-9C526A1EC434</delegate>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="770EDAFA-7A49-527A-3CD1-D1E079965B36" referredColumn="4ADF0D24-3BCA-C11C-3296-9C526A1EC434"/>
-</associations>
-</Column>
-<Column name="COMMAND_NAME" id="B91D680C-3CFA-9325-C3BA-8B3E688C84FD">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_COMMAND_PARAMS</sourceObjSchema>
-<sourceObjName>COMMAND_NAME</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
-<delegate>569AA471-5167-90B2-0C50-3871E5742AA7</delegate>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="770EDAFA-7A49-527A-3CD1-D1E079965B36" referredColumn="569AA471-5167-90B2-0C50-3871E5742AA7"/>
-</associations>
-</Column>
-<Column name="TYPE" id="6600E8BA-94A5-8514-7646-21A3D195346E">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_COMMAND_PARAMS</sourceObjSchema>
-<sourceObjName>TYPE</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
-<delegate>149A2457-758C-DD35-CFEF-5A0AF0A2D9ED</delegate>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="770EDAFA-7A49-527A-3CD1-D1E079965B36" referredColumn="149A2457-758C-DD35-CFEF-5A0AF0A2D9ED"/>
-</associations>
-</Column>
-<Column name="CREATION_DATE" id="73FFDF99-83C5-0894-A80B-5A133CA14D68">
-<sourceConnName>DBONDEMAND PROD</sourceConnName>
-<sourceObjSchema>DOD_COMMAND_PARAMS</sourceObjSchema>
-<sourceObjName>CREATION_DATE</sourceObjName>
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
-<ownerDesignName>dbod</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
-<delegate>1797C4FC-9905-E1CF-D858-D0D0784B48EF</delegate>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="770EDAFA-7A49-527A-3CD1-D1E079965B36" referredColumn="1797C4FC-9905-E1CF-D858-D0D0784B48EF"/>
+<colAssociation fkAssociation="96B3E12E-D3CE-D2EF-8488-E893E2642AC7" referredColumn="E4239188-E749-5117-6604-B8320DAEB228"/>
 </associations>
 </Column>
 <Column name="NAME" id="7D3A6C83-8542-694E-9924-553444291325">
@@ -106,6 +49,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 BYTE</dataTypeSize>
+<ownDataTypeParameters>64 BYTE,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="VALUE" id="54955B0D-7D21-0FDD-36AC-3CFB9AF5ED29">
@@ -119,12 +63,12 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT028</logicalDatatype>
-<dataTypeSize>4000</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="2D9E16C7-9AA9-F93E-4F72-C0CAEBF81A9D" name="PK_DOD_COMMAND_PARAMS">
+<ind_PK_UK id="2D9E16C7-9AA9-F93E-4F72-C0CAEBF81A9D" name="COMMAND_PARAM_PK">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_COMMAND_PARAMS</sourceObjName>
@@ -135,15 +79,10 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="81035474-0557-2C16-F64C-55B7A2C22FE7"/>
-<colUsage columnID="A481BDFF-3393-9F36-A800-B1D18CCE202C"/>
-<colUsage columnID="B91D680C-3CFA-9325-C3BA-8B3E688C84FD"/>
-<colUsage columnID="6600E8BA-94A5-8514-7646-21A3D195346E"/>
-<colUsage columnID="73FFDF99-83C5-0894-A80B-5A133CA14D68"/>
-<colUsage columnID="7D3A6C83-8542-694E-9924-553444291325"/>
+<colUsage columnID="83C1CAA9-DC54-B73E-F783-EB523EDAEABA"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="1FB5D1F3-6305-7F29-99BA-7838E81B4ED8" name="PK_DOD_COMMAND_PARAMS">
+<ind_PK_UK id="1FB5D1F3-6305-7F29-99BA-7838E81B4ED8" schemaObject="4828E39F-D2B4-4775-5649-E985B8CF542A" name="PK_COMMAND_PARAMS">
 <sourceConnName>DBONDEMAND PROD</sourceConnName>
 <sourceObjSchema>DBONDEMAND</sourceObjSchema>
 <sourceObjName>PK_DOD_COMMAND_PARAMS</sourceObjName>
@@ -151,29 +90,29 @@
 <createdTime>2015-11-05 14:08:01 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Unique Plain Index</indexState>
-<schemaObject>4828E39F-D2B4-4775-5649-E985B8CF542A</schemaObject>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="81035474-0557-2C16-F64C-55B7A2C22FE7"/>
-<colUsage columnID="A481BDFF-3393-9F36-A800-B1D18CCE202C"/>
-<colUsage columnID="B91D680C-3CFA-9325-C3BA-8B3E688C84FD"/>
-<colUsage columnID="6600E8BA-94A5-8514-7646-21A3D195346E"/>
-<colUsage columnID="73FFDF99-83C5-0894-A80B-5A133CA14D68"/>
-<colUsage columnID="7D3A6C83-8542-694E-9924-553444291325"/>
+<colUsage columnID="83C1CAA9-DC54-B73E-F783-EB523EDAEABA"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="54D45667-6344-C5DB-55C7-7E8D1BEC0278" name="DOD_PARAMS_JOBS">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:08:01 UTC</createdTime>
+<ind_PK_UK id="14B9694B-3606-534B-6A21-BE0BD41B50EE" name="COMMAND_PARAM_JOB_IDX">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-15 10:31:24 UTC</createdTime>
+<ownerDesignName>dbod</ownerDesignName>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7B6861CF-2697-748A-D9E6-2EAAC5603048"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B1F87FA0-DD7B-FCB4-8432-20DBB913472A" name="COMMAND_PARAM_JOB_FK">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:10:58 UTC</createdTime>
+<generatorID>7D58076E-F78C-4FC3-55E0-CA20900EF7D4</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="81035474-0557-2C16-F64C-55B7A2C22FE7"/>
-<colUsage columnID="A481BDFF-3393-9F36-A800-B1D18CCE202C"/>
-<colUsage columnID="B91D680C-3CFA-9325-C3BA-8B3E688C84FD"/>
-<colUsage columnID="6600E8BA-94A5-8514-7646-21A3D195346E"/>
-<colUsage columnID="73FFDF99-83C5-0894-A80B-5A133CA14D68"/>
+<colUsage columnID="7B6861CF-2697-748A-D9E6-2EAAC5603048"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

@@ -102,8 +102,8 @@
                                 </hbox>
                                 <hbox id="categoryEditBox" visible="false" align="bottom" if="${controller.admin}">
                                     <combobox id="categoryEdit" width="275px" mold="rounded" readonly="true" onOK="controller.editCategory();" >
-                                        <comboitem label="${c:l('categoryOFFICIAL')}" />
-                                        <comboitem label="${c:l('categoryPERSONAL')}" />
+                                        <comboitem label="${c:l('categoryPROD')}" />
+                                        <comboitem label="${c:l('categoryREF')}" />
                                         <comboitem label="${c:l('categoryTEST')}" />
                                     </combobox>
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editCategory();"/>

@@ -464,6 +464,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         }
                     });
                 }
+                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
+                    monitorBtn.setDisabled(true);
+                }
                 else {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     String date = dateFormat.format(new Date());
@@ -525,7 +528,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
     private Label getFormattedLabel(String text, int maxLength) {
         Label toret = new Label(text);
         toret.setMaxlength(maxLength);
-        if (text.length() > maxLength) {
+        if (text != null && text.length() > maxLength) {
             toret.setTooltiptext(text);
         }
         toret.setStyle("hyphens:none;text-wrap:none;-webkit-hyphens:none;white-space:nowrap;");

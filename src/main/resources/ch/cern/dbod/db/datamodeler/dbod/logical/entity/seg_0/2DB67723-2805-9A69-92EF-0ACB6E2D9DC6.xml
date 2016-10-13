@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2DB67723-2805-9A69-92EF-0ACB6E2D9DC6" name="DOD JOBS">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2DB67723-2805-9A69-92EF-0ACB6E2D9DC6" name="JOB">
 <createdBy>dcollado</createdBy>
 <createdTime>2015-11-05 14:20:44 UTC</createdTime>
 <generatorID>50FFE09F-DA98-01E8-51C3-44D37CE14858</generatorID>
@@ -16,61 +16,17 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="USERNAME" id="25916EF9-4767-D61F-33BE-770AAA1E5AD0">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>E94E8748-AFE5-7D48-4085-7E18043BAE09</generatorID>
+<Attribute name="ID" id="DD00205E-F52A-7346-49DC-EDB89DC1DB7E">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-08 13:44:23 UTC</createdTime>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
-<referedAttribute>00BF44E0-BDAA-327E-C503-240F07885662</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>32 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="DB NAME" id="D4679205-95DB-E194-F430-CAF3E952A56D">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>E94E8748-AFE5-7D48-4085-7E18043BAE09</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>91F685A2-EFD7-9F0F-AD27-D0885E4A868E</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>128 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="COMMAND NAME" id="E54396C8-4773-5FEA-4299-A4014E671F4F">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>D118FDDA-260E-4586-7801-F720CA2B00B1</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>797A149D-F9CA-BA6E-1893-FF5F3A3C2589</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
-</Attribute>
-<Attribute name="TYPE" id="638619B2-080D-D775-60C6-2BEAE5233690">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>D118FDDA-260E-4586-7801-F720CA2B00B1</generatorID>
-<ownerDesignName>dbod</ownerDesignName>
-<engineerTo>
-<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
-</engineerTo>
-<referedAttribute>80DD46AA-37C5-CFA7-0410-A2322D8540F5</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>64 BYTE</dataTypeSize>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="CREATION DATE" id="9028F371-0385-7219-49CA-DC71515C0605">
 <createdBy>dcollado</createdBy>
@@ -83,7 +39,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="COMPLETION DATE" id="57BB25BC-401B-9024-DB56-BC18831C4353">
 <createdBy>dcollado</createdBy>
@@ -97,7 +53,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="REQUESTER" id="5FA5BDD2-ACD6-DF04-0B9F-6F06D3C6F35E">
 <createdBy>dcollado</createdBy>
@@ -111,6 +67,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="ADMIN ACTION" id="C0524248-C13B-EE36-1001-5785B65C4EC0">
 <createdBy>dcollado</createdBy>
@@ -125,6 +82,7 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>*</dataTypePrecision>
 <dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
 </Attribute>
 <Attribute name="STATE" id="FB396EA8-5731-36A7-F208-A4F1DD08E5A7">
 <createdBy>dcollado</createdBy>
@@ -138,6 +96,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>32 BYTE</dataTypeSize>
+<ownDataTypeParameters>32 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="LOG" id="8193AC5F-9CDF-4C30-4093-BCE724D41442">
 <createdBy>dcollado</createdBy>
@@ -152,6 +111,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT028</logicalDatatype>
 <dataTypeSize>4000</dataTypeSize>
+<ownDataTypeParameters>4000,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="RESULT" id="1A7502FE-A5AD-6CFF-922E-062D661B2592">
 <createdBy>dcollado</createdBy>
@@ -166,6 +126,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>2048 BYTE</dataTypeSize>
+<ownDataTypeParameters>2048 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="EMAIL SENT" id="46B241DB-DDD2-E201-03E1-7920F58B8078">
 <createdBy>dcollado</createdBy>
@@ -180,24 +141,77 @@
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
 <dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
 </Attribute>
-</attributes>
-<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="9A9B33CD-61DB-025B-32B4-FA221CF617A8" name="PK DOD JOBS">
-<createdBy>dcollado</createdBy>
-<createdTime>2015-11-05 14:20:44 UTC</createdTime>
-<generatorID>AA3E2054-B9CC-B5D1-2F7D-4864A2BA905D</generatorID>
+<Attribute name="NAME" id="A4A611E8-0E90-D9E2-9E85-96A7E6C8F96D">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 12:45:26 UTC</createdTime>
+<generatorID>D118FDDA-260E-4586-7801-F720CA2B00B1</generatorID>
 <ownerDesignName>dbod</ownerDesignName>
 <engineerTo>
 <item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
 </engineerTo>
+<referedAttribute>797A149D-F9CA-BA6E-1893-FF5F3A3C2589</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="COMMAND DEFINITION ID" id="7872E17D-0489-13BA-93E6-622EDE2210B4">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:09:09 UTC</createdTime>
+<generatorID>20CFF383-DF8B-5592-50C9-A2E9C0574632</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>14ABA233-4773-4434-F8C8-76E8BB47A2BB</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="INSTANCE ID" id="DE7BDF50-E88C-9EB5-B8D9-8035FB4DDFE8">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-14 16:10:11 UTC</createdTime>
+<generatorID>1E6917FE-2406-40B2-6960-29A0E6D592A4</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<referedAttribute>AB701D0E-04C9-C313-1726-84E583718C10</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="DOD COMMAND DEFINITION ID" id="C4EA4F8E-057F-07FA-5BD6-D3CEFD44A9BC">
+<createdBy>jocorder</createdBy>
+<createdTime>2016-03-15 10:22:15 UTC</createdTime>
+<generatorID>88CA64EE-94A4-9298-F885-664C5AD3BF38</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9A9B33CD-61DB-025B-32B4-FA221CF617A8" name="JOB_PK">
+<createdBy>dcollado</createdBy>
+<createdTime>2015-11-05 14:20:44 UTC</createdTime>
+<generatorID>AA3E2054-B9CC-B5D1-2F7D-4864A2BA905D</generatorID>
+<ownerDesignName>dbod</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="2CAAB16A-844F-FA4E-BDA9-6877A74FDB13" value="false"/>
+</engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>25916EF9-4767-D61F-33BE-770AAA1E5AD0</attributeRef>
-<attributeRef>D4679205-95DB-E194-F430-CAF3E952A56D</attributeRef>
-<attributeRef>E54396C8-4773-5FEA-4299-A4014E671F4F</attributeRef>
-<attributeRef>638619B2-080D-D775-60C6-2BEAE5233690</attributeRef>
-<attributeRef>9028F371-0385-7219-49CA-DC71515C0605</attributeRef>
+<attributeRef>DD00205E-F52A-7346-49DC-EDB89DC1DB7E</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
