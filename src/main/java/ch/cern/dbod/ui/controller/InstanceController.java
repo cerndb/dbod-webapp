@@ -598,12 +598,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         else {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date = dateFormat.format(new Date());
-            String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + instance.getDbName() + ":" + date);
+            String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
             String appdynURL; 
             if (instance.getDbType().equals(CommonConstants.DB_TYPE_PG))
-                appdynURL = ConfigLoader.getDBTuna4PgPath() + instance.getDbName() + "&sec_token=" + sec_token;
+                appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA4PG) + instance.getDbName() + "&sec_token=" + sec_token;
             else
-                appdynURL = ConfigLoader.getDBTunaPath() + instance.getDbName() + "&sec_token=" + sec_token;
+                appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA) + instance.getDbName() + "&sec_token=" + sec_token;
   
             monitorBtn.setTarget("_blank");
             monitorBtn.setHref(appdynURL);
@@ -620,7 +620,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             hostMonitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON);
         }
 
-        String kibanaURL = ConfigLoader.getKibanaDashboard() + instance.getHost();
+        String kibanaURL = ConfigLoader.getProperty(CommonConstants.KIBANA_DASHBOARD) + instance.getHost();
 
         hostMonitorBtn.setTarget("_blank");
         hostMonitorBtn.setHref(kibanaURL);

@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import java.io.IOException;
@@ -68,12 +69,13 @@ public class TopBarController extends Div implements BeforeCompose, AfterCompose
     public void afterCompose() {
         //Get HTML for announcement
         String text = new String();
+        String announcementPath = ConfigLoader.getProperty(CommonConstants.ANNOUNCEMENT_LOCATION);
         try {
-            byte[] encoded = Files.readAllBytes(Paths.get(CommonConstants.ANNOUNCEMENT_FILE));
+            byte[] encoded = Files.readAllBytes(Paths.get(announcementPath));
             text = Charset.defaultCharset().decode(ByteBuffer.wrap(encoded)).toString().trim();
         }
         catch (IOException e){
-            Logger.getLogger(TopBarController.class.getName()).log(Level.SEVERE, "ERROR READING ANNOUNCEMENT FILE ON " + CommonConstants.ANNOUNCEMENT_FILE, e);
+            Logger.getLogger(TopBarController.class.getName()).log(Level.SEVERE, "ERROR READING ANNOUNCEMENT FILE ON " + announcementPath, e);
         }
         
         if (!text.isEmpty()) {

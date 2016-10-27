@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.appservlet;
 
+import ch.cern.dbod.util.CommonConstants;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -122,7 +123,7 @@ public class ProxyUtils {
             if (sessions.containsKey(appdynid))
             {
                 // The token is valid, so the request is processed
-                if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + host + ":" + date)))
+                if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + host + ":" + date)))
                 {
                     // Don't send the cookie this time, so a new session and cookie will be created
                     httprequest.addHeader("Cookie", "anycookie=1;");
@@ -144,7 +145,7 @@ public class ProxyUtils {
             else
             {
                 // The session is not saved in our map, check if the token is valid
-                if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + host + ":" + date)))
+                if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + host + ":" + date)))
                 {
                     // Don't send the cookie this time, so a new session and cookie will be created
                     httprequest.addHeader("Cookie", "anycookie=1;");
@@ -160,7 +161,7 @@ public class ProxyUtils {
         else 
         {
             // The token is valid, so the request is processed
-            if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProxyPassword() + ":" + host + ":" + date)))
+            if (host != null && sec_token != null && sec_token.equalsIgnoreCase(DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + host + ":" + date)))
             {
                 // Don't send the cookie this time, so a new session and cookie will be created
                 httprequest.addHeader("Cookie", "anycookie=1;");

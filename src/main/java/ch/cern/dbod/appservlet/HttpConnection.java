@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.appservlet;
 
+import ch.cern.dbod.util.CommonConstants;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,9 +80,9 @@ public class HttpConnection {
             return null;
         
         if (url.charAt(0) == '/')
-            return ConfigLoader.getAppDynHost() + url;
+            return ConfigLoader.getProperty(CommonConstants.APPDYN_HOST)+ url;
         else
-            return ConfigLoader.getAppDynHost() + "/" + url;
+            return ConfigLoader.getProperty(CommonConstants.APPDYN_HOST) + "/" + url;
     }
     
     /**
@@ -264,7 +265,7 @@ public class HttpConnection {
             }
             
             // Add authentication headers
-            httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
+            httprequest.addHeader("Authorization", ConfigLoader.getProperty(CommonConstants.APPDYN_AUTH_STRING));
 
             // Execute the request
             HttpClient client = HttpClientBuilder.create().build();
@@ -309,7 +310,7 @@ public class HttpConnection {
             HttpGet httprequest = new HttpGet(url);
             
             // Add authentication headers
-            httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
+            httprequest.addHeader("Authorization", ConfigLoader.getProperty(CommonConstants.APPDYN_AUTH_STRING));
 
             // Execute the request
             HttpResponse httpresponse = client.execute(httprequest);
@@ -341,7 +342,7 @@ public class HttpConnection {
             response.setContentType(mimetype);
 
             // Add authentication headers
-            httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
+            httprequest.addHeader("Authorization", ConfigLoader.getProperty(CommonConstants.APPDYN_AUTH_STRING));
             HttpResponse httpresponse = client.execute(httprequest);
 
             // Read the resource and resend it
@@ -372,7 +373,7 @@ public class HttpConnection {
             HttpPost httprequest = new HttpPost(url);
 
             // Add authentication headers
-            httprequest.addHeader("Authorization", ConfigLoader.getAppDynamicAuth());
+            httprequest.addHeader("Authorization", ConfigLoader.getProperty(CommonConstants.APPDYN_AUTH_STRING));
             httprequest.addHeader("Cookie", "anycookie=1;");
             
             // Add the POST parameters
