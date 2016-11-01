@@ -59,7 +59,7 @@ public class ActivityDAO {
             connection.setAutoCommit(false);
             
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String activityQuery = "INSERT INTO activity (username, instance, page, log)"
+            String activityQuery = "INSERT INTO activity_log (username, instance, page, log)"
                             + " VALUES (?, ?, ?, ?)";
             activityStatement = connection.prepareStatement(activityQuery);
             //Assign values to variables
