@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.dao;
 
+import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.util.CommonConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,7 +48,7 @@ public class ActivityDAO {
      * @param page Name of the view (if any).
      * @param log Action executed.
      */
-    public void insert(String user, String instance, String page, String log) {
+    public void insert(String user, Instance instance, String page, String log) {
         Connection connection = null;
         PreparedStatement activityStatement = null;
         PreparedStatement masterStatement = null;
@@ -64,7 +65,7 @@ public class ActivityDAO {
             activityStatement = connection.prepareStatement(activityQuery);
             //Assign values to variables
             activityStatement.setString(1, user);
-            activityStatement.setString(2, instance);
+            activityStatement.setString(2, instance.getDbName());
             activityStatement.setString(3, page);
             activityStatement.setString(4, log);
             

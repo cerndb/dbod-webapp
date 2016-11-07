@@ -210,7 +210,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
             showAllCommandStats(false);
         }
         
-        activityDAO.insert(username, "", "OVERVIEW", "Loaded overview page");
+        activityDAO.insert(username, null, "OVERVIEW", "Loaded overview page");
     }
     
     /**
@@ -369,7 +369,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         }
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_USER_SHOW_ALL, show);
         
-        activityDAO.insert(username, "", "OVERVIEW", "Show all instances set to " + show);
+        activityDAO.insert(username, null, "OVERVIEW", "Show all instances set to " + show);
     }
     
     /**
