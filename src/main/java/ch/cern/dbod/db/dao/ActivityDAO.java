@@ -65,7 +65,7 @@ public class ActivityDAO {
             activityStatement = connection.prepareStatement(activityQuery);
             //Assign values to variables
             activityStatement.setString(1, user);
-            activityStatement.setString(2, instance.getDbName());
+            activityStatement.setString(2, instance == null ? null : instance.getDbName());
             activityStatement.setString(3, page);
             activityStatement.setString(4, log);
             
