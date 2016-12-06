@@ -156,11 +156,11 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 Html dbName = new Html();
                 
                 //Admin view and the instance is not in FIM
-                //if (checkboxes && instance.getUser() == null)
-                //    dbName.setContent("<a style=\"text-decoration:none;color:red\" class=\"z-label\" href=\""
-                //                    + Executions.encodeURL(CommonConstants.PAGE_INSTANCE + "?" + CommonConstants.INSTANCE + "=" + instance.getDbName()) 
-                //                    +"\">" + instance.getDbName() + "</a>");
-                //else
+                if (checkboxes && instance.getUser() == null)
+                    dbName.setContent("<a style=\"text-decoration:none;color:red\" class=\"z-label\" href=\""
+                                    + Executions.encodeURL(CommonConstants.PAGE_INSTANCE + "?" + CommonConstants.INSTANCE + "=" + instance.getDbName()) 
+                                    +"\">" + instance.getDbName() + "</a>");
+                else
                     dbName.setContent("<a style=\"text-decoration:none;color:blue\" class=\"z-label\" href=\""
                                     + Executions.encodeURL(CommonConstants.PAGE_INSTANCE + "?" + CommonConstants.INSTANCE + "=" + instance.getDbName()) 
                                     +"\">" + instance.getDbName() + "</a>");
