@@ -32,10 +32,6 @@ Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 	<!--         -->
 	<!-- Imports -->
 	<!--         -->
-	<import>
-		<import-name>ThemeFns</import-name>
-		<import-class>org.zkoss.web.fn.ThemeFns</import-class>
-	</import>
 	
 	<!--                 -->
 	<!-- Theme Utilities -->

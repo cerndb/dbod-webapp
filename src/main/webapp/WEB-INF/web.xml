@@ -9,6 +9,10 @@
         <description>ZK listener for session cleanup</description>
         <listener-class>org.zkoss.zk.ui.http.HttpSessionListener</listener-class>
     </listener>
+    <context-param>
+        <param-name>configLocation</param-name>
+        <param-value>/opt/dbod/webapp/dbod-web.cfg</param-value>
+    </context-param>
     <servlet>
         <description>ZK loader for ZUML pages</description>
         <servlet-name>zkLoader</servlet-name>

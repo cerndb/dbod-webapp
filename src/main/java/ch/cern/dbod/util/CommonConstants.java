@@ -48,14 +48,28 @@ public class CommonConstants {
     public static final String ATTRIBUTE_USER_FILTER_JOB_DB_NAME = "userFilterJobDbName";
     public static final String ATTRIBUTE_USER_FILTER_JOB_COMMAND_NAME = "userFilterJobCommandName";
     
+    //Config
+    public static final String CONFIG_LOCATION = "configLocation";
+    /*public static final String WS_USER_PSWD = "wsUserPswd"; (Unused)*/
+    public static final String WS_USER = "service_account";
+    public static final String WS_PSWD = "service_password";
+    /*public static final String KEYSTORE_PSWD = "keyStorePswd"; (Unused)*/
+    /*public static final String KEYSTORE_LOCATION = "keyStoreLoc"; (Unused)*/
+    public static final String ANNOUNCEMENT_LOCATION = "announcement_location";
+    public static final String DBOD_API_LOCATION = "dbodapi_path";
+    public static final String DBOD_API_USER = "dbodapi_user";
+    public static final String DBOD_API_PASS = "dbodapi_pass";
+    public static final String APPDYN_AUTH_STRING = "appdyn_auth";
+    public static final String APPDYN_HOST = "appdyn_host";
+    public static final String APPDYN_DBTUNA = "appdyn_dbtuna_path";
+    public static final String APPDYN_DBTUNA4PG = "appdynn_dbtuna4pg_path";
+    public static final String APPDYN_TOKEN = "token_password";
+    public static final String KIBANA_DASHBOARD = "kibana_dashboard";
+    
     //Variables
     public static final String ENVIRONMENT_CONTEXT = "java:/comp/env";
     public static final String DATA_SOURCE_DBOD = "jdbc/dbondemand";
     public static final String DATA_SOURCE_MONITORING = "jdbc/monitoring";
-    public static final String WS_USER_PSWD = "wsUserPswd";
-    public static final String WS_USER = "wsUser";
-    public static final String WS_PSWD = "wsPswd";
-    public static final String KEYSTORE_PSWD = "keyStorePswd";
     public static final String ADMIN_E_GROUP = "dbondemand-admin";
     public static final String LOCALE_COOKIE = "dbondemand.locale";
     public static final String ADFS_FULLNAME = "ADFS_FULLNAME";
@@ -122,9 +136,7 @@ public class CommonConstants {
     public static final int MONITORING_DAYS = 15;
     public static final int MONITORING_OVERVIEW_DAYS = 7;
     public static final int MONITORING_ADMIN_DAYS = 3;
-    
-    public static final String ANNOUNCEMENT_FILE = "/afs/cern.ch/project/jps/reps/DBOnDemand/announcement.html";
-    
+
     public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
     public static final String OEM_EGROUP = "oracle-em-test-users";
     public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
@@ -135,11 +147,11 @@ public class CommonConstants {
     public static final String IT_ES_CPU_GROUP = "CPUutil";
     public static final String IT_ES_CPU_STAT = "PercUser";
     
-    public static final String KEYSTORE_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/dodws.p12";
-    public static final String CONFIG_LOCATION = "/afs/cern.ch/project/jps/reps/DBOnDemand/proxy.dat";
-
     public static final String CONFIG_RELOAD_TRUE = "1";
     public static final String CONFIG_RELOAD_FALSE = "0";
+    
+    //DBOD API Endpoints
+    public static final String INSTANCE_ENDPOINT = "api/v1/instance/%s";
     
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";

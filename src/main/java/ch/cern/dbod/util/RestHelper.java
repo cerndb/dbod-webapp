@@ -54,7 +54,7 @@ public class RestHelper {
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
             
-            HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {
@@ -79,7 +79,7 @@ public class RestHelper {
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
             
-            HttpGet request = new HttpGet(ConfigLoader.getRestApiPath() + path);
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {

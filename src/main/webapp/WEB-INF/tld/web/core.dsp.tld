@@ -95,14 +95,7 @@ Copyright (C) 2005 Potix Corporation. All Rights Reserved.
 	<!--         -->
 	<!-- Imports -->
 	<!--         -->
-	<import>
-		<import-name>ServletFns</import-name>
-		<import-class>org.zkoss.web.fn.ServletFns</import-class>
-	</import>
-	<import>
-		<import-name>Labels</import-name>
-		<import-class>org.zkoss.util.resource.Labels</import-class>
-	</import>
+
 
 	<!--                 -->
 	<!-- Class Utilities -->

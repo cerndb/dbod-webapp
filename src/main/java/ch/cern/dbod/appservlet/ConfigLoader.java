@@ -9,13 +9,15 @@
 
 package ch.cern.dbod.appservlet;
 
-import static ch.cern.dbod.util.CommonConstants.CONFIG_LOCATION;
+import ch.cern.dbod.util.CommonConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.ServletContext;
+import org.zkoss.zk.ui.Sessions;
 
 /**
  * Reads the configuration file for the proxy server to AppDynamics.
@@ -25,51 +27,21 @@ public class ConfigLoader {
     
     private static final Properties propertiesFile = init();
     
-    public static String getProxyPassword()
-    {
-        return propertiesFile.getProperty("token_password");
-    }
-    
-    public static String getAppDynamicAuth()
-    {
-        return propertiesFile.getProperty("appdyn_auth");
-    }
-    
-    public static String getAppDynHost()
-    {
-        return propertiesFile.getProperty("appdyn_host");
-    }
-    
-    public static String getKibanaDashboard()
-    {
-        return propertiesFile.getProperty("kibana_dashboard");
-    }
-    
-    public static String getDBTunaPath()
-    {
-        return propertiesFile.getProperty("appdyn_dbtuna_path");
-    }
-    
-    public static String getDBTuna4PgPath()
-    {
-        return propertiesFile.getProperty("appdynn_dbtuna4pg_path");
-    }
-    
-    public static String getRestApiPath()
-    {
-        return propertiesFile.getProperty("restapi_path");
+    public static String getProperty(String name) {
+        return propertiesFile.getProperty(name);
     }
     
     private static Properties init()
     {
         Properties prop = new Properties();
-        try (InputStream input = new FileInputStream(CONFIG_LOCATION))
+        String configPath = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.CONFIG_LOCATION);
+        try (InputStream input = new FileInputStream(configPath))
         {
             prop.load(input);
         }
         catch (IOException ex)
         {
-            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, "UNCAUGHT EXCEPTION", ex);
+            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, "EXCEPTION READING CONFIG FILE ON " + configPath, ex);
         }
         return prop;
     }
