@@ -196,7 +196,7 @@
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
     <!-- Define filter to avoid Tomcat's error page and catch every uncaught exception -->
