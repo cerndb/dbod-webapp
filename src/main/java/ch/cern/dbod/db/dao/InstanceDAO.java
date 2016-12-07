@@ -382,19 +382,17 @@ public class InstanceDAO {
         Instance instance = null;
         try {
             instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
-            System.out.println("INSTANCE = " + instance);
+            if (instance == null)
+                return null;
             
             User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
-            System.out.println("USER = " + user);
-            
-            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
-            System.out.println("PORT = " + port);
-            instance.setPort(port);
-            
             instance.setUser(user);
             
+            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
+            instance.setPort(port);
+            
             //Check if instance needs upgrade
-            if (instance != null && upgrades != null) {
+            if (upgrades != null) {
                 for (int i=0; i < upgrades.size(); i++) {
                     Upgrade upgrade = upgrades.get(i);
                     if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
