@@ -30,6 +30,11 @@ public class Instance implements Comparable, Cloneable{
      */
     @SerializedName("user")
     private User user;
+    
+    /**
+     * Port of the instance (temporal).
+     */
+    private String port;
 
     /**
      * DB name for this instance (max. 8)
@@ -140,6 +145,14 @@ public class Instance implements Comparable, Cloneable{
      * is checked it will be counted for collective actions.
      */
     private boolean checked;
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
 
     public String getUsername() {
         return username;

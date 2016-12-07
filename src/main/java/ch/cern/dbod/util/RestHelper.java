@@ -98,4 +98,24 @@ public class RestHelper {
         
         return null;
     }
+    
+    public static String getValueFromRestApi(String path)
+    {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                return EntityUtils.toString(response.getEntity());
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
 }

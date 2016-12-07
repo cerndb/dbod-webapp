@@ -387,6 +387,10 @@ public class InstanceDAO {
             User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
             System.out.println("USER = " + user);
             
+            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
+            System.out.println("PORT = " + port);
+            instance.setPort(port);
+            
             instance.setUser(user);
             
             //Check if instance needs upgrade

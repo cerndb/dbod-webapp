@@ -432,6 +432,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             ((Label) getFellow("orgunit")).setValue(orgunit);
         }
         
+        // Show the instance's port
+        String port = instance.getPort();
+        if (!port.isEmpty()) {
+            ((Label) getFellow("port")).setValue(port);
+        }
+        
         //If the user is an admin
         if (admin) {
             //Maintenance button
