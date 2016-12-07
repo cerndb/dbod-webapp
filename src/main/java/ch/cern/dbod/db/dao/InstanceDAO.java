@@ -9,10 +9,9 @@
 
 package ch.cern.dbod.db.dao;
 
-import ch.cern.dbod.db.entity.Instance;
-import ch.cern.dbod.db.entity.InstanceChange;
-import ch.cern.dbod.db.entity.Upgrade;
+import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.util.CommonConstants;
+import ch.cern.dbod.util.RestHelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -380,49 +379,20 @@ public class InstanceDAO {
      * @return instance for the username and DB name specified.
      */
     public Instance selectByDbName(String dbName, List<Upgrade> upgrades) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
         Instance instance = null;
         try {
-            //Get connection
-            connection = getConnection();
-        
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE db_name = ? AND status = '1'");
-            statement = connection.prepareStatement(query.toString());
-
-            //Assign values to variables
-            statement.setString(1, dbName);
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance object
-            if (result.next()) {
-                instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
+            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
+            if (instance == null)
+                return null;
+            
+            User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
+            instance.setUser(user);
+            
+            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
+            instance.setPort(port);
+            
             //Check if instance needs upgrade
-                if (upgrades != null) {
+            if (upgrades != null) {
                 for (int i=0; i < upgrades.size(); i++) {
                     Upgrade upgrade = upgrades.get(i);
                     if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
@@ -430,22 +400,8 @@ public class InstanceDAO {
                         instance.setUpgradeTo(upgrade.getVersionTo());
                 }
             }
-        }
-        } catch (NamingException | SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCE FOR DB NAME " + dbName ,ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-        }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
         }
         return instance;
     }

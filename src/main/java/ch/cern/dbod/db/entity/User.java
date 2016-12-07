@@ -20,61 +20,61 @@ public class User implements Comparable, Cloneable{
     /**
      * First name.
      */
-    @SerializedName("OWNER_FIRST_NAME")
+    @SerializedName("owner_first_name")
     private String firstName;
 
     /**
      * Last name.
      */
-    @SerializedName("OWNER_LAST_NAME")
+    @SerializedName("owner_last_name")
     private String lastName;
 
     /**
      * Login of the user (max. 8)
      */
-    @SerializedName("OWNER_LOGIN")
+    @SerializedName("owner_login")
     private String login;
 
     /**
      * Email.
      */
-    @SerializedName("OWNER_MAIL")
+    @SerializedName("owner_mail")
     private String email;
 
     /**
      * Phone 1.
      */
-    @SerializedName("OWNER_PHONE1")
+    @SerializedName("owner_phone1")
     private Integer phone1;
 
     /**
      * Phone 2.
      */
-    @SerializedName("OWNER_PHONE2")
+    @SerializedName("owner_phone2")
     private Integer phone2;
 
     /**
      * Portable phone.
      */
-    @SerializedName("OWNER_PORTABLE_PHONE")
+    @SerializedName("owner_portable_phone")
     private Integer portable;
 
     /**
      * Department.
      */
-    @SerializedName("OWNER_DEPARTMENT")
+    @SerializedName("owner_department")
     private String department;
     
     /**
      * Group.
      */
-    @SerializedName("OWNER_GROUP")
+    @SerializedName("owner_group")
     private String group;
     
     /**
      * Section.
      */
-    @SerializedName("OWNER_SECTION")
+    @SerializedName("owner_section")
     private String section;
 
     public String getFirstName() {

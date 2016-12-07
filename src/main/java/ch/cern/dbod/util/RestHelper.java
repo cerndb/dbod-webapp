@@ -29,9 +29,9 @@ public class RestHelper {
     {
         Gson gson = new GsonBuilder()
                     .registerTypeAdapter(boolean.class, new BooleanSerializer())
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .setDateFormat("yyyy-MM-dd")
                     .create();
-            
+        
         return gson;
     }
     
@@ -47,7 +47,7 @@ public class RestHelper {
         return parser.parse(json).getAsJsonArray();
     }
     
-    public static <T> T getObjectFromRestApi(String path, Class<T> object)
+    public static <T> T getObjectFromRestApi(String path, Class<T> object, String resName)
     {
         Gson gson = init();
         
@@ -59,13 +59,15 @@ public class RestHelper {
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonElement json = parseObject(resp);
+                JsonObject json = parseObject(resp).getAsJsonObject().get(resName).getAsJsonArray().get(0).getAsJsonObject();
                 EntityUtils.consume(response.getEntity());
                 
                 T result = gson.fromJson(json, object);
                 return result;
             }
         } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
@@ -91,6 +93,26 @@ public class RestHelper {
                 return result;
             }
         } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
+    public static String getValueFromRestApi(String path)
+    {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                return EntityUtils.toString(response.getEntity());
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         

@@ -432,6 +432,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             ((Label) getFellow("orgunit")).setValue(orgunit);
         }
         
+        // Show the instance's port
+        String port = instance.getPort();
+        if (!port.isEmpty()) {
+            ((Label) getFellow("port")).setValue(port);
+        }
+        
         //If the user is an admin
         if (admin) {
             //Maintenance button
@@ -466,19 +472,19 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             ((Textbox) getFellow("hostEdit")).setValue(String.valueOf(instance.getHost()));
             
             //If the user couldn't be found, the instance is not in FIM
-            //if (user == null)
-            //{
-            //    ((Caption) getFellow("instanceCaption")).setImage("/img/warning-small.png");
-            //    ((Label) getFellow("instanceTitle")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_INSTANCE_ON_FIM));
-            //    ((Label) getFellow("instanceTitle")).setStyle("text-decoration-line:underline; text-decoration-style:dashed; text-decoration-color:red;");
-            //}
+            if (user == null)
+            {
+                ((Caption) getFellow("instanceCaption")).setImage("/img/warning-small.png");
+                ((Label) getFellow("instanceTitle")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_INSTANCE_ON_FIM));
+                ((Label) getFellow("instanceTitle")).setStyle("text-decoration-line:underline; text-decoration-style:dashed; text-decoration-color:red;");
+            }
             //If the username saved in the instance doesn't match the user saved in FIM
-            //else if (!instance.getUsername().equalsIgnoreCase(user.getLogin()))
-            //{
-            //    ((Label) getFellow("username")).setValue(instance.getUsername() + " (" + user.getLogin() + ")");
-            //    ((Label) getFellow("username")).setStyle("color:red !important;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:red;");
-            //    ((Label) getFellow("username")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_USER_ON_FIM));
-            //}
+            else if (!instance.getUsername().equalsIgnoreCase(user.getLogin()))
+            {
+                ((Label) getFellow("username")).setValue(instance.getUsername() + " (" + user.getLogin() + ")");
+                ((Label) getFellow("username")).setStyle("color:red !important;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:red;");
+                ((Label) getFellow("username")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_USER_ON_FIM));
+            }
         }
     }
 
