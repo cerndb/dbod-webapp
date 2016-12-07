@@ -9,9 +9,7 @@
 
 package ch.cern.dbod.db.dao;
 
-import ch.cern.dbod.db.entity.Instance;
-import ch.cern.dbod.db.entity.InstanceChange;
-import ch.cern.dbod.db.entity.Upgrade;
+import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
 import java.sql.Connection;
@@ -385,6 +383,11 @@ public class InstanceDAO {
         try {
             instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
             System.out.println("INSTANCE = " + instance);
+            
+            User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
+            System.out.println("USER = " + user);
+            
+            instance.setUser(user);
             
             //Check if instance needs upgrade
             if (instance != null && upgrades != null) {
