@@ -59,13 +59,15 @@ public class RestHelper {
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonElement json = parseObject(resp);
+                JsonObject json = parseObject(resp).getAsJsonObject().get("response").getAsJsonArray().get(0).getAsJsonObject();
                 EntityUtils.consume(response.getEntity());
                 
                 T result = gson.fromJson(json, object);
                 return result;
             }
         } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         

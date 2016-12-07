@@ -22,13 +22,13 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Username creator of this instance (max. 32)
      */
-    @SerializedName("USERNAME")
+    @SerializedName("username")
     private String username;
     
     /**
      * Information about the owner of this instance.
      */
-    @SerializedName("USER")
+    @SerializedName("user")
     private User user;
 
     /**
@@ -37,67 +37,67 @@ public class Instance implements Comparable, Cloneable{
      * The DB name limitation comes from the fact that Oracle SID's can only
      * be 8 characters
      */
-    @SerializedName("DB_NAME")
+    @SerializedName("db_name")
     private String dbName;
 
     /**
      * DB e-Group (max. 256)
      */
-    @SerializedName("E_GROUP")
+    @SerializedName("e_group")
     private String eGroup;
 
     /**
      * Category of the instances (personal, test or official, max. 32)
      */
-    @SerializedName("CATEGORY")
+    @SerializedName("class")
     private String category;
 
     /**
      * Creation date
      */
-    @SerializedName("CREATION_DATE")
+    @SerializedName("creation_date")
     private Date creationDate;
 
     /**
      * Expiration date
      */
-    @SerializedName("EXPIRY_DATE")
+    @SerializedName("expiry_date")
     private Date expiryDate;
 
     /**
      * Database type (Oracle, MySQL, etc)
      */
-    @SerializedName("DB_TYPE")
+    @SerializedName("db_type")
     private String dbType;
 
     /**
      * Database size (in GB)
      */
-    @SerializedName("DB_SIZE")
+    @SerializedName("db_size")
     private int dbSize;
 
     /**
      * Number of connections
      */
-    @SerializedName("NO_CONNECTIONS")
+    @SerializedName("no_connections")
     private int noConnections;
 
     /**
      * Project
      */
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     private String project;
 
     /**
      * Database description (max. 1024)
      */
-    @SerializedName("DESCRIPTION")
+    @SerializedName("description")
     private String description;
     
     /**
      * Version of the database (max. 128)
      */
-    @SerializedName("VERSION")
+    @SerializedName("version")
     private String version;
     
     /**
@@ -108,31 +108,31 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Logical status (active or inactive)
      */
-    @SerializedName("STATUS")
+    @SerializedName("status")
     private boolean status;
     
     /**
      * DB name of the master (if slave)
      */
-    @SerializedName("MASTER")
+    @SerializedName("master")
     private String master;
     
     /**
      * DB name of the slave (if master)
      */
-    @SerializedName("SLAVE")
+    @SerializedName("slave")
     private String slave;
     
     /**
      * Host where instance is running
      */
-    @SerializedName("HOST")
+    @SerializedName("host")
     private String host;
 
     /**
      * State (On Creation, Running, Stopped, etc)
      */
-    @SerializedName("STATE")
+    @SerializedName("state")
     private String state;
     
     /**
