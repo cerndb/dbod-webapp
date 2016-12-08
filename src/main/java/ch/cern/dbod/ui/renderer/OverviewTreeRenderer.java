@@ -10,6 +10,7 @@
 package ch.cern.dbod.ui.renderer;
 
 import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.db.dao.ActivityDAO;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.controller.BackupController;
@@ -52,6 +53,10 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
      */
     private InstanceDAO instanceDAO;
     /**
+     * Activity DAO
+     */
+    private ActivityDAO activityDAO;
+    /**
      * Helper to create jobs
      */
     private JobHelper jobHelper;
@@ -70,6 +75,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
         String eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
         Boolean adminMode = (Boolean) EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups);
         this.instanceDAO = new InstanceDAO();
+        this.activityDAO = new ActivityDAO();
         this.jobHelper = new JobHelper(adminMode.booleanValue());
         this.checkboxes = checkboxes;
     }
@@ -265,6 +271,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         }
                         else
                             showError(item, null, CommonConstants.ERROR_DISPATCHING_JOB);
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Startup instance button");
                     }
                 });
                 //Only enable button if the instance is stopped
@@ -294,6 +302,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         } catch (InterruptedException ex) {
                             showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                         }
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Shutdown instance button");
                     }
                 });
                 //Only enable button if the instance is running
@@ -324,6 +334,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         } catch (InterruptedException ex) {
                             showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                         }
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Manage instance files button");
                     }
                 });
 
@@ -356,6 +368,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         } catch (InterruptedException ex) {
                             showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                         }
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Backup instance button");
                     }
                 });
 
@@ -388,6 +402,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         } catch (InterruptedException ex) {
                             showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                         }
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Restore instance button");
                     }
                 });
 
@@ -421,6 +437,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         } catch (InterruptedException ex) {
                             showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                         }
+                        
+                        activityDAO.insert(username, instance, "OVERVIEW", "Upgrade instance button");
                     }
                 });
                 
@@ -461,6 +479,8 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                             } catch (InterruptedException ex) {
                                 showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
                             }
+                            
+                            activityDAO.insert(username, instance, "OVERVIEW", "Monitor Oracle instance button");
                         }
                     });
                 }
