@@ -219,6 +219,8 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             //Load changes
             loadChanges();
         }
+  
+        activityDAO.insert(username, instance, "INSTANCE", "Loaded page for instance information");
     }
     
     /**

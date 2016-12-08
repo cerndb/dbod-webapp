@@ -368,8 +368,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
             paging.setStyle("display:none");
         }
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_USER_SHOW_ALL, show);
-        
-        activityDAO.insert(username, null, "OVERVIEW", "Show all instances set to " + show);
     }
     
     /**
