@@ -10,9 +10,7 @@
 package ch.cern.dbod.ui.controller;
 
 import ch.cern.dbod.appservlet.ConfigLoader;
-import ch.cern.dbod.db.dao.InstanceDAO;
-import ch.cern.dbod.db.dao.JobDAO;
-import ch.cern.dbod.db.dao.UpgradeDAO;
+import ch.cern.dbod.db.dao.*;
 import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.ui.renderer.InstanceChangesRenderer;
 import ch.cern.dbod.util.CommonConstants;
@@ -51,6 +49,10 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Instance DAO
      */
     private InstanceDAO instanceDAO;
+    /**
+     * Activity DAO
+     */
+    private ActivityDAO activityDAO;
     /**
      * DAO to load jobs
      */
@@ -120,6 +122,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             upgradeDAO = new UpgradeDAO();
             upgrades = upgradeDAO.selectAll();
             instanceDAO = new InstanceDAO();
+            activityDAO = new ActivityDAO();
             instance = instanceDAO.selectByDbName(dbName, upgrades);
             if (instance != null) {
                 //Get username and adminMode from headers
@@ -594,6 +597,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
                         @Override
                         public void onEvent(Event event) {
+                            activityDAO.insert(username, instance, "INSTANCE", "Monitor Oracle instance button");
                             doMonitor();
                         }
                     });
@@ -769,6 +773,8 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates job to startup the instance.
      */
     public void doStartup() {
+        activityDAO.insert(username, instance, "INSTANCE", "Startup instance button");
+        
         //Create new job and update instance status
         if (jobHelper.doStartup(instance, username)) {
             afterCompose();
@@ -781,6 +787,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates job to shutdown the instance.
      */
     public void doShutdown() {
+        activityDAO.insert(username, instance, "INSTANCE", "Shutdown instance button");
         try {
             ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -797,6 +804,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the files window.
      */
     public void doFiles() {
+        activityDAO.insert(username, instance, "INSTANCE", "Manage instance files button");
         try {
             FileController fileController = new FileController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -813,6 +821,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the backup window to create a backup job.
      */
     public void doBackup() {
+        activityDAO.insert(username, instance, "INSTANCE", "Backup instance button");
         try {
             BackupController backupController = new BackupController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -829,6 +838,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the restore window to create a restore job.
      */
     public void doRestore() {
+        activityDAO.insert(username, instance, "INSTANCE", "Restore instance button");
         try {
             RestoreController restoreController = new RestoreController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -861,6 +871,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates a job to upgrade this instance.
      */
     public void doUpgrade() {
+        activityDAO.insert(username, instance, "INSTANCE", "Upgrade instance button");
         try {
             UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
