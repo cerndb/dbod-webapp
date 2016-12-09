@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.db.dao.ActivityDAO;
 import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.model.OverviewTreeModel;
@@ -56,6 +57,10 @@ public class BackupController extends Window {
      * DAO for jobs.
      */
     private JobDAO jobDAO;
+    /**
+     * Activity DAO
+     */
+    private ActivityDAO activityDAO;
     /**
      * Checkbox to indicate if snapshots should be taken automatically every x hours.
      */
@@ -149,6 +154,7 @@ public class BackupController extends Window {
         this.username = user;
         this.jobHelper = jobHelper;
         this.jobDAO = new JobDAO();
+        this.activityDAO = new ActivityDAO();
         
         //Initialise model
         this.model = model;
@@ -392,6 +398,8 @@ public class BackupController extends Window {
      * Disables the automatic backups created in a previous job.
      */
     private void doBackupNow() {
+        activityDAO.insert(username, instance, "BACKUP VIEW", "doBackupNow");
+        
         boolean result = jobHelper.doBackup(instance, username);
         if (!result) {
             showError(CommonConstants.ERROR_DISPATCHING_JOB);
@@ -415,6 +423,8 @@ public class BackupController extends Window {
      * Method executed when user applies changes. A job is created and the window is detached.
      */
     private void doApplyChanges() {
+        activityDAO.insert(username, instance, "BACKUP VIEW", "doApplyChanges");
+        
         boolean result = false;
         //If there are no previous error messages
         if (isConfigValid()) {

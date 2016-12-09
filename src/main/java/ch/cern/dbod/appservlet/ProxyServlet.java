@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.appservlet;
 
+import ch.cern.dbod.db.dao.ActivityDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -26,6 +27,12 @@ import org.apache.commons.httpclient.URI;
  * June 2015
  */
 public class ProxyServlet extends HttpServlet {
+    
+    ActivityDAO activityDAO;
+    
+    public ProxyServlet() {
+        activityDAO = new ActivityDAO();
+    }
 
     /**
      * Handle a normal GET request.
@@ -42,6 +49,12 @@ public class ProxyServlet extends HttpServlet {
             // Generate the full URL, relative to AppDynamics
             String pathInfo = request.getPathInfo();
             String url = HttpConnection.generateUrlRelative(pathInfo);
+            
+            // Activity logging
+            String instance = request.getParameter("host");
+            String sec_token = request.getParameter("sec_token");
+            if (sec_token != null)
+                activityDAO.insert("-Proxy-", null, "APPDYNAMICS", "Access to instance " + instance);
             
             if (url == null)
             {

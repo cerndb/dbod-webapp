@@ -12,6 +12,7 @@ package ch.cern.dbod.ui.controller;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.StatsDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
+import ch.cern.dbod.db.dao.ActivityDAO;
 import ch.cern.dbod.db.entity.CommandStat;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.JobStat;
@@ -50,6 +51,10 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Stats DAO
      */
     private StatsDAO statsDAO;
+    /**
+     * Activity DAO
+     */
+    private ActivityDAO activityDAO;
     /**
      * List of instances. In this case, all the instances in the database.
      */
@@ -98,6 +103,9 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         statsDAO = new StatsDAO();
         commandStats = statsDAO.selectCommandStats(instances);
         jobStats = statsDAO.selectJobStats(instances);
+        
+        //Activity stats
+        activityDAO = new ActivityDAO();
     }
 
     /**
@@ -201,6 +209,8 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         else {
             showAllCommandStats(false);
         }
+        
+        activityDAO.insert(username, null, "OVERVIEW", "Loaded overview page");
     }
     
     /**
