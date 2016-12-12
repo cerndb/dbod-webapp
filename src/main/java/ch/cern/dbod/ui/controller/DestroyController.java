@@ -173,7 +173,7 @@ public class DestroyController extends Window {
             ///Delete instance
             if (instanceDAO.delete(instance) == 1) {
                 //Reload the grid
-                AdminController controller = (AdminController) this.getRoot().getFellow("controller");
+                ExpiredController controller = (ExpiredController) this.getRoot().getFellow("expiredController");
                 controller.refreshInstances();
             }
             else {
