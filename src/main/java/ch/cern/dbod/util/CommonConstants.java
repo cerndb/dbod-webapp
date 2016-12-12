@@ -50,11 +50,8 @@ public class CommonConstants {
     
     //Config
     public static final String CONFIG_LOCATION = "configLocation";
-    /*public static final String WS_USER_PSWD = "wsUserPswd"; (Unused)*/
     public static final String WS_USER = "service_account";
     public static final String WS_PSWD = "service_password";
-    /*public static final String KEYSTORE_PSWD = "keyStorePswd"; (Unused)*/
-    /*public static final String KEYSTORE_LOCATION = "keyStoreLoc"; (Unused)*/
     public static final String ANNOUNCEMENT_LOCATION = "announcement_location";
     public static final String DBOD_API_LOCATION = "dbodapi_path";
     public static final String DBOD_API_USER = "dbodapi_user";

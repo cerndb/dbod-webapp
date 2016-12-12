@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.*;
@@ -133,8 +132,8 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 admin = adminMode.booleanValue();
                 
                 //Get user and password for the web services account
-                String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_USER);
-                String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_PSWD);
+                String wsUser = ConfigLoader.getProperty(CommonConstants.WS_USER);
+                String wsPswd = ConfigLoader.getProperty(CommonConstants.WS_PSWD);
                 String userCCIDText = execution.getHeader(CommonConstants.ADFS_CCID);
                 if (userCCIDText != null && !userCCIDText.isEmpty())
                     userCCID = Long.parseLong(execution.getHeader(CommonConstants.ADFS_CCID));
