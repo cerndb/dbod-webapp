@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.MonitoringDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Metric;
@@ -17,10 +18,8 @@ import ch.cern.dbod.util.ParamsHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -73,8 +72,8 @@ public class MonitoringController extends Window {
 
         //Create params helper to get the host name for the link to Lemon
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_PSWD);
+        String wsUser = ConfigLoader.getProperty(CommonConstants.WS_USER);
+        String wsPswd = ConfigLoader.getProperty(CommonConstants.WS_PSWD);
         ParamsHelper paramsHelper = new ParamsHelper(wsUser, wsPswd);
 
         String hostname = paramsHelper.getHost(instance);

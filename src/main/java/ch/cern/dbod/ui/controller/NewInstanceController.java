@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.util.AuthenticationHelper;
@@ -19,7 +20,6 @@ import ch.cern.dbod.ws.authentication.UserInfo;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
@@ -60,8 +60,8 @@ public class NewInstanceController extends Window implements AfterCompose {
     @Override
     public void afterCompose() {
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_PSWD);
+        String wsUser = ConfigLoader.getProperty(CommonConstants.WS_USER);
+        String wsPswd = ConfigLoader.getProperty(CommonConstants.WS_PSWD);
         eGroupHelper = new EGroupHelper(wsUser, wsPswd);
         authenticationHelper = new AuthenticationHelper(wsUser, wsPswd);
 

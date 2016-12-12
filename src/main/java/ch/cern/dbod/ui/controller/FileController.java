@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.exception.ConfigFileSizeException;
 import ch.cern.dbod.ui.model.OverviewTreeModel;
@@ -19,10 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import org.zkoss.util.media.AMedia;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -118,8 +117,8 @@ public class FileController extends Window {
         this.model = model;
 
         //Get user and password for the web services account
-        String wsUser = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_USER);
-        String wsPswd = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.WS_PSWD);
+        String wsUser = ConfigLoader.getProperty(CommonConstants.WS_USER);
+        String wsPswd = ConfigLoader.getProperty(CommonConstants.WS_PSWD);
         fileHelper = new FileHelper(wsUser, wsPswd);
 
         //Basic window properties
