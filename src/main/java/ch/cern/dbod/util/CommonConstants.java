@@ -62,6 +62,7 @@ public class CommonConstants {
     public static final String APPDYN_DBTUNA4PG = "appdynn_dbtuna4pg_path";
     public static final String APPDYN_TOKEN = "token_password";
     public static final String KIBANA_DASHBOARD = "kibana_dashboard";
+    public static final String USE_ACTIVITY_LOG = "log_activity";
     
     //Variables
     public static final String ENVIRONMENT_CONTEXT = "java:/comp/env";
