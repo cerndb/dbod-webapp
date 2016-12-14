@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.dao;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.util.CommonConstants;
 import java.sql.Connection;
@@ -49,6 +50,10 @@ public class ActivityDAO {
      * @param log Action executed.
      */
     public void insert(String user, Instance instance, String page, String log) {
+        // Check if activity log is enabled in the config file
+        if (!"true".equalsIgnoreCase(ConfigLoader.getProperty(CommonConstants.USE_ACTIVITY_LOG)))
+            return;
+        
         Connection connection = null;
         PreparedStatement activityStatement = null;
         PreparedStatement masterStatement = null;
