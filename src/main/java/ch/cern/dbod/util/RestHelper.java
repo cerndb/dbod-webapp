@@ -25,8 +25,7 @@ import org.apache.http.util.EntityUtils;
  */
 public class RestHelper {
     
-    private static Gson init()
-    {
+    private static Gson init() {
         Gson gson = new GsonBuilder()
                     .registerTypeAdapter(boolean.class, new BooleanSerializer())
                     .setDateFormat("yyyy-MM-dd")
@@ -35,20 +34,17 @@ public class RestHelper {
         return gson;
     }
     
-    public static JsonElement parseObject(String json)
-    {
+    private static JsonObject parseObject(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonObject();
     }
     
-    public static JsonElement parseList(String json)
-    {
+    private static JsonArray parseList(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonArray();
     }
     
-    public static <T> T getObjectFromRestApi(String path, Class<T> object, String resName)
-    {
+    public static <T> T getObjectFromRestApi(String path, Class<T> object, String resName) {
         Gson gson = init();
         
         try {
@@ -74,8 +70,7 @@ public class RestHelper {
         return null;
     }
     
-    public static <T> T getObjectListFromRestApi(String path, Class<T> object)
-    {
+    public static <T> T getObjectListFromRestApi(String path, Class<T> object) {
         Gson gson = init();
         
         try {
@@ -99,8 +94,7 @@ public class RestHelper {
         return null;
     }
     
-    public static String getValueFromRestApi(String path)
-    {
+    public static String getValueFromRestApi(String path) {
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
             
@@ -108,7 +102,9 @@ public class RestHelper {
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {
-                return EntityUtils.toString(response.getEntity());
+                String value = EntityUtils.toString(response.getEntity());
+                EntityUtils.consume(response.getEntity());
+                return value;
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
