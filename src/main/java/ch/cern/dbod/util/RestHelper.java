@@ -55,7 +55,7 @@ public class RestHelper {
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonObject json = parseObject(resp).getAsJsonObject().get(resName).getAsJsonArray().get(0).getAsJsonObject();
+                JsonObject json = parseObject(resp).getAsJsonArray(resName).get(0).getAsJsonObject();
                 EntityUtils.consume(response.getEntity());
                 
                 T result = gson.fromJson(json, object);
