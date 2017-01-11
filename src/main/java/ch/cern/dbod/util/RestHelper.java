@@ -13,6 +13,7 @@ import com.google.gson.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
@@ -105,6 +106,34 @@ public class RestHelper {
                 String value = EntityUtils.toString(response.getEntity());
                 EntityUtils.consume(response.getEntity());
                 return value;
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
+    public static String runRundeckJob(String job, String instance) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpPost request = new HttpPost(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + "api/v1/rundeck/job/" + job + "/" + instance);
+            
+            String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
+            byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
+            request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                String resp = EntityUtils.toString(response.getEntity());
+                String result = parseObject(resp).getAsJsonObject("response").getAsJsonArray("entries").get(0).getAsJsonObject().get("log").getAsString();
+                EntityUtils.consume(response.getEntity());
+                return result;
+            } else {
+                Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
