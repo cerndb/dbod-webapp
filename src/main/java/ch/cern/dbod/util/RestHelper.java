@@ -71,6 +71,29 @@ public class RestHelper {
         return null;
     }
     
+    public static JsonObject getJsonObjectFromRestApi(String path) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                String resp = EntityUtils.toString(response.getEntity());
+                JsonObject json = parseObject(resp).getAsJsonObject();
+                EntityUtils.consume(response.getEntity());
+                
+                return json;
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
     public static <T> T getObjectListFromRestApi(String path, Class<T> object) {
         Gson gson = init();
         

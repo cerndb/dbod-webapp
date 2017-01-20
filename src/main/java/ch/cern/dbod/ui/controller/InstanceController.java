@@ -437,7 +437,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         }
         
         // Show the instance's port
-        String port = instance.getPort();
+        String port = instance.getAttribute("port");
         if (!port.isEmpty()) {
             ((Label) getFellow("port")).setValue(port);
         }

@@ -12,6 +12,8 @@ package ch.cern.dbod.db.dao;
 import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -388,8 +391,11 @@ public class InstanceDAO {
             User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
             instance.setUser(user);
             
-            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
-            instance.setPort(port);
+            JsonObject attributes = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + dbName + "/attribute");
+            attributes.entrySet();
+            for (Entry<String, JsonElement> entry : attributes.entrySet()) {
+                instance.setAttribute(entry.getKey(), entry.getValue().getAsString());
+            }
             
             //Check if instance needs upgrade
             if (upgrades != null) {

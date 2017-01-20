@@ -11,6 +11,7 @@ package ch.cern.dbod.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,11 @@ import java.util.Objects;
  * @author Jose Andres Cordero Benitez
  */
 public class Instance implements Comparable, Cloneable{
+    
+    public Instance() {
+        this.attributes = new HashMap<>();
+    }
+    
     /**
      * Username creator of this instance (max. 32)
      */
@@ -32,9 +38,9 @@ public class Instance implements Comparable, Cloneable{
     private User user;
     
     /**
-     * Port of the instance (temporal).
+     * Attributes of the instance.
      */
-    private String port;
+    private HashMap<String, String> attributes;
 
     /**
      * DB name for this instance (max. 8)
@@ -146,12 +152,20 @@ public class Instance implements Comparable, Cloneable{
      */
     private boolean checked;
 
-    public String getPort() {
-        return port;
+    public HashMap<String, String> getAttributes() {
+        return attributes;
     }
 
-    public void setPort(String port) {
-        this.port = port;
+    public void setAttributes(HashMap<String, String> attributes) {
+        this.attributes = attributes;
+    }
+    
+    public String getAttribute(String name) {
+        return this.attributes.get(name);
+    }
+    
+    public void setAttribute(String name, String value) {
+        this.attributes.put(name, value);
     }
 
     public String getUsername() {
