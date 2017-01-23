@@ -26,6 +26,12 @@ public class Instance implements Comparable, Cloneable{
     }
     
     /**
+     * Instance id.
+     */
+    @SerializedName("id")
+    private Integer id;
+    
+    /**
      * Username creator of this instance (max. 32)
      */
     @SerializedName("username")
@@ -151,6 +157,14 @@ public class Instance implements Comparable, Cloneable{
      * is checked it will be counted for collective actions.
      */
     private boolean checked;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public HashMap<String, String> getAttributes() {
         return attributes;
@@ -337,6 +351,7 @@ public class Instance implements Comparable, Cloneable{
     @Override
     public Instance clone() {
         Instance clone = new Instance();
+        clone.setId(id);
         clone.setCategory(category);
         clone.setCreationDate((Date) creationDate.clone());
         clone.setDbName(dbName);
@@ -364,6 +379,8 @@ public class Instance implements Comparable, Cloneable{
             clone.setSlave(slave);
         if (host != null)
             clone.setHost(host);
+        clone.setUser(user);
+        clone.setAttributes((HashMap)attributes.clone());
         return clone;
     }
     
@@ -405,6 +422,6 @@ public class Instance implements Comparable, Cloneable{
 
     @Override
     public String toString() {
-        return "Instance{" + "username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + '}';
+        return "Instance{" + "id=" + id + ", username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
     }
 }
