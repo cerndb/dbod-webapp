@@ -80,6 +80,7 @@
                                 <image id="stateImage"/>
                                 <toolbarbutton id="setMaintenanceBtn" tooltiptext="${c:l('setMaintenance')}" zclass="button" image="/img/set_maintenance.png" onClick="controller.setMaintenance(true);" if="${controller.admin}"/>
                                 <toolbarbutton id="unsetMaintenanceBtn" tooltiptext="${c:l('unsetMaintenance')}" zclass="button" image="/img/unset_maintenance.png" onClick="controller.setMaintenance(false);" if="${controller.admin}"/>
+                                <toolbarbutton id="notificationsBtn" tooltiptext="${c:l('setNotifications')}" zclass="button" onClick="controller.setNotifications()" if="${controller.admin}"/>
                             </hbox>
                             <!-- DB type -->
                             <hbox hflex="1" align="bottom">
