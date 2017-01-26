@@ -166,4 +166,28 @@ public class RestHelper {
         
         return null;
     }
+    
+    public static boolean putJsonToRestApi(JsonElement json, String path) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpPut request = new HttpPut(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
+            byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
+            request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 204)
+            {
+                return true;
+            } else {
+                Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return false;
+    }
 }
