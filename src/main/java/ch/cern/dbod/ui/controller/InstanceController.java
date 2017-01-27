@@ -445,7 +445,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         //If the user is an admin
         if (admin) {
             //Maintenance button
-            if (instance != null && instance.getState().equals(CommonConstants.INSTANCE_STATE_MAINTENANCE)){
+            if (instance.getState().equals(CommonConstants.INSTANCE_STATE_MAINTENANCE)){
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:none");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:block");
             }
@@ -453,6 +453,17 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:block");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:none");
             }
+            //Notifications button
+            if (instance.getAttribute("notifications") != null) {
+                if ("true".equalsIgnoreCase(instance.getAttribute("notifications"))) {
+                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_enabled.png");
+                } else {
+                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_disabled.png");
+                }
+            } else {
+                ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/cancel.png");
+            }
+            
             //Values for edit boxes
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_REFERENCE);
@@ -884,6 +895,29 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             showError(ex, CommonConstants.ERROR_DISPATCHING_JOB);
         }
     }
+    
+    /**
+     * Sets the state of the machine to toggle notifications.
+     */
+    public void setNotifications() {
+        boolean notifications = !Boolean.valueOf(instance.getAttribute("notifications"));
+        
+        //Clone the instance and set the notifications
+        Instance clone = instance.clone();
+        clone.setAttribute("notifications", String.valueOf(notifications));
+        
+        if (instanceDAO.update(instance, clone, username) > 0) {
+            instance = clone;
+            System.out.println(instance);
+            loadInstanceInfo();
+            loadButtons();
+            loadJobs();
+            loadChanges();
+        }
+        else {
+            showError(null, CommonConstants.ERROR_UPDATING_INSTANCE);
+        }
+    } 
     
     /**
      * Sets the state of the machine to under maintenance.
