@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public class Instance implements Comparable, Cloneable{
      * Information about the owner of this instance.
      */
     @SerializedName("user")
+    @Expose(serialize = false)
     private User user;
     
     /**
@@ -156,6 +158,7 @@ public class Instance implements Comparable, Cloneable{
      * If an instance is checked or not in the overview page for admins. If it
      * is checked it will be counted for collective actions.
      */
+    @Expose(serialize = false, deserialize = false)
     private boolean checked;
 
     public Integer getId() {
