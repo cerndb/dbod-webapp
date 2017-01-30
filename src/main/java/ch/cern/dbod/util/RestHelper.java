@@ -36,12 +36,12 @@ public class RestHelper {
         return gson;
     }
     
-    private static JsonObject parseObject(String json) {
+    public static JsonObject parseObject(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonObject();
     }
     
-    private static JsonArray parseList(String json) {
+    public static JsonArray parseList(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonArray();
     }
@@ -195,5 +195,10 @@ public class RestHelper {
         }
         
         return false;
+    }
+    
+    public static String toJson(Object object) {
+        Gson gson = init();
+        return gson.toJson(object);
     }
 }

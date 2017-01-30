@@ -563,38 +563,12 @@ public class InstanceDAO {
         PreparedStatement insertStatement = null;
         int updateResult = 0;
         try {
-            //Get connection
-            connection = getConnection();
-            connection.setAutoCommit(false);
+            String ijson = RestHelper.toJson(newInstance);
+            JsonObject json = RestHelper.parseObject(ijson);
 
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String updateQuery = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, host = ? WHERE username = ? AND db_name = ?";
-            updateStatement = connection.prepareStatement(updateQuery);
-            //Assign values to variables
-            updateStatement.setString(1, newInstance.getEGroup());
-            if (newInstance.getExpiryDate() != null)
-                updateStatement.setDate(2, new java.sql.Date(newInstance.getExpiryDate().getTime()));
-            else
-                updateStatement.setDate(2, null);
-            updateStatement.setString(3, newInstance.getProject());
-            updateStatement.setString(4, newInstance.getDescription());
-            updateStatement.setString(5, newInstance.getCategory());
-            updateStatement.setInt(6, newInstance.getNoConnections());
-            updateStatement.setInt(7, newInstance.getDbSize());
-            updateStatement.setString(8, newInstance.getState());
-            updateStatement.setString(9, newInstance.getVersion());
-            updateStatement.setString(10, newInstance.getMaster());
-            updateStatement.setString(11, newInstance.getSlave());
-            updateStatement.setString(12, newInstance.getHost());
-            updateStatement.setString(13, newInstance.getUsername());
-            updateStatement.setString(14, newInstance.getDbName());
-            //Execute query
-            updateResult = updateStatement.executeUpdate();
-            
             /**
              * Insert or update attributes
              */
-            JsonObject json = new JsonObject();
             JsonObject attributes_json = new JsonObject();
             for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
                 attributes_json.addProperty(entry.getKey(), entry.getValue());
@@ -603,7 +577,13 @@ public class InstanceDAO {
             boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getDbName());
             if (!restResult) {
                 throw new NamingException("Error updating attributes.");
+            } else {
+                updateResult = 1;
             }
+            
+            //Get connection
+            connection = getConnection();
+            connection.setAutoCommit(false);
             
             //If update was successful log the change
             if (updateResult > 0) {
