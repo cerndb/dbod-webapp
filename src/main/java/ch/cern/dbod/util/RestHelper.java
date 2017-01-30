@@ -18,6 +18,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -175,6 +176,11 @@ public class RestHelper {
             String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
             byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
             request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+
+            StringEntity jsonData = new StringEntity(json.toString(), "UTF-8");
+            /* Body of request */
+            request.setEntity(jsonData);
+            
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 204)
             {
