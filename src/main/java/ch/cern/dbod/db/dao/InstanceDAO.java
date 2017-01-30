@@ -591,6 +591,20 @@ public class InstanceDAO {
             //Execute query
             updateResult = updateStatement.executeUpdate();
             
+            /**
+             * Insert or update attributes
+             */
+            JsonObject json = new JsonObject();
+            JsonObject attributes_json = new JsonObject();
+            for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
+                attributes_json.addProperty(entry.getKey(), entry.getValue());
+            }
+            json.add("attributes", attributes_json);
+            boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getDbName());
+            if (!restResult) {
+                throw new NamingException("Error updating attributes.");
+            }
+            
             //If update was successful log the change
             if (updateResult > 0) {
                 String insertQuery = "INSERT INTO dod_instance_changes (username, db_name, attribute, change_date, requester, old_value, new_value) VALUES (?,?,?,?,?,?,?)";
