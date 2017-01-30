@@ -789,6 +789,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         
         //Create new job and update instance status
         if (jobHelper.doStartup(instance, username)) {
+            Instance clone = instance.clone();
+            clone.setAttribute("notifications", "true");
+
+            if (instanceDAO.update(instance, clone, username) > 0) {
+                instance = clone;
+            }
             afterCompose();
         } else {
             showError(null, CommonConstants.ERROR_DISPATCHING_JOB);
@@ -908,7 +914,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         
         if (instanceDAO.update(instance, clone, username) > 0) {
             instance = clone;
-            System.out.println(instance);
             loadInstanceInfo();
             loadButtons();
             loadJobs();
@@ -927,9 +932,11 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         Instance clone = instance.clone();
         if (maintenance) {
             clone.setState(CommonConstants.INSTANCE_STATE_MAINTENANCE);
+            clone.setAttribute("notifications", "false");
         }
         else {
             clone.setState(CommonConstants.INSTANCE_STATE_RUNNING);
+            clone.setAttribute("notifications", "true");
         }
         if (instanceDAO.update(instance, clone, username) > 0) {
             instance = clone;
