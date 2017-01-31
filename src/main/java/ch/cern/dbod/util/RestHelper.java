@@ -28,8 +28,12 @@ import org.apache.http.util.EntityUtils;
 public class RestHelper {
     
     private static Gson init() {
+        BooleanSerializer serializer = new BooleanSerializer();
         Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(boolean.class, new BooleanSerializer())
+                    .registerTypeAdapter(boolean.class, serializer)
+                    .registerTypeAdapter(Boolean.class, serializer)
+                    .addSerializationExclusionStrategy(new AnnotationExclusionStrategySerialization())
+                    .addDeserializationExclusionStrategy(new AnnotationExclusionStrategyDeserialization())
                     .setDateFormat("yyyy-MM-dd")
                     .create();
         
