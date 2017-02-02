@@ -9,34 +9,28 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.dao.StatsDAO;
 import ch.cern.dbod.db.entity.CommandStat;
+import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.db.entity.JobStat;
 import ch.cern.dbod.ui.model.CommandStatsModel;
 import ch.cern.dbod.ui.model.JobStatsModel;
+import ch.cern.dbod.ui.model.LastJobsModel;
 import ch.cern.dbod.ui.renderer.CommandStatsRenderer;
 import ch.cern.dbod.ui.renderer.JobStatsRenderer;
+import ch.cern.dbod.ui.renderer.LastJobsRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.ESHelper;
 import ch.cern.dbod.util.SSOHelper;
-import java.io.IOException;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
-import org.apache.http.cookie.Cookie;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
-import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.*;
 
 /**
@@ -51,6 +45,10 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
      */
     private StatsDAO statsDAO;
     /**
+     * Job DAO
+     */
+    private JobDAO jobDAO;
+    /**
      * List of command stats.
      */
     private List<CommandStat> commandStats;
@@ -58,6 +56,10 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
      * List of job stats.
      */
     private List<JobStat> jobStats;
+    /**
+     * List of jobs.
+     */
+    private List<Job> jobs;
     /**
      * Helper to obtain monitoring data from ElasticSearch
      */
@@ -74,8 +76,10 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
     public void beforeCompose() {        
         //Select stats
         statsDAO = new StatsDAO();
+        jobDAO = new JobDAO();
         commandStats = statsDAO.selectCommandStats();
         jobStats = statsDAO.selectJobStats();
+        jobs = jobDAO.selectLastJobs();
     }
 
     /**
@@ -93,6 +97,11 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
         if (filterJobCommandName != null && !filterJobCommandName.isEmpty()) {
             ((Textbox) getFellow("jobStatsCommandFilter")).setValue(filterJobCommandName);
         }
+        
+        //Last jobs information grid
+        Grid lastJobsGrid = (Grid) getFellow("lastJobsInformation");
+        lastJobsGrid.setModel(new LastJobsModel(jobs));
+        lastJobsGrid.setRowRenderer(new LastJobsRenderer());
 
         //Command stats grid
         Grid commandStatsGrid = (Grid) getFellow("commandStatsGrid");

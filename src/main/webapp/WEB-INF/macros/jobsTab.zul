@@ -1,5 +1,28 @@
 <tabpanel fulfill="tabJobs.onSelect">
     <vbox use="AdminMonitoringController" id="monitoringController" align="center" hflex="1">
+        <!-- Groupbox for last executed jobs -->
+        <hbox hflex="1">
+            <groupbox hflex="1" mold="3d" closable="false">
+                <caption label=" ">
+                    <label value="${c:l('jobLastLogs')}" sclass="title" style="float:left;"/>
+                </caption>
+                <vbox hflex="1" align="right">
+                    <vbox hflex="1" align="left">
+                        <!-- Commmand stats grid -->
+                        <grid id="lastJobsInformation" mold="paging" pageSize="20" style="display:block" hflex="1" span="true">
+                            <columns>
+                                <column label="${c:l('dbName')}" sort="auto(dbName)" hflex="3"/>
+                                <column label="${c:l('dbType')}" sort="auto(type)" hflex="3"/>
+                                <column label="${c:l('statsCommandName')}" sort="auto(commandName)" hflex="6"/>
+                                <column label="${c:l('creationDate')}" sort="auto(creationDate)" hflex="4"/>
+                                <column label="${c:l('completionDate')}" sort="auto(completionDate)" hflex="4"/>
+                                <column label="${c:l('state')}" sort="auto(state)" hflex="1"/>
+                            </columns>
+                        </grid>
+                    </vbox>
+                </vbox>
+            </groupbox>
+        </hbox>
         <!-- hbox for execution stats -->
         <hbox hflex="1">
             <!-- Groupbox for command stats -->
