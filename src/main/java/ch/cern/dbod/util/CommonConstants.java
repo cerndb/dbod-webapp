@@ -284,6 +284,8 @@ public class CommonConstants {
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
     public static final String LABEL_PHONE = "telephone";
     public static final String LABEL_PORTABLE = "portable";
+    public static final String LABEL_NOTIFICATIONS_ENABLED = "unsetNotifications";
+    public static final String LABEL_NOTIFICATIONS_DISABLED = "setNotifications";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";

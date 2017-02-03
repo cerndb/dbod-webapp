@@ -454,14 +454,18 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:none");
             }
             //Notifications button
+            Toolbarbutton notifButton = (Toolbarbutton) getFellow("notificationsBtn");
             if (instance.getAttribute("notifications") != null) {
                 if ("true".equalsIgnoreCase(instance.getAttribute("notifications"))) {
-                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_enabled.png");
+                    notifButton.setImage("/img/notifications_enabled.png");
+                    notifButton.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_NOTIFICATIONS_ENABLED));
                 } else {
-                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_disabled.png");
+                    notifButton.setImage("/img/notifications_disabled.png");
+                    notifButton.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_NOTIFICATIONS_DISABLED));
                 }
             } else {
-                ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/cancel.png");
+                notifButton.setImage("/img/cancel.png");
+                notifButton.setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_INSTANCE_ON_FIM));
             }
             
             //Values for edit boxes
