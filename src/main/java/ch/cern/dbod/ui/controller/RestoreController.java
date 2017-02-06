@@ -150,7 +150,7 @@ public class RestoreController extends Window {
         String wsPswd = ConfigLoader.getProperty(CommonConstants.WS_PSWD);
 
         //Get snapshots
-        SnapshotHelper snapshotHelper = new SnapshotHelper(wsUser, wsPswd);
+        SnapshotHelper snapshotHelper = new SnapshotHelper();
         snapshots = snapshotHelper.getSnapshots(instance);
         Collections.sort(snapshots);
 

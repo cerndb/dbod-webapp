@@ -36,6 +36,7 @@ import javax.sql.DataSource;
 /**
  * DAO for Job entity.
  * @author Daniel Gomez Blanco
+ * @author Jose Andres Cordero Benitez
  */
 public class JobDAO {
 
@@ -167,6 +168,60 @@ public class JobDAO {
             } catch (Exception e) {}
         }
         return log;
+    }
+    
+    /**
+     * Obtains the list of last executed jobs.
+     * @return list of last executed jobs.
+     */
+    public List<Job> selectLastJobs() {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<Job> jobs = new ArrayList<>();
+        try {
+            //Get connection
+            connection = getConnection();
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            String query = "SELECT * FROM ("
+                            + " SELECT username, db_name, command_name, type, creation_date, completion_date, state "
+                            + " FROM dod_jobs "
+                            + " ORDER BY creation_date DESC, completion_date DESC) "
+                            + " WHERE ROWNUM <= ?";
+            
+            statement = connection.prepareStatement(query);
+            //Assign values to variables
+            statement.setInt(1, 500);
+            //Execute query
+            result = statement.executeQuery();
+
+            //Instantiate instance objects
+            while (result.next()) {
+                Job job = new Job();
+                job.setUsername(result.getString(1));
+                job.setDbName(result.getString(2));
+                job.setCommandName(result.getString(3));
+                job.setType(result.getString(4));
+                job.setCreationDate(new java.util.Date(result.getTimestamp(5).getTime()));
+                if (result.getTimestamp(6) != null)
+                    job.setCompletionDate(new java.util.Date(result.getTimestamp(6).getTime()));
+                job.setState(result.getString(7));
+                jobs.add(job);
+            }
+        } catch (NamingException | SQLException ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LAST EXECUTED JOBS", ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {}
+            try {
+                statement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return jobs;
     }
     
     /**

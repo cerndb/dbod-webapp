@@ -437,15 +437,15 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         }
         
         // Show the instance's port
-        String port = instance.getPort();
-        if (port != null && !port.isEmpty()) {
+        String port = instance.getAttribute("port");
+        if (!port.isEmpty()) {
             ((Label) getFellow("port")).setValue(port);
         }
         
         //If the user is an admin
         if (admin) {
             //Maintenance button
-            if (instance != null && instance.getState().equals(CommonConstants.INSTANCE_STATE_MAINTENANCE)){
+            if (instance.getState().equals(CommonConstants.INSTANCE_STATE_MAINTENANCE)){
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:none");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:block");
             }
@@ -453,6 +453,17 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 ((Toolbarbutton) getFellow("setMaintenanceBtn")).setStyle("display:block");
                 ((Toolbarbutton) getFellow("unsetMaintenanceBtn")).setStyle("display:none");
             }
+            //Notifications button
+            if (instance.getAttribute("notifications") != null) {
+                if ("true".equalsIgnoreCase(instance.getAttribute("notifications"))) {
+                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_enabled.png");
+                } else {
+                    ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/notifications_disabled.png");
+                }
+            } else {
+                ((Toolbarbutton) getFellow("notificationsBtn")).setImage("/img/cancel.png");
+            }
+            
             //Values for edit boxes
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(0).setValue(CommonConstants.CATEGORY_OFFICIAL);
             ((Combobox) getFellow("categoryEdit")).getItemAtIndex(1).setValue(CommonConstants.CATEGORY_REFERENCE);
@@ -778,6 +789,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         
         //Create new job and update instance status
         if (jobHelper.doStartup(instance, username)) {
+            Instance clone = instance.clone();
+            clone.setAttribute("notifications", "true");
+
+            if (instanceDAO.update(instance, clone, username) > 0) {
+                instance = clone;
+            }
             afterCompose();
         } else {
             showError(null, CommonConstants.ERROR_DISPATCHING_JOB);
@@ -886,6 +903,28 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
     }
     
     /**
+     * Sets the state of the machine to toggle notifications.
+     */
+    public void setNotifications() {
+        boolean notifications = !Boolean.valueOf(instance.getAttribute("notifications"));
+        
+        //Clone the instance and set the notifications
+        Instance clone = instance.clone();
+        clone.setAttribute("notifications", String.valueOf(notifications));
+        
+        if (instanceDAO.update(instance, clone, username) > 0) {
+            instance = clone;
+            loadInstanceInfo();
+            loadButtons();
+            loadJobs();
+            loadChanges();
+        }
+        else {
+            showError(null, CommonConstants.ERROR_UPDATING_INSTANCE);
+        }
+    } 
+    
+    /**
      * Sets the state of the machine to under maintenance.
      */
     public void setMaintenance(boolean maintenance) {
@@ -893,9 +932,11 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         Instance clone = instance.clone();
         if (maintenance) {
             clone.setState(CommonConstants.INSTANCE_STATE_MAINTENANCE);
+            clone.setAttribute("notifications", "false");
         }
         else {
             clone.setState(CommonConstants.INSTANCE_STATE_RUNNING);
+            clone.setAttribute("notifications", "true");
         }
         if (instanceDAO.update(instance, clone, username) > 0) {
             instance = clone;

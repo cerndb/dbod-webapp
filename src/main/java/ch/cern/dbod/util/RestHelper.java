@@ -13,10 +13,12 @@ import com.google.gson.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -25,30 +27,30 @@ import org.apache.http.util.EntityUtils;
  */
 public class RestHelper {
     
-    private static Gson init()
-    {
+    private static Gson init() {
+        BooleanSerializer serializer = new BooleanSerializer();
         Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(boolean.class, new BooleanSerializer())
+                    .registerTypeAdapter(boolean.class, serializer)
+                    .registerTypeAdapter(Boolean.class, serializer)
+                    .addSerializationExclusionStrategy(new AnnotationExclusionStrategySerialization())
+                    .addDeserializationExclusionStrategy(new AnnotationExclusionStrategyDeserialization())
                     .setDateFormat("yyyy-MM-dd")
                     .create();
         
         return gson;
     }
     
-    public static JsonElement parseObject(String json)
-    {
+    public static JsonObject parseObject(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonObject();
     }
     
-    public static JsonElement parseList(String json)
-    {
+    public static JsonArray parseList(String json) {
         JsonParser parser = new JsonParser();
         return parser.parse(json).getAsJsonArray();
     }
     
-    public static <T> T getObjectFromRestApi(String path, Class<T> object, String resName)
-    {
+    public static <T> T getObjectFromRestApi(String path, Class<T> object, String resName) {
         Gson gson = init();
         
         try {
@@ -59,7 +61,7 @@ public class RestHelper {
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonObject json = parseObject(resp).getAsJsonObject().get(resName).getAsJsonArray().get(0).getAsJsonObject();
+                JsonObject json = parseObject(resp).getAsJsonArray(resName).get(0).getAsJsonObject();
                 EntityUtils.consume(response.getEntity());
                 
                 T result = gson.fromJson(json, object);
@@ -74,8 +76,30 @@ public class RestHelper {
         return null;
     }
     
-    public static <T> T getObjectListFromRestApi(String path, Class<T> object)
-    {
+    public static JsonObject getJsonObjectFromRestApi(String path) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                String resp = EntityUtils.toString(response.getEntity());
+                JsonObject json = parseObject(resp).getAsJsonObject();
+                EntityUtils.consume(response.getEntity());
+                
+                return json;
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
+    public static <T> T getObjectListFromRestApi(String path, Class<T> object) {
         Gson gson = init();
         
         try {
@@ -99,8 +123,7 @@ public class RestHelper {
         return null;
     }
     
-    public static String getValueFromRestApi(String path)
-    {
+    public static String getValueFromRestApi(String path) {
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
             
@@ -108,7 +131,9 @@ public class RestHelper {
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {
-                return EntityUtils.toString(response.getEntity());
+                String value = EntityUtils.toString(response.getEntity());
+                EntityUtils.consume(response.getEntity());
+                return value;
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
@@ -117,5 +142,67 @@ public class RestHelper {
         }
         
         return null;
+    }
+    
+    public static String runRundeckJob(String job, String instance) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpPost request = new HttpPost(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + "api/v1/rundeck/job/" + job + "/" + instance);
+            
+            String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
+            byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
+            request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200)
+            {
+                String resp = EntityUtils.toString(response.getEntity());
+                String result = parseObject(resp).getAsJsonObject("response").getAsJsonArray("entries").get(0).getAsJsonObject().get("log").getAsString();
+                EntityUtils.consume(response.getEntity());
+                return result;
+            } else {
+                Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return null;
+    }
+    
+    public static boolean putJsonToRestApi(JsonElement json, String path) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpPut request = new HttpPut(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
+            byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
+            request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+
+            StringEntity jsonData = new StringEntity(json.toString(), "UTF-8");
+            /* Body of request */
+            request.setEntity(jsonData);
+            
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 204)
+            {
+                return true;
+            } else {
+                Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
+        return false;
+    }
+    
+    public static String toJson(Object object) {
+        Gson gson = init();
+        return gson.toJson(object);
     }
 }

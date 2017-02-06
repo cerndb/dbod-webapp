@@ -12,6 +12,8 @@ package ch.cern.dbod.db.dao;
 import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -63,7 +66,7 @@ public class InstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
+            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '1'"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
@@ -74,24 +77,25 @@ public class InstanceDAO {
             //Instantiate instance objects
             while (result.next()) {
                 Instance instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
+                instance.setId(result.getInt(1));
+                instance.setUsername(result.getString(2));
+                instance.setDbName(result.getString(3));
+                instance.setEGroup(result.getString(4));
+                instance.setCategory(result.getString(5));
+                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
+                if (result.getDate(7) != null)
+                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
+                instance.setDbType(result.getString(8));
+                instance.setDbSize(result.getInt(9));
+                instance.setNoConnections(result.getInt(10));
+                instance.setProject(result.getString(11));
+                instance.setDescription(result.getString(12));
+                instance.setVersion(result.getString(13));
+                instance.setState(result.getString(14));
+                instance.setStatus(result.getBoolean(15));
+                instance.setMaster(result.getString(16));
+                instance.setSlave(result.getString(17));
+                instance.setHost(result.getString(18));
             //Check if instance needs upgrade
             if (upgrades != null) {
                     for (int i=0; i < upgrades.size(); i++) {
@@ -138,7 +142,7 @@ public class InstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
+            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '0'"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
@@ -149,24 +153,25 @@ public class InstanceDAO {
             //Instantiate instance objects
             while (result.next()) {
                 Instance instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
+                instance.setId(result.getInt(1));
+                instance.setUsername(result.getString(2));
+                instance.setDbName(result.getString(3));
+                instance.setEGroup(result.getString(4));
+                instance.setCategory(result.getString(5));
+                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
+                if (result.getDate(7) != null)
+                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
+                instance.setDbType(result.getString(8));
+                instance.setDbSize(result.getInt(9));
+                instance.setNoConnections(result.getInt(10));
+                instance.setProject(result.getString(11));
+                instance.setDescription(result.getString(12));
+                instance.setVersion(result.getString(13));
+                instance.setState(result.getString(14));
+                instance.setStatus(result.getBoolean(15));
+                instance.setMaster(result.getString(16));
+                instance.setSlave(result.getString(17));
+                instance.setHost(result.getString(18));
                 instances.add(instance);
             }
         } catch (NamingException | SQLException ex) {
@@ -207,7 +212,7 @@ public class InstanceDAO {
             
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
+            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '1' ");
             //Append egroups (if any)
             StringTokenizer tokenizer = new StringTokenizer("");
@@ -243,24 +248,25 @@ public class InstanceDAO {
             //Instantiate instance objects
             while (result.next()) {
                 Instance instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
+                instance.setId(result.getInt(1));
+                instance.setUsername(result.getString(2));
+                instance.setDbName(result.getString(3));
+                instance.setEGroup(result.getString(4));
+                instance.setCategory(result.getString(5));
+                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
+                if (result.getDate(7) != null)
+                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
+                instance.setDbType(result.getString(8));
+                instance.setDbSize(result.getInt(9));
+                instance.setNoConnections(result.getInt(10));
+                instance.setProject(result.getString(11));
+                instance.setDescription(result.getString(12));
+                instance.setVersion(result.getString(13));
+                instance.setState(result.getString(14));
+                instance.setStatus(result.getBoolean(15));
+                instance.setMaster(result.getString(16));
+                instance.setSlave(result.getString(17));
+                instance.setHost(result.getString(18));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int j=0; j < upgrades.size(); j++) {
@@ -309,7 +315,7 @@ public class InstanceDAO {
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
-            query.append("SELECT username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
+            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
                             + " FROM dod_instances WHERE status = '1' AND host = ?"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
@@ -323,24 +329,25 @@ public class InstanceDAO {
             //Instantiate instance objects
             while (result.next()) {
                 Instance instance = new Instance();
-                instance.setUsername(result.getString(1));
-                instance.setDbName(result.getString(2));
-                instance.setEGroup(result.getString(3));
-                instance.setCategory(result.getString(4));
-                instance.setCreationDate(new java.util.Date(result.getDate(5).getTime()));
-                if (result.getDate(6) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(6).getTime()));
-                instance.setDbType(result.getString(7));
-                instance.setDbSize(result.getInt(8));
-                instance.setNoConnections(result.getInt(9));
-                instance.setProject(result.getString(10));
-                instance.setDescription(result.getString(11));
-                instance.setVersion(result.getString(12));
-                instance.setState(result.getString(13));
-                instance.setStatus(result.getBoolean(14));
-                instance.setMaster(result.getString(15));
-                instance.setSlave(result.getString(16));
-                instance.setHost(result.getString(17));
+                instance.setId(result.getInt(1));
+                instance.setUsername(result.getString(2));
+                instance.setDbName(result.getString(3));
+                instance.setEGroup(result.getString(4));
+                instance.setCategory(result.getString(5));
+                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
+                if (result.getDate(7) != null)
+                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
+                instance.setDbType(result.getString(8));
+                instance.setDbSize(result.getInt(9));
+                instance.setNoConnections(result.getInt(10));
+                instance.setProject(result.getString(11));
+                instance.setDescription(result.getString(12));
+                instance.setVersion(result.getString(13));
+                instance.setState(result.getString(14));
+                instance.setStatus(result.getBoolean(15));
+                instance.setMaster(result.getString(16));
+                instance.setSlave(result.getString(17));
+                instance.setHost(result.getString(18));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
                     for (int i=0; i < upgrades.size(); i++) {
@@ -388,8 +395,11 @@ public class InstanceDAO {
             User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
             instance.setUser(user);
             
-            String port = RestHelper.getValueFromRestApi("api/v1/instance/" + dbName + "/attribute/port");
-            instance.setPort(port);
+            JsonObject attributes = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + dbName + "/attribute");
+            attributes.entrySet();
+            for (Entry<String, JsonElement> entry : attributes.entrySet()) {
+                instance.setAttribute(entry.getKey(), entry.getValue().getAsString());
+            }
             
             //Check if instance needs upgrade
             if (upgrades != null) {
@@ -553,33 +563,27 @@ public class InstanceDAO {
         PreparedStatement insertStatement = null;
         int updateResult = 0;
         try {
+            String ijson = RestHelper.toJson(newInstance);
+            JsonObject json = RestHelper.parseObject(ijson);
+
+            /**
+             * Insert or update attributes
+             */
+            JsonObject attributes_json = new JsonObject();
+            for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
+                attributes_json.addProperty(entry.getKey(), entry.getValue());
+            }
+            json.add("attributes", attributes_json);
+            boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getDbName());
+            if (!restResult) {
+                throw new NamingException("Error updating attributes.");
+            } else {
+                updateResult = 1;
+            }
+            
             //Get connection
             connection = getConnection();
             connection.setAutoCommit(false);
-
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String updateQuery = "UPDATE dod_instances SET e_group = ?, expiry_date = ?, project = ?, description = ?, category = ?, no_connections = ?, db_size = ?, state = ?, version = ?, master = ?, slave = ?, host = ? WHERE username = ? AND db_name = ?";
-            updateStatement = connection.prepareStatement(updateQuery);
-            //Assign values to variables
-            updateStatement.setString(1, newInstance.getEGroup());
-            if (newInstance.getExpiryDate() != null)
-                updateStatement.setDate(2, new java.sql.Date(newInstance.getExpiryDate().getTime()));
-            else
-                updateStatement.setDate(2, null);
-            updateStatement.setString(3, newInstance.getProject());
-            updateStatement.setString(4, newInstance.getDescription());
-            updateStatement.setString(5, newInstance.getCategory());
-            updateStatement.setInt(6, newInstance.getNoConnections());
-            updateStatement.setInt(7, newInstance.getDbSize());
-            updateStatement.setString(8, newInstance.getState());
-            updateStatement.setString(9, newInstance.getVersion());
-            updateStatement.setString(10, newInstance.getMaster());
-            updateStatement.setString(11, newInstance.getSlave());
-            updateStatement.setString(12, newInstance.getHost());
-            updateStatement.setString(13, newInstance.getUsername());
-            updateStatement.setString(14, newInstance.getDbName());
-            //Execute query
-            updateResult = updateStatement.executeUpdate();
             
             //If update was successful log the change
             if (updateResult > 0) {

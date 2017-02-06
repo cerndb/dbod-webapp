@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
+import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.model.OverviewTreeModel;
 import ch.cern.dbod.util.CommonConstants;
@@ -45,6 +46,10 @@ public class ShutdownController extends Window {
      */
     private JobHelper jobHelper;
     /**
+     * Instance DAO
+     */
+    private InstanceDAO instanceDAO;
+    /**
      * User authenticated in the system at the moment.
      */
     private String username;
@@ -79,6 +84,7 @@ public class ShutdownController extends Window {
         //Initialize instance and create job helper
         this.instance = inst;
         this.jobHelper = jobHelper;
+        instanceDAO = new InstanceDAO();
         this.username = user;
         
         //Initialise model and node
@@ -177,6 +183,12 @@ public class ShutdownController extends Window {
     private void doAccept() {
         ///Create new job and update instance status
         if (jobHelper.doShutdown(instance, username)) {
+            Instance clone = instance.clone();
+            clone.setAttribute("notifications", "false");
+
+            if (instanceDAO.update(instance, clone, username) > 0) {
+                instance = clone;
+            }
             //If we are in the overview page
             if (model != null) {
                 //Reload the node

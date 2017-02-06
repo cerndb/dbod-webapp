@@ -9,8 +9,10 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -19,6 +21,17 @@ import java.util.Objects;
  * @author Jose Andres Cordero Benitez
  */
 public class Instance implements Comparable, Cloneable{
+    
+    public Instance() {
+        this.attributes = new HashMap<>();
+    }
+    
+    /**
+     * Instance id.
+     */
+    @SerializedName("id")
+    private Integer id;
+    
     /**
      * Username creator of this instance (max. 32)
      */
@@ -29,12 +42,13 @@ public class Instance implements Comparable, Cloneable{
      * Information about the owner of this instance.
      */
     @SerializedName("user")
+    @Expose(serialize = false)
     private User user;
     
     /**
-     * Port of the instance (temporal).
+     * Attributes of the instance.
      */
-    private String port;
+    private HashMap<String, String> attributes;
 
     /**
      * DB name for this instance (max. 8)
@@ -144,14 +158,31 @@ public class Instance implements Comparable, Cloneable{
      * If an instance is checked or not in the overview page for admins. If it
      * is checked it will be counted for collective actions.
      */
+    @Expose(serialize = false, deserialize = false)
     private boolean checked;
 
-    public String getPort() {
-        return port;
+    public Integer getId() {
+        return id;
     }
 
-    public void setPort(String port) {
-        this.port = port;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public HashMap<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(HashMap<String, String> attributes) {
+        this.attributes = attributes;
+    }
+    
+    public String getAttribute(String name) {
+        return this.attributes.get(name);
+    }
+    
+    public void setAttribute(String name, String value) {
+        this.attributes.put(name, value);
     }
 
     public String getUsername() {
@@ -323,6 +354,7 @@ public class Instance implements Comparable, Cloneable{
     @Override
     public Instance clone() {
         Instance clone = new Instance();
+        clone.setId(id);
         clone.setCategory(category);
         clone.setCreationDate((Date) creationDate.clone());
         clone.setDbName(dbName);
@@ -350,6 +382,8 @@ public class Instance implements Comparable, Cloneable{
             clone.setSlave(slave);
         if (host != null)
             clone.setHost(host);
+        clone.setUser(user);
+        clone.setAttributes((HashMap)attributes.clone());
         return clone;
     }
     
@@ -391,6 +425,6 @@ public class Instance implements Comparable, Cloneable{
 
     @Override
     public String toString() {
-        return "Instance{" + "username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + '}';
+        return "Instance{" + "id=" + id + ", username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
     }
 }
