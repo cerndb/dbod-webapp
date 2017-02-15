@@ -3,7 +3,7 @@
 <?page title="${c:l('appTitle')}" contentType="text/html; charset=UTF-8"?>
 <?link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" ?>
 <?link href="/css/dbondemand.css" rel="stylesheet" type="text/css" ?>
-<?link href='https://fonts.googleapis.com/css?family=PT+Sans:400' rel='stylesheet' type='text/css'?>
+<?link href='/css/PTSans400.css' rel='stylesheet' type='text/css'?>
 <?taglib uri="/WEB-INF/tld/web/core.dsp.tld" prefix="c"?>
 <?component name="topBar" inline="true" macroURI="/WEB-INF/macros/topBar.zul"?>
 <?component name="error" inline="true" macroURI="/WEB-INF/macros/errorWindow.zul"?>
