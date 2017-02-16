@@ -26,11 +26,6 @@
         <hbox align="top" use="MonitoringOverviewController" id="controller">
             <!-- Error window -->
             <error/>
-            
-            <!-- Scripts for monitoring -->
-            <script src="https://www.google.com/jsapi"/>
-            <script src="/scripts/graph.js"/>
-
             <!-- Groupbox for the  tree -->
             <groupbox mold="3d"  width="1200px" id="container" closable="false">
                 <caption label=" ">

@@ -258,9 +258,6 @@
             <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInstances();"/>
             <!-- Script to mark the snapshot days in the calendar -->
             <script src="/scripts/markSnapshots.js"/>
-            <!-- Scripts for monitoring -->
-            <script src="https://www.google.com/jsapi"/>
-            <script src="/scripts/graph.js"/>
         </vbox>
     </div>
 </zk>
