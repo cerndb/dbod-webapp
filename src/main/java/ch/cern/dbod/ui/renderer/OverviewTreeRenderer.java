@@ -15,7 +15,6 @@ import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.ui.controller.BackupController;
 import ch.cern.dbod.ui.controller.FileController;
-import ch.cern.dbod.ui.controller.MonitoringController;
 import ch.cern.dbod.ui.controller.RestoreController;
 import ch.cern.dbod.ui.controller.ShutdownController;
 import ch.cern.dbod.ui.controller.UpgradeController;
@@ -459,33 +458,27 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 monitorBtn.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_JOB + CommonConstants.JOB_MONITOR));
                 monitorBtn.setImage(CommonConstants.IMG_MONITOR);
                 monitorBtn.setParent(box);
+                
+                //Disable button if the instance is awaiting approval
+                if (instance.getState().equals(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
+                    monitorBtn.setDisabled(true);
+                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
+                } else {
+                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON);
+                }
+                
                 //If it is an oracle instance, send to OEM
                 if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORA)) {
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
                 }
-                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE))
-                {
-                    monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-                        @Override
-                        public void onEvent(Event event) {
-                            try {
-                                MonitoringController monitoringController = new MonitoringController(instance);
-                                //Only show window if it is not already being diplayed
-                                if (row.getRoot().getFellowIfAny(monitoringController.getId()) == null) {
-                                    monitoringController.setParent(row.getRoot());
-                                    monitoringController.doModal();
-                                }
-                            } catch (InterruptedException ex) {
-                                showError(item, ex, CommonConstants.ERROR_DISPATCHING_JOB);
-                            }
-                            
-                            activityDAO.insert(username, instance, "OVERVIEW", "Monitor Oracle instance button");
-                        }
-                    });
+                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
+                    monitorBtn.setDisabled(true);
+                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
                 }
                 else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
                     monitorBtn.setDisabled(true);
+                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
                 }
                 else {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -501,14 +494,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     monitorBtn.setHref(appdynURL);
                 }
 
-                //Only disable button if the instance is awaiting approval
-                if (instance.getState().equals(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL)) {
-                    monitorBtn.setDisabled(true);
-                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
-                } else {
-                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON);
-                }
-                
                 //Host monitoring button
                 final Toolbarbutton hostMonitorBtn = new Toolbarbutton();
                 hostMonitorBtn.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_JOB + CommonConstants.JOB_HOSTMONITOR));
