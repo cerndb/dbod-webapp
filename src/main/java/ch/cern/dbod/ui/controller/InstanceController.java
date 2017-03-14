@@ -27,9 +27,6 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.*;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.*;
@@ -610,16 +607,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
         }
         else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
-            monitorBtn.addEventListener(Events.ON_CLICK, new EventListener() {
-                        @Override
-                        public void onEvent(Event event) {
-                            activityDAO.insert(username, instance, "INSTANCE", "Monitor Oracle instance button");
-                            doMonitor();
-                        }
-                    });
+            monitorBtn.setDisabled(true);
+            monitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
         }
         else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
             monitorBtn.setDisabled(true);
+            monitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
         }
         else {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -868,22 +861,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 restoreController.setParent(this.getRoot());
                 restoreController.doModal();
             }
-        } catch (InterruptedException ex) {
-            showError(ex, CommonConstants.ERROR_DISPATCHING_JOB);
-        }
-    }
-
-    /**
-     * Opens the monitor window.
-     */
-    public void doMonitor() {
-        try {
-            MonitoringController monitoringController = new MonitoringController(instance);
-            //Only show window if it is not already being diplayed
-            if (this.getRoot().getFellowIfAny(monitoringController.getId()) == null) {
-                monitoringController.setParent(this.getRoot());
-                monitoringController.doModal();
-    }
         } catch (InterruptedException ex) {
             showError(ex, CommonConstants.ERROR_DISPATCHING_JOB);
         }

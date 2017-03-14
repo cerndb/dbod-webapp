@@ -4,7 +4,7 @@
 
     <groupId>ch.cern</groupId>
     <artifactId>DBOnDemand</artifactId>
-    <version>5.8.0</version>
+    <version>5.8.2</version>
     <packaging>war</packaging>
 
     <name>DBOnDemand</name>
@@ -19,19 +19,13 @@
         
         <maven.compiler.version>3.1</maven.compiler.version>
         <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
         <maven.war.version>2.4</maven.war.version>
         <maven.dependency.version>2.8</maven.dependency.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
         
         <zk.version>7.0.3</zk.version>
-        <bsh.version>2.0b4</bsh.version>
         <commons-fileupload.version>1.2.2</commons-fileupload.version>
         <commons-io.version>2.1</commons-io.version>
-        
-        <jest.version>0.1.0</jest.version>
-        <log4j.version>1.6.1</log4j.version>
-        <google-visualization.version>1.1.1</google-visualization.version>
     </properties>
     
     <repositories>
@@ -59,16 +53,28 @@
             <version>2.4</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>${javaee.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.beanshell</groupId>
-            <artifactId>bsh</artifactId>
-            <version>${bsh.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -104,32 +110,6 @@
             <groupId>org.zkoss.zk</groupId>
             <artifactId>zkbind</artifactId>
             <version>${zk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.searchbox</groupId>
-            <artifactId>jest</artifactId>
-            <version>${jest.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.visualization</groupId>
-            <artifactId>visualization-datasource</artifactId>
-            <version>${google-visualization.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
@@ -191,11 +171,6 @@
                     <nohelp>true</nohelp>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
         </plugins>
         
         <resources>
@@ -207,5 +182,4 @@
             </resource>
         </resources>
     </build>
-
 </project>

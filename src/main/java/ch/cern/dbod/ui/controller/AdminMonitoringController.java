@@ -21,8 +21,6 @@ import ch.cern.dbod.ui.renderer.CommandStatsRenderer;
 import ch.cern.dbod.ui.renderer.JobStatsRenderer;
 import ch.cern.dbod.ui.renderer.LastJobsRenderer;
 import ch.cern.dbod.util.CommonConstants;
-import ch.cern.dbod.util.ESHelper;
-import ch.cern.dbod.util.SSOHelper;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,14 +58,6 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
      * List of jobs.
      */
     private List<Job> jobs;
-    /**
-     * Helper to obtain monitoring data from ElasticSearch
-     */
-    private ESHelper esHelper;
-    /**
-     * Helper to obtain SSO cookies
-     */
-    private SSOHelper ssoHelper;
 
     /**
      * Method executed before the page is composed. Obtains stats from DB.
