@@ -7,7 +7,7 @@
             <caption label=" ">
                 <label value="${c:l('overview')}" sclass="title" style="float:left;"/>
                 <hbox height="24px" style="float:right" align="bottom">
-                    <hbox style="margin-right:380px;">
+                    <hbox style="margin-right:380px;display:none">
                         <hbox id="collectiveBtns" style="display:none" align="bottom">
                             <label sclass="title" value="${c:l('collectiveActions')}" style="font-size:10pt !important"/>
                             <toolbarbutton id="startupAllBtn" tooltiptext="${c:l('collectiveStartup')}" zclass="buttonDisabled" image="/img/startup.png" onClick="adminController.startupAll();" disabled="true"/>
