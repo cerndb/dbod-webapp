@@ -190,7 +190,7 @@
         <error-code>403</error-code>
         <location>/not_authorized.zul</location>
     </error-page>
-    <security-constraint>
+    <!--<security-constraint>
         <web-resource-collection>
             <web-resource-name>Entire Application</web-resource-name>
             <url-pattern>/*</url-pattern>
@@ -198,7 +198,7 @@
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-    </security-constraint>
+    </security-constraint>-->
     <!-- Define filter to avoid Tomcat's error page and catch every uncaught exception -->
     <filter>
         <filter-name>GeneralFilter</filter-name>
