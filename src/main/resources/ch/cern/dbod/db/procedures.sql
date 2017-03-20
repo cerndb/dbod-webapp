@@ -1,5 +1,5 @@
 -- Inserts a backup job in the database
-CREATE OR REPLACE PROCEDURE insert_backup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+create or replace PROCEDURE insert_backup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
 						type_param IN VARCHAR2, requester_param IN VARCHAR2)
 IS
 	now DATE;
@@ -16,7 +16,7 @@ END;
 /
 
 -- Creates a new scheduled job in the database
-CREATE OR REPLACE PROCEDURE create_scheduled_backup (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
+create or replace PROCEDURE create_scheduled_backup (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
 							start_date_param IN DATE, interval_hours IN INTEGER)
 IS
 	name VARCHAR2(512); -- job name
@@ -33,7 +33,7 @@ BEGIN
 	-- Initialise name and action
 	name := db_name || '_BACKUP';
 	action := 'BEGIN
-			dbondemand.insert_backup_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', ' 
+			dbondemand.insert_backup_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', '
 			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
 
 	-- Query for any job with the same name running at the moment
@@ -73,7 +73,7 @@ END;
 /
 
 -- Deletes a scheduled job in the database
-CREATE OR REPLACE PROCEDURE delete_scheduled_backup (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
+create or replace PROCEDURE delete_scheduled_backup (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
 IS
 	name VARCHAR2(512); -- job name
 	job_count INTEGER; -- number of jobs with the same name running (1 or 0)
@@ -116,7 +116,7 @@ END;
 /
 
 -- Inserts a backup to tape job in the database
-CREATE OR REPLACE PROCEDURE insert_backup_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+create or replace PROCEDURE insert_backup_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
                                                         type_param IN VARCHAR2, requester_param IN VARCHAR2)
 IS
 	now DATE;
@@ -132,7 +132,7 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE PROCEDURE insert_backup_logs_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+create or replace PROCEDURE insert_backup_logs_to_tape_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
                                                         type_param IN VARCHAR2, requester_param IN VARCHAR2)
 IS
 	now DATE;
@@ -148,8 +148,8 @@ BEGIN
 END;
 /
 
--- Creates a new scheduled job in the database
-CREATE OR REPLACE PROCEDURE create_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
+-- Creates a backup to tape job in the database
+create or replace PROCEDURE create_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER,
 							start_date_param IN DATE)
 IS
 	name VARCHAR2(512); -- job name
@@ -167,7 +167,7 @@ BEGIN
 	-- Initialise name and action
 	name := db_name || '_BACKUP_TO_TAPE';
 	action := 'BEGIN
-			dbondemand.insert_backup_to_tape_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', ' 
+			dbondemand.insert_backup_to_tape_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', '
 			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
 
 	-- Query for any job with the same name running at the moment
@@ -207,7 +207,7 @@ BEGIN
         -- Initialise name and action for logs
 	name := db_name || '_BACKUP_LOGS_TO_TAPE';
 	action := 'BEGIN
-			dbondemand.insert_backup_logs_to_tape_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', ' 
+			dbondemand.insert_backup_logs_to_tape_job (' || '''' || username || '''' || ', ' || '''' || db_name || '''' || ', '
 			|| '''' || type || '''' || ', ' || '''' || requester || ''');END;';
 
 	-- Query for any job with the same name running at the moment
@@ -247,8 +247,8 @@ BEGIN
 END;
 /
 
--- Deletes a scheduled job in the database
-CREATE OR REPLACE PROCEDURE delete_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
+-- Deletes a backup to tape job in the database
+create or replace PROCEDURE delete_backup_to_tape (username IN VARCHAR2, db_name IN VARCHAR2, type IN VARCHAR2, requester IN VARCHAR2, admin_action IN INTEGER)
 IS
 	name VARCHAR2(512); -- job name
 	job_count INTEGER; -- number of jobs with the same name running (1 or 0)
@@ -319,7 +319,7 @@ END;
 /
 
 -- Approves an instance creation by changing the state of the isntance
-CREATE OR REPLACE PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2, result OUT INTEGER)
+create or replace PROCEDURE approve_instance (id_param IN VARCHAR2, db_name_param IN VARCHAR2, result OUT INTEGER)
 IS
     db_type VARCHAR2 (32);
     username VARCHAR2 (32);
@@ -356,7 +356,7 @@ BEGIN
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => '"' || db_name_param || '_CLEANUP"',
                     job_type             => 'PLSQL_BLOCK',
-                    job_action           => 'BEGIN dbondemand.insert_cleanup_job(''' || username || ''',''' 
+                    job_action           => 'BEGIN dbondemand.insert_cleanup_job(''' || username || ''','''
                                             || db_name_param || ''',''' || db_type || ''',''dbod''); END;',
                     repeat_interval      => 'FREQ=DAILY;',
                     enabled              =>  TRUE,
@@ -370,7 +370,7 @@ END;
 /
 
 -- Destroys an instance by deleting the FIM object and setting the status of the instance to 0
-CREATE OR REPLACE PROCEDURE destroy_instance (id_param IN VARCHAR2, result OUT INTEGER)
+create or replace PROCEDURE destroy_instance (id_param IN VARCHAR2, result OUT INTEGER)
 IS
     backup_count INTEGER;
     backup_name VARCHAR2 (512);
@@ -519,7 +519,7 @@ END;
 /
 
 -- Updates the username to change the owner of an instance
-CREATE OR REPLACE PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
+create or replace PROCEDURE change_owner (instance IN VARCHAR2, old_user IN VARCHAR2, new_user IN VARCHAR2)
 IS
     backup_count INTEGER;
     backup_name VARCHAR2 (512);
@@ -564,7 +564,7 @@ BEGIN
 	WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backup
     IF backup_count > 0
     THEN
@@ -575,7 +575,7 @@ BEGIN
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  backup_name,
                     force      =>  TRUE);
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => backup_name,
@@ -604,7 +604,7 @@ BEGIN
 	WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backups to tape
     IF tape_count > 0
     THEN
@@ -615,7 +615,7 @@ BEGIN
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  tape_name,
                     force      =>  TRUE);
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => tape_name,
@@ -644,7 +644,7 @@ BEGIN
 	WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backups to tape
     IF tape_logs_count > 0
     THEN
@@ -655,7 +655,7 @@ BEGIN
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  tape_logs_name,
                     force      =>  TRUE);
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => tape_logs_name,
@@ -695,7 +695,7 @@ BEGIN
             DBMS_SCHEDULER.DROP_JOB (
                     job_name   =>  cleanup_name,
                     force      =>  TRUE);
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => cleanup_name,
@@ -710,7 +710,7 @@ END;
 /
 
 -- Checks for changes in ownership, comparing FIM table to own table (to be used with dbms_scheduler)
-CREATE OR REPLACE PROCEDURE check_ownership
+create or replace PROCEDURE check_ownership
 IS
     CURSOR instances IS
         SELECT owner_login, internal_id
@@ -733,7 +733,7 @@ END;
 /
 
 -- Monitor jobs
-CREATE OR REPLACE PROCEDURE monitor_jobs
+create or replace PROCEDURE monitor_jobs
 IS
     -- Jobs that are pending for more than 30 seconds and no job is running on that instance
     CURSOR pending_jobs IS
@@ -775,7 +775,7 @@ BEGIN
                             </ul>
                         </body>
                     </html>';
-        
+
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
             subject => 'DBOD: WARNING: Pending job on "' || pending_job.db_name || '"',
@@ -785,7 +785,7 @@ BEGIN
         UPDATE dbondemand.dod_jobs
             SET email_sent = (SELECT sysdate FROM dual)
             WHERE CURRENT OF pending_jobs;
-        
+
     END LOOP;
 
     FOR running_job IN running_jobs
@@ -805,7 +805,7 @@ BEGIN
                             </ul>
                         </body>
                     </html>';
-        
+
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => 'dbondemand-admin@cern.ch',
             subject => 'DBOD: WARNING: Running job on "' || running_job.db_name || '"',
@@ -815,23 +815,24 @@ BEGIN
         UPDATE dbondemand.dod_jobs
             SET email_sent = (SELECT sysdate FROM dual)
             WHERE CURRENT OF running_jobs;
-        
+
     END LOOP;
 END;
 /
 
 -- Backup warning: emails users when they do not have automatic backups enabled
-CREATE OR REPLACE PROCEDURE backup_warning
+create or replace PROCEDURE backup_warning
 IS
     -- Users and databases with no bacups activated
     CURSOR instances IS
-        SELECT db_name, username
+        SELECT db_name, username, e_group
             FROM dod_instances
             WHERE 0 = (SELECT COUNT(*)
                         FROM user_scheduler_jobs
                         WHERE job_name = db_name || '_BACKUP')
                 AND status = '1';
     message VARCHAR2 (2056);
+    e_group_email VARCHAR2(500);
 BEGIN
     FOR instance IN instances
     LOOP
@@ -854,19 +855,23 @@ BEGIN
                             </p>
                         </body>
                     </html>';
-        
+        IF instance.e_group is not null THEN
+          e_group_email := instance.e_group || '@cern.ch' ;
+        ELSE
+          e_group_email := '';
+        END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch',
+            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
             subject => 'Automatic backups not enabled on DB On Demand instance "' || instance.db_name || '"',
             message => message,
-            mime_type => 'text/html');   
+            mime_type => 'text/html');
     END LOOP;
 END;
 /
 
 -- Clean the jobs table, deleting jobs older than 90 days
-CREATE OR REPLACE PROCEDURE clean_jobs
+create or replace PROCEDURE clean_jobs
 IS
     now DATE;
 BEGIN
@@ -883,24 +888,25 @@ END;
 /
 
 -- Checks for expired instances. Updating the status of the instance and sending an email to admins in case an instance is expired
-CREATE OR REPLACE PROCEDURE check_expired
+create or replace PROCEDURE check_expired
 IS
     -- Users and databases of expired instances
     CURSOR expired_instances IS
-        SELECT db_name, username
+        SELECT db_name, username, e_group
             FROM dod_instances
             WHERE expiry_date < sysdate
                 AND status = '1'
             FOR UPDATE OF status;
     -- Users and databases and days of instances to expire in 30, 15 or 1 days
     CURSOR to_expire_instances IS
-        SELECT db_name, username, TRUNC (expiry_date - SYSDATE) + 1 AS days
+        SELECT db_name, username, e_group, TRUNC (expiry_date - SYSDATE) + 1 AS days
             FROM dod_instances
             WHERE (TRUNC (expiry_date - SYSDATE) + 1 = 30
                 OR TRUNC (expiry_date - SYSDATE) + 1 = 15
                 OR TRUNC (expiry_date - SYSDATE) + 1= 1)
                 AND status = '1';
     message VARCHAR2 (2056);
+    e_group_email VARCHAR2(500);
 BEGIN
     FOR instance IN expired_instances
     LOOP
@@ -920,14 +926,19 @@ BEGIN
                             </p>
                         </body>
                     </html>';
-        
+        IF instance.e_group is not null THEN
+          e_group_email := instance.e_group || '@cern.ch' ;
+        ELSE
+          e_group_email := '';
+        END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch',
+            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
             subject => 'DB On Demand instance "' || instance.db_name || '" has expired',
             message => message,
             mime_type => 'text/html');
-        
+
+        --disable_jobs(instance.db_name);
         UPDATE dod_instances
             SET status = '0' WHERE db_name = instance.db_name;
     END LOOP;
@@ -940,7 +951,7 @@ BEGIN
                             Dear DB On Demand user,
                             </p>
                             <p>
-                            Your instance <b>' || instance.db_name || '</b> will expire in ' || instance.days || ' days. If you want to extend the expiry date for your instance, please go to the instance view in our website, where you can modify important information related to your instance.
+                            Your instance <b>' || instance.db_name || '</b> will expire in ' || instance.days || ' days. If you want to extend the expiry date for your instance, please go to the instance view in <a href="https://dbondemand.web.cern.ch/DBOnDemand/index.zul">our website</a>, where you can modify important information related to your instance.
                             </p>
                             <p>
                             Kind regards,
@@ -950,10 +961,14 @@ BEGIN
                             </p>
                         </body>
                     </html>';
-        
+        IF instance.e_group is not null THEN
+          e_group_email := instance.e_group || '@cern.ch' ;
+        ELSE
+          e_group_email := '';
+        END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch',
+            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
             subject => 'DB On Demand instance "' || instance.db_name || '" will expire in ' || instance.days || ' days',
             message => message,
             mime_type => 'text/html');
@@ -962,7 +977,7 @@ END;
 /
 
 -- Inserts a cleanup job in the database
-CREATE OR REPLACE PROCEDURE insert_cleanup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
+create or replace PROCEDURE insert_cleanup_job (username_param IN VARCHAR2, db_name_param IN VARCHAR2,
 						type_param IN VARCHAR2, requester_param IN VARCHAR2)
 IS
 	now DATE;
@@ -979,7 +994,7 @@ END;
 /
 
 -- Updates the DB name  of an instance
-CREATE OR REPLACE PROCEDURE change_db_name (old_instance IN VARCHAR2, new_instance IN VARCHAR2)
+create or replace PROCEDURE change_db_name (old_instance IN VARCHAR2, new_instance IN VARCHAR2)
 IS
     backup_count INTEGER;
     backup_name VARCHAR2 (512);
@@ -1024,7 +1039,7 @@ BEGIN
         WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backup
     IF backup_count > 0
     THEN
@@ -1038,7 +1053,7 @@ BEGIN
 
             -- Quote name for object
             backup_name := '"' || new_instance || '_BACKUP"';
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => backup_name,
@@ -1067,7 +1082,7 @@ BEGIN
         WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backups to tape
     IF tape_count > 0
     THEN
@@ -1081,7 +1096,7 @@ BEGIN
 
             -- Quote name for object
             tape_name := '"' || new_instance || '_BACKUP_TO_TAPE"';
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => tape_name,
@@ -1110,7 +1125,7 @@ BEGIN
         WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled backups to tape
     IF tape_logs_count > 0
     THEN
@@ -1124,7 +1139,7 @@ BEGIN
 
             -- Quote name for object
             tape_logs_name := '"' || new_instance || '_BACKUP_LOGS_TO_TAPE"';
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => tape_logs_name,
@@ -1153,7 +1168,7 @@ BEGIN
 	WHEN OTHERS THEN
             RAISE;
     END;
-            
+
     -- If there is a scheduled cleanups
     IF cleanup_count > 0
     THEN
@@ -1166,7 +1181,7 @@ BEGIN
                     force      =>  TRUE);
 
             cleanup_name := '"' || new_instance || '_CLEANUP"';
-            
+
             -- Create the scheduled job
             DBMS_SCHEDULER.CREATE_JOB (
                     job_name             => cleanup_name,
@@ -1181,7 +1196,7 @@ END;
 /
 
 -- Inserts the number of instances created so far this month
-CREATE OR REPLACE PROCEDURE merge_stats_monthly_instances
+create or replace PROCEDURE merge_stats_monthly_instances
 IS
   p_agg_num_instances NUMBER;
   p_inst_last_month NUMBER;
