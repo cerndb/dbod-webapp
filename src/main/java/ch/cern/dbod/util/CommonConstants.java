@@ -65,7 +65,7 @@ public class CommonConstants {
     public static final String USE_ACTIVITY_LOG = "log_activity";
     
     //Variables
-    public static final String ENVIRONMENT_CONTEXT = "java:/comp/env";
+    public static final String ENVIRONMENT_CONTEXT = "java:jboss";
     public static final String DATA_SOURCE_DBOD = "jdbc/dbondemand";
     public static final String DATA_SOURCE_MONITORING = "jdbc/monitoring";
     public static final String ADMIN_E_GROUP = "dbondemand-admin";
