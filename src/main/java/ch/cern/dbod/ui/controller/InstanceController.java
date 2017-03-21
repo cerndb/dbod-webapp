@@ -611,8 +611,9 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             monitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
         }
         else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
-            monitorBtn.setDisabled(true);
-            monitorBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
+            String graphanaURL = String.format(ConfigLoader.getProperty(CommonConstants.INFLUX_MONITORING), instance.getHost(), instance.getDbName());
+            monitorBtn.setTarget("_blank");
+            monitorBtn.setHref(graphanaURL);
         }
         else {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
