@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.db.dao;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.util.CommonConstants;
 import java.sql.Connection;

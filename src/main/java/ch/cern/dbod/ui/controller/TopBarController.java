@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import java.io.IOException;

@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.appservlet;
 
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.util.CommonConstants;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

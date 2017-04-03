@@ -7,7 +7,7 @@
  * or submit itself to any jurisdiction.
  */
 
-package ch.cern.dbod.appservlet;
+package ch.cern.dbod.util;
 
 import ch.cern.dbod.util.CommonConstants;
 import java.io.FileInputStream;
