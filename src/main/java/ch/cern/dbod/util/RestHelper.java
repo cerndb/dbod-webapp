@@ -8,7 +8,6 @@
  */
 package ch.cern.dbod.util;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
 import com.google.gson.*;
 import java.io.*;
 import java.util.logging.Level;

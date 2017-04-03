@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.exception.ConfigFileSizeException;
 import ch.cern.dbod.ui.model.OverviewTreeModel;

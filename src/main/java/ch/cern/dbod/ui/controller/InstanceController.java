@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.ui.controller;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.db.dao.*;
 import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.ui.renderer.InstanceChangesRenderer;
