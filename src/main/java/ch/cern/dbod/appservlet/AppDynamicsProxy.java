@@ -27,11 +27,11 @@ import org.apache.commons.httpclient.URI;
  * @author Jose Andres Cordero Benitez
  * June 2015
  */
-public class ApplicationProxy extends HttpServlet {
+public class AppDynamicsProxy extends HttpServlet {
     
     private ActivityDAO activityDAO;
     
-    public ApplicationProxy() {
+    public AppDynamicsProxy() {
         activityDAO = new ActivityDAO();
     }
 
@@ -87,7 +87,7 @@ public class ApplicationProxy extends HttpServlet {
         }
         catch (IOException ex)
         {
-            Logger.getLogger(ApplicationProxy.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AppDynamicsProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
