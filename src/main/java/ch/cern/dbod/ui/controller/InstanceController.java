@@ -574,6 +574,12 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             restoreBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON);
         }
         
+        //At the moment not available for Influx instances
+        if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
+            restoreBtn.setDisabled(true);
+            restoreBtn.setZclass(CommonConstants.STYLE_BIG_BUTTON_DISABLED);
+        }
+        
         //Upgrade a database button
         final Toolbarbutton upgradeBtn = (Toolbarbutton) getFellow("upgrade");
         //Only enable button if the instance is stopped or running (and there is an upgrade available)

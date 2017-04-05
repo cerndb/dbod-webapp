@@ -416,6 +416,12 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                 } else {
                     restoreBtn.setZclass(CommonConstants.STYLE_BUTTON);
                 }
+                
+                //At the moment not available for Influx instances
+                if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
+                    restoreBtn.setDisabled(true);
+                    restoreBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
+                }
 
                 //Upgrade button
                 final Toolbarbutton upgradeBtn = new Toolbarbutton();
