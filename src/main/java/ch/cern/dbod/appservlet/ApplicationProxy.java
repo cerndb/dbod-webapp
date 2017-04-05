@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.appservlet;
 
+import ch.cern.dbod.appservlet.handler.AppDynamicsHandler;
 import ch.cern.dbod.db.dao.ActivityDAO;
 import java.io.IOException;
 import java.net.URL;
@@ -22,15 +23,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.httpclient.URI;
 
 /**
- * Servlet to be used as an internat proxy between the user and AppDynamics application.
+ * Servlet to be used as an internal proxy between the user and AppDynamics application.
  * @author Jose Andres Cordero Benitez
  * June 2015
  */
-public class ProxyServlet extends HttpServlet {
+public class ApplicationProxy extends HttpServlet {
     
-    ActivityDAO activityDAO;
+    private ActivityDAO activityDAO;
     
-    public ProxyServlet() {
+    public ApplicationProxy() {
         activityDAO = new ActivityDAO();
     }
 
@@ -48,8 +49,8 @@ public class ProxyServlet extends HttpServlet {
         {
             // Generate the full URL, relative to AppDynamics
             String pathInfo = request.getPathInfo();
-            String url = HttpConnection.generateUrlRelative(pathInfo);
-            
+            String url = AppDynamicsHandler.generateUrlRelative(pathInfo);
+
             // Activity logging
             String instance = request.getParameter("host");
             String sec_token = request.getParameter("sec_token");
@@ -63,7 +64,7 @@ public class ProxyServlet extends HttpServlet {
             }
             
             // Get and resend all the parameters in the request
-            String params = HttpConnection.generateParametersString(request);
+            String params = AppDynamicsHandler.generateParametersString(request);
             if (params != null)
                 url += params;
             
@@ -78,15 +79,15 @@ public class ProxyServlet extends HttpServlet {
             
             // Do the request and proxy it
             if (mimetype == null)
-                HttpConnection.doGetUsingCookies(url, mimetype, request, response);
+                AppDynamicsHandler.doGetUsingCookies(url, mimetype, request, response);
             else if (mimetype.startsWith("text"))
-                HttpConnection.doGet(url, mimetype, request, response);
+                AppDynamicsHandler.doGet(url, mimetype, request, response);
             else
-                HttpConnection.doGetStream(url, mimetype, response);
+                AppDynamicsHandler.doGetStream(url, mimetype, response);
         }
         catch (IOException ex)
         {
-            Logger.getLogger(ProxyServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplicationProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -103,10 +104,10 @@ public class ProxyServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         
         // Generate the full URL, relative to AppDynamics
-        String url = HttpConnection.generateUrlRelative(pathInfo);
+        String url = AppDynamicsHandler.generateUrlRelative(pathInfo);
         
         if (url != null)
-            HttpConnection.doPostStream(url, request, response);
+            AppDynamicsHandler.doPostStream(url, request, response);
         else
             response.sendError(404);
     }
