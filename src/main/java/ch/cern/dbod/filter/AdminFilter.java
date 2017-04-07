@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.filter;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.HTTPHelper;
