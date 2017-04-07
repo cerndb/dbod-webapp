@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.filter;
 
-import ch.cern.dbod.appservlet.ConfigLoader;
+import ch.cern.dbod.util.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
 import ch.cern.dbod.db.entity.Instance;
