@@ -72,7 +72,7 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
     public OverviewTreeRenderer(boolean checkboxes) {
         Execution execution = Executions.getCurrent();
         String eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
-        Boolean adminMode = (Boolean) EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups);
+        Boolean adminMode = (Boolean) EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups);
         this.instanceDAO = new InstanceDAO();
         this.activityDAO = new ActivityDAO();
         this.jobHelper = new JobHelper(adminMode.booleanValue());

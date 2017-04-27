@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.filter;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
 import ch.cern.dbod.db.entity.Instance;
@@ -69,7 +70,7 @@ public class InstanceFilter implements Filter {
 
                 //Get admin mode from headers
                 String eGroups = ((HttpServletRequest) request).getHeader(CommonConstants.ADFS_GROUP);
-                Boolean adminMode = (Boolean) EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups);
+                Boolean adminMode = (Boolean) EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups);
 
                 //If any of these is null redirect to instance not found
                 if (instance != null && adminMode != null) {
