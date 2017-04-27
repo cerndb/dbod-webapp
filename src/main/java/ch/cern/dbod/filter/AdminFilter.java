@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.filter;
 
+import ch.cern.dbod.appservlet.ConfigLoader;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.HTTPHelper;
@@ -56,7 +57,7 @@ public class AdminFilter implements Filter{
             String eGroups = ((HttpServletRequest) request).getHeader(CommonConstants.ADFS_GROUP);
 
             //If user is not admin redirect to unauthorized
-            if (EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups))
+            if (EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups))
                 filterChain.doFilter(request, response);
             else
                 HTTPHelper.redirect((HttpServletRequest) request, (HttpServletResponse) response, CommonConstants.PAGE_NOT_AUTHORIZED);

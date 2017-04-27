@@ -58,7 +58,7 @@ public class TopBarController extends Div implements BeforeCompose, AfterCompose
         eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
 
         //Only show admin link if the user is admin
-        admin = EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups);
+        admin = EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups);
         
         //Get authenticated user's name
         username = execution.getHeader(CommonConstants.ADFS_LOGIN);

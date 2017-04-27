@@ -49,6 +49,7 @@ public class CommonConstants {
     public static final String ATTRIBUTE_USER_FILTER_JOB_COMMAND_NAME = "userFilterJobCommandName";
     
     //Config
+    public static final String ADMIN_E_GROUP = "admin_egroup";
     public static final String CONFIG_LOCATION = "configLocation";
     public static final String WS_USER = "service_account";
     public static final String WS_PSWD = "service_password";
@@ -69,7 +70,6 @@ public class CommonConstants {
     public static final String ENVIRONMENT_CONTEXT = "java:jboss";
     public static final String DATA_SOURCE_DBOD = "jdbc/dbondemand";
     public static final String DATA_SOURCE_MONITORING = "jdbc/monitoring";
-    public static final String ADMIN_E_GROUP = "dbondemand-admin";
     public static final String LOCALE_COOKIE = "dbondemand.locale";
     public static final String ADFS_FULLNAME = "ADFS_FULLNAME";
     public static final String ADFS_LOGIN = "ADFS_LOGIN";

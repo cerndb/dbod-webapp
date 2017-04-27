@@ -125,7 +125,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 Execution execution = Executions.getCurrent();
                 username = execution.getHeader(CommonConstants.ADFS_LOGIN);
                 String eGroups = execution.getHeader(CommonConstants.ADFS_GROUP);
-                Boolean adminMode = (Boolean) EGroupHelper.groupInList(CommonConstants.ADMIN_E_GROUP, eGroups);
+                Boolean adminMode = (Boolean) EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups);
                 admin = adminMode.booleanValue();
                 
                 //Get user and password for the web services account
