@@ -478,16 +478,13 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
                 }
-                else if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
-                    monitorBtn.setDisabled(true);
-                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
-                }
                 else if (instance.getDbType().equals(CommonConstants.DB_TYPE_INFLUX)) {
                     String graphanaURL = String.format(ConfigLoader.getProperty(CommonConstants.INFLUX_MONITORING), instance.getHost(), instance.getDbName());
                                    monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(graphanaURL);
                 }
-                else {
+                else if (!instance.getCategory().equals(CommonConstants.CATEGORY_TEST)) {
+                    // Test instances have AppDynamics disabled
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     String date = dateFormat.format(new Date());
                     String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
@@ -499,6 +496,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(appdynURL);
+                } else {
+                    monitorBtn.setDisabled(true);
+                    monitorBtn.setZclass(CommonConstants.STYLE_BUTTON_DISABLED);
                 }
 
                 //Host monitoring button
