@@ -125,7 +125,7 @@ public class MonitoringDAO {
         try (Connection connection = getConnection()) {
             //Adjust beginning
             Date now = new Date();
-            Timestamp start = new Timestamp(now.getTime() - (days * 86400000));
+            Timestamp start = new Timestamp(now.getTime() - (days * 86400000L));
 
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();

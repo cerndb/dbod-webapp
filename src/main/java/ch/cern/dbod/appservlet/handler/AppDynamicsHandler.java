@@ -97,16 +97,14 @@ public class AppDynamicsHandler {
     {
         String params = null;
         Map<String, String[]> map = request.getParameterMap();
-        for (String key : map.keySet())
+        for (Map.Entry<String, String[]> entry : map.entrySet())
         {
-            String[] value = map.get(key);
-
             if (params == null)
                 params = "?";
             else
                 params += "&";
 
-            params += key + "=" + value[0];
+            params += entry.getKey() + "=" + entry.getValue()[0];
         }
         
         return params;

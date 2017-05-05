@@ -199,7 +199,7 @@ public class FileHelper {
         AMedia file = null;
         try {
            URL url = new URL(urlString);
-           file = new AMedia(filePath.substring(filePath.lastIndexOf("/") + 1), null, "application/octet-stream", url, null);
+           file = new AMedia(filePath.substring(filePath.lastIndexOf('/') + 1), null, "application/octet-stream", url, null);
         } catch (MalformedURLException | FileNotFoundException ex) {
            Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR SERVING FILE ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
