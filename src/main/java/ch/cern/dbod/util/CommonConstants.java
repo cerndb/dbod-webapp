@@ -64,6 +64,8 @@ public class CommonConstants {
     public static final String APPDYN_TOKEN = "token_password";
     public static final String KIBANA_DASHBOARD = "kibana_dashboard";
     public static final String INFLUX_MONITORING = "influx_dashboard";
+    public static final String MYSQL_MONITORING = "mysql_dashboard";
+    public static final String POSTGRES_MONITORING = "postgres_dashboard";
     public static final String USE_ACTIVITY_LOG = "log_activity";
     
     //Variables
