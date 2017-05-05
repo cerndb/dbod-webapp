@@ -269,9 +269,9 @@ public class AddUpgradeController extends Window {
      */
     private void doAccept() {
         if (FormValidations.isDbTypeValid(dbType)
-                & FormValidations.isCategoryValid(category)
-                & FormValidations.isVersionValid(versionFrom)
-                & FormValidations.isVersionValid(versionTo)) {
+                && FormValidations.isCategoryValid(category)
+                && FormValidations.isVersionValid(versionFrom)
+                && FormValidations.isVersionValid(versionTo)) {
             ///Create new upgrade and insert it
             Upgrade upgrade = new Upgrade();
             upgrade.setDbType((String)dbType.getSelectedItem().getValue());

@@ -105,7 +105,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         Integer filterCategory = (Integer) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_CATEGORY);
         if (filterCategory != null) {
-            ((Combobox) getFellow("categoryFilter")).setSelectedIndex(filterCategory.intValue());
+            ((Combobox) getFellow("categoryFilter")).setSelectedIndex(filterCategory);
         }
         else {
             ((Combobox) getFellow("categoryFilter")).setSelectedIndex(0);
@@ -116,14 +116,14 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         }
         Integer filterDbType = (Integer) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_DB_TYPE);
         if (filterDbType != null) {
-            ((Combobox) getFellow("dbTypeFilter")).setSelectedIndex(filterDbType.intValue());
+            ((Combobox) getFellow("dbTypeFilter")).setSelectedIndex(filterDbType);
         }
         else{
             ((Combobox) getFellow("dbTypeFilter")).setSelectedIndex(0);
         }
         Integer filterActions = (Integer) Sessions.getCurrent().getAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_ACTIONS);
         if (filterActions != null) {
-            ((Combobox) getFellow("actionFilter")).setSelectedIndex(filterActions.intValue());
+            ((Combobox) getFellow("actionFilter")).setSelectedIndex(filterActions);
         }
         else {
             ((Combobox) getFellow("actionFilter")).setSelectedIndex(0);
@@ -451,10 +451,10 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         displayOrHideAreas();
         
         //Set filters on session
-        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_ACTIONS, new Integer(((Combobox) getFellow("actionFilter")).getSelectedIndex()));
-        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_CATEGORY, new Integer(((Combobox) getFellow("categoryFilter")).getSelectedIndex()));
+        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_ACTIONS, ((Combobox) getFellow("actionFilter")).getSelectedIndex());
+        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_CATEGORY, ((Combobox) getFellow("categoryFilter")).getSelectedIndex());
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_DB_NAME, ((Textbox) getFellow("dbNameFilter")).getValue());
-        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_DB_TYPE, new Integer(((Combobox) getFellow("dbTypeFilter")).getSelectedIndex()));
+        Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_DB_TYPE, ((Combobox) getFellow("dbTypeFilter")).getSelectedIndex());
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_E_GROUP, ((Textbox) getFellow("eGroupFilter")).getValue());
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_HOST, ((Textbox) getFellow("hostFilter")).getValue());
         Sessions.getCurrent().setAttribute(CommonConstants.ATTRIBUTE_ADMIN_FILTER_PROJECT, ((Textbox) getFellow("projectFilter")).getValue());
