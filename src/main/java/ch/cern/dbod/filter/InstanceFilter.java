@@ -73,7 +73,7 @@ public class InstanceFilter implements Filter {
                 Boolean adminMode = (Boolean) EGroupHelper.groupInList(ConfigLoader.getProperty(CommonConstants.ADMIN_E_GROUP), eGroups);
 
                 //If any of these is null redirect to instance not found
-                if (instance != null && adminMode != null) {
+                if (instance != null) {
                     //Admins are allowed to manage every instance
                     if (adminMode) {
                         filterChain.doFilter(request, response);
