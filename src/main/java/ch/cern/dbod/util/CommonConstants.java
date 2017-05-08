@@ -20,13 +20,9 @@ public class CommonConstants {
     
     //Session attributes
     public static final String ATTRIBUTE_USER_SHOW_ALL = "userShowAll";
-    public static final String ATTRIBUTE_USER_SHOW_ALL_JOB_STATS = "userShowAllJobStats";
-    public static final String ATTRIBUTE_USER_SHOW_ALL_COMMAND_STATS = "userShowAllCommandStats";
     public static final String ATTRIBUTE_ADMIN_SHOW_ALL = "showAll";
     public static final String ATTRIBUTE_ADMIN_SHOW_ALL_TO_DESTROY = "showAllToDestroy";
     public static final String ATTRIBUTE_ADMIN_SHOW_ALL_UPGRADES = "showAllUpgrades";
-    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_JOB_STATS = "showAllJobStats";
-    public static final String ATTRIBUTE_ADMIN_SHOW_ALL_COMMAND_STATS = "showAllCommandStats";
     public static final String ATTRIBUTE_ADMIN_FILTER_DB_NAME = "adminFilterDbName";
     public static final String ATTRIBUTE_ADMIN_FILTER_HOST= "adminFilterHost";
     public static final String ATTRIBUTE_ADMIN_FILTER_USERNAME = "adminFilterUsername";
@@ -35,8 +31,6 @@ public class CommonConstants {
     public static final String ATTRIBUTE_ADMIN_FILTER_PROJECT = "adminFilterProject";
     public static final String ATTRIBUTE_ADMIN_FILTER_DB_TYPE = "adminFilterDbType";
     public static final String ATTRIBUTE_ADMIN_FILTER_ACTIONS = "adminFilterActions";
-    public static final String ATTRIBUTE_ADMIN_FILTER_JOB_DB_NAME = "adminFilterJobDbName";
-    public static final String ATTRIBUTE_ADMIN_FILTER_JOB_COMMAND_NAME = "adminFilterJobCommandName";
     public static final String ATTRIBUTE_USER_FILTER_DB_NAME = "userFilterDbName";
     public static final String ATTRIBUTE_USER_FILTER_HOST= "userFilterHost";
     public static final String ATTRIBUTE_USER_FILTER_USERNAME = "userFilterUsername";
@@ -45,8 +39,6 @@ public class CommonConstants {
     public static final String ATTRIBUTE_USER_FILTER_PROJECT = "userFilterProject";
     public static final String ATTRIBUTE_USER_FILTER_DB_TYPE = "userFilterDbType";
     public static final String ATTRIBUTE_USER_FILTER_ACTIONS = "userFilterActions";
-    public static final String ATTRIBUTE_USER_FILTER_JOB_DB_NAME = "userFilterJobDbName";
-    public static final String ATTRIBUTE_USER_FILTER_JOB_COMMAND_NAME = "userFilterJobCommandName";
     
     //Config
     public static final String ADMIN_E_GROUP = "admin_egroup";

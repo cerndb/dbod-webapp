@@ -48,7 +48,6 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
      * List of instances. In this case, all the instances in the database.
      */
     private List<Instance> instances;
-
     /**
      * List of upgrades.
      */
