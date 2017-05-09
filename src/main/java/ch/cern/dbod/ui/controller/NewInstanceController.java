@@ -79,8 +79,8 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Datebox) getFellow("expiryDate")).setFormat(CommonConstants.DATE_FORMAT);
         ((Datebox) getFellow("expiryDate")).setTimeZonesReadonly(true);
         ((Combobox) getFellow("dbType")).getItemAtIndex(0).setValue(CommonConstants.DB_TYPE_MYSQL);
-        ((Combobox) getFellow("dbType")).getItemAtIndex(1).setValue(CommonConstants.DB_TYPE_ORACLE);
-        ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(CommonConstants.DB_TYPE_ORA);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(1).setValue(CommonConstants.DB_TYPE_ORACLE_11);
+        ((Combobox) getFellow("dbType")).getItemAtIndex(2).setValue(CommonConstants.DB_TYPE_ORACLE_12);
         ((Combobox) getFellow("dbType")).getItemAtIndex(3).setValue(CommonConstants.DB_TYPE_PG);
         ((Combobox) getFellow("dbType")).getItemAtIndex(4).setValue(CommonConstants.DB_TYPE_INFLUX);
         ((Combobox) getFellow("dbType")).setSelectedIndex(0);
@@ -165,7 +165,7 @@ public class NewInstanceController extends Window implements AfterCompose {
             //If the egroups exists or it was created adn  instance is Oracle 12c create OEM e-group
             boolean addedToOEM = true;
             if ((eGroupExists || eGroupCreated)
-                    && CommonConstants.DB_TYPE_ORA.equals((String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())) {
+                    && CommonConstants.DB_TYPE_ORACLE_12.equals((String)((Combobox)getFellow("dbType")).getSelectedItem().getValue())) {
                 addedToOEM = eGroupHelper.addEgroupToOEM(((Textbox) getFellow("dbName")).getValue(),
                                             ((Textbox) getFellow("eGroup")).getValue());
             }

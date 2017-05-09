@@ -610,7 +610,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         }
         
         switch (instance.getDbType()) {
-            case CommonConstants.DB_TYPE_ORA:
+            case CommonConstants.DB_TYPE_ORACLE_12:
                 //If it is an oracle instance, send to OEM
                 monitorBtn.setTarget("_blank");
                 monitorBtn.setHref(CommonConstants.OEM_URL + instance.getHost().toUpperCase() + ".cern.ch_" + instance.getDbName().toString().toUpperCase());
@@ -1002,7 +1002,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             if (eGroupExists || eGroupCreated) {
                 //If instance is Oracle 12 change it in OEM
                 boolean changedInOEM = true;
-                if (CommonConstants.DB_TYPE_ORA.equals(instance.getDbType())) {
+                if (CommonConstants.DB_TYPE_ORACLE_12.equals(instance.getDbType())) {
                     changedInOEM = eGroupHelper.changeEgroupInOEM(instance.getDbName(),
                                                     instance.getEGroup(),
                                                     ((Textbox) getFellow("eGroupEdit")).getValue());

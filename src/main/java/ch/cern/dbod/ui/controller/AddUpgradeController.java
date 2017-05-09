@@ -124,12 +124,12 @@ public class AddUpgradeController extends Window {
         mySQL.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_MYSQL));
         dbType.appendChild(mySQL);
         Comboitem oracle = new Comboitem();
-        oracle.setValue(CommonConstants.DB_TYPE_ORACLE);
-        oracle.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_ORACLE));
+        oracle.setValue(CommonConstants.DB_TYPE_ORACLE_11);
+        oracle.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_ORACLE_11));
         dbType.appendChild(oracle);
         Comboitem ora = new Comboitem();
-        ora.setValue(CommonConstants.DB_TYPE_ORA);
-        ora.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_ORA));
+        ora.setValue(CommonConstants.DB_TYPE_ORACLE_12);
+        ora.setLabel(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + CommonConstants.DB_TYPE_ORACLE_12));
         dbType.appendChild(ora);
         Comboitem pg = new Comboitem();
         pg.setValue(CommonConstants.DB_TYPE_PG);

@@ -132,7 +132,7 @@ public class FormValidations {
             }
             //If egroup is empty and the instance is Oracle 12c show error
             else {
-                if (CommonConstants.DB_TYPE_ORA.equals(dbType)) {
+                if (CommonConstants.DB_TYPE_ORACLE_12.equals(dbType)) {
                     eGroup.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_E_GROUP_ORA12));
                     return false;
                 }
@@ -211,8 +211,8 @@ public class FormValidations {
                 return false;
             }
             //Check dbtype Oracle, MySQL or PostgreSQL
-            if (!dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORA)
-                    && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORACLE)
+            if (!dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORACLE_12)
+                    && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_ORACLE_11)
                     && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_MYSQL)
                     && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_PG)
                     && !dbType.getSelectedItem().getValue().equals(CommonConstants.DB_TYPE_INFLUX)) {

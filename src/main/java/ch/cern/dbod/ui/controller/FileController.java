@@ -422,7 +422,7 @@ public class FileController extends Window {
                     }
                 }
                 break;
-            case CommonConstants.DB_TYPE_ORACLE:
+            case CommonConstants.DB_TYPE_ORACLE_11:
                 logArray = fileHelper.getOracleLogs(instance);
                 if (logArray != null) {
                     for (int i=0; i < logArray.length; i++) {
@@ -434,7 +434,7 @@ public class FileController extends Window {
                     }
                 }
                 break;
-            case CommonConstants.DB_TYPE_ORA:
+            case CommonConstants.DB_TYPE_ORACLE_12:
                 logArray = fileHelper.getOraLogs(instance);
                 if (logArray != null) {
                     for (int i=0; i < logArray.length; i++) {
@@ -482,9 +482,9 @@ public class FileController extends Window {
                     return CommonConstants.CONFIG_FILE_PG.equals((String)item.getValue())
                             ||
                             CommonConstants.CONFIG_FILE_PG_HBA.equals((String)item.getValue()); 
-                case CommonConstants.DB_TYPE_ORA:
+                case CommonConstants.DB_TYPE_ORACLE_12:
                     return false;
-                case CommonConstants.DB_TYPE_ORACLE:
+                case CommonConstants.DB_TYPE_ORACLE_11:
                     return false;
             }
             return true;
