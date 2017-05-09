@@ -125,7 +125,7 @@ public class JobHelper {
         List<CommandParam> params = new ArrayList<>();
         
         //Do not stop listener if instance is Oracle in a shared machine
-        if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
+        if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE_11)) {
             List <Instance> instancesPerHost = instanceDAO.selectInstancesPerHost(instance.getHost(), null);
             
             CommandParam listener = new CommandParam();
@@ -363,7 +363,7 @@ public class JobHelper {
         List<CommandParam> params = new ArrayList<>();
         
         //If the database is Oracle add version from
-        if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE)) {
+        if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE_11)) {
             CommandParam versionFrom = new CommandParam();
             versionFrom.setUsername(instance.getUsername());
             versionFrom.setDbName(instance.getDbName());
