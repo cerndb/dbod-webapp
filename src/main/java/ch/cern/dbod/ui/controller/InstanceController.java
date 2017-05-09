@@ -190,9 +190,10 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         
         //Configure input fields
         ((Textbox) getFellow("eGroupEdit")).setMaxlength(CommonConstants.MAX_E_GROUP_LENGTH);
-        ((Datebox) getFellow("expiryDateEdit")).setFormat(CommonConstants.DATE_FORMAT);
-        ((Datebox) getFellow("expiryDateEdit")).setTimeZonesReadonly(true);
-        ((Datebox) getFellow("expiryDateEdit")).setConstraint("no past, before " + dateFormat.format(cal.getTime()) + ": " + errorMsg);
+        Datebox expiryDateEdit = (Datebox) getFellow("expiryDateEdit");
+        expiryDateEdit.setFormat(CommonConstants.DATE_FORMAT);
+        expiryDateEdit.setTimeZonesReadonly(true);
+        expiryDateEdit.setConstraint("no past, before " + dateFormat.format(cal.getTime()) + ": " + errorMsg);
         ((Textbox) getFellow("projectEdit")).setMaxlength(CommonConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(CommonConstants.MAX_DESCRIPTION_LENGTH);
         if (admin) {
