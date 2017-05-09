@@ -152,7 +152,6 @@ public class CommonConstants {
     public static final String PAGE_ERROR = "/error.zul";
     public static final String PAGE_INDEX = "/index.zul";
     public static final String PAGE_ADMIN = "/admin/admin.zul";
-    public static final String PAGE_MONITORING_OVERVIEW = "/monitoring_overview.zul";
 
     //Labels
     public static final String LABEL_STATE = "state";
@@ -167,8 +166,6 @@ public class CommonConstants {
     public static final String LABEL_SELECT_SNAPSHOT = "selectSnapshot";
     public static final String LABEL_CANCEL = "cancel";
     public static final String LABEL_ACCEPT = "accept";
-    public static final String LABEL_SELECT_METRIC = "selectMetric";
-    public static final String LABEL_METRICS_TITLE = "metricsTitle";
     public static final String LABEL_AUTOMATIC_BACKUP = "automaticBackup";
     public static final String LABEL_HOURS = "hours";
     public static final String LABEL_BACKUP_TITLE = "backupTitle";
@@ -222,7 +219,6 @@ public class CommonConstants {
     public static final String LABEL_SHUTDOWN_TITLE = "shutdownTitle";
     public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
     public static final String LABEL_MESSAGE_NO_CERN = "messageNoCern";
-    public static final String LABEL_METRICS = "metrics";
     public static final String LABEL_RESCUE_TITLE = "rescueTitle";
     public static final String LABEL_RESCUE_MESSAGE = "rescueMessage";
     public static final String LABEL_PHONE = "telephone";
@@ -258,7 +254,6 @@ public class CommonConstants {
     public static final String ERROR_DISPATCHING_JOB = "errorDispatchingJob";
     public static final String ERROR_DISPATCHING_UPGRADE_JOB = "errorDispatchingUpgradeJob";
     public static final String ERROR_SELECT_SNAPSHOT = "errorSelectSnapshot";
-    public static final String ERROR_OBTAINING_METRICS = "errorObtainingMetrics";
     public static final String ERROR_DISPLAYING_HELP = "errorDisplayingHelp";
     public static final String ERROR_INSTANCE_UNIQUE = "errorInstanceUnique";
     public static final String ERROR_CATEGORY_EMPTY = "errorCategoryEmpty";
