@@ -74,7 +74,6 @@ public class CommonConstants {
     public static final String INSTANCE = "instance";
     public static final String MASTER = "master";
     public static final String SLAVE = "slave";
-    public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
     public static final int MAX_SIZE_CONFIG_FILE = 512;
     public static final int MAX_DB_SIZE = 1000;
     public static final int MAX_NO_CONNECTIONS = 1000;
@@ -94,9 +93,6 @@ public class CommonConstants {
     
     public static final String CONFIG_RELOAD_TRUE = "1";
     public static final String CONFIG_RELOAD_FALSE = "0";
-    
-    //DBOD API Endpoints
-    public static final String INSTANCE_ENDPOINT = "api/v1/instance/%s";
     
     //DB values
     public static final String INSTANCE_STATE_AWAITING_APPROVAL = "AWAITING_APPROVAL";
@@ -126,8 +122,8 @@ public class CommonConstants {
     public static final String JOB_MONITOR = "MONITOR";
     public static final String JOB_HOSTMONITOR = "HOSTMONITOR";
     public static final String JOB_CLEANUP = "CLEANUP";
-    public static final String DB_TYPE_ORA = "ORA";
-    public static final String DB_TYPE_ORACLE = "ORACLE";
+    public static final String DB_TYPE_ORACLE_12 = "ORA";
+    public static final String DB_TYPE_ORACLE_11 = "ORACLE";
     public static final String DB_TYPE_MYSQL = "MYSQL";
     public static final String DB_TYPE_PG = "PG";
     public static final String DB_TYPE_INFLUX = "InfluxDB";

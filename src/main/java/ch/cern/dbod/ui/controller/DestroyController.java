@@ -166,7 +166,7 @@ public class DestroyController extends Window {
         else {
             boolean deleteEgroup = true;
             //Delete e-group if instance is Oracle 12c
-            if (CommonConstants.DB_TYPE_ORA.equals(instance.getDbType())) {
+            if (CommonConstants.DB_TYPE_ORACLE_12.equals(instance.getDbType())) {
                 deleteEgroup = eGroupHelper.removeEgroupFromOEM(instance.getDbName());
             }
             ///Delete instance
