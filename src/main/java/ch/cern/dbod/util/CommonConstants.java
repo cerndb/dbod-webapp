@@ -212,10 +212,6 @@ public class CommonConstants {
     public static final String LABEL_LOGS_DOWNLOAD = "logsDownload";
     public static final String LABEL_NO_LOGS = "noLogs";
     public static final String LABEL_UPGRADE_SLAVE_FIRST = "upgradeSlaveFirst";
-    public static final String LABEL_MONITORING_OVERVIEW_TITLE = "monitoringOverviewTitle";
-    public static final String LABEL_MONITORING_OVERVIEW_MESSAGE = "monitoringOerviewMessage";
-    public static final String LABEL_MONITORING_OVERVIEW = "monitoringOverview";
-    public static final String LABEL_MONITORING_OVERVIEW_WARNING = "monitoringOverviewWarning";
     public static final String LABEL_SHUTDOWN_TITLE = "shutdownTitle";
     public static final String LABEL_SHUTDOWN_WARNING = "shutdownWarning";
     public static final String LABEL_MESSAGE_NO_CERN = "messageNoCern";
