@@ -9,8 +9,6 @@
 
 package ch.cern.dbod.util;
 
-import ch.cern.dbod.db.entity.Metric;
-
 /**
  * Class containing constants for DBOnDemand.
  * @author Daniel Gomez Blanco
@@ -77,13 +75,6 @@ public class CommonConstants {
     public static final String MASTER = "master";
     public static final String SLAVE = "slave";
     public static final String SHARED_INSTANCE_LIST = "sharedInstanceList";
-    public static final String MONITORING_TYPE = "tgtt";
-    public static final String MONITORING_TYPE_MYSQL = "M";
-    public static final String MONITORING_TYPE_NODE = "N";
-    public static final String MONITORING_TYPE_ORACLE = "C";
-    public static final String MONITORING_TYPE_PG = "P";
-    public static final String LEMON_URL = "http://lemonweb.cern.ch/lemon-web/info.php?entity=";
-    public static final String PARAM_HOST = "host";
     public static final int MAX_SIZE_CONFIG_FILE = 512;
     public static final int MAX_DB_SIZE = 1000;
     public static final int MAX_NO_CONNECTIONS = 1000;
@@ -96,49 +87,10 @@ public class CommonConstants {
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
     public static final int DEFAULT_INTERVAL_HOURS = 24;
-    public static final Metric[] MYSQL_OVERVIEW_METRICS = {new Metric("Threads_connected","Currently open connections","M",null),
-                                                                new Metric("Aborted_connects","Aborted connections","M",null),
-                                                                new Metric("Innodb_buffer_pool_reads","Logical reads that InnoDB had to read directly from the disk","M",null),
-                                                                new Metric("Innodb_data_reads","Data reads","M",null),
-                                                                new Metric("Innodb_buffer_pool_write_requests","Writes done to the InnoDB buffer pool","M",null),
-                                                                new Metric("Innodb_data_writes","Data writes","M",null),
-                                                                new Metric("Innodb_data_read","Data read since the server was started","M","bytes"),
-                                                                new Metric("Innodb_data_written","Data written since the server was started","M","bytes"),
-                                                                new Metric("Qcache_hits","Query cache hits","M",null),
-                                                                new Metric("Qcache_not_cached","Noncached queries","M",null)};
-    public static final Metric[] ORACLE_OVERVIEW_METRICS = {new Metric("2147","Average Active Sessions","C","Active Sessions"),
-                                                                new Metric("2003","User Transaction Per Sec","C","Transactions Per Second"),
-                                                                new Metric("2093","Physical Read Total Bytes Per Sec","C","Bytes Per Second"),
-                                                                new Metric("2092","Physical Read Total IO Requests Per Sec","C","Requests Per Second"),
-                                                                new Metric("2124","Physical Write Total Bytes Per Sec","C","Bytes Per Second"),
-                                                                new Metric("2100","Physical Write Total IO Requests Per Sec","C","Requests Per Second"),
-                                                                new Metric("2106","SQL Service Response Time","C","CentiSeconds Per Call"),
-                                                                new Metric("2057","Host CPU Utilization (%)","C","% Busy/(Idle+Busy)"),
-                                                                new Metric("2016","Redo Generated Per Sec","C","Bytes Per Second"),
-                                                                new Metric("2034","Redo Writes Per Sec","C","Writes Per Second")};
-    public static final Metric[] PG_OVERVIEW_METRICS = {new Metric("numbackends","Backends connected","P",null),
-                                                                new Metric("deadlocks","Deadlocks detected","P",null),
-                                                                new Metric("xact_commit","Transactions that have been committed","P",null),
-                                                                new Metric("xact_rollback","Transactions that have been rolled back","P",null),
-                                                                new Metric("heap_blks_read","Disk blocks read","P",null),
-                                                                new Metric("buffers_clean","Buffers written by the background writer","P",null),
-                                                                new Metric("blks_hit","Times that disk blocks were found in the buffer cache","P",null),
-                                                                new Metric("blks_read","Times that disk blocks were not found in the buffer cache","P",null),
-                                                                new Metric("n_live_tup","Estimated number of live rows","P",null),
-                                                                new Metric("n_dead_tup","Estimated number of dead rows","P",null)};
-    public static final int MONITORING_DAYS = 15;
-    public static final int MONITORING_OVERVIEW_DAYS = 7;
-    public static final int MONITORING_ADMIN_DAYS = 3;
-
+    
     public static final String OEM_URL = "https://oem-test.cern.ch/em/faces/db-rac-home?type=oracle_pdb&target=";
     public static final String OEM_EGROUP = "oracle-em-test-users";
     public static final String OEM_PDB_EGROUP_PREFIX = "oem-dbod-pdb-";
-    
-    public static final String IT_ES_URL = "https://dashboards.cern.ch/public";
-    public static final String IT_ES_MEMORY_GROUP = "memoryStats";
-    public static final String IT_ES_MEMORY_STAT = "mem_in_use";
-    public static final String IT_ES_CPU_GROUP = "CPUutil";
-    public static final String IT_ES_CPU_STAT = "PercUser";
     
     public static final String CONFIG_RELOAD_TRUE = "1";
     public static final String CONFIG_RELOAD_FALSE = "0";
