@@ -1,0 +1,20 @@
+<tabpanel>
+    <vbox use="ConfigController" id="configController" align="center" hflex="1">
+        <!-- Groupbox for the instances overview -->
+        <groupbox hflex="1" mold="3d" closable="false">
+            <caption label=" ">
+                <label value="${c:l('configurationEditor')}" sclass="title" style="float:left;"/>
+            </caption>
+            <vbox hflex="1" align="right">
+                <vbox hflex="1" align="left" xmlns:c="http://www.zkoss.org/2005/zk/client">
+                    <textbox id="configEditor" rows="35" hflex="1" style="resize:none;"/>
+                    <label id="configurationMsg" style="font-weight:bold" visible="false"/>
+                    <hbox hflex="1" align="bottom">
+                        <button label="Save" mold="os" onClick="configController.saveFile();"/>
+                        <button label="Reload config" mold="os" onClick="configController.refreshConfig();"/>
+                    </hbox>
+                </vbox>
+            </vbox>
+        </groupbox>
+    </vbox>
+</tabpanel>

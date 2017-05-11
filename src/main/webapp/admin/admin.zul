@@ -11,6 +11,7 @@
 <?component name="instancesTab" inline="true" macroURI="/WEB-INF/macros/instancesTab.zul"?>
 <?component name="expiredTab" inline="true" macroURI="/WEB-INF/macros/expiredTab.zul"?>
 <?component name="upgradesTab" inline="true" macroURI="/WEB-INF/macros/upgradesTab.zul"?>
+<?component name="configTab" inline="true" macroURI="/WEB-INF/macros/configTab.zul"?>
 
 <zk>
     <!-- Import controllers -->
@@ -22,6 +23,7 @@
             import ch.cern.dbod.ui.controller.TopBarController;
             import ch.cern.dbod.ui.controller.NewInstanceController;
             import ch.cern.dbod.ui.controller.UpgradesController;
+            import ch.cern.dbod.ui.controller.ConfigController;
             import ch.cern.dbod.util.CommonConstants;
             import ch.cern.dbod.util.TreeNodeComparator;
             import org.zkoss.util.resource.Labels;
@@ -55,12 +57,14 @@
                 <tab id="tabJobs" label="${c:l('tabJobs')}"/>
                 <tab id="tabExpired" label="${c:l('tabExpired')}"/>
                 <tab id="tabUpgrades" label="${c:l('tabUpgrades')}"/>
+                <tab id="tabConfig" label="${c:l('tabConfig')}"/>
             </tabs>
             <tabpanels>
                 <instancesTab/>
                 <jobsTab/>
                 <expiredTab/>
                 <upgradesTab/>
+                <configTab/>
             </tabpanels>
         </tabbox>
         </vbox>
