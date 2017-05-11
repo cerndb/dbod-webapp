@@ -25,22 +25,23 @@ import org.zkoss.zk.ui.Sessions;
  */
 public class ConfigLoader {
     
-    private static final Properties propertiesFile = init();
+    private static Properties propertiesFile = init();
     
     public static String getProperty(String name) {
         return propertiesFile.getProperty(name);
+    }
+    
+    public static void reload() {
+        propertiesFile = init();
     }
     
     private static Properties init()
     {
         Properties prop = new Properties();
         String configPath = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.CONFIG_LOCATION);
-        try (InputStream input = new FileInputStream(configPath))
-        {
+        try (InputStream input = new FileInputStream(configPath)) {
             prop.load(input);
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, "EXCEPTION READING CONFIG FILE ON " + configPath, ex);
         }
         return prop;
