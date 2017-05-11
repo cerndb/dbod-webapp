@@ -187,6 +187,9 @@ public class CommonConstants {
     public static final String LABEL_CONFIG_UPLOAD = "configUpload";
     public static final String LABEL_CONFIG_DOWNLOAD = "configDownload";
     public static final String LABEL_CONFIG = "config";
+    public static final String LABEL_CONFIG_FILE_RELOAD = "configFileReloaded";
+    public static final String LABEL_CONFIG_FILE_SAVED = "configFileSaved";
+    public static final String LABEL_CONFIG_FILE_ERROR = "configFileSavingError";
     public static final String LABEL_LEMON_MESSAGE= "lemonMessage";
     public static final String LABEL_LEMON_LINK = "lemonLink";
     public static final String LABEL_CLOSE = "close";
