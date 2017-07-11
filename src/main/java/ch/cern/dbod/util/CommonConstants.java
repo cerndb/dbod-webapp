@@ -82,6 +82,7 @@ public class CommonConstants {
     public static final int MAX_E_GROUP_LENGTH = 256;
     public static final int MAX_PROJECT_LENGTH = 128;
     public static final int MAX_HOST_LENGTH = 128;
+    public static final int MAX_PORT_LENGTH = 5;
     public static final int MAX_DESCRIPTION_LENGTH = 1024;
     public static final int MAX_VERSION_LENGTH = 128;
     public static final int MIN_INTERVAL_HOURS = 6;
@@ -286,6 +287,8 @@ public class CommonConstants {
     public static final String ERROR_HOST_LENGTH = "errorHostLength";
     public static final String ERROR_HOST_EMPTY = "errorHostEmpty";
     public static final String ERROR_HOST_CHARS = "errorHostChars";
+    public static final String ERROR_PORT_EMPTY = "errorPortEmpty";
+    public static final String ERROR_PORT_INVALID = "errorPortInvalid";
     public static final String ERROR_MASTER_DOES_NOT_EXIST = "errorMasterDoesNotExist";
     public static final String ERROR_PIT_ONE_MINUTE = "errorPITOneMinute";
     public static final String ERROR_DESTROYING_INSTANCE = "errorDestroyingInstance";
