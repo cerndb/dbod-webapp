@@ -421,4 +421,37 @@ public class FormValidations {
             return false;
         return true;
     }
+    
+    /**
+     * Validates port
+     * @param port Textbox with the port to validate.
+     * @return true if shared instance is valid, false otherwise.
+     */
+    public static boolean isPortValid(Textbox port) {
+        //If there are no previous errors
+        if (port.getErrorMessage() == null || port.getErrorMessage().isEmpty()) {
+            //Trim
+            port.setValue(port.getValue().trim());
+            //Check if user has entered a value
+            if (port.getValue().isEmpty()) {
+                port.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_PORT_EMPTY));
+                return false;
+            }
+            //Only numbers are allowed
+            Integer portValue;
+            try {
+                portValue = Integer.parseInt(port.getValue());
+                if (portValue >= 1 && portValue <= 65535) {
+                    return true;
+                } else {
+                    port.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_PORT_INVALID));
+                    return false;
+                }
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+        }
+        else
+            return false;
+    }
 }

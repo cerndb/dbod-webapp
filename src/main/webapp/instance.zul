@@ -199,7 +199,14 @@
                             <!-- Port -->
                             <hbox hflex="1" align="bottom">
                                 <label value="${c:l('port')}: " style="font-weight:bold"/>
-                                <label id="port"/>
+                                <hbox id="portBox" align="bottom">
+                                    <label id="port"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="portBox.setVisible(false);portEditBox.setVisible(true);" if="${controller.admin}"/>
+                                </hbox>
+                                <hbox id="portEditBox" visible="false" align="bottom">
+                                    <textbox id="portEdit" width="219px" onOK="controller.editPort()"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editPort()"/>
+                                </hbox>
                             </hbox>
                             <!-- Phone -->
                             <hbox hflex="1" align="bottom">
