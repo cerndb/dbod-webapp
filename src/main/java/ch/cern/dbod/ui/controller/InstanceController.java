@@ -201,6 +201,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             ((Textbox) getFellow("dbSizeEdit")).setMaxlength(String.valueOf(CommonConstants.MAX_DB_SIZE).length());
             ((Textbox) getFellow("versionEdit")).setMaxlength(CommonConstants.MAX_VERSION_LENGTH);
             ((Textbox) getFellow("hostEdit")).setMaxlength(CommonConstants.MAX_HOST_LENGTH);
+            ((Textbox) getFellow("portEdit")).setMaxlength(CommonConstants.MAX_PORT_LENGTH);
         }
         
         //Load instance info if necessary
@@ -1054,6 +1055,29 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                     ((Label) getFellow("project")).setValue("-");
                 ((Hbox) getFellow("projectEditBox")).setVisible(false);
                 ((Hbox) getFellow("projectBox")).setVisible(true);
+                //Reload changes
+                refreshInfo();
+                loadChanges();
+            }
+            else {
+                showError(null, CommonConstants.ERROR_UPDATING_INSTANCE);
+            }
+        }
+    }
+    
+    /**
+     * Edits the port of this instance.
+     */
+    public void editPort() {
+        if (FormValidations.isPortValid((Textbox) getFellow("portEdit"))) {
+            //Clone the instance and override description
+            Instance clone = instance.clone();
+            clone.setAttribute("port", ((Textbox) getFellow("portEdit")).getValue());
+            if (instanceDAO.update(instance, clone, username) > 0) {
+                instance = clone;
+                ((Label) getFellow("port")).setValue(instance.getAttribute("port"));
+                ((Hbox) getFellow("portEditBox")).setVisible(false);
+                ((Hbox) getFellow("portBox")).setVisible(true);
                 //Reload changes
                 refreshInfo();
                 loadChanges();
