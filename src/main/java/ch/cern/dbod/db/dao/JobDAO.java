@@ -169,6 +169,68 @@ public class JobDAO {
         }
         return log;
     }
+
+    /**
+     * Selects an specific log.
+     * @param username
+     * @param dbName
+     * @param commandName
+     * @param type
+     * @param creationDate
+     * @return Selected job.
+     */
+    public Job selectJob(String username, String dbName, String commandName, String type, long creationDate) {
+        Logger.getLogger(JobDAO.class.getName()).log(Level.INFO, String.format("SELECTING JOB: %s,%s,%s,%s,%s", username, dbName, commandName, type, creationDate));
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        try {
+            //Get connection
+            connection = getConnection();
+            //Prepare query for the prepared statement (to avoid SQL injection)
+            String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, requester, state, admin_action, result FROM dod_jobs"
+                            + " WHERE username = ? AND db_name = ? AND command_name = ? AND type = ? AND creation_date = ? ORDER BY creation_date";
+            statement = connection.prepareStatement(query);
+            //Assign values to variables
+            statement.setString(1, username);
+            statement.setString(2, dbName);
+            statement.setString(3, commandName);
+            statement.setString(4, type);
+            statement.setTimestamp(5,  new java.sql.Timestamp(creationDate));
+            
+            //Execute query
+            result = statement.executeQuery();
+            
+            if (result.next()) {
+                Job job = new Job();
+                job.setUsername(result.getString(1));
+                job.setDbName(result.getString(2));
+                job.setCommandName(result.getString(3));
+                job.setType(result.getString(4));
+                job.setCreationDate(new java.util.Date(result.getTimestamp(5).getTime()));
+                if (result.getTimestamp(6) != null)
+                    job.setCompletionDate(new java.util.Date(result.getTimestamp(6).getTime()));
+                job.setRequester(result.getString(7));
+                job.setState(result.getString(8));
+                job.setAdminAction(result.getInt(9));
+                job.setResult(result.getString(10));
+                return job;
+            }
+        } catch (NamingException | SQLException ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + username + " AND DB_NAME " + dbName, ex);
+        } finally {
+            try {
+                result.close();
+            } catch (Exception e) {}
+            try {
+                statement.close();
+            } catch (Exception e) {}
+            try {
+                connection.close();
+            } catch (Exception e) {}
+        }
+        return null;
+    }
     
     /**
      * Obtains the list of last executed jobs.

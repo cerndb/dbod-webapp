@@ -18,10 +18,11 @@ import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.FormValidations;
 import ch.cern.dbod.util.JobHelper;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -137,7 +138,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 else
                     userCCID = new Long(0);
 
-                //Get instance and amdmin mode from session attributes
+                //Get instance and admin mode from session attributes
                 jobHelper = new JobHelper(admin);
                 dateFormatter = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
                 dateTimeFormatter = new SimpleDateFormat(CommonConstants.DATE_TIME_FORMAT);     
@@ -217,7 +218,28 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             //Load changes
             loadChanges();
         }
-  
+        
+        String jobId = (String) Executions.getCurrent().getParameter("job");
+        if (jobId != null && !jobId.isEmpty()) {
+            String[] jobTokens = jobId.split("\\$");
+            if (jobTokens.length == 4) {
+                // Order: USERNAME$COMMAND_NAME$TYPE$CREATION_DATE
+                String user = jobTokens[0];
+                String command_name = jobTokens[1];
+                String type = jobTokens[2];
+                String creation_date = jobTokens[3];
+                Date parsedDate;
+                try {
+                    parsedDate = dateTimeFormatter.parse(creation_date);
+                    Job job = jobDAO.selectJob(user, instance.getDbName(), command_name, type, parsedDate.getTime());
+                    loadJob(job);
+                }
+                catch (ParseException ex) {
+                    Logger.getLogger(InstanceController.class.getName()).log(Level.SEVERE, "ERROR PARSING DATETIME: " + creation_date, ex);
+                }
+            }
+        }
+        
         activityDAO.insert(username, instance, "INSTANCE", "Loaded page for instance information");
     }
     
@@ -743,20 +765,14 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         }
 
         //Load information for the selected item
-        loadJob();
+        Job selectedJob = jobSelector.getSelectedItem() == null ? null : (Job) jobSelector.getSelectedItem().getValue(); 
+        loadJob(selectedJob);
     }
     
     /**
      * Loads the information for the selected job
      */
-    private void loadJob() {
-        //Get job
-        Listbox jobSelector = (Listbox) getFellow("jobGridSelector");
-        if (jobSelector == null || jobSelector.getSelectedItem() == null)
-            return;
-        
-        Job job = (Job) jobSelector.getSelectedItem().getValue();
-
+    private void loadJob(Job job) {
         //If a job is selected
         if (job != null) {
             Window window = ((Window) getFellow("jobInfoWindow"));
