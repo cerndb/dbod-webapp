@@ -643,17 +643,17 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 monitorBtn.setHref(String.format(ConfigLoader.getProperty(CommonConstants.INFLUX_MONITORING), instance.getHost(), instance.getDbName()));
                 break;
             case CommonConstants.DB_TYPE_PG:
-                if (instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL)) {
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    String date = dateFormat.format(new Date());
-                    String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
-                    String appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA4PG) + instance.getDbName() + "&sec_token=" + sec_token;
-                    monitorBtn.setTarget("_blank");
-                    monitorBtn.setHref(appdynURL);
-                } else {
+                //if (instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL)) {
+                //    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                //    String date = dateFormat.format(new Date());
+                //    String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
+                //    String appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA4PG) + instance.getDbName() + "&sec_token=" + sec_token;
+                //    monitorBtn.setTarget("_blank");
+                //    monitorBtn.setHref(appdynURL);
+                //} else {
                     monitorBtn.setTarget("_blank");
                     monitorBtn.setHref(String.format(ConfigLoader.getProperty(CommonConstants.POSTGRES_MONITORING), instance.getHost(), instance.getDbName()));
-                }
+                //}
                 break;
             case CommonConstants.DB_TYPE_MYSQL:
                 if (instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL)) {
