@@ -45,10 +45,6 @@
         <load-on-startup>1</load-on-startup>
         <!-- Must -->
     </servlet>
-    <servlet>
-        <servlet-name>AppDynamicsProxy</servlet-name>
-        <servlet-class>ch.cern.dbod.appservlet.AppDynamicsProxy</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>zkLoader</servlet-name>
         <url-pattern>*.zul</url-pattern>
@@ -111,10 +107,6 @@
     <!-- //// -->
     <!-- /////////// -->
     <!-- [Optional] Session timeout -->
-    <servlet-mapping>
-        <servlet-name>AppDynamicsProxy</servlet-name>
-        <url-pattern>/appdyn/*</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>
