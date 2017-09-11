@@ -25,10 +25,8 @@ import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.JobHelper;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -497,17 +495,17 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
                         //}
                         break;
                     case CommonConstants.DB_TYPE_MYSQL:
-                        if (instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL)) {
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                            String date = dateFormat.format(new Date());
-                            String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
-                            String appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA) + instance.getDbName() + "&sec_token=" + sec_token;
-                            monitorBtn.setTarget("_blank");
-                            monitorBtn.setHref(appdynURL);
-                        } else {
+                    //    if (instance.getCategory().equals(CommonConstants.CATEGORY_OFFICIAL)) {
+                    //        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    //        String date = dateFormat.format(new Date());
+                    //        String sec_token = DigestUtils.sha256Hex(ConfigLoader.getProperty(CommonConstants.APPDYN_TOKEN) + ":" + instance.getDbName() + ":" + date);
+                    //        String appdynURL = ConfigLoader.getProperty(CommonConstants.APPDYN_DBTUNA) + instance.getDbName() + "&sec_token=" + sec_token;
+                    //        monitorBtn.setTarget("_blank");
+                    //        monitorBtn.setHref(appdynURL);
+                    //    } else {
                             monitorBtn.setTarget("_blank");
                             monitorBtn.setHref(String.format(ConfigLoader.getProperty(CommonConstants.MYSQL_MONITORING), instance.getHost(), instance.getDbName()));
-                        }
+                    //    }
                         break;
                     default:
                         monitorBtn.setDisabled(true);
