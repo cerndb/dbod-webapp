@@ -122,6 +122,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Upgrade available for the database (calculated field)
      */
+    @Expose(serialize = false, deserialize = false)
     private String upgradeTo;
 
     /**
