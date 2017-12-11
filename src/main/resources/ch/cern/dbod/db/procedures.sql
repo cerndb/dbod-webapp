@@ -845,7 +845,7 @@ BEGIN
                             We have detected that your instance <b>' || instance.db_name || '</b> is not being automatically backed up. It is strongly recommended to enable automatic backups. In order to do so, open the backup management window from the overview or the instance view page, and check "Perform automatic backups every xx hours". Then click on "Apply changes".
                             </p>
                             <p>
-                            For more information visit our <a href="https://j2eeps.cern.ch/DBOnDemand/help.zul">help page</a>.
+                            For more information please visit our help page at: <a href="https://dbod.web.cern.ch/help.zul">https://dbod.web.cern.ch/help.zul</a>.
                             </p>
                             <p>
                             Kind regards,
