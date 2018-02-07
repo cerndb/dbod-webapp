@@ -62,7 +62,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * DB e-Group (max. 256)
      */
-    @SerializedName("e_group")
+    @SerializedName("egroup")
     private String eGroup;
 
     /**
@@ -86,7 +86,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Database type (Oracle, MySQL, etc)
      */
-    @SerializedName("db_type")
+    @SerializedName("type")
     private String dbType;
 
     /**

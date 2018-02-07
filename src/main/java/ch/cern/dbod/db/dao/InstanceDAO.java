@@ -388,7 +388,7 @@ public class InstanceDAO {
     public Instance selectByDbName(String dbName, List<Upgrade> upgrades) {
         Instance instance = null;
         try {
-            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
+            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName + "/metadata", Instance.class, "response");
             if (instance == null)
                 return null;
             
