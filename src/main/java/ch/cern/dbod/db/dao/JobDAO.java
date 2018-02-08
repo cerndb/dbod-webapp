@@ -13,11 +13,7 @@ import ch.cern.dbod.db.entity.CommandParam;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.util.CommonConstants;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.CallableStatement;
-import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -142,7 +138,7 @@ public class JobDAO {
 
             //Instantiate instance objects
             if (result.next()) {
-                Clob logClob = (Clob) result.getClob(1);
+                /*Clob logClob = (Clob) result.getClob(1);
                 if (logClob != null) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(logClob.getAsciiStream()));
                     String line;
@@ -152,9 +148,10 @@ public class JobDAO {
                         buffer.append("\n");
                     }
                     log = buffer.toString();
-                }
+                }*/
+                log = result.getString(1);
             }
-        } catch (IOException | NamingException | SQLException ex) {
+        } catch (/*IOException |*/ NamingException | SQLException ex) {
             Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
         } finally {
             try {
