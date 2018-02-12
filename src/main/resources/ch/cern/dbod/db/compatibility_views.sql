@@ -47,7 +47,8 @@ CREATE OR REPLACE VIEW public.dod_instances AS
             WHEN i.status = 'ACTIVE'::instance_status THEN 1
             ELSE 0
         END AS status,
-    i.id
+    i.id,
+    api.get_instance_attribute('port'::character varying, i.id) AS port
    FROM instance i
      JOIN instance_type t ON i.type_id = t.id
      LEFT JOIN instance m ON i.master_id = m.id
