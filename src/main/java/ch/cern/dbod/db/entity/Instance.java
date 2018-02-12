@@ -146,8 +146,8 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Host where instance is running
      */
-    @SerializedName("host")
-    private String host;
+    @SerializedName("hosts")
+    private String[] host = new String[1];
 
     /**
      * State (On Creation, Running, Stopped, etc)
@@ -323,11 +323,11 @@ public class Instance implements Comparable, Cloneable{
     }
 
     public String getHost() {
-        return host;
+        return host[0];
     }
 
     public void setHost(String host) {
-        this.host = host;
+        this.host[0] = host;
     }
 
     public String getState() {
@@ -382,7 +382,7 @@ public class Instance implements Comparable, Cloneable{
         if (slave != null)
             clone.setSlave(slave);
         if (host != null)
-            clone.setHost(host);
+            clone.setHost(host[0]);
         clone.setUser(user);
         clone.setAttributes((HashMap)attributes.clone());
         return clone;
