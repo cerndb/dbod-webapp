@@ -242,15 +242,13 @@ public class JobDAO {
             //Get connection
             connection = getConnection();
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT * FROM ("
-                            + " SELECT username, db_name, command_name, type, creation_date, completion_date, state "
+            String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, state "
                             + " FROM dod_jobs "
-                            + " ORDER BY creation_date DESC, completion_date DESC) "
-                            + " WHERE ROWNUM <= ?";
+                            + " ORDER BY creation_date DESC, completion_date DESC ";
             
             statement = connection.prepareStatement(query);
             //Assign values to variables
-            statement.setInt(1, 500);
+            statement.setMaxRows(500);
             //Execute query
             result = statement.executeQuery();
 
