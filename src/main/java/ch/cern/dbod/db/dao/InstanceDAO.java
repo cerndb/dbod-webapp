@@ -567,19 +567,17 @@ public class InstanceDAO {
              * Insert or update attributes
              */
             for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
-                // Try to modify the attribute
-                boolean result = RestHelper.putValueToRestApi(entry.getValue(), "api/v1/instance/" + newInstance.getDbName() + "/attribute/" + entry.getKey());
-                
-                // In case the attribute doesn't exist, send a new request to create it
-                if (!result) {
+                if (oldInstance.getAttribute(entry.getKey()) == null) {
+                    // The attribute is not present in old copy of the instance -> Create it
                     JsonObject postJson = RestHelper.parseObject("{" + entry.getKey() + ":" + entry.getValue() + "}");
                     RestHelper.postJsonToRestApi(postJson, "api/v1/instance/" + newInstance.getDbName() + "/attribute");
+                } else if (!oldInstance.getAttribute(entry.getKey()).equals(newInstance.getAttribute(entry.getKey()))) {
+                    // The attribute existed -> Update it
+                    RestHelper.putValueToRestApi(entry.getValue(), "api/v1/instance/" + newInstance.getDbName() + "/attribute/" + entry.getKey());
                 }
             }
 
             JsonObject json = RestHelper.parseObject(RestHelper.toJson(newInstance));
-            // Remove attributes, as they have been inserted before
-            json.remove("attributes");
             boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getDbName());
             if (!restResult) {
                 throw new NamingException("Error updating attributes.");
