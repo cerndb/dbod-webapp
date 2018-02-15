@@ -48,6 +48,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Attributes of the instance.
      */
+    @Expose(serialize = false, deserialize = false)
     private HashMap<String, String> attributes;
 
     /**
