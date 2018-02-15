@@ -157,7 +157,7 @@ public class RestHelper {
             request.setEntity(jsonData);
             
             HttpResponse response = httpclient.execute(request);
-            if (response.getStatusLine().getStatusCode() == 204) {
+            if (response.getStatusLine().getStatusCode() == 200) {
                 return true;
             } else {
                 Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
@@ -213,7 +213,7 @@ public class RestHelper {
             request.setEntity(jsonData);
             
             HttpResponse response = httpclient.execute(request);
-            if (response.getStatusLine().getStatusCode() == 204) {
+            if (response.getStatusLine().getStatusCode() == 201) {
                 return true;
             } else {
                 Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
