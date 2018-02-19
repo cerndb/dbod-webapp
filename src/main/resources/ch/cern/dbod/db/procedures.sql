@@ -735,12 +735,12 @@ END;
 -- Monitor jobs
 create or replace PROCEDURE monitor_jobs
 IS
-    -- Jobs that are pending for more than 30 seconds and no job is running on that instance
+    -- Jobs that are pending for more than 60 seconds and no job is running on that instance
     CURSOR pending_jobs IS
         SELECT *
         FROM dbondemand.dod_jobs a
         WHERE a.state = 'PENDING'
-            AND 30 <= (((SELECT sysdate FROM dual) - a.creation_date) * 86400)
+            AND 60 <= (((SELECT sysdate FROM dual) - a.creation_date) * 86400)
             AND 0 = (SELECT COUNT(*)
                         FROM dbondemand.dod_jobs b
                         WHERE a.db_name = b.db_name
@@ -762,7 +762,7 @@ BEGIN
     LOOP
         message := '<html>
                         <body>
-                            The following job has been pending for more than 30 seconds:
+                            The following job has been pending for more than 60 seconds:
                             <ul>
                                 <li><b>Username</b>: ' || pending_job.username || '</li>
                                 <li><b>DB Name</b>: ' || pending_job.db_name || '</li>
@@ -777,7 +777,7 @@ BEGIN
                     </html>';
 
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
-            recipients => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-support@cern.ch',
             subject => 'DBOD: WARNING: Pending job on "' || pending_job.db_name || '"',
             message => message,
             mime_type => 'text/html');
@@ -807,7 +807,7 @@ BEGIN
                     </html>';
 
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
-            recipients => 'dbondemand-admin@cern.ch',
+            recipients => 'dbondemand-support@cern.ch',
             subject => 'DBOD: WARNING: Running job on "' || running_job.db_name || '"',
             message => message,
             mime_type => 'text/html');
@@ -830,7 +830,7 @@ IS
             WHERE 0 = (SELECT COUNT(*)
                         FROM user_scheduler_jobs
                         WHERE job_name = db_name || '_BACKUP')
-                AND status = '1';
+                AND status = '1' AND master IS null;
     message VARCHAR2 (2056);
     e_group_email VARCHAR2(500);
 BEGIN
@@ -862,7 +862,7 @@ BEGIN
         END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
+            cc => 'dbondemand-support@cern.ch' || ',' || e_group_email,
             subject => 'Automatic backups not enabled on DB On Demand instance "' || instance.db_name || '"',
             message => message,
             mime_type => 'text/html');
@@ -933,7 +933,7 @@ BEGIN
         END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
+            cc => 'dbondemand-support@cern.ch' || ',' || e_group_email,
             subject => 'DB On Demand instance "' || instance.db_name || '" has expired',
             message => message,
             mime_type => 'text/html');
@@ -951,7 +951,7 @@ BEGIN
                             Dear DB On Demand user,
                             </p>
                             <p>
-                            Your instance <b>' || instance.db_name || '</b> will expire in ' || instance.days || ' days. If you want to extend the expiry date for your instance, please go to the instance view in <a href="https://dbondemand.web.cern.ch/DBOnDemand/index.zul">our website</a>, where you can modify important information related to your instance.
+                            Your instance <b>' || instance.db_name || '</b> will expire in ' || instance.days || ' days. If you want to extend the expiry date for your instance, please go to the instance view in <a href="https://dbod.web.cern.ch/">our website</a>, where you can modify important information related to your instance.
                             </p>
                             <p>
                             Kind regards,
@@ -968,7 +968,7 @@ BEGIN
         END IF;
         UTL_MAIL.send(sender => 'dbondemand-admin@cern.ch',
             recipients => instance.username || '@cern.ch',
-            cc => 'dbondemand-admin@cern.ch' || ',' || e_group_email,
+            cc => 'dbondemand-support@cern.ch' || ',' || e_group_email,
             subject => 'DB On Demand instance "' || instance.db_name || '" will expire in ' || instance.days || ' days',
             message => message,
             mime_type => 'text/html');
