@@ -350,19 +350,6 @@ BEGIN
             SET state = 'RUNNING'
             WHERE db_name = db_name_param;
 
-        -- If Oracle instance, add scheduled cleanup job
-        IF db_type = 'ORACLE' OR db_type = 'PG'
-        THEN
-            DBMS_SCHEDULER.CREATE_JOB (
-                    job_name             => '"' || db_name_param || '_CLEANUP"',
-                    job_type             => 'PLSQL_BLOCK',
-                    job_action           => 'BEGIN dbondemand.insert_cleanup_job(''' || username || ''','''
-                                            || db_name_param || ''',''' || db_type || ''',''dbod''); END;',
-                    repeat_interval      => 'FREQ=DAILY;',
-                    enabled              =>  TRUE,
-                    comments             => 'Scheduled cleanup job for DB On Demand');
-        END IF;
-
         -- Return 0 for success
         result := 0;
     END IF;
