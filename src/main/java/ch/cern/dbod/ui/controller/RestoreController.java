@@ -33,7 +33,6 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Timebox;
 import org.zkoss.zul.Toolbarbutton;
@@ -50,6 +49,7 @@ public class RestoreController extends Window {
      * Instance being managed at the moment.
      */
     private Instance instance;
+    
     /**
      * Helper to execute jobs.
      */
@@ -297,7 +297,7 @@ public class RestoreController extends Window {
                         return;
                     }
                     try {
-                        RestoreConfirmWindow confirmWindow = new RestoreConfirmWindow(snapshotToRestore, dateToRestore);
+                        RestoreConfirmWindow confirmWindow = new RestoreConfirmWindow(this, jobHelper, model, instance, username, time, snapshotToRestore, dateToRestore);
                         //Only show window if it is not already being diplayed
                         if (this.getFellowIfAny(confirmWindow.getId()) == null) {
                             confirmWindow.setParent(this);
@@ -395,7 +395,7 @@ public class RestoreController extends Window {
      * Displays an error window for the error code provided.
      * @param errorCode error code for the message to be displayed.
      */
-    private void showError(String errorCode) {
+    protected void showError(String errorCode) {
         Window errorWindow = (Window) this.getParent().getFellow("errorWindow");
         Label errorMessage = (Label) errorWindow.getFellow("errorMessage");
         errorMessage.setValue(Labels.getLabel(errorCode));
@@ -403,148 +403,6 @@ public class RestoreController extends Window {
             errorWindow.doModal();
         } catch (SuspendNotAllowedException ex) {
             Logger.getLogger(RestoreController.class.getName()).log(Level.SEVERE, "ERROR SHOWING ERROR WINDOW", ex);
-        }
-    }
-    
-    /**
-     * Confirm window to warn the user about the restore operation.
-     * @author Daniel Gomez Blanco
-     */
-    private class RestoreConfirmWindow extends Window {
-        
-        /**
-         * Snaphsot to restore.
-         */
-        private Snapshot snapshotToRestore;
-        
-        /**
-         * Day to restore
-         */
-        private Date dateToRestore;
-
-        /**
-         * Constructor for this window.
-         * @throws InterruptedException if the window cannot be created.
-         */
-        public RestoreConfirmWindow(Snapshot snap, Date date) throws InterruptedException {
-            //Call super constructor
-            super();
-            
-            //Instantiate variables
-            snapshotToRestore = snap;
-            dateToRestore = date;
-
-            //Basic window properties
-            this.setId("restoreConfirmWindow");
-            this.setTitle(Labels.getLabel(CommonConstants.LABEL_RESTORE_CONFIRM_TITLE));
-            this.setBorder("normal");
-            this.setMode(Window.OVERLAPPED);
-            this.setPosition("center");
-            this.setClosable(false);
-            this.setWidth("350px");
-
-            //Main box used to apply pading
-            Vbox mainBox = new Vbox();
-            mainBox.setStyle("padding-top:5px;padding-left:5px;padding-right:5px");
-            this.appendChild(mainBox);
-
-            //Box for message
-            Hbox messageBox = new Hbox();
-            messageBox.appendChild(new Image(CommonConstants.IMG_WARNING));
-            //Main message
-            Label message = new Label(Labels.getLabel(CommonConstants.LABEL_RESTORE_CONFIRM_MESSAGE));
-            messageBox.appendChild(message);
-            mainBox.appendChild(messageBox);
-
-            //Div for accept and cancel buttons
-            Div buttonsDiv = new Div();
-            buttonsDiv.setWidth("100%");
-
-            //Cancel button
-            Hbox cancelBox = new Hbox();
-            cancelBox.setHeight("24px");
-            cancelBox.setAlign("bottom");
-            cancelBox.setStyle("float:left;");
-            Toolbarbutton cancelButton = new Toolbarbutton();
-            cancelButton.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_CANCEL));
-            cancelButton.setZclass(CommonConstants.STYLE_BUTTON);
-            cancelButton.setImage(CommonConstants.IMG_CANCEL);
-            cancelButton.addEventListener(Events.ON_CLICK, new EventListener() {
-                @Override
-                public void onEvent(Event event) {
-                    doCancel();
-                }
-            });
-            cancelBox.appendChild(cancelButton);
-            Label cancelLabel = new Label(Labels.getLabel(CommonConstants.LABEL_CANCEL));
-            cancelLabel.setSclass(CommonConstants.STYLE_TITLE);
-            cancelLabel.setStyle("font-size:10pt !important;cursor:pointer;");
-            cancelLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-                @Override
-                public void onEvent(Event event) {
-                    doCancel();
-                }
-            });
-            cancelBox.appendChild(cancelLabel);
-            buttonsDiv.appendChild(cancelBox);
-
-            //Accept button
-            Hbox acceptBox = new Hbox();
-            acceptBox.setHeight("24px");
-            acceptBox.setAlign("bottom");
-            acceptBox.setStyle("float:right;");
-            Label acceptLabel = new Label(Labels.getLabel(CommonConstants.LABEL_ACCEPT));
-            acceptLabel.setSclass(CommonConstants.STYLE_TITLE);
-            acceptLabel.setStyle("font-size:10pt !important;cursor:pointer;");
-            acceptLabel.addEventListener(Events.ON_CLICK, new EventListener() {
-                @Override
-                public void onEvent(Event event) {
-                    doAccept();
-                }
-            });
-            acceptBox.appendChild(acceptLabel);
-            Toolbarbutton acceptButton = new Toolbarbutton();
-            acceptButton.setTooltiptext(Labels.getLabel(CommonConstants.LABEL_ACCEPT));
-            acceptButton.setZclass(CommonConstants.STYLE_BUTTON);
-            acceptButton.setImage(CommonConstants.IMG_ACCEPT);
-            acceptButton.addEventListener(Events.ON_CLICK, new EventListener() {
-                @Override
-                public void onEvent(Event event) {
-                    doAccept();
-                }
-            });
-            acceptBox.appendChild(acceptButton);
-            buttonsDiv.appendChild(acceptBox);
-            this.appendChild(buttonsDiv);
-        }
-
-
-        /**
-         * Method executed when user accepts the form. A job is created and the window is detached.
-         */
-        private void doAccept() {
-            //Create new job and update instance status
-            if (jobHelper.doRestore(instance, username, snapshotToRestore, dateToRestore)) {
-                if (model != null) {
-                //Reload the node
-                model.updateInstance(instance);
-            } //If we are in the instance page
-                else if (time.getRoot().getFellowIfAny("controller") != null && time.getRoot().getFellow("controller") instanceof InstanceController) {
-                    InstanceController controller = (InstanceController) time.getRoot().getFellow("controller");
-                    controller.afterCompose();
-                }
-            } else {
-                showError(CommonConstants.ERROR_DISPATCHING_JOB);
-            }
-            this.detach();
-            RestoreController.this.detach();
-        }
-
-        /**
-         * Method executed when the user cancels the form. The window is detached from the page.
-         */
-        private void doCancel() {
-            this.detach();
         }
     }
 }

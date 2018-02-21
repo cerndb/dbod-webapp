@@ -23,8 +23,6 @@ import ch.cern.dbod.ui.model.OverviewTreeNode;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.JobHelper;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -96,9 +94,6 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Cast database object
                 final Instance instance = (Instance)((OverviewTreeNode) node).getData();
-
-                //Create date formatter
-                DateFormat dateFormatter = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
 
                 //Create row
                 final Treerow row = new Treerow();
