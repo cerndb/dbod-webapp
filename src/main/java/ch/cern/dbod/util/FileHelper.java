@@ -15,6 +15,7 @@ import ch.cern.dbod.ws.DBODWebServicePortType;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.media.AMedia;
@@ -99,8 +100,12 @@ public class FileHelper {
             DBODWebServicePortType port = service.getDBODWebServicePort();
             String slowLogsString = port.getSlowLogs(CommonConstants.PREFIX_INSTANCE_NAME + instance.getDbName());
             if (slowLogsString != null && !slowLogsString.isEmpty()) {
-                slowLogs = slowLogsString.split(":");
+                String[] tempLogs = slowLogsString.split(":");
+                slowLogs = Arrays.copyOf(tempLogs, tempLogs.length + 1);
+            } else {
+                slowLogs = new String[1];
             }
+            slowLogs[slowLogs.length - 1] = "/ORA/dbs03/" + instance.getDbName().toUpperCase() + "/mysql/" + instance.getHost() + ".cern.ch.err";
         } catch (Exception ex) {
             Logger.getLogger(FileHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING SLOW LOGS ON INSTANCE " + instance.getDbName(), ex.getMessage());
         }
