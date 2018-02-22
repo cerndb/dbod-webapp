@@ -73,7 +73,8 @@ public class ConfigController extends Vbox implements AfterCompose{
     }
     
     public void refreshConfig() {
-        ConfigLoader.reload();
+        ServletContext sc = (ServletContext)Sessions.getCurrent().getWebApp().getServletContext();
+        ConfigLoader.reload(sc);
         Label msg = ((Label) getFellow("configurationMsg"));
         msg.setStyle("font-weight:bold;color:green");
         msg.setValue(Labels.getLabel(CommonConstants.LABEL_CONFIG_FILE_RELOAD));

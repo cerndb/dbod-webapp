@@ -9,7 +9,6 @@
 
 package ch.cern.dbod.util;
 
-import ch.cern.dbod.util.CommonConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,33 +16,38 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import org.zkoss.zk.ui.Sessions;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  * Reads the configuration file for the proxy server to AppDynamics.
  * @author Jose Andres Cordero Benitez
  */
-public class ConfigLoader {
+public class ConfigLoader implements ServletContextListener {
     
-    private static Properties propertiesFile = init();
+    private static Properties properties;
+    
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        reload(sce.getServletContext());
+    }
     
     public static String getProperty(String name) {
-        return propertiesFile.getProperty(name);
+        return properties.getProperty(name);
     }
     
-    public static void reload() {
-        propertiesFile = init();
-    }
-    
-    private static Properties init()
-    {
-        Properties prop = new Properties();
-        String configPath = ((ServletContext)Sessions.getCurrent().getWebApp().getServletContext()).getInitParameter(CommonConstants.CONFIG_LOCATION);
+    public static void reload(ServletContext sc) {
+        properties = new Properties();
+        String configPath = sc.getInitParameter(CommonConstants.CONFIG_LOCATION);
         try (InputStream input = new FileInputStream(configPath)) {
-            prop.load(input);
+            properties.load(input);
         } catch (IOException ex) {
             Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, "EXCEPTION READING CONFIG FILE ON " + configPath, ex);
         }
-        return prop;
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        // Nothing to do
     }
 }
