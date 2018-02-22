@@ -10,6 +10,8 @@ package ch.cern.dbod.util;
 
 import com.google.gson.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
@@ -98,22 +100,33 @@ public class RestHelper {
         return null;
     }
     
-    public static <T> T getObjectListFromRestApi(String path, Class<T> object) {
+    public static <T> ArrayList<T> getObjectListFromRestApi(String path, Class<T> object) {
         Gson gson = init();
         
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
             
             HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
+            byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
+            request.addHeader("Authorization", "Basic " + new String(encodedBytes));
+            
             HttpResponse response = httpclient.execute(request);
             if (response.getStatusLine().getStatusCode() == 200)
             {
                 String resp = EntityUtils.toString(response.getEntity());
-                JsonElement json = parseList(resp);
+                JsonArray jList = parseObject(resp).getAsJsonArray("response");
                 
-                T result = gson.fromJson(json, object);
+                ArrayList<T> objectList = new ArrayList<>();
+                Iterator<JsonElement> itr = jList.iterator();
+                while (itr.hasNext()) {
+                    JsonObject jItem = itr.next().getAsJsonObject();
+                    T item = gson.fromJson(jItem, object);
+                    objectList.add(item);
+                }
+                
                 EntityUtils.consume(response.getEntity());
-                return result;
+                return objectList;
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
