@@ -13,6 +13,7 @@ import ch.cern.dbod.db.entity.CommandParam;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.util.CommonConstants;
+import ch.cern.dbod.util.RestHelper;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,51 +61,13 @@ public class JobDAO {
      * @return list of jobs for the specified instance.
      */
     public List<Job> selectByInstance(Instance instance) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<Job> jobs = new ArrayList<>();
+        ArrayList<Job> jobs = null;
         try {
-            //Get connection
-            connection = getConnection();
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, requester, state, admin_action, result"
-                            + " FROM dod_jobs WHERE username = ? AND db_name = ? ORDER BY creation_date DESC, completion_date DESC";
-            statement = connection.prepareStatement(query);
-            //Assign values to variables
-            statement.setString(1, instance.getUsername());
-            statement.setString(2, instance.getDbName());
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Job job = new Job();
-                job.setUsername(result.getString(1));
-                job.setDbName(result.getString(2));
-                job.setCommandName(result.getString(3));
-                job.setType(result.getString(4));
-                job.setCreationDate(new java.util.Date(result.getTimestamp(5).getTime()));
-                if (result.getTimestamp(6) != null)
-                    job.setCompletionDate(new java.util.Date(result.getTimestamp(6).getTime()));
-                job.setRequester(result.getString(7));
-                job.setState(result.getString(8));
-                job.setAdminAction(result.getInt(9));
-                job.setResult(result.getString(10));
-                jobs.add(job);
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING JOB FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            jobs = RestHelper.getObjectListFromRestApi("api/v1/instance/" + instance.getDbName() + "/job", Job.class);
+        } catch (Exception ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "Error getting jobs for instance: " + instance.getDbName(), ex);
         } finally {
-            try {
-                result.close();
-            } catch (Exception e) {}
-            try {
-                statement.close();
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
+            
         }
         return jobs;
     }
@@ -353,8 +316,8 @@ public class JobDAO {
             //Set autocommit to false to execute multiple queries and rollback in case something goes wrong
             connection.setAutoCommit(false);
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state, instance_id)"
+                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             insertJobStatement = connection.prepareStatement(insertQuery);
             //Assign values to variables
             insertJobStatement.setString(1, job.getUsername());
@@ -365,6 +328,7 @@ public class JobDAO {
             insertJobStatement.setString(6, job.getRequester());
             insertJobStatement.setInt(7, job.getAdminAction());
             insertJobStatement.setString(8, job.getState());
+            insertJobStatement.setInt(9, job.getInstance_id());
 
             //Execute query
             insertJobResult = insertJobStatement.executeUpdate();

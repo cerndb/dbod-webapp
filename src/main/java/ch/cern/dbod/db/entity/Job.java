@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 /**
@@ -26,11 +27,13 @@ public class Job {
     /**
      * DB name for the instance on which the job is going to be performed (max. 8)
      */
+    @SerializedName("db_name")
     private String dbName;
 
     /**
      * Command to be executed (max. 64)
      */
+    @SerializedName("command_name")
     private String commandName;
 
     /**
@@ -41,11 +44,13 @@ public class Job {
     /**
      * Creation time of this job
      */
+    @SerializedName("creation_date")
     private Date creationDate;
 
     /**
      * Completion time of this job
      */
+    @SerializedName("completion_date")
     private Date completionDate;
 
     /**
@@ -57,6 +62,7 @@ public class Job {
      * Admin flag (0 indicates is not an admin job, 1 indicates is an admin job,
      * 2 indicates that it is scheduled job)
      */
+    @SerializedName("admin_action")
     private int adminAction;
 
     /**
@@ -68,6 +74,16 @@ public class Job {
      * Result of the job
      */
     private String result;
+    
+    /**
+     * Job ID.
+     */
+    private int id;
+    
+    /**
+     * Instance ID.
+     */
+    private int instance_id;
     
 
     public String getUsername() {
@@ -148,5 +164,25 @@ public class Job {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public int getInstance_id()
+    {
+        return instance_id;
+    }
+
+    public void setInstance_id(int instance_id)
+    {
+        this.instance_id = instance_id;
     }
 }

@@ -35,7 +35,7 @@ public class RestHelper {
                     .registerTypeAdapter(Boolean.class, serializer)
                     .addSerializationExclusionStrategy(new AnnotationExclusionStrategySerialization())
                     .addDeserializationExclusionStrategy(new AnnotationExclusionStrategyDeserialization())
-                    .setDateFormat("yyyy-MM-dd")
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                     .create();
         
         return gson;
@@ -102,6 +102,7 @@ public class RestHelper {
     
     public static <T> ArrayList<T> getObjectListFromRestApi(String path, Class<T> object) {
         Gson gson = init();
+        ArrayList<T> objectList = new ArrayList<>();
         
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
@@ -117,7 +118,6 @@ public class RestHelper {
                 String resp = EntityUtils.toString(response.getEntity());
                 JsonArray jList = parseObject(resp).getAsJsonArray("response");
                 
-                ArrayList<T> objectList = new ArrayList<>();
                 Iterator<JsonElement> itr = jList.iterator();
                 while (itr.hasNext()) {
                     JsonObject jItem = itr.next().getAsJsonObject();
@@ -126,13 +126,12 @@ public class RestHelper {
                 }
                 
                 EntityUtils.consume(response.getEntity());
-                return objectList;
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
-        return null;
+        return objectList;
     }
     
     public static String getValueFromRestApi(String path) {

@@ -302,6 +302,7 @@ public class JobHelper {
         else
             job.setAdminAction(0);
         job.setState(CommonConstants.JOB_STATE_PENDING);
+        job.setInstance_id(instance.getId());
         //Create param
         List<CommandParam> params = new ArrayList<>();
         CommandParam snapshotFile = new CommandParam();
