@@ -14,11 +14,9 @@ import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.apache.http.ParseException;
 
 /**
  * DAO for Job entity.
@@ -78,54 +77,18 @@ public class JobDAO {
      * @return String containing the job log.
      */
     public String selectLogByJob(Job job) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
         String log = "";
         try {
-            //Get connection
-            connection = getConnection();
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT log FROM dod_jobs"
-                            + " WHERE username = ? AND db_name = ? AND command_name = ? AND type = ? AND creation_date = ? ORDER BY creation_date";
-            statement = connection.prepareStatement(query);
-            //Assign values to variables
-            statement.setString(1, job.getUsername());
-            statement.setString(2, job.getDbName());
-            statement.setString(3, job.getCommandName());
-            statement.setString(4, job.getType());
-            statement.setTimestamp(5,  new java.sql.Timestamp(job.getCreationDate().getTime()));
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            if (result.next()) {
-                /*Clob logClob = (Clob) result.getClob(1);
-                if (logClob != null) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(logClob.getAsciiStream()));
-                    String line;
-                    StringBuilder buffer = new StringBuilder();
-                    while((line = reader.readLine()) != null) {
-                        buffer.append(line);
-                        buffer.append("\n");
-                    }
-                    log = buffer.toString();
-                }*/
-                log = result.getString(1);
-            }
-        } catch (/*IOException |*/ NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {}
-            try {
-                statement.close();
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
+            JsonObject json = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + job.getDbName() + "/job/" + job.getId());
+            log = json.getAsJsonObject("response").get("log").getAsString();
+        } catch (ParseException ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR INSTANCE: " + job.getDbName(), ex);
+        }
+        catch (IOException ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR COMMUNICATING WITH APIATO", ex);
+        }
+        catch (IllegalStateException ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR PARSING RESPONSE", ex);
         }
         return log;
     }

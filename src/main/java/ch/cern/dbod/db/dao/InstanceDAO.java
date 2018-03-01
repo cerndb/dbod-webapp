@@ -14,6 +14,7 @@ import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,6 +29,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.apache.http.ParseException;
 
 /**
  * DAO for Instance entity.
@@ -569,7 +571,8 @@ public class InstanceDAO {
             for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
                 if (oldInstance.getAttribute(entry.getKey()) == null) {
                     // The attribute is not present in old copy of the instance -> Create it
-                    JsonObject postJson = RestHelper.parseObject("{" + entry.getKey() + ":" + entry.getValue() + "}");
+                    JsonObject postJson = new JsonObject();
+                    postJson.addProperty(entry.getKey(), entry.getValue());
                     RestHelper.postJsonToRestApi(postJson, "api/v1/instance/" + newInstance.getDbName() + "/attribute");
                 } else if (!oldInstance.getAttribute(entry.getKey()).equals(newInstance.getAttribute(entry.getKey()))) {
                     // The attribute existed -> Update it
@@ -668,10 +671,14 @@ public class InstanceDAO {
                 Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE UPDATE", ex);
             }
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
-        } finally {
-            try {
-                updateStatement.close();
-            } catch (Exception e) {}
+        }
+        catch (IOException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (ParseException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
             try {
                 insertStatement.close();
             } catch (Exception e) {}
