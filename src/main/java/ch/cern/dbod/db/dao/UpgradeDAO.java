@@ -15,8 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -47,11 +46,11 @@ public class UpgradeDAO {
      * Selects all the upgrades available in the database.
      * @return List of all the upgrades in the database.
      */
-    public List<Upgrade> selectAll() {
+    public Map<String, Upgrade> selectAll() {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<Upgrade> upgrades = new ArrayList<>();
+        HashMap<String, Upgrade> upgrades = new HashMap<>();
         try {
             //Get connection
             connection = getConnection();
@@ -72,7 +71,8 @@ public class UpgradeDAO {
                 upgrade.setCategory(result.getString(2));
                 upgrade.setVersionFrom(result.getString(3));
                 upgrade.setVersionTo(result.getString(4));
-                upgrades.add(upgrade);
+                String key = upgrade.getDbType() + "$" + upgrade.getCategory() + "$" + upgrade.getVersionFrom();
+                upgrades.put(key, upgrade);
             }
         } catch (NamingException | SQLException ex) {
             Logger.getLogger(UpgradeDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);

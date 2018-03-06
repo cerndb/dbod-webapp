@@ -12,6 +12,7 @@ package ch.cern.dbod.db.dao;
 import ch.cern.dbod.db.entity.*;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.RestHelper;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -57,74 +58,29 @@ public class InstanceDAO {
      * @param upgrades list of available upgrades.
      * @return List of all the instances in the database.
      */
-    public List<Instance> selectAll(List<Upgrade> upgrades) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<Instance> instances = new ArrayList<>();
+    public List<Instance> selectAll(String username, String egroups, boolean admin, Map<String, Upgrade> upgrades) {
+        ArrayList<Instance> instances = null;
         try {
-            //Get connection
-            connection = getConnection();
-
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE status = '1'"
-                            + " ORDER BY db_name");
-            statement = connection.prepareStatement(query.toString());
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Instance instance = new Instance();
-                instance.setId(result.getInt(1));
-                instance.setUsername(result.getString(2));
-                instance.setDbName(result.getString(3));
-                instance.setEGroup(result.getString(4));
-                instance.setCategory(result.getString(5));
-                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
-                if (result.getDate(7) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
-                instance.setDbType(result.getString(8));
-                instance.setDbSize(result.getInt(9));
-                instance.setNoConnections(result.getInt(10));
-                instance.setProject(result.getString(11));
-                instance.setDescription(result.getString(12));
-                instance.setVersion(result.getString(13));
-                instance.setState(result.getString(14));
-                instance.setStatus(result.getBoolean(15));
-                instance.setMaster(result.getString(16));
-                instance.setSlave(result.getString(17));
-                instance.setHost(result.getString(18));
-            //Check if instance needs upgrade
-            if (upgrades != null) {
-                    for (int i=0; i < upgrades.size(); i++) {
-                        Upgrade upgrade = upgrades.get(i);
-                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                            && upgrade.getVersionFrom().equals(instance.getVersion()))
-                            instance.setUpgradeTo(upgrade.getVersionTo());
+            JsonObject authHeader = new JsonObject();
+            authHeader.addProperty("owner", username);
+            authHeader.addProperty("groups", "[" + egroups + "]");
+            authHeader.addProperty("admin", admin);
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), null);
+            
+            for (Instance instance : instances) {
+                //Check if instance needs upgrade
+                if (upgrades != null) {
+                    String key = instance.getDbType() + "$" + instance.getCategory() + "$" + instance.getVersion();
+                    Upgrade upgrade = upgrades.get(key);
+                    if (upgrade != null) {
+                        instance.setUpgradeTo(upgrade.getVersionTo());
                     }
                 }
-                instances.add(instance);
             }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
+        } catch (IOException | IllegalStateException | ParseException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN", ex);
         }
-            try {
-                statement.close();
-            } catch (Exception e) {
-        }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
-        }
+        
         return instances;
     }
     
@@ -203,99 +159,31 @@ public class InstanceDAO {
      * @param upgrades upgrades available.
      * @return List of instances belonging to a username or to any of their e-groups.
      */
-    public List<Instance> selectByUserNameAndEGroups(String username, String egroups, List<Upgrade> upgrades) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<Instance> instances = new ArrayList<>();
+    public List<Instance> selectByUserNameAndEGroups(String username, String egroups, Map<String, Upgrade> upgrades) {
+        ArrayList<Instance> instances = null;
         try {
-            //Get connection
-            connection = getConnection();
+            JsonObject authHeader = new JsonObject();
+            authHeader.addProperty("owner", username);
+            JsonArray eg = new JsonArray();
+            eg.add(egroups);
+            authHeader.add("groups", eg);
+            authHeader.addProperty("admin", false);
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), null);
             
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE status = '1' ");
-            //Append egroups (if any)
-            StringTokenizer tokenizer = new StringTokenizer("");
-            if (egroups != null && !egroups.isEmpty()) {
-                query.append("AND (username = ? ");
-                tokenizer = new StringTokenizer(egroups.toLowerCase(), ";");
-                int tokens = tokenizer.countTokens();
-                if (tokens > 0) {
-                    query.append("OR ( e_group IS NOT NULL AND e_group IN (");
-                    for (int i=0; i<tokens-1; i++) {
-                        query.append("?, ");
-                    }
-                    query.append("?))) ");
-                }
-            }
-            else {
-                query.append("AND username = ? ");
-            }
-            query.append("ORDER BY db_name");
-            statement = connection.prepareStatement(query.toString());
-
-            //Assign values to variables
-            statement.setString(1, username);
-            int i = 2;
-            while (tokenizer.hasMoreTokens()) {
-                statement.setString(i, tokenizer.nextToken());
-                i++;
-            }
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Instance instance = new Instance();
-                instance.setId(result.getInt(1));
-                instance.setUsername(result.getString(2));
-                instance.setDbName(result.getString(3));
-                instance.setEGroup(result.getString(4));
-                instance.setCategory(result.getString(5));
-                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
-                if (result.getDate(7) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
-                instance.setDbType(result.getString(8));
-                instance.setDbSize(result.getInt(9));
-                instance.setNoConnections(result.getInt(10));
-                instance.setProject(result.getString(11));
-                instance.setDescription(result.getString(12));
-                instance.setVersion(result.getString(13));
-                instance.setState(result.getString(14));
-                instance.setStatus(result.getBoolean(15));
-                instance.setMaster(result.getString(16));
-                instance.setSlave(result.getString(17));
-                instance.setHost(result.getString(18));
+            for (Instance instance : instances) {
                 //Check if instance needs upgrade
                 if (upgrades != null) {
-                    for (int j=0; j < upgrades.size(); j++) {
-                        Upgrade upgrade = upgrades.get(j);
-                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                                && upgrade.getVersionFrom().equals(instance.getVersion()))
-                            instance.setUpgradeTo(upgrade.getVersionTo());
+                    String key = instance.getDbType() + "$" + instance.getCategory() + "$" + instance.getVersion();
+                    Upgrade upgrade = upgrades.get(key);
+                    if (upgrade != null) {
+                        instance.setUpgradeTo(upgrade.getVersionTo());
                     }
                 }
-                instances.add(instance);
             }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR USERNAME " + username ,ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
+        } catch (IOException | IllegalStateException | ParseException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR USERNAME " + username, ex);
         }
+        
         return instances;
     }
     
@@ -306,7 +194,7 @@ public class InstanceDAO {
      * @param upgrades upgrades available.
      * @return List of the instances in the host.
      */
-    public List<Instance> selectInstancesPerHost(String host, List<Upgrade> upgrades) {
+    public List<Instance> selectInstancesPerHost(String host, Map<String, Upgrade> upgrades) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
@@ -352,14 +240,13 @@ public class InstanceDAO {
                 instance.setHost(result.getString(18));
                 //Check if instance needs upgrade
                 if (upgrades != null) {
-                    for (int i=0; i < upgrades.size(); i++) {
-                        Upgrade upgrade = upgrades.get(i);
-                        if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                                && upgrade.getVersionFrom().equals(instance.getVersion()))
-                            instance.setUpgradeTo(upgrade.getVersionTo());
+                    String key = instance.getDbType() + "$" + instance.getCategory() + "$" + instance.getVersion();
+                    Upgrade upgrade = upgrades.get(key);
+                    if (upgrade != null) {
+                        instance.setUpgradeTo(upgrade.getVersionTo());
                     }
                 }
-               instances.add(instance);
+                instances.add(instance);
             }
         } catch (NamingException | SQLException ex) {
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN",ex);
@@ -387,10 +274,10 @@ public class InstanceDAO {
      * @param upgrades upgrades available.
      * @return instance for the username and DB name specified.
      */
-    public Instance selectByDbName(String dbName, List<Upgrade> upgrades) {
+    public Instance selectByDbName(String dbName, Map<String, Upgrade> upgrades) {
         Instance instance = null;
         try {
-            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName + "/metadata", Instance.class, "response");
+            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
             if (instance == null)
                 return null;
             
@@ -405,11 +292,10 @@ public class InstanceDAO {
             
             //Check if instance needs upgrade
             if (upgrades != null) {
-                for (int i=0; i < upgrades.size(); i++) {
-                    Upgrade upgrade = upgrades.get(i);
-                    if (upgrade.getDbType().equals(instance.getDbType()) && upgrade.getCategory().equals(instance.getCategory())
-                            && upgrade.getVersionFrom().equals(instance.getVersion()))
-                        instance.setUpgradeTo(upgrade.getVersionTo());
+                String key = instance.getDbType() + "$" + instance.getCategory() + "$" + instance.getVersion();
+                Upgrade upgrade = upgrades.get(key);
+                if (upgrade != null) {
+                    instance.setUpgradeTo(upgrade.getVersionTo());
                 }
             }
         } catch (Exception ex) {
@@ -671,9 +557,6 @@ public class InstanceDAO {
                 Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE UPDATE", ex);
             }
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
-        }
-        catch (IOException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (ParseException ex) {
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);

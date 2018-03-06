@@ -19,6 +19,7 @@ import ch.cern.dbod.util.EGroupHelper;
 import ch.cern.dbod.util.HTTPHelper;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
@@ -64,7 +65,7 @@ public class InstanceFilter implements Filter {
             String dbName = (String) request.getParameter(CommonConstants.INSTANCE);
             if (dbName != null && !dbName.isEmpty()) {
                 UpgradeDAO upgradeDAO = new UpgradeDAO();
-                List<Upgrade> upgrades = upgradeDAO.selectAll();
+                Map<String, Upgrade> upgrades = upgradeDAO.selectAll();
                 InstanceDAO instanceDAO = new InstanceDAO();
                 Instance instance = instanceDAO.selectByDbName(dbName, upgrades);
 

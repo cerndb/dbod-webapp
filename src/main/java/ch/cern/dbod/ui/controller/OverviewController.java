@@ -18,6 +18,7 @@ import ch.cern.dbod.ui.model.OverviewTreeModel;
 import ch.cern.dbod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import java.util.List;
+import java.util.Map;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
@@ -51,7 +52,7 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
     /**
      * List of upgrades.
      */
-    private List<Upgrade> upgrades;
+    private Map<String, Upgrade> upgrades;
     /**
      * User authenticated in the system.
      */

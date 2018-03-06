@@ -42,8 +42,7 @@ public class RestHelper {
         return gson;
     }
     
-    private static void addAuthorizationHeader(HttpRequest request)
-    {
+    private static void addAuthorizationHeader(HttpRequest request) {
         String encode = ConfigLoader.getProperty(CommonConstants.DBOD_API_USER) + ":" + ConfigLoader.getProperty(CommonConstants.DBOD_API_PASS);
         byte[] encodedBytes = Base64.encodeBase64(encode.getBytes());
         request.addHeader("Authorization", "Basic " + new String(encodedBytes));
@@ -100,7 +99,7 @@ public class RestHelper {
         return null;
     }
     
-    public static <T> ArrayList<T> getObjectListFromRestApi(String path, Class<T> object) throws IOException, ParseException, IllegalStateException {
+    public static <T> ArrayList<T> getObjectListFromRestApi(String path, Class<T> object, String auth, String response) throws IOException, ParseException, IllegalStateException {
         Gson gson = init();
         ArrayList<T> objectList = new ArrayList<>();
         
@@ -108,23 +107,29 @@ public class RestHelper {
 
         HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
         addAuthorizationHeader(request);
+        if (auth != null) {
+            request.addHeader("auth", auth);
+        }
 
-        HttpResponse response = httpclient.execute(request);
-        if (response.getStatusLine().getStatusCode() == 200)
+        HttpResponse resp = httpclient.execute(request);
+        if (resp.getStatusLine().getStatusCode() == 200)
         {
-            String resp = EntityUtils.toString(response.getEntity());
-            JsonArray jList = parseObject(resp).getAsJsonArray("response");
-
+            String respStr = EntityUtils.toString(resp.getEntity());
+            EntityUtils.consume(resp.getEntity());
+            JsonArray jList;
+            if (response != null) {
+                jList = parseObject(respStr).getAsJsonArray(response);
+            } else {
+                jList = parseList(respStr).getAsJsonArray();
+            }
+            
             Iterator<JsonElement> itr = jList.iterator();
             while (itr.hasNext()) {
                 JsonObject jItem = itr.next().getAsJsonObject();
                 T item = gson.fromJson(jItem, object);
                 objectList.add(item);
             }
-
-            EntityUtils.consume(response.getEntity());
         }
-        
         
         return objectList;
     }
@@ -146,21 +151,27 @@ public class RestHelper {
         return null;
     }
     
-    public static boolean putValueToRestApi(String value, String path) throws IOException, ParseException {
-        HttpClient httpclient = HttpClientBuilder.create().build();
-
-        HttpPut request = new HttpPut(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
-        addAuthorizationHeader(request);
-
-        StringEntity jsonData = new StringEntity(value, "UTF-8");
-        /* Body of request */
-        request.setEntity(jsonData);
-
-        HttpResponse response = httpclient.execute(request);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            return true;
-        } else {
-            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
+    public static boolean putValueToRestApi(String value, String path) {
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            
+            HttpPut request = new HttpPut(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            addAuthorizationHeader(request);
+            
+            StringEntity jsonData = new StringEntity(value, "UTF-8");
+            /* Body of request */
+            request.setEntity(jsonData);
+            
+            HttpResponse response = httpclient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                return true;
+            } else {
+                Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, "API Returned error code: {0}", response.getStatusLine().getStatusCode());
+            }
+        } catch (IOException e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, e);
         }
         
         return false;
