@@ -15,6 +15,7 @@ import ch.cern.dbod.ui.model.UpgradesListModel;
 import ch.cern.dbod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -37,7 +38,7 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
     /**
      * List of upgrades.
      */
-    private List<Upgrade> upgrades;
+    private Map<String, Upgrade> upgrades;
 
     /**
      * Method executed before the page is composed. Obtains instances from DB.
@@ -57,7 +58,7 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
     public void afterCompose() {
         //Upgrades grid
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        upgradesGrid.setModel(new UpgradesListModel(upgrades));
+        upgradesGrid.setModel(new UpgradesListModel((List)upgrades.values()));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
         
         displayOrHideAreas();
@@ -108,10 +109,10 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
         }
         if (upgrades != null && upgrades.size() > 0) {
             if (upgradesGrid.getModel() != null) {
-                ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgrades);
+                ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades((List)upgrades.values());
             }
             else {
-                upgradesGrid.setModel(new UpgradesListModel(upgrades));
+                upgradesGrid.setModel(new UpgradesListModel((List)upgrades.values()));
                 upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
             }
         }

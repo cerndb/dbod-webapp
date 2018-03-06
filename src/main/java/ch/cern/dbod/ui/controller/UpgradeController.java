@@ -17,6 +17,7 @@ import ch.cern.dbod.ui.model.OverviewTreeModel;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.JobHelper;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -50,10 +51,6 @@ public class UpgradeController extends Window {
      * User authenticated in the system at the moment.
      */
     private String username;
-    /**
-     * List of instances shared wit the current one.
-     */
-    private List<Instance> sharedInstances;
     /**
      * Model of the tree (null if we are in list view).
      */
@@ -92,7 +89,7 @@ public class UpgradeController extends Window {
         
         InstanceDAO instanceDAO = new InstanceDAO();
         UpgradeDAO upgradeDAO = new UpgradeDAO();
-        List<Upgrade> upgrades = upgradeDAO.selectAll();
+        Map<String, Upgrade> upgrades = upgradeDAO.selectAll();
         
         //Boolean that indicates if the slave is upgraded (requirement in case of master upgrade)
         boolean slaveUpgraded = true;
@@ -101,10 +98,6 @@ public class UpgradeController extends Window {
             if (slave.getUpgradeTo() != null && !slave.getUpgradeTo().isEmpty())
                 slaveUpgraded = false;
         }
-        
-        //Get shared instances
-        sharedInstances = instanceDAO.selectInstancesPerHost(instance.getHost(), upgrades);
-        sharedInstances.remove(instance);
 
         //Basic window properties
         this.setId("upgradeWindow");

@@ -21,8 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -60,7 +59,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
     /**
      * List of upgrades.
      */
-    private List<Upgrade> upgrades;
+    private Map<String, Upgrade> upgrades;
     /**
      * Instance being managed at the moment.
      */

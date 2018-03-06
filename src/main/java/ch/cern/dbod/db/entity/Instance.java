@@ -57,19 +57,19 @@ public class Instance implements Comparable, Cloneable{
      * The DB name limitation comes from the fact that Oracle SID's can only
      * be 8 characters
      */
-    @SerializedName("db_name")
+    @SerializedName("name")
     private String dbName;
 
     /**
      * DB e-Group (max. 256)
      */
-    @SerializedName("egroup")
+    @SerializedName("e_group")
     private String eGroup;
 
     /**
      * Category of the instances (personal, test or official, max. 32)
      */
-    @SerializedName("class")
+    @SerializedName("category")
     private String category;
 
     /**
@@ -93,7 +93,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Database size (in GB)
      */
-    @SerializedName("db_size")
+    @SerializedName("size")
     private int dbSize;
 
     /**
@@ -147,8 +147,8 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Host where instance is running
      */
-    @SerializedName("hosts")
-    private String[] host = new String[1];
+    @SerializedName("host")
+    private String host;
 
     /**
      * State (On Creation, Running, Stopped, etc)
@@ -324,11 +324,11 @@ public class Instance implements Comparable, Cloneable{
     }
 
     public String getHost() {
-        return host[0];
+        return host;
     }
 
     public void setHost(String host) {
-        this.host[0] = host;
+        this.host = host;
     }
 
     public String getState() {
@@ -383,7 +383,7 @@ public class Instance implements Comparable, Cloneable{
         if (slave != null)
             clone.setSlave(slave);
         if (host != null)
-            clone.setHost(host[0]);
+            clone.setHost(host);
         clone.setUser(user);
         clone.setAttributes((HashMap)attributes.clone());
         return clone;

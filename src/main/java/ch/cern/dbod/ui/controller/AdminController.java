@@ -19,6 +19,7 @@ import ch.cern.dbod.ui.renderer.OverviewTreeRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import ch.cern.dbod.util.JobHelper;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -51,7 +52,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
     /**
      * List of upgrades.
      */
-    private List<Upgrade> upgrades;
+    private Map<String, Upgrade> upgrades;
     /**
      * Job helper to perform admin actions.
      */
@@ -76,7 +77,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
 
         //Select instances
         instanceDAO = new InstanceDAO();
-        instances = instanceDAO.selectAll(upgrades);
+        instances = instanceDAO.selectAll(username, "", true, upgrades);
     }
 
     /**
@@ -176,7 +177,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         upgrades = upgradeDAO.selectAll();
         
         //Get instances
-        List<Instance> newInstances = instanceDAO.selectAll(upgrades);
+        List<Instance> newInstances = instanceDAO.selectAll(username, "", true, upgrades);
         
         //Update checked instances
         for (int i=0; i < newInstances.size(); i++) {
