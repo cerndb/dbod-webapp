@@ -124,27 +124,6 @@ public class JobHelper {
         //Param
         List<CommandParam> params = new ArrayList<>();
         
-        //Do not stop listener if instance is Oracle in a shared machine
-        if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE_11)) {
-            List <Instance> instancesPerHost = instanceDAO.selectInstancesPerHost(instance.getHost(), null);
-            
-            CommandParam listener = new CommandParam();
-            listener.setUsername(instance.getUsername());
-            listener.setDbName(instance.getDbName());
-            listener.setCommandName(CommonConstants.JOB_SHUTDOWN);
-            listener.setType(instance.getDbType());
-            listener.setCreationDate(now);
-            listener.setName(CommonConstants.PARAM_LISTENER_BOOLEAN);
-            
-            if (instancesPerHost.size() > 1) {
-                listener.setValue("false");
-            }
-            else {
-                listener.setValue("true");
-            }
-            params.add(listener);
-        }
-
         //Execute
         int result = jobDAO.insert(job, params);
         //If everything went OK update instance object
