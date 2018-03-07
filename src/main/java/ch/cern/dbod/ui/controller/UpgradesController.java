@@ -14,6 +14,7 @@ import ch.cern.dbod.db.entity.Upgrade;
 import ch.cern.dbod.ui.model.UpgradesListModel;
 import ch.cern.dbod.ui.renderer.UpgradesGridRenderer;
 import ch.cern.dbod.util.CommonConstants;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,6 +40,7 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
      * List of upgrades.
      */
     private Map<String, Upgrade> upgrades;
+    private List<Upgrade> upgradesList;
 
     /**
      * Method executed before the page is composed. Obtains instances from DB.
@@ -48,6 +50,7 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
         //Select upgrades
         upgradeDAO = new UpgradeDAO();
         upgrades = upgradeDAO.selectAll();
+        upgradesList = new ArrayList<>(upgrades.values());
     }
 
     /**
@@ -58,7 +61,7 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
     public void afterCompose() {
         //Upgrades grid
         Grid upgradesGrid = (Grid) getFellow("upgradesGrid");
-        upgradesGrid.setModel(new UpgradesListModel((List)upgrades.values()));
+        upgradesGrid.setModel(new UpgradesListModel(upgradesList));
         upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
         
         displayOrHideAreas();
@@ -109,10 +112,10 @@ public class UpgradesController extends Vbox implements BeforeCompose, AfterComp
         }
         if (upgrades != null && upgrades.size() > 0) {
             if (upgradesGrid.getModel() != null) {
-                ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades((List)upgrades.values());
+                ((UpgradesListModel)upgradesGrid.getModel()).setUpgrades(upgradesList);
             }
             else {
-                upgradesGrid.setModel(new UpgradesListModel((List)upgrades.values()));
+                upgradesGrid.setModel(new UpgradesListModel(upgradesList));
                 upgradesGrid.setRowRenderer(new UpgradesGridRenderer(upgradeDAO));
             }
         }
