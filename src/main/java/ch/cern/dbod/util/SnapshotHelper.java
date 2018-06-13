@@ -11,6 +11,7 @@ package ch.cern.dbod.util;
 
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Snapshot;
+import static ch.cern.dbod.util.CommonConstants.RUNDECK_GET_SNAPSHOTS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,7 +33,7 @@ public class SnapshotHelper {
     public List<Snapshot> getSnapshots(Instance instance) {
         ArrayList<Snapshot> snapshots = new ArrayList<>();
         try {
-            String snapshotsString = RestHelper.runRundeckJob("get-snapshots", instance.getDbName());
+            String snapshotsString = RestHelper.runRundeckJob(RUNDECK_GET_SNAPSHOTS, instance.getDbName());
             if (snapshotsString != null) {
                 String[] snapshotArray = snapshotsString.split(":");
                 Pattern pattern = Pattern.compile("_");

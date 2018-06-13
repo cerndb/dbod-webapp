@@ -145,6 +145,14 @@ public class CommonConstants {
     public static final String PARAM_VERSION_TO = "VERSION_TO";
     public static final String PARAM_LISTENER_BOOLEAN = "LISTENER_BOOLEAN";
     public static final String PARAM_RELOAD_CONFIG = "RELOAD_CONFIG";
+    
+    //Rundeck jobs
+    public static final String RUNDECK_GET_SNAPSHOTS = "get-snapshots";
+    public static final String RUNDECK_DO_BACKUP = "backup";
+    public static final String RUNDECK_DO_START = "start";
+    public static final String RUNDECK_DO_STOP = "stop";
+    public static final String RUNDECK_LIST_LOG_FILES = "list-log-files";
+    public static final String RUNDECK_SERVE_FILE = "serve-file";
 
     //Pages
     public static final String PAGE_INSTANCE = "/instance.zul";
