@@ -16,6 +16,7 @@ import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.db.entity.Snapshot;
 import ch.cern.dbod.exception.ConfigFileSizeException;
+import static ch.cern.dbod.util.CommonConstants.RUNDECK_DO_BACKUP;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -232,30 +233,42 @@ public class JobHelper {
      */
     public boolean doBackup(Instance instance, String username) {
         Date now = new Date();
-        //Create job
-        Job job = new Job();
-        job.setUsername(instance.getUsername());
-        job.setDbName(instance.getDbName());
-        job.setCommandName(CommonConstants.JOB_BACKUP);
-        job.setType(instance.getDbType());
-        job.setCreationDate(now);
-        job.setRequester(username);
-        if (adminMode)
-            job.setAdminAction(1);
-        else
-            job.setAdminAction(0);
-        job.setState(CommonConstants.JOB_STATE_PENDING);
         
-        int result = jobDAO.insert(job, new ArrayList<CommandParam>());
-        //If everything went OK update instance object
-        if (result > 0) {
-            instance.setState(CommonConstants.INSTANCE_STATE_JOB_PENDING);
-            Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+        try {
+            String backupLog = RestHelper.runRundeckJob(RUNDECK_DO_BACKUP, instance.getDbName());
+            if (backupLog != null) {
+                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP SUCCESSFULLY CREATED FOR INSTANCE: " + instance.getDbName());
+                Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "Log: " + backupLog);
+                
+                Job job = new Job();
+                job.setUsername(instance.getUsername());
+                job.setDbName(instance.getDbName());
+                job.setCommandName(CommonConstants.JOB_BACKUP);
+                job.setType(instance.getDbType());
+                job.setCreationDate(now);
+                job.setRequester(username);
+                if (adminMode)
+                    job.setAdminAction(1);
+                else
+                    job.setAdminAction(0);
+                job.setState(CommonConstants.JOB_STATE_RUNNING);
+
+                int result = jobDAO.insert(job, new ArrayList<CommandParam>());
+                //If everything went OK update instance object
+                if (result > 0) {
+                    instance.setState(CommonConstants.INSTANCE_STATE_JOB_PENDING);
+                    Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "BACKUP JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
+                }
+                
+            }
             return true;
-        } else {
-            return false;
+        } catch (Exception ex) {
+            Logger.getLogger(SnapshotHelper.class.getName()).log(Level.SEVERE, "ERROR OBTAINING SNAPSHOTS FOR INSTANCE " + instance.getDbName(), ex.getMessage());
+            ex.printStackTrace();
         }
-    }   
+        
+        return false;
+    }
 
     /**
      * Restore a backup for an instance.
