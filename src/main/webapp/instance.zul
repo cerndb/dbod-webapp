@@ -391,8 +391,6 @@
 
             <!-- Error window -->
             <error/>
-            <!-- Timer to update the instances every minute -->
-            <timer id="refresh" delay="60000" repeats="true" onTimer="controller.refreshInfo();"/>
             <!-- Script to mark the snapshot days in the calendar -->
             <script src="/scripts/markSnapshots.js"/>
         </vbox>

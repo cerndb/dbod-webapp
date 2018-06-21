@@ -1,7 +1,5 @@
 <tabpanel>
     <vbox use="AdminController" id="adminController" align="center" hflex="1">
-        <!-- Timer to update the instances every minute -->
-        <timer id="refresh" delay="60000" repeats="true" onTimer="adminController.refreshInstances();"/>
         <!-- Groupbox for the instances overview -->
         <groupbox hflex="1" mold="3d" closable="false" style="margin-top:-5px">
             <caption label=" ">
