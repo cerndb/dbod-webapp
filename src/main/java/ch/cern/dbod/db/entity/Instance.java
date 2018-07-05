@@ -35,7 +35,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * Username creator of this instance (max. 32)
      */
-    @SerializedName("username")
+    @SerializedName("owner")
     private String username;
     
     /**
@@ -63,7 +63,7 @@ public class Instance implements Comparable, Cloneable{
     /**
      * DB e-Group (max. 256)
      */
-    @SerializedName("e_group")
+    @SerializedName("egroup")
     private String eGroup;
 
     /**
@@ -95,12 +95,6 @@ public class Instance implements Comparable, Cloneable{
      */
     @SerializedName("size")
     private int dbSize;
-
-    /**
-     * Number of connections
-     */
-    @SerializedName("no_connections")
-    private int noConnections;
 
     /**
      * Project
@@ -259,14 +253,6 @@ public class Instance implements Comparable, Cloneable{
         this.dbSize = dbSize;
     }
 
-    public int getNoConnections() {
-        return noConnections;
-    }
-
-    public void setNoConnections(int noConnections) {
-        this.noConnections = noConnections;
-    }
-
     public String getProject() {
         return project;
     }
@@ -368,7 +354,6 @@ public class Instance implements Comparable, Cloneable{
             clone.setEGroup(eGroup);
         if (expiryDate != null)
             clone.setExpiryDate((Date) expiryDate.clone());
-        clone.setNoConnections(noConnections);
         if (project != null)
             clone.setProject(project);
         clone.setState(state);
@@ -411,7 +396,6 @@ public class Instance implements Comparable, Cloneable{
         hash = 29 * hash + Objects.hashCode(this.expiryDate);
         hash = 29 * hash + Objects.hashCode(this.dbType);
         hash = 29 * hash + this.dbSize;
-        hash = 29 * hash + this.noConnections;
         hash = 29 * hash + Objects.hashCode(this.project);
         hash = 29 * hash + Objects.hashCode(this.description);
         hash = 29 * hash + Objects.hashCode(this.version);
@@ -427,6 +411,6 @@ public class Instance implements Comparable, Cloneable{
 
     @Override
     public String toString() {
-        return "Instance{" + "id=" + id + ", username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", noConnections=" + noConnections + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
+        return "Instance{" + "id=" + id + ", username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
     }
 }

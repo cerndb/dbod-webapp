@@ -185,8 +185,6 @@ public class NewInstanceController extends Window implements AfterCompose {
                 instance.setMaster(((Textbox) getFellow("master")).getValue());
                 instance.setHost(((Textbox) getFellow("host")).getValue());
                 instance.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSize")).getValue()));
-                if (!((Textbox) getFellow("noConnections")).getValue().isEmpty())
-                    instance.setNoConnections(Integer.parseInt(((Textbox) getFellow("noConnections")).getValue()));
                 instance.setProject(((Textbox) getFellow("project")).getValue());
                 instance.setDescription(((Textbox) getFellow("description")).getValue());
                 instance.setStatus(true);

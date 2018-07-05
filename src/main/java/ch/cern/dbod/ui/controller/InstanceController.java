@@ -343,13 +343,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         ((Label) getFellow("dbType")).setValue(Labels.getLabel(CommonConstants.LABEL_DB_TYPE + instance.getDbType()));
         ((Label) getFellow("dbSize")).setValue(instance.getDbSize() + " GB");
             
-        //DB connections (if any)
-        if (instance.getNoConnections() > 0) {
-            ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
-        } else {
-            ((Label) getFellow("noConnections")).setValue("-");
-        }
-        
         //Version (if any)
         if (instance.getVersion() != null && !instance.getVersion().isEmpty()) {
             ((Label) getFellow("version")).setValue(instance.getVersion());
@@ -503,8 +496,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                     break;
             }
             ((Textbox) getFellow("dbSizeEdit")).setValue(String.valueOf(instance.getDbSize()));
-            if (instance.getNoConnections() > 0)
-                ((Textbox) getFellow("noConnectionsEdit")).setValue(String.valueOf(instance.getNoConnections()));
             if (instance.getVersion() != null && !instance.getVersion().isEmpty())
                 ((Textbox) getFellow("versionEdit")).setValue(String.valueOf(instance.getVersion()));
             ((Textbox) getFellow("hostEdit")).setValue(String.valueOf(instance.getHost()));
@@ -1167,33 +1158,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 ((Label) getFellow("dbSize")).setValue(String.valueOf(instance.getDbSize()) + " GB");
                 ((Hbox) getFellow("dbSizeEditBox")).setVisible(false);
                 ((Hbox) getFellow("dbSizeBox")).setVisible(true);
-                refreshInfo();
-            }
-            else {
-                showError(null, CommonConstants.ERROR_UPDATING_INSTANCE);
-            }
-        }
-    }
-    
-    /**
-     * Edits the noConnections of this instance.
-     */
-    public void editNoConnections() {
-        if (FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnectionsEdit"))) {
-            //Clone the instance and override noConnections
-            Instance clone = instance.clone();
-            if (!((Textbox) getFellow("noConnectionsEdit")).getValue().isEmpty())
-                clone.setNoConnections(Integer.valueOf(((Textbox) getFellow("noConnectionsEdit")).getValue()));
-            else
-                clone.setNoConnections(0);
-            if (instanceDAO.update(instance, clone, username) > 0) {
-                instance = clone;
-                if (instance.getNoConnections() > 0)
-                    ((Label) getFellow("noConnections")).setValue(String.valueOf(instance.getNoConnections()));
-                else
-                    ((Label) getFellow("noConnections")).setValue("-");
-                ((Hbox) getFellow("noConnectionsEditBox")).setVisible(false);
-                ((Hbox) getFellow("noConnectionsBox")).setVisible(true);
                 refreshInfo();
             }
             else {
