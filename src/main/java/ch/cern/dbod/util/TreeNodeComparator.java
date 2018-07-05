@@ -53,7 +53,7 @@ public class TreeNodeComparator implements Comparator<OverviewTreeNode> {
             case "STATE":
                 return stateToNumber(((Instance)o1.getData()).getState()).compareTo(stateToNumber(((Instance)o2.getData()).getState())) * (asc ? 1 : -1);
             case "USERNAME":
-                return ((Instance)o1.getData()).getUsername().compareTo(((Instance)o2.getData()).getUsername()) * (asc ? 1 : -1);
+                return ((Instance)o1.getData()).getOwner().compareTo(((Instance)o2.getData()).getOwner()) * (asc ? 1 : -1);
             case "CREATIONDATE":
                 return ((Instance)o1.getData()).getCreationDate().compareTo(((Instance)o2.getData()).getCreationDate()) * (asc ? 1 : -1);
             case "HOST":

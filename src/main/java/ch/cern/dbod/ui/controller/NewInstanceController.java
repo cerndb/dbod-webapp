@@ -174,7 +174,7 @@ public class NewInstanceController extends Window implements AfterCompose {
             if ((eGroupExists || eGroupCreated) && addedToOEM) {
                 //Create instace object
                 Instance instance = new Instance();
-                instance.setUsername(((Textbox) getFellow("username")).getValue());
+                instance.setOwner(((Textbox) getFellow("username")).getValue());
                 instance.setDbName(((Textbox) getFellow("dbName")).getValue());
                 instance.setEGroup(((Textbox) getFellow("eGroup")).getValue());
                 instance.setCategory(((String)((Combobox) getFellow("category")).getSelectedItem().getValue()));

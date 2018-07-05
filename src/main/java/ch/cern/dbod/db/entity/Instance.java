@@ -36,7 +36,7 @@ public class Instance implements Comparable, Cloneable{
      * Username creator of this instance (max. 32)
      */
     @SerializedName("owner")
-    private String username;
+    private String owner;
     
     /**
      * Information about the owner of this instance.
@@ -181,12 +181,12 @@ public class Instance implements Comparable, Cloneable{
         this.attributes.put(name, value);
     }
 
-    public String getUsername() {
-        return username;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public User getUser() {
@@ -358,7 +358,7 @@ public class Instance implements Comparable, Cloneable{
             clone.setProject(project);
         clone.setState(state);
         clone.setStatus(status);
-        clone.setUsername(username);
+        clone.setOwner(owner);
         if (upgradeTo != null)
             clone.setUpgradeTo(upgradeTo);
         if (version != null)
@@ -388,7 +388,7 @@ public class Instance implements Comparable, Cloneable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.username);
+        hash = 29 * hash + Objects.hashCode(this.owner);
         hash = 29 * hash + Objects.hashCode(this.dbName);
         hash = 29 * hash + Objects.hashCode(this.eGroup);
         hash = 29 * hash + Objects.hashCode(this.category);
@@ -411,6 +411,6 @@ public class Instance implements Comparable, Cloneable{
 
     @Override
     public String toString() {
-        return "Instance{" + "id=" + id + ", username=" + username + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
+        return "Instance{" + "id=" + id + ", username=" + owner + ", user=" + user + ", dbName=" + dbName + ", eGroup=" + eGroup + ", category=" + category + ", creationDate=" + creationDate + ", expiryDate=" + expiryDate + ", dbType=" + dbType + ", dbSize=" + dbSize + ", project=" + project + ", description=" + description + ", version=" + version + ", upgradeTo=" + upgradeTo + ", status=" + status + ", master=" + master + ", slave=" + slave + ", host=" + host + ", state=" + state + ", checked=" + checked + ", attributes=" + attributes + '}';
     }
 }

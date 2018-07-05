@@ -83,7 +83,7 @@ public class InstanceFilter implements Filter {
                         //Obtain username and egroups
                         String username = ((HttpServletRequest) request).getHeader(CommonConstants.ADFS_LOGIN);
                         //Check if user is authorized to see instance
-                        if (username.equals(instance.getUsername()) || EGroupHelper.groupInList(instance.getEGroup(), eGroups)) {
+                        if (username.equals(instance.getOwner()) || EGroupHelper.groupInList(instance.getEGroup(), eGroups)) {
                             filterChain.doFilter(request, response);
                         }
                         else {

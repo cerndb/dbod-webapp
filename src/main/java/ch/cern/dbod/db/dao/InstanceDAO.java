@@ -112,7 +112,7 @@ public class InstanceDAO {
             while (result.next()) {
                 Instance instance = new Instance();
                 instance.setId(result.getInt(1));
-                instance.setUsername(result.getString(2));
+                instance.setOwner(result.getString(2));
                 instance.setDbName(result.getString(3));
                 instance.setEGroup(result.getString(4));
                 instance.setCategory(result.getString(5));
@@ -247,7 +247,7 @@ public class InstanceDAO {
                             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             instanceStatement = connection.prepareStatement(instanceQuery);
             //Assign values to variables
-            instanceStatement.setString(1, instance.getUsername());
+            instanceStatement.setString(1, instance.getOwner());
             instanceStatement.setString(2, instance.getDbName());
             instanceStatement.setString(3, instance.getEGroup());
             instanceStatement.setString(4, instance.getCategory());
@@ -298,16 +298,16 @@ public class InstanceDAO {
             connection.commit();
             
         } catch (NamingException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING INSTANCE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } catch (SQLException ex) {
             try {
                 //Rollback updates
                 connection.rollback();
             }
             catch (SQLException ex1) {
-                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSERTING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex1);
+                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSERTING INSTANCE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex1);
             }
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING INSTANCE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 instanceStatement.close();
@@ -342,11 +342,11 @@ public class InstanceDAO {
             deleteStatement = connection.prepareStatement(deleteQuery);
             //Set values
             deleteStatement.setString(1, instance.getDbName());
-            deleteStatement.setString(2, instance.getUsername());
+            deleteStatement.setString(2, instance.getOwner());
 
             deleteResult = deleteStatement.executeUpdate();
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING INSTANCE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 deleteStatement.close();
@@ -405,7 +405,7 @@ public class InstanceDAO {
                 //Check for changes on fields editable by users
                 if ((oldInstance.getEGroup() == null && newInstance.getEGroup() != null)
                         || (oldInstance.getEGroup() != null && !oldInstance.getEGroup().equals(newInstance.getEGroup()))) {
-                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(1, newInstance.getOwner());
                     insertStatement.setString(2, newInstance.getDbName());
                     insertStatement.setString(3, "e-Group");
                     insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
@@ -417,7 +417,7 @@ public class InstanceDAO {
                 if ((oldInstance.getExpiryDate() == null && newInstance.getExpiryDate() != null)
                         || (oldInstance.getExpiryDate() != null && !oldInstance.getExpiryDate().equals(newInstance.getExpiryDate()))) {
                     DateFormat dateFormatter = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
-                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(1, newInstance.getOwner());
                     insertStatement.setString(2, newInstance.getDbName());
                     insertStatement.setString(3, "Expiry Date");
                     insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
@@ -434,7 +434,7 @@ public class InstanceDAO {
                 }
                 if ((oldInstance.getProject() == null && newInstance.getProject() != null)
                         || (oldInstance.getProject() != null && !oldInstance.getProject().equals(newInstance.getProject()))) {
-                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(1, newInstance.getOwner());
                     insertStatement.setString(2, newInstance.getDbName());
                     insertStatement.setString(3, "Project");
                     insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
@@ -445,7 +445,7 @@ public class InstanceDAO {
                 }
                 if ((oldInstance.getDescription() == null && newInstance.getDescription() != null)
                         || (oldInstance.getDescription() != null && !oldInstance.getDescription().equals(newInstance.getDescription()))) {
-                    insertStatement.setString(1, newInstance.getUsername());
+                    insertStatement.setString(1, newInstance.getOwner());
                     insertStatement.setString(2, newInstance.getDbName());
                     insertStatement.setString(3, "Description");
                     insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
@@ -468,7 +468,7 @@ public class InstanceDAO {
             connection.commit();
 
         } catch (NamingException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getOwner() + " AND DB_NAME " + oldInstance.getDbName(), ex);
         } catch (SQLException ex) {
             updateResult = 0;
             try {
@@ -476,7 +476,7 @@ public class InstanceDAO {
             } catch (Exception e) {
                 Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE UPDATE", ex);
             }
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getUsername() + " AND DB_NAME " + oldInstance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getOwner() + " AND DB_NAME " + oldInstance.getDbName(), ex);
         }
         catch (ParseException ex) {
             Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -580,7 +580,7 @@ public class InstanceDAO {
                             + " FROM dod_instance_changes WHERE username = ? AND db_name = ? ORDER BY change_date DESC";
             statement = connection.prepareStatement(query);
             //Assign values to variables
-            statement.setString(1, instance.getUsername());
+            statement.setString(1, instance.getOwner());
             statement.setString(2, instance.getDbName());
             //Execute query
             result = statement.executeQuery();
@@ -598,7 +598,7 @@ public class InstanceDAO {
                 changes.add(change);
             }
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 result.close();
@@ -631,11 +631,11 @@ public class InstanceDAO {
             rescueStatement = connection.prepareStatement(rescueQuery);
             //Set values
             rescueStatement.setString(1, instance.getDbName());
-            rescueStatement.setString(2, instance.getUsername());
+            rescueStatement.setString(2, instance.getOwner());
 
             rescueResult = rescueStatement.executeUpdate();
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR RESCUING INSTANCE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 rescueStatement.close();
