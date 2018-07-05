@@ -196,7 +196,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         ((Textbox) getFellow("projectEdit")).setMaxlength(CommonConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("descriptionEdit")).setMaxlength(CommonConstants.MAX_DESCRIPTION_LENGTH);
         if (admin) {
-            ((Textbox) getFellow("noConnectionsEdit")).setMaxlength(String.valueOf(CommonConstants.MAX_NO_CONNECTIONS).length());
             ((Textbox) getFellow("dbSizeEdit")).setMaxlength(String.valueOf(CommonConstants.MAX_DB_SIZE).length());
             ((Textbox) getFellow("versionEdit")).setMaxlength(CommonConstants.MAX_VERSION_LENGTH);
             ((Textbox) getFellow("hostEdit")).setMaxlength(CommonConstants.MAX_HOST_LENGTH);
@@ -477,7 +476,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 }
             } else {
                 notifButton.setImage("/img/cancel.png");
-                notifButton.setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_INSTANCE_ON_FIM));
+                notifButton.setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NOTIFICATIONS_UNSET));
             }
             
             //Values for edit boxes

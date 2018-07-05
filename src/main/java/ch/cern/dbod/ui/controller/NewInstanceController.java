@@ -86,8 +86,6 @@ public class NewInstanceController extends Window implements AfterCompose {
         ((Combobox) getFellow("dbType")).setSelectedIndex(0);
         ((Slider) getFellow("dbSizeSlider")).setMaxpos(CommonConstants.MAX_DB_SIZE);
         ((Textbox) getFellow("dbSize")).setMaxlength(String.valueOf(CommonConstants.MAX_DB_SIZE).length());
-        ((Slider) getFellow("noConnectionsSlider")).setMaxpos(CommonConstants.MAX_NO_CONNECTIONS);
-        ((Textbox) getFellow("noConnections")).setMaxlength(String.valueOf(CommonConstants.MAX_NO_CONNECTIONS).length());
         ((Textbox) getFellow("project")).setMaxlength(CommonConstants.MAX_PROJECT_LENGTH);
         ((Textbox) getFellow("description")).setMaxlength(CommonConstants.MAX_DESCRIPTION_LENGTH);
         ((Textbox) getFellow("version")).setMaxlength(CommonConstants.MAX_VERSION_LENGTH);
@@ -110,7 +108,6 @@ public class NewInstanceController extends Window implements AfterCompose {
                 & FormValidations.isMasterValid((Textbox) getFellow("master"), instanceDAO)
                 & FormValidations.isHostValid((Textbox) getFellow("host"))
                 & FormValidations.isDbSizeValid((Textbox) getFellow("dbSize"))
-                & FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnections"))
                 & FormValidations.isProjectValid((Textbox) getFellow("project"))
                 & FormValidations.isDescriptionValid((Textbox) getFellow("description"))) {
             //If there is an egroup
@@ -151,7 +148,6 @@ public class NewInstanceController extends Window implements AfterCompose {
                 & FormValidations.isMasterValid((Textbox) getFellow("master"), instanceDAO)
                 & FormValidations.isHostValid((Textbox) getFellow("host"))
                 & FormValidations.isDbSizeValid((Textbox) getFellow("dbSize"))
-                & FormValidations.isNOConnectionsValid((Textbox) getFellow("noConnections"))
                 & FormValidations.isProjectValid((Textbox) getFellow("project"))
                 & FormValidations.isDescriptionValid((Textbox) getFellow("description"))) {
             boolean eGroupCreated = false;

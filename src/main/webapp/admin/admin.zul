@@ -166,40 +166,6 @@
                         </textbox>
                     </vbox>
                 </row>
-                <!-- Number of connections -->
-                <row style="border:none;">
-                    <label value="${c:l('noConnections')}"/>
-                    <vbox>
-                        <slider id="noConnectionsSlider" mold="scale" width="200px">
-                            <attribute name="onScroll">
-                                <![CDATA[
-                                    noConnections.setText(String.valueOf(noConnectionsSlider.getCurpos()));
-                                ]]>
-                            </attribute>
-                        </slider>
-                        <textbox id="noConnections" width="200px" >
-                            <attribute name="onChange">
-                                <![CDATA[
-                                    if (!noConnections.getText().isEmpty()) {
-                                        int conn;
-                                        try {
-                                            conn = Integer.valueOf(noConnections.getText()).intValue();
-                                            if (conn > 0 && conn <= CommonConstants.MAX_NO_CONNECTIONS)
-                                                noConnectionsSlider.setCurpos(conn);
-                                            else
-                                                noConnections.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_NO_CONNECTIONS_RANGE));
-                                        } catch(java.lang.NumberFormatException ex) {
-                                            noConnections.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_INTEGER_FORMAT));
-                                        }
-                                    }
-                                    else {
-                                        noConnectionsSlider.setCurpos(0);
-                                    }
-                                ]]>
-                            </attribute>
-                        </textbox>
-                    </vbox>
-                </row>
                 <!-- Description -->
                 <row style="border:none;">
                     <label value="${c:l('description')}"/>
