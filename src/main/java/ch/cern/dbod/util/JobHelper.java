@@ -76,7 +76,7 @@ public class JobHelper {
         Date now = new Date();
         //Create job
         Job job = new Job();
-        job.setUsername(instance.getUsername());
+        job.setUsername(instance.getOwner());
         job.setDbName(instance.getDbName());
         job.setCommandName(CommonConstants.JOB_STARTUP);
         job.setType(instance.getDbType());
@@ -110,7 +110,7 @@ public class JobHelper {
         Date now = new Date();
         //Create job
         Job job = new Job();
-        job.setUsername(instance.getUsername());
+        job.setUsername(instance.getOwner());
         job.setDbName(instance.getDbName());
         job.setCommandName(CommonConstants.JOB_SHUTDOWN);
         job.setType(instance.getDbType());
@@ -158,7 +158,7 @@ public class JobHelper {
                 Date now = new Date();
                 //Insert job
                 Job job = new Job();
-                job.setUsername(instance.getUsername());
+                job.setUsername(instance.getOwner());
                 job.setDbName(instance.getDbName());
                 job.setCommandName(CommonConstants.JOB_UPLOAD);
                 job.setType(instance.getDbType());
@@ -173,7 +173,7 @@ public class JobHelper {
                 //Create params
                 List<CommandParam> params = new ArrayList<>();
                 CommandParam configFile = new CommandParam();
-                configFile.setUsername(instance.getUsername());
+                configFile.setUsername(instance.getOwner());
                 configFile.setDbName(instance.getDbName());
                 configFile.setCommandName(CommonConstants.JOB_UPLOAD);
                 configFile.setType(instance.getDbType());
@@ -182,7 +182,7 @@ public class JobHelper {
                 configFile.setValue(data);
                 params.add(configFile);
                 CommandParam path = new CommandParam();
-                path.setUsername(instance.getUsername());
+                path.setUsername(instance.getOwner());
                 path.setDbName(instance.getDbName());
                 path.setCommandName(CommonConstants.JOB_UPLOAD);
                 path.setType(instance.getDbType());
@@ -194,7 +194,7 @@ public class JobHelper {
                 // If DB type is PG, pass config reload param
                 if (instance.getDbType().equals(CommonConstants.DB_TYPE_PG)) {
                     CommandParam reloadCfg = new CommandParam();
-                    reloadCfg.setUsername(instance.getUsername());
+                    reloadCfg.setUsername(instance.getOwner());
                     reloadCfg.setDbName(instance.getDbName());
                     reloadCfg.setCommandName(CommonConstants.JOB_UPLOAD);
                     reloadCfg.setType(instance.getDbType());
@@ -241,7 +241,7 @@ public class JobHelper {
                 Logger.getLogger(JobHelper.class.getName()).log(Level.INFO, "Log: " + backupLog);
                 
                 Job job = new Job();
-                job.setUsername(instance.getUsername());
+                job.setUsername(instance.getOwner());
                 job.setDbName(instance.getDbName());
                 job.setCommandName(CommonConstants.JOB_BACKUP);
                 job.setType(instance.getDbType());
@@ -283,7 +283,7 @@ public class JobHelper {
         DateFormat formatter = new SimpleDateFormat(CommonConstants.DATE_TIME_FORMAT_PITR);
         //Create job
         Job job = new Job();
-        job.setUsername(instance.getUsername());
+        job.setUsername(instance.getOwner());
         job.setDbName(instance.getDbName());
         job.setCommandName(CommonConstants.JOB_RESTORE);
         job.setType(instance.getDbType());
@@ -298,7 +298,7 @@ public class JobHelper {
         //Create param
         List<CommandParam> params = new ArrayList<>();
         CommandParam snapshotFile = new CommandParam();
-        snapshotFile.setUsername(instance.getUsername());
+        snapshotFile.setUsername(instance.getOwner());
         snapshotFile.setDbName(instance.getDbName());
         snapshotFile.setCommandName(CommonConstants.JOB_RESTORE);
         snapshotFile.setType(instance.getDbType());
@@ -309,7 +309,7 @@ public class JobHelper {
         //Only add PIT if the date is different form the snapshot date
         if (!formatter.format(snapshot.getCreationDate()).equals(formatter.format(pitrTime))) {
             CommandParam pitrParam = new CommandParam();
-            pitrParam.setUsername(instance.getUsername());
+            pitrParam.setUsername(instance.getOwner());
             pitrParam.setDbName(instance.getDbName());
             pitrParam.setCommandName(CommonConstants.JOB_RESTORE);
             pitrParam.setType(instance.getDbType());
@@ -340,7 +340,7 @@ public class JobHelper {
         Date now = new Date();
         //Create job
         Job job = new Job();
-        job.setUsername(instance.getUsername());
+        job.setUsername(instance.getOwner());
         job.setDbName(instance.getDbName());
         job.setCommandName(CommonConstants.JOB_UPGRADE);
         job.setType(instance.getDbType());
@@ -358,7 +358,7 @@ public class JobHelper {
         //If the database is Oracle add version from
         if (instance.getDbType().equals(CommonConstants.DB_TYPE_ORACLE_11)) {
             CommandParam versionFrom = new CommandParam();
-            versionFrom.setUsername(instance.getUsername());
+            versionFrom.setUsername(instance.getOwner());
             versionFrom.setDbName(instance.getDbName());
             versionFrom.setCommandName(CommonConstants.JOB_UPGRADE);
             versionFrom.setType(instance.getDbType());
@@ -368,7 +368,7 @@ public class JobHelper {
             params.add(versionFrom);
         }
         CommandParam versionTo = new CommandParam();
-        versionTo.setUsername(instance.getUsername());
+        versionTo.setUsername(instance.getOwner());
         versionTo.setDbName(instance.getDbName());
         versionTo.setCommandName(CommonConstants.JOB_UPGRADE);
         versionTo.setType(instance.getDbType());

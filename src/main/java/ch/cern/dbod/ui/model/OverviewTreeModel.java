@@ -170,7 +170,7 @@ public class OverviewTreeModel extends AbstractTreeModel implements Sortable {
         
         if (instance.getDbName().toLowerCase().indexOf(dbName.trim().toLowerCase()) >= 0
                 && instance.getHost().toLowerCase().indexOf(host.trim().toLowerCase()) >= 0
-                && instance.getUsername().toLowerCase().indexOf(user.trim().toLowerCase()) >= 0
+                && instance.getOwner().toLowerCase().indexOf(user.trim().toLowerCase()) >= 0
                 && (eGroup.isEmpty() || (instance.getEGroup() != null && instance.getEGroup().toLowerCase().indexOf(eGroup.trim().toLowerCase()) >= 0))
                 && (project.isEmpty() || (instance.getProject() != null && instance.getProject().toLowerCase().indexOf(project.trim().toLowerCase()) >= 0))
                 && (category.isEmpty() || instance.getCategory().equals(category))

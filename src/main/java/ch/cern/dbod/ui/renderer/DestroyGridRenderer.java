@@ -66,7 +66,7 @@ public class DestroyGridRenderer implements RowRenderer {
         row.appendChild(new Label(instance.getDbName()));
         
         //Username
-        row.appendChild(new Label(instance.getUsername()));
+        row.appendChild(new Label(instance.getOwner()));
         
         //Host
         row.appendChild(new Label(instance.getHost()));

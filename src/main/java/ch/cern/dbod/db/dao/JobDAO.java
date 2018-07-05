@@ -407,7 +407,7 @@ public class JobDAO {
             String createScheduleCall = "{ call create_scheduled_backup(?, ?, ?, ?, ?, ?, ?) }";
             createScheduleStatement = connection.prepareCall(createScheduleCall);
             //Set values
-            createScheduleStatement.setString(1, instance.getUsername());
+            createScheduleStatement.setString(1, instance.getOwner());
             createScheduleStatement.setString(2, instance.getDbName());
             createScheduleStatement.setString(3, instance.getDbType());
             createScheduleStatement.setString(4, requester);
@@ -419,7 +419,7 @@ public class JobDAO {
             createScheduleResult = createScheduleStatement.executeUpdate();
         }
         catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
         finally {
@@ -455,7 +455,7 @@ public class JobDAO {
             String deleteScheduleCall = "{ call delete_scheduled_backup(?, ?, ?, ?, ?) }";
             deleteScheduleStatement = connection.prepareCall(deleteScheduleCall);
             //Set values
-            deleteScheduleStatement.setString(1, instance.getUsername());
+            deleteScheduleStatement.setString(1, instance.getOwner());
             deleteScheduleStatement.setString(2, instance.getDbName());
             deleteScheduleStatement.setString(3, instance.getDbType());
             deleteScheduleStatement.setString(4, username);
@@ -468,7 +468,7 @@ public class JobDAO {
                  Logger.getLogger(JobDAO.class.getName()).log(Level.INFO, "DISABLE AUTOMATIC BACKUPS JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
         }
         catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
         finally {
@@ -514,7 +514,7 @@ public class JobDAO {
                 interval = Integer.parseInt(intervalStr.substring(intervalStr.indexOf("INTERVAL=") + 9));
             }
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP INTERVAL FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 result.close();
@@ -557,7 +557,7 @@ public class JobDAO {
                 date = new java.util.Date(result.getTimestamp(1).getTime());
             }
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP START DATE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP START DATE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 result.close();
@@ -593,7 +593,7 @@ public class JobDAO {
             String createScheduleCall = "{ call create_backup_to_tape(?, ?, ?, ?, ?, ?) }";
             createScheduleStatement = connection.prepareCall(createScheduleCall);
             //Set values
-            createScheduleStatement.setString(1, instance.getUsername());
+            createScheduleStatement.setString(1, instance.getOwner());
             createScheduleStatement.setString(2, instance.getDbName());
             createScheduleStatement.setString(3, instance.getDbType());
             createScheduleStatement.setString(4, username);
@@ -603,7 +603,7 @@ public class JobDAO {
             createScheduleResult = createScheduleStatement.executeUpdate();
         }
         catch (NamingException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         }
         catch (SQLException ex) {
             try {
@@ -611,9 +611,9 @@ public class JobDAO {
                 connection.rollback();
             }
             catch (SQLException ex1) {
-                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex1);
+                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex1);
             }
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR ENABLING BACKUPS TO TAPE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
         finally {
@@ -649,7 +649,7 @@ public class JobDAO {
             String deleteScheduleCall = "{ call delete_backup_to_tape(?, ?, ?, ?, ?) }";
             deleteScheduleStatement = connection.prepareCall(deleteScheduleCall);
             //Set values
-            deleteScheduleStatement.setString(1, instance.getUsername());
+            deleteScheduleStatement.setString(1, instance.getOwner());
             deleteScheduleStatement.setString(2, instance.getDbName());
             deleteScheduleStatement.setString(3, instance.getDbType());
             deleteScheduleStatement.setString(4, username);
@@ -661,7 +661,7 @@ public class JobDAO {
                  Logger.getLogger(JobDAO.class.getName()).log(Level.INFO, "DISABLE AUTOMATIC BACKUPS TO TAPE JOB FOR REQUESTER {0} ON INSTANCE {1} SUCCESSFULLY CREATED", new Object[]{username, instance.getDbName()});
         }
         catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR DELETING SCHEDULED BACKUP TO TAPE FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         }
 
         finally {
@@ -706,7 +706,7 @@ public class JobDAO {
                 date = new java.util.Date(result.getTimestamp(1).getTime());
             }
         } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getUsername() + " AND DB_NAME " + instance.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING BACKUP TO TAPE ENABLED FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
         } finally {
             try {
                 result.close();

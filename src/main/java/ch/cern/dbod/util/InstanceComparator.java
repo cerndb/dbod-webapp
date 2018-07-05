@@ -52,7 +52,7 @@ public class InstanceComparator implements Comparator<Instance> {
             case "STATE":
                 return stateToNumber(o1.getState()).compareTo(stateToNumber(o2.getState())) * (asc ? 1 : -1);
             case "USERNAME":
-                return o1.getUsername().compareTo(o2.getUsername()) * (asc ? 1 : -1);
+                return o1.getOwner().compareTo(o2.getOwner()) * (asc ? 1 : -1);
             case "CREATIONDATE":
                 return o1.getCreationDate().compareTo(o2.getCreationDate()) * (asc ? 1 : -1);
             case "HOST":

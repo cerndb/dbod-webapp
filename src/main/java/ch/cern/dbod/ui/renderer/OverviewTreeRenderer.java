@@ -179,9 +179,9 @@ public class OverviewTreeRenderer implements TreeitemRenderer{
 
                 //Render username
                 Treecell usernameCell = new Treecell();
-                usernameCell.appendChild(getFormattedLabel(instance.getUsername(), 10));
+                usernameCell.appendChild(getFormattedLabel(instance.getOwner(), 10));
                 //Admin view and the instance's user doesn't match with FIM
-                if (checkboxes && instance.getUser() != null && !instance.getUsername().equals(instance.getUser().getLogin()))
+                if (checkboxes && instance.getUser() != null && !instance.getOwner().equals(instance.getUser().getLogin()))
                     usernameCell.setStyle("color:red;");
                 row.appendChild(usernameCell);
 

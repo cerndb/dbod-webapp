@@ -302,7 +302,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
     private void loadInstanceInfo() {
         //Title
         ((Label) getFellow("instanceTitle")).setValue(Labels.getLabel(CommonConstants.LABEL_INSTANCE_TITLE) + " " + instance.getDbName());
-        ((Label) getFellow("username")).setValue(instance.getUsername());
+        ((Label) getFellow("username")).setValue(instance.getOwner());
 
         //e-group (if any)
         if (instance.getEGroup() != null && !instance.getEGroup().isEmpty()) {
@@ -508,9 +508,9 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 ((Label) getFellow("instanceTitle")).setStyle("text-decoration-line:underline; text-decoration-style:dashed; text-decoration-color:red;");
             }
             //If the username saved in the instance doesn't match the user saved in FIM
-            else if (!instance.getUsername().equalsIgnoreCase(user.getLogin()))
+            else if (!instance.getOwner().equalsIgnoreCase(user.getLogin()))
             {
-                ((Label) getFellow("username")).setValue(instance.getUsername() + " (" + user.getLogin() + ")");
+                ((Label) getFellow("username")).setValue(instance.getOwner() + " (" + user.getLogin() + ")");
                 ((Label) getFellow("username")).setStyle("color:red !important;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:red;");
                 ((Label) getFellow("username")).setTooltiptext(Labels.getLabel(CommonConstants.ERROR_NO_USER_ON_FIM));
             }
