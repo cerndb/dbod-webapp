@@ -134,6 +134,25 @@
                                 <label value="${c:l('creationDate')}: " style="font-weight:bold"/>
                                 <label id="creationDate"/>
                             </hbox>
+                            <!-- DB size -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
+                                <hbox id="dbSizeBox" align="bottom">
+                                    <label id="dbSize"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
+                                </hbox>
+                                <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
+                                    <textbox id="dbSizeEdit" width="221px" onOK="controller.editDbSize();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
+                                </hbox>
+                            </hbox>
+                            <!-- User's fullname -->
+                            <hbox hflex="1" align="bottom">
+                                <label value="${c:l('fullname')}: " style="font-weight:bold"/>
+                                <label id="fullname"/>
+                            </hbox>
+                        </hbox>
+                        <hbox width="100%" align="bottom" height="24px">
                             <!-- Expiry date -->
                             <hbox hflex="1" align="bottom">
                                 <label value="${c:l('expiryDate')}: " style="font-weight:bold"/>
@@ -146,10 +165,22 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editExpiryDate();"/>
                                 </hbox>
                             </hbox>
-                            <!-- User's fullname -->
+                            <!-- Host -->
+                            <hbox hflex="1" align="bottom" id="hostArea">
+                                <label value="${c:l('host')}: " style="font-weight:bold"/>
+                                <hbox id="hostBox" align="bottom">
+                                    <label id="host" maxlength="35"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
+                                </hbox>
+                                <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">
+                                    <textbox id="hostEdit" width="242px" onOK="controller.editHost();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
+                                </hbox>
+                            </hbox>
+                            <!-- OrgUnit -->
                             <hbox hflex="1" align="bottom">
-                                <label value="${c:l('fullname')}: " style="font-weight:bold"/>
-                                <label id="fullname"/>
+                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
+                                <label id="orgunit"/>
                             </hbox>
                         </hbox>
                         <hbox width="100%" align="bottom" height="24px">
@@ -163,37 +194,6 @@
                                 <hbox id="projectEditBox" visible="false" align="bottom">
                                     <textbox id="projectEdit" width="226px" onOK="controller.editProject();"/>
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editProject();"/>
-                                </hbox>
-                            </hbox>
-                            <!-- DB size -->
-                            <hbox hflex="1" align="bottom">
-                                <label value="${c:l('dbSize')}: " style="font-weight:bold"/>
-                                <hbox id="dbSizeBox" align="bottom">
-                                    <label id="dbSize"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="dbSizeBox.setVisible(false);dbSizeEditBox.setVisible(true);" if="${controller.admin}"/>
-                                </hbox>
-                                <hbox id="dbSizeEditBox" visible="false" align="bottom" if="${controller.admin}">
-                                    <textbox id="dbSizeEdit" width="221px" onOK="controller.editDbSize();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editDbSize();"/>
-                                </hbox>
-                            </hbox>
-                            <!-- OrgUnit -->
-                            <hbox hflex="1" align="bottom">
-                                <label value="${c:l('orgunit')}: " style="font-weight:bold"/>
-                                <label id="orgunit"/>
-                            </hbox>
-                        </hbox>
-                        <hbox width="100%" align="bottom" height="24px">
-                            <!-- Number of connections -->
-                            <hbox hflex="1" align="bottom" id="hostArea">
-                                <label value="${c:l('host')}: " style="font-weight:bold"/>
-                                <hbox id="hostBox" align="bottom">
-                                    <label id="host" maxlength="35"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
-                                </hbox>
-                                <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">
-                                    <textbox id="hostEdit" width="242px" onOK="controller.editHost();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
                                 </hbox>
                             </hbox>
                             <!-- Port -->
