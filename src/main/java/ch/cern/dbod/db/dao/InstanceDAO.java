@@ -121,7 +121,7 @@ public class InstanceDAO {
                     instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
                 instance.setDbType(result.getString(8));
                 instance.setDbSize(result.getInt(9));
-                instance.setNoConnections(result.getInt(10));
+                //instance.setNoConnections(result.getInt(10));
                 instance.setProject(result.getString(11));
                 instance.setDescription(result.getString(12));
                 instance.setVersion(result.getString(13));
@@ -258,7 +258,7 @@ public class InstanceDAO {
                 instanceStatement.setDate(6, null);
             instanceStatement.setString(7, instance.getDbType());
             instanceStatement.setInt(8, instance.getDbSize());
-            instanceStatement.setInt(9, instance.getNoConnections());
+            //instanceStatement.setInt(9, instance.getNoConnections());
             instanceStatement.setString(10, instance.getProject());
             instanceStatement.setString(11, instance.getDescription());
             instanceStatement.setString(12, instance.getVersion());
