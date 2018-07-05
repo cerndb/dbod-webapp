@@ -258,36 +258,6 @@ public class FormValidations {
     }
     
     /**
-     * Validates NO Connections.
-     * @param noConnections Textbox with the number of connections to validate.
-     * @return true if NO Connections is valid, false otherwise
-     */
-    public static boolean isNOConnectionsValid(Textbox noConnections) {
-        //If there are no previous errors
-        if (noConnections.getErrorMessage() == null || noConnections.getErrorMessage().isEmpty()) {
-            //Trim
-            noConnections.setValue(noConnections.getValue().trim());
-            //Check only if user has entered a value
-            if (!noConnections.getValue().isEmpty()) {
-                try {
-                    int noConn = Integer.valueOf(noConnections.getText()).intValue();
-                    //Check dbName length
-                    if (noConn <= 0 || noConn > CommonConstants.MAX_NO_CONNECTIONS) {
-                        noConnections.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_NO_CONNECTIONS_RANGE));
-                        return false;
-                    }
-                } catch (NumberFormatException ex) {
-                    noConnections.setErrorMessage(Labels.getLabel(CommonConstants.ERROR_INTEGER_FORMAT));
-                    return false;
-                }
-            }
-        }
-        else
-            return false;
-        return true;
-    }
-    
-    /**
      * Validates project
      * @param project Textbox with the project to validate.
      * @return true if project is valid, false otherwise

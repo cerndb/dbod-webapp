@@ -185,15 +185,15 @@
                         </hbox>
                         <hbox width="100%" align="bottom" height="24px">
                             <!-- Number of connections -->
-                            <hbox hflex="1" align="bottom">
-                                <label value="${c:l('noConnections')}: " style="font-weight:bold"/>
-                                <hbox id="noConnectionsBox" align="bottom">
-                                    <label id="noConnections"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="noConnectionsBox.setVisible(false);noConnectionsEditBox.setVisible(true);" if="${controller.admin}"/>
+                            <hbox hflex="1" align="bottom" id="hostArea">
+                                <label value="${c:l('host')}: " style="font-weight:bold"/>
+                                <hbox id="hostBox" align="bottom">
+                                    <label id="host" maxlength="35"/>
+                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
                                 </hbox>
-                                <hbox id="noConnectionsEditBox" visible="false" align="bottom" if="${controller.admin}">
-                                    <textbox id="noConnectionsEdit" width="224px" onOK="controller.editNoConnections();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editNoConnections();"/>
+                                <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">
+                                    <textbox id="hostEdit" width="242px" onOK="controller.editHost();"/>
+                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
                                 </hbox>
                             </hbox>
                             <!-- Port -->
@@ -227,18 +227,7 @@
                                     <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editVersion();"/>
                                 </hbox>
                             </hbox>
-                            <!-- Host and Master/slave -->
-                            <hbox hflex="1" align="bottom" id="hostArea">
-                                <label value="${c:l('host')}: " style="font-weight:bold"/>
-                                <hbox id="hostBox" align="bottom">
-                                    <label id="host" maxlength="35"/>
-                                    <toolbarbutton tooltiptext="${c:l('edit')}" zclass="button" image="/img/edit.png" onClick="hostBox.setVisible(false);hostEditBox.setVisible(true);" if="${controller.admin}"/>
-                                </hbox>
-                                <hbox id="hostEditBox" visible="false" align="bottom" if="${controller.admin}">
-                                    <textbox id="hostEdit" width="242px" onOK="controller.editHost();"/>
-                                    <toolbarbutton tooltiptext="${c:l('accept')}" zclass="button" image="/img/accept.png" onClick="controller.editHost();"/>
-                                </hbox>
-                            </hbox>
+                            <!-- Master/slave -->
                             <hbox hflex="1" align="bottom" id="masterArea" visible="false">
                                 <label value="${c:l('master')}: " style="font-weight:bold"/>
                                 <hbox id="masterBox" align="bottom">

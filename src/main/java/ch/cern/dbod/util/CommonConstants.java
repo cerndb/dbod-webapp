@@ -76,7 +76,6 @@ public class CommonConstants {
     public static final String SLAVE = "slave";
     public static final int MAX_SIZE_CONFIG_FILE = 512;
     public static final int MAX_DB_SIZE = 1000;
-    public static final int MAX_NO_CONNECTIONS = 1000;
     public static final int MAX_USERNAME_LENGTH = 32;
     public static final int MAX_DB_NAME_LENGTH = 8;
     public static final int MAX_E_GROUP_LENGTH = 256;
@@ -233,6 +232,7 @@ public class CommonConstants {
     public static final String LABEL_PORTABLE = "portable";
     public static final String LABEL_NOTIFICATIONS_ENABLED = "unsetNotifications";
     public static final String LABEL_NOTIFICATIONS_DISABLED = "setNotifications";
+    public static final String ERROR_NOTIFICATIONS_UNSET = "noNotifications";
 
     //Errors
     public static final String ERROR_DB_NAME_EMPTY = "errorDbNameEmpty";
@@ -254,7 +254,6 @@ public class CommonConstants {
     public static final String ERROR_DB_SIZE_RANGE = "errorDbSizeRange";
     public static final String ERROR_INSTANCE_CREATION = "errorInstanceCreation";
     public static final String ERROR_INTEGER_FORMAT = "errorIntegerFormat";
-    public static final String ERROR_NO_CONNECTIONS_RANGE = "errorNoConnectionsRange";
     public static final String ERROR_DESCRIPTION_LENGTH = "errorDescriptionLength";
     public static final String ERROR_UPLOADING_CONFIG_FILE = "errorUploadingConfigFile";
     public static final String ERROR_UPLOADING_CONFIG_FILE_SIZE = "errorUploadingConfigFileSize";
