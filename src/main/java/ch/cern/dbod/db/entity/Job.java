@@ -20,26 +20,20 @@ import java.util.Date;
 public class Job {
     
     /**
-     * Username creator of this job (max. 32)
+     * Job ID.
      */
-    private String username;
-
+    private int id;
+    
     /**
-     * DB name for the instance on which the job is going to be performed (max. 8)
+     * Instance ID.
      */
-    @SerializedName("db_name")
-    private String dbName;
+    private int instance_id;
 
     /**
      * Command to be executed (max. 64)
      */
     @SerializedName("command_name")
     private String commandName;
-
-    /**
-     * Type of command (max. 64)
-     */
-    private String type;
 
     /**
      * Creation time of this job
@@ -70,36 +64,20 @@ public class Job {
      */
     private String state;
 
-    /**
-     * Result of the job
-     */
-    private String result;
-    
-    /**
-     * Job ID.
-     */
-    private int id;
-    
-    /**
-     * Instance ID.
-     */
-    private int instance_id;
-    
-
-    public String getUsername() {
-        return username;
+    public int getId() {
+        return id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getDbName() {
-        return dbName;
+    public int getInstance_id() {
+        return instance_id;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setInstance_id(int instance_id) {
+        this.instance_id = instance_id;
     }
 
     public String getCommandName() {
@@ -108,14 +86,6 @@ public class Job {
 
     public void setCommandName(String commandName) {
         this.commandName = commandName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Date getCreationDate() {
@@ -156,33 +126,5 @@ public class Job {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    public int getInstance_id()
-    {
-        return instance_id;
-    }
-
-    public void setInstance_id(int instance_id)
-    {
-        this.instance_id = instance_id;
     }
 }

@@ -73,16 +73,17 @@ public class JobDAO {
 
     /**
      * Selects a log for a specific job.
+     * @param instance
      * @param job job to obtain the log from.
      * @return String containing the job log.
      */
-    public String selectLogByJob(Job job) {
+    public String selectLogByJob(String instance, Job job) {
         String log = "";
         try {
-            JsonObject json = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + job.getDbName() + "/job/" + job.getId());
+            JsonObject json = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + instance + "/job/" + job.getId());
             log = json.getAsJsonObject("response").get("log").getAsString();
         } catch (ParseException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR INSTANCE: " + job.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR INSTANCE: " + instance, ex);
         }
         catch (IOException ex) {
             Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR COMMUNICATING WITH APIATO", ex);
@@ -95,62 +96,17 @@ public class JobDAO {
 
     /**
      * Selects an specific log.
-     * @param username
-     * @param dbName
-     * @param commandName
-     * @param type
-     * @param creationDate
+     * @param jobId
      * @return Selected job.
      */
-    public Job selectJob(String username, String dbName, String commandName, String type, long creationDate) {
-        Logger.getLogger(JobDAO.class.getName()).log(Level.INFO, String.format("SELECTING JOB: %s,%s,%s,%s,%s", username, dbName, commandName, type, creationDate));
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
+    public Job selectJob(String instance, int jobId) {
+        Logger.getLogger(JobDAO.class.getName()).log(Level.INFO, String.format("SELECTING JOB: %d", jobId));
         try {
-            //Get connection
-            connection = getConnection();
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, requester, state, admin_action, result FROM dod_jobs"
-                            + " WHERE username = ? AND db_name = ? AND command_name = ? AND type = ? AND creation_date = ? ORDER BY creation_date";
-            statement = connection.prepareStatement(query);
-            //Assign values to variables
-            statement.setString(1, username);
-            statement.setString(2, dbName);
-            statement.setString(3, commandName);
-            statement.setString(4, type);
-            statement.setTimestamp(5,  new java.sql.Timestamp(creationDate));
-            
-            //Execute query
-            result = statement.executeQuery();
-            
-            if (result.next()) {
-                Job job = new Job();
-                job.setUsername(result.getString(1));
-                job.setDbName(result.getString(2));
-                job.setCommandName(result.getString(3));
-                job.setType(result.getString(4));
-                job.setCreationDate(new java.util.Date(result.getTimestamp(5).getTime()));
-                if (result.getTimestamp(6) != null)
-                    job.setCompletionDate(new java.util.Date(result.getTimestamp(6).getTime()));
-                job.setRequester(result.getString(7));
-                job.setState(result.getString(8));
-                job.setAdminAction(result.getInt(9));
-                job.setResult(result.getString(10));
-                return job;
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LOG FOR USERNAME " + username + " AND DB_NAME " + dbName, ex);
+            return RestHelper.getObjectFromRestApi("api/v1/instance/" + instance + "/job/" + jobId, Job.class, "response");
+        } catch (Exception ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "Error getting job " + jobId + " for instance: " + instance, ex);
         } finally {
-            try {
-                result.close();
-            } catch (Exception e) {}
-            try {
-                statement.close();
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
+            
         }
         return null;
     }
@@ -164,7 +120,7 @@ public class JobDAO {
         PreparedStatement statement = null;
         ResultSet result = null;
         ArrayList<Job> jobs = new ArrayList<>();
-        try {
+        /*try {
             //Get connection
             connection = getConnection();
             //Prepare query for the prepared statement (to avoid SQL injection)
@@ -203,7 +159,7 @@ public class JobDAO {
             try {
                 connection.close();
             } catch (Exception e) {}
-        }
+        }*/
         return jobs;
     }
     
@@ -219,35 +175,49 @@ public class JobDAO {
     public int insert(Job job, String log) {
         Connection connection = null;
         PreparedStatement insertJobStatement = null;
+        PreparedStatement insertJobLogStatement = null;
         int insertJobResult = 0;
         try {
             //Get connection
             connection = getConnection();
+            connection.setAutoCommit(false);
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state, log)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO job (instance_id, command_name, creation_date, requester, admin_action, state)"
+                            + " VALUES (?, ?, ?, ?, ?, ?)";
             insertJobStatement = connection.prepareStatement(insertQuery);
             //Assign values to variables
-            insertJobStatement.setString(1, job.getUsername());
-            insertJobStatement.setString(2, job.getDbName());
-            insertJobStatement.setString(3, job.getCommandName());
-            insertJobStatement.setString(4, job.getType());
-            insertJobStatement.setTimestamp(5, new java.sql.Timestamp(job.getCreationDate().getTime()));
-            insertJobStatement.setString(6, job.getRequester());
-            insertJobStatement.setInt(7, job.getAdminAction());
-            insertJobStatement.setString(8, job.getState());
-            insertJobStatement.setString(9, log);
+            insertJobStatement.setInt(1, job.getInstance_id());
+            insertJobStatement.setString(2, job.getCommandName());
+            insertJobStatement.setTimestamp(3, new java.sql.Timestamp(job.getCreationDate().getTime()));
+            insertJobStatement.setString(4, job.getRequester());
+            insertJobStatement.setInt(5, job.getAdminAction());
+            insertJobStatement.setString(6, job.getState());
 
             //Execute query
             insertJobResult = insertJobStatement.executeUpdate();
+            
+            if (insertJobResult != PreparedStatement.EXECUTE_FAILED) {
+                try (ResultSet rs = insertJobStatement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        //Prepare query for the prepared statement (to avoid SQL injection)
+                        String insertLogQuery = "INSERT INTO job_log (id, log) VALUES (?, ?)";
+                        insertJobLogStatement = connection.prepareStatement(insertLogQuery);
+                        
+                        insertJobLogStatement.setInt(1, rs.getInt(1));
+                        insertJobLogStatement.setString(2, log);
+                        
+                        //Execute query
+                        insertJobResult = insertJobLogStatement.executeUpdate();
+                    }
+                }
+            }
             
             //Commit queries
             connection.commit();
         }
         catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR INSTANCE " + job.getInstance_id(), ex);
         }
-
         finally {
             try {
                 insertJobStatement.close();
@@ -279,40 +249,33 @@ public class JobDAO {
             //Set autocommit to false to execute multiple queries and rollback in case something goes wrong
             connection.setAutoCommit(false);
             //Prepare query for the prepared statement (to avoid SQL injection)
-            String insertQuery = "INSERT INTO dod_jobs (username, db_name, command_name, type, creation_date, requester, admin_action, state, instance_id)"
-                            + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO job (instance_id, command_name, creation_date, requester, admin_action, state)"
+                            + " VALUES (?, ?, ?, ?, ?, ?)";
             insertJobStatement = connection.prepareStatement(insertQuery);
             //Assign values to variables
-            insertJobStatement.setString(1, job.getUsername());
-            insertJobStatement.setString(2, job.getDbName());
-            insertJobStatement.setString(3, job.getCommandName());
-            insertJobStatement.setString(4, job.getType());
-            insertJobStatement.setTimestamp(5, new java.sql.Timestamp(job.getCreationDate().getTime()));
-            insertJobStatement.setString(6, job.getRequester());
-            insertJobStatement.setInt(7, job.getAdminAction());
-            insertJobStatement.setString(8, job.getState());
-            insertJobStatement.setInt(9, job.getInstance_id());
+            insertJobStatement.setInt(1, job.getInstance_id());
+            insertJobStatement.setString(2, job.getCommandName());
+            insertJobStatement.setTimestamp(3, new java.sql.Timestamp(job.getCreationDate().getTime()));
+            insertJobStatement.setString(4, job.getRequester());
+            insertJobStatement.setInt(5, job.getAdminAction());
+            insertJobStatement.setString(6, job.getState());
 
             //Execute query
             insertJobResult = insertJobStatement.executeUpdate();
-
+            
             //If the insert operation was successful, insert params (if any) and update intance
             if (insertJobResult != PreparedStatement.EXECUTE_FAILED) {
                 if (params != null && !params.isEmpty()) {
                     //Prepare query for the prepared statement (to avoid SQL injection)
-                    String paramsQuery = "INSERT INTO dod_command_params (username, db_name, command_name, type, creation_date, name, value) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    String paramsQuery = "INSERT INTO command_param (job_id, name, value) VALUES (?, ?, ?)";
                     insertParamsStatement = connection.prepareStatement(paramsQuery);
                     //If there are parameters
                     for (int i=0; i<params.size(); i++) {
                         CommandParam commandParam = params.get(i);
                         //Assign values to variables
-                        insertParamsStatement.setString(1, commandParam.getUsername());
-                        insertParamsStatement.setString(2, commandParam.getDbName());
-                        insertParamsStatement.setString(3, commandParam.getCommandName());
-                        insertParamsStatement.setString(4, commandParam.getType());
-                        insertParamsStatement.setTimestamp(5, new java.sql.Timestamp(commandParam.getCreationDate().getTime()));
-                        insertParamsStatement.setString(6, commandParam.getName());
-                        insertParamsStatement.setString(7, commandParam.getValue());
+                        insertParamsStatement.setInt(1, job.getId());
+                        insertParamsStatement.setString(2, commandParam.getName());
+                        insertParamsStatement.setString(3, commandParam.getValue());
                         insertParamsStatement.addBatch();
                     }
                     int[] results = insertParamsStatement.executeBatch();
@@ -330,11 +293,10 @@ public class JobDAO {
                 //Only update instance if the operation was succesful
                 if (insertParamsResult != PreparedStatement.EXECUTE_FAILED) {
                     //Prepare query for the prepared statement (to avoid SQL injection)
-                    String updateQuery = "UPDATE dod_instances SET state = '" + CommonConstants.INSTANCE_STATE_JOB_PENDING + "' WHERE username = ? AND db_name = ?";
+                    String updateQuery = "UPDATE instance SET state = '" + CommonConstants.INSTANCE_STATE_JOB_PENDING + "' WHERE id = ?";
                     updateInstanceStatement = connection.prepareStatement(updateQuery);
                     //Assign values to variables
-                    updateInstanceStatement.setString(1, job.getUsername());
-                    updateInstanceStatement.setString(2, job.getDbName());
+                    updateInstanceStatement.setInt(1, job.getInstance_id());
                     //Execute query
                     updateInstanceResult = updateInstanceStatement.executeUpdate();
 
@@ -353,7 +315,7 @@ public class JobDAO {
             connection.commit();
         }
         catch (NamingException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR INSTANCE " + job.getInstance_id(), ex);
         }
         catch (SQLException ex) {
             try {
@@ -361,9 +323,9 @@ public class JobDAO {
                 connection.rollback();
             }
             catch (SQLException ex1) {
-                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex1);
+                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR INSTANCE " + job.getInstance_id(), ex1);
             }
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR USERNAME " + job.getUsername() + " AND DB_NAME " + job.getDbName(), ex);
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR INSERTING JOB FOR INSTANCE " + job.getInstance_id(), ex);
         }
 
         finally {
