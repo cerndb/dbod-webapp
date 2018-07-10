@@ -124,7 +124,7 @@ public class Instance implements Comparable, Cloneable{
      * Logical status (active or inactive)
      */
     @SerializedName("status")
-    private boolean status;
+    private String status;
     
     /**
      * DB name of the master (if slave)
@@ -285,11 +285,11 @@ public class Instance implements Comparable, Cloneable{
         this.upgradeTo = upgradeTo;
     }
 
-    public boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -400,7 +400,7 @@ public class Instance implements Comparable, Cloneable{
         hash = 29 * hash + Objects.hashCode(this.description);
         hash = 29 * hash + Objects.hashCode(this.version);
         hash = 29 * hash + Objects.hashCode(this.upgradeTo);
-        hash = 29 * hash + (this.status ? 1 : 0);
+        hash = 29 * hash + Objects.hashCode(this.status);
         hash = 29 * hash + Objects.hashCode(this.master);
         hash = 29 * hash + Objects.hashCode(this.slave);
         hash = 29 * hash + Objects.hashCode(this.host);
