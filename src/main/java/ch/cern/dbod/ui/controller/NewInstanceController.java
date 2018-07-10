@@ -183,7 +183,7 @@ public class NewInstanceController extends Window implements AfterCompose {
                 instance.setDbSize(Integer.valueOf(((Textbox) getFellow("dbSize")).getValue()));
                 instance.setProject(((Textbox) getFellow("project")).getValue());
                 instance.setDescription(((Textbox) getFellow("description")).getValue());
-                instance.setStatus(true);
+                instance.setStatus(CommonConstants.INSTANCE_STATUS_ACTIVE);
                 instance.setState(CommonConstants.INSTANCE_STATE_AWAITING_APPROVAL);
 
                 //Insert object in DB

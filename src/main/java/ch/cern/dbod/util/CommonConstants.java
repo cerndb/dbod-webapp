@@ -144,6 +144,8 @@ public class CommonConstants {
     public static final String PARAM_VERSION_TO = "VERSION_TO";
     public static final String PARAM_LISTENER_BOOLEAN = "LISTENER_BOOLEAN";
     public static final String PARAM_RELOAD_CONFIG = "RELOAD_CONFIG";
+    public static final String INSTANCE_STATUS_ACTIVE = "ACTIVE";
+    public static final String INSTANCE_STATUS_NON_ACTIVE = "NON_ACTIVE";
     
     //Rundeck jobs
     public static final String RUNDECK_GET_SNAPSHOTS = "get-snapshots";

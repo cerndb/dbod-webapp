@@ -101,9 +101,10 @@ public class InstanceDAO {
             //Prepare query for the prepared statement (to avoid SQL injection)
             StringBuilder query = new StringBuilder();
             query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE status = '0'"
+                            + " FROM dod_instances WHERE status = '?'"
                             + " ORDER BY db_name");
             statement = connection.prepareStatement(query.toString());
+            statement.setString(1, CommonConstants.INSTANCE_STATUS_ACTIVE);
 
             //Execute query
             result = statement.executeQuery();
@@ -126,7 +127,7 @@ public class InstanceDAO {
                 instance.setDescription(result.getString(12));
                 instance.setVersion(result.getString(13));
                 instance.setState(result.getString(14));
-                instance.setStatus(result.getBoolean(15));
+                instance.setStatus(result.getString(15));
                 instance.setMaster(result.getString(16));
                 instance.setSlave(result.getString(17));
                 instance.setHost(result.getString(18));
@@ -263,7 +264,7 @@ public class InstanceDAO {
             instanceStatement.setString(11, instance.getDescription());
             instanceStatement.setString(12, instance.getVersion());
             instanceStatement.setString(13, instance.getState());
-            instanceStatement.setBoolean(14, instance.getStatus());
+            instanceStatement.setString(14, instance.getStatus());
             instanceStatement.setString(15, instance.getMaster());
             instanceStatement.setString(16, instance.getSlave());
             instanceStatement.setString(17, instance.getHost());
@@ -370,7 +371,7 @@ public class InstanceDAO {
         PreparedStatement updateStatement = null;
         PreparedStatement insertStatement = null;
         int updateResult = 0;
-        try {
+        //try {
             /**
              * Insert or update attributes
              */
@@ -387,15 +388,16 @@ public class InstanceDAO {
             }
 
             JsonObject json = RestHelper.parseObject(RestHelper.toJson(newInstance));
-            boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getDbName());
+            boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getId());
             if (!restResult) {
-                throw new NamingException("Error updating attributes.");
+                //throw new NamingException("Error updating attributes.");
+                updateResult = 0;
             } else {
                 updateResult = 1;
             }
             
             //Get connection
-            connection = getConnection();
+            /*connection = getConnection();
             connection.setAutoCommit(false);
             
             //If update was successful log the change
@@ -491,7 +493,7 @@ public class InstanceDAO {
             try {
                 connection.close();
             } catch (Exception e) {}
-        }
+        }*/
         return updateResult;
     }
     
