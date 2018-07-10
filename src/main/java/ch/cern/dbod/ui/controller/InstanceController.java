@@ -216,24 +216,18 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             loadChanges();
         }
         
-        String jobId = (String) Executions.getCurrent().getParameter("job");
-        if (jobId != null && !jobId.isEmpty()) {
-            String[] jobTokens = jobId.split("\\$");
-            if (jobTokens.length == 4) {
-                // Order: USERNAME$COMMAND_NAME$TYPE$CREATION_DATE
-                String user = jobTokens[0];
-                String command_name = jobTokens[1];
-                String type = jobTokens[2];
-                String creation_date = jobTokens[3];
-                Date parsedDate;
-                try {
-                    parsedDate = dateTimeFormatter.parse(creation_date);
-                    Job job = jobDAO.selectJob(user, instance.getDbName(), command_name, type, parsedDate.getTime());
-                    loadJob(job);
-                }
-                catch (ParseException ex) {
-                    Logger.getLogger(InstanceController.class.getName()).log(Level.SEVERE, "ERROR PARSING DATETIME: " + creation_date, ex);
-                }
+        String jobParameter = (String) Executions.getCurrent().getParameter("job");
+        if (jobParameter != null && !jobParameter.isEmpty()) {
+            Integer jobId = null;
+            try {
+                jobId = Integer.parseInt(jobParameter);
+            } catch(Exception ex) {
+                Logger.getLogger(InstanceController.class.getName()).log(Level.SEVERE, "ERROR GETTING JOB: " + jobParameter, ex);
+            }
+            
+            if (jobId != null) {
+                Job job = jobDAO.selectJob(instance.getDbName(), jobId);
+                loadJob(job);
             }
         }
         
@@ -744,9 +738,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 jobSelector.appendChild(item);
                 
                 //If it was the selected one, select it again
-                if (selected != null && job.getUsername().equals(selected.getUsername()) && job.getDbName().equals(selected.getDbName())
-                        && job.getCommandName().equals(selected.getCommandName()) && job.getType().equals(selected.getType())
-                        && job.getCreationDate().getTime() == selected.getCreationDate().getTime()) {
+                if (selected != null && job.getId() == selected.getId()) {
                     jobSelector.setSelectedItem(item);
                 }
             }
@@ -798,7 +790,7 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             }
 
             //Load log
-            ((Textbox) window.getFellow("log")).setRawValue(jobDAO.selectLogByJob(job));
+            ((Textbox) window.getFellow("log")).setRawValue(jobDAO.selectLogByJob(instance.getDbName(), job));
 
             //Show the popup with the information
             window.setVisible(true);

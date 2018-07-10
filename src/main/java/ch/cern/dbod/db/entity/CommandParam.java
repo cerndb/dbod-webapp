@@ -9,7 +9,7 @@
 
 package ch.cern.dbod.db.entity;
 
-import java.util.Date;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents a parameter job that has to be carried out on a database. In the
@@ -19,30 +19,17 @@ import java.util.Date;
  */
 
 public class CommandParam{
-    /**
-     * Username creator of this instance (max. 32)
-     */
-    private String username;
 
     /**
-     * DB name for the instance on which the job is going to be performed (max. 8)
+     * Id
      */
-    private String dbName;
-
+    private Integer id;
+    
     /**
-     * Command to be executed (max. 64)
+     * Id of the job
      */
-    private String commandName;
-
-    /**
-     * Type of command (max. 64)
-     */
-    private String type;
-
-    /**
-     * Creation time
-     */
-    private Date creationDate;
+    @SerializedName("job_id")
+    private Integer jobId;
 
     /**
      * Type of command (max. 64)
@@ -54,44 +41,24 @@ public class CommandParam{
      */
     private String value;
 
-    public String getUsername() {
-        return username;
+    public Integer getId()
+    {
+        return id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
-    public String getDbName() {
-        return dbName;
+    public Integer getJobId()
+    {
+        return jobId;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public String getCommandName() {
-        return commandName;
-    }
-
-    public void setCommandName(String commandName) {
-        this.commandName = commandName;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setJobId(Integer jobId)
+    {
+        this.jobId = jobId;
     }
 
     public String getName() {
