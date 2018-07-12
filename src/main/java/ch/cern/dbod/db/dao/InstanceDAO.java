@@ -65,7 +65,7 @@ public class InstanceDAO {
             authHeader.addProperty("owner", username);
             authHeader.addProperty("groups", "[" + egroups + "]");
             authHeader.addProperty("admin", admin);
-            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), null);
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), "response");
             
             for (Instance instance : instances) {
                 //Check if instance needs upgrade
@@ -169,8 +169,8 @@ public class InstanceDAO {
             eg.add(egroups);
             authHeader.add("groups", eg);
             authHeader.addProperty("admin", false);
-            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), null);
-            
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), "response");
+
             for (Instance instance : instances) {
                 //Check if instance needs upgrade
                 if (upgrades != null) {
