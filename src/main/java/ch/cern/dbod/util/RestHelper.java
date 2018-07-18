@@ -255,6 +255,12 @@ public class RestHelper {
         return false;
     }
     
+    public static <T> T fromJson(JsonObject json, Class<T> object) {
+        Gson gson = init();
+        T result = gson.fromJson(json, object);
+        return result;
+    }
+    
     public static String toJson(Object object) {
         Gson gson = init();
         return gson.toJson(object);

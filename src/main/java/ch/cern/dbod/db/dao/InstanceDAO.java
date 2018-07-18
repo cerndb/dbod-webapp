@@ -198,17 +198,17 @@ public class InstanceDAO {
     public Instance selectByDbName(String dbName, Map<String, Upgrade> upgrades) {
         Instance instance = null;
         try {
-            instance = RestHelper.getObjectFromRestApi("api/v1/instance/" + dbName, Instance.class, "response");
-            if (instance == null)
+            JsonObject object = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + dbName);
+            if (object == null)
                 return null;
             
-            User user = RestHelper.getObjectFromRestApi("api/v1/fim/" + dbName, User.class, "data");
-            instance.setUser(user);
+            instance = RestHelper.fromJson(object.getAsJsonArray("response").get(0).getAsJsonObject(), Instance.class);
             
-            JsonObject attributes = RestHelper.getJsonObjectFromRestApi("api/v1/instance/" + dbName + "/attribute");
-            attributes.entrySet();
-            for (Entry<String, JsonElement> entry : attributes.entrySet()) {
-                instance.setAttribute(entry.getKey(), entry.getValue().getAsString());
+            JsonObject attributes = object.getAsJsonArray("response").get(0).getAsJsonObject().getAsJsonObject("attributes");
+            if (attributes != null) {
+                for (Entry<String, JsonElement> entry : attributes.entrySet()) {
+                    instance.setAttribute(entry.getKey(), entry.getValue().getAsString());
+                }
             }
             
             //Check if instance needs upgrade
