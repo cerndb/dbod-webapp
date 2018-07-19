@@ -570,7 +570,8 @@ public class InstanceDAO {
      * @return list of changes for the specified instance.
      */
     public List<InstanceChange> selectInstanceChanges(Instance instance) {
-        Connection connection = null;
+        return new ArrayList<>();
+        /*Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
         ArrayList<InstanceChange> changes = new ArrayList<>();
@@ -612,7 +613,7 @@ public class InstanceDAO {
                 connection.close();
             } catch (Exception e) {}
         }
-        return changes;
+        return changes;*/
     }
     
     /**
