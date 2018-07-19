@@ -47,7 +47,8 @@ public class UpgradeDAO {
      * @return List of all the upgrades in the database.
      */
     public Map<String, Upgrade> selectAll() {
-        Connection connection = null;
+        return new HashMap<>();
+        /*Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
         HashMap<String, Upgrade> upgrades = new HashMap<>();
@@ -90,7 +91,7 @@ public class UpgradeDAO {
             } catch (Exception e) {
             }
         }
-        return upgrades;
+        return upgrades;*/
     }
     
     /**
