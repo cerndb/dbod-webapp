@@ -315,6 +315,9 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
         } else {
             ((Label) getFellow("project")).setValue("-");
         }
+        
+        //port
+        ((Textbox) getFellow("portEdit")).setValue(instance.getAttribute("port"));
 
         //Creation date
         ((Label) getFellow("creationDate")).setValue(dateFormatter.format(instance.getCreationDate()));
