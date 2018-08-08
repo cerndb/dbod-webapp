@@ -58,14 +58,14 @@ public class InstanceDAO {
      * @param upgrades list of available upgrades.
      * @return List of all the instances in the database.
      */
-    public List<Instance> selectAll(String username, String egroups, boolean admin, Map<String, Upgrade> upgrades) {
+    public List<Instance> selectAll(String username, Map<String, Upgrade> upgrades) {
         ArrayList<Instance> instances = null;
         try {
             JsonObject authHeader = new JsonObject();
             authHeader.addProperty("owner", username);
-            authHeader.addProperty("groups", "[" + egroups + "]");
-            authHeader.addProperty("admin", admin);
-            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), "response");
+            authHeader.addProperty("groups", "[]");
+            authHeader.addProperty("admin", true);
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", null, Instance.class, authHeader.toString(), "response");
             
             for (Instance instance : instances) {
                 //Check if instance needs upgrade
@@ -89,66 +89,20 @@ public class InstanceDAO {
      * status of 0.
      * @return List of all the instances to be destroyed.
      */
-    public List<Instance> selectToDestroy() {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<Instance> instances = new ArrayList<>();
+    public List<Instance> selectToDestroy(String username) {
+        ArrayList<Instance> instances = null;
         try {
-            //Get connection
-            connection = getConnection();
-
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT id, username, db_name, e_group, category, creation_date, expiry_date, db_type, db_size, no_connections, project, description, version, state, status, master, slave, host"
-                            + " FROM dod_instances WHERE status = '?'"
-                            + " ORDER BY db_name");
-            statement = connection.prepareStatement(query.toString());
-            statement.setString(1, CommonConstants.INSTANCE_STATUS_ACTIVE);
-
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Instance instance = new Instance();
-                instance.setId(result.getInt(1));
-                instance.setOwner(result.getString(2));
-                instance.setDbName(result.getString(3));
-                instance.setEGroup(result.getString(4));
-                instance.setCategory(result.getString(5));
-                instance.setCreationDate(new java.util.Date(result.getDate(6).getTime()));
-                if (result.getDate(7) != null)
-                    instance.setExpiryDate(new java.util.Date(result.getDate(7).getTime()));
-                instance.setDbType(result.getString(8));
-                instance.setDbSize(result.getInt(9));
-                //instance.setNoConnections(result.getInt(10));
-                instance.setProject(result.getString(11));
-                instance.setDescription(result.getString(12));
-                instance.setVersion(result.getString(13));
-                instance.setState(result.getString(14));
-                instance.setStatus(result.getString(15));
-                instance.setMaster(result.getString(16));
-                instance.setSlave(result.getString(17));
-                instance.setHost(result.getString(18));
-                instances.add(instance);
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES TO DESTROY",ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {
-            }
-            try {
-                statement.close();
-            } catch (Exception e) {
-            }
-            try {
-                connection.close();
-            } catch (Exception e) {
-            }
+            JsonObject authHeader = new JsonObject();
+            authHeader.addProperty("owner", username);
+            authHeader.addProperty("groups", "[]");
+            authHeader.addProperty("admin", true);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("status", "eq.NON_ACTIVE");
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", params, Instance.class, authHeader.toString(), "response");
+        } catch (IOException | IllegalStateException | ParseException ex) {
+            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING INSTANCES FOR ADMIN", ex);
         }
+        
         return instances;
     }
 
@@ -169,7 +123,7 @@ public class InstanceDAO {
             eg.add(egroups);
             authHeader.add("groups", eg);
             authHeader.addProperty("admin", false);
-            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", Instance.class, authHeader.toString(), "response");
+            instances = RestHelper.getObjectListFromRestApi("api/v1/instance", null, Instance.class, authHeader.toString(), "response");
 
             for (Instance instance : instances) {
                 //Check if instance needs upgrade
