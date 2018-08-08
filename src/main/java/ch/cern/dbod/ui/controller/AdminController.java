@@ -77,7 +77,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
 
         //Select instances
         instanceDAO = new InstanceDAO();
-        instances = instanceDAO.selectAll(username, "", true, upgrades);
+        instances = instanceDAO.selectAll(username, upgrades);
     }
 
     /**
@@ -177,7 +177,7 @@ public class AdminController extends Vbox implements BeforeCompose, AfterCompose
         upgrades = upgradeDAO.selectAll();
         
         //Get instances
-        List<Instance> newInstances = instanceDAO.selectAll(username, "", true, upgrades);
+        List<Instance> newInstances = instanceDAO.selectAll(username, upgrades);
         
         //Update checked instances
         for (int i=0; i < newInstances.size(); i++) {
