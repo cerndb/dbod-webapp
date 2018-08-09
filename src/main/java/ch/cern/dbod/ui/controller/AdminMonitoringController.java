@@ -13,7 +13,10 @@ import ch.cern.dbod.db.dao.JobDAO;
 import ch.cern.dbod.db.entity.Job;
 import ch.cern.dbod.ui.model.LastJobsModel;
 import ch.cern.dbod.ui.renderer.LastJobsRenderer;
+import ch.cern.dbod.util.CommonConstants;
 import java.util.List;
+import org.zkoss.zk.ui.Execution;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.*;
@@ -33,14 +36,20 @@ public class AdminMonitoringController extends Vbox implements BeforeCompose, Af
      * List of jobs.
      */
     private List<Job> jobs;
+    /**
+     * User authenticated in the system.
+     */
+    private String username;
 
     /**
      * Method executed before the page is composed. Obtains stats from DB.
      */
     @Override
-    public void beforeCompose() {        
+    public void beforeCompose() {
+        Execution execution = Executions.getCurrent();
+        username = execution.getHeader(CommonConstants.ADFS_LOGIN);
         jobDAO = new JobDAO();
-        jobs = jobDAO.selectLastJobs();
+        jobs = jobDAO.selectLastJobs(username);
     }
 
     /**
