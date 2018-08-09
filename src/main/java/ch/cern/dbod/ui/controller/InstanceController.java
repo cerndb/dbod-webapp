@@ -45,10 +45,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      */
     private InstanceDAO instanceDAO;
     /**
-     * Activity DAO
-     */
-    private ActivityDAO activityDAO;
-    /**
      * DAO to load jobs
      */
     JobDAO jobDAO;
@@ -117,7 +113,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
             upgradeDAO = new UpgradeDAO();
             upgrades = upgradeDAO.selectAll();
             instanceDAO = new InstanceDAO();
-            activityDAO = new ActivityDAO();
             instance = instanceDAO.selectByDbName(dbName, upgrades);
             if (instance != null) {
                 //Get username and adminMode from headers
@@ -230,8 +225,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
                 loadJob(job);
             }
         }
-        
-        activityDAO.insert(username, instance, "INSTANCE", "Loaded page for instance information");
     }
     
     /**
@@ -804,8 +797,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates job to startup the instance.
      */
     public void doStartup() {
-        activityDAO.insert(username, instance, "INSTANCE", "Startup instance button");
-        
         //Create new job and update instance status
         if (jobHelper.doStartup(instance, username)) {
             Instance clone = instance.clone();
@@ -824,7 +815,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates job to shutdown the instance.
      */
     public void doShutdown() {
-        activityDAO.insert(username, instance, "INSTANCE", "Shutdown instance button");
         try {
             ShutdownController shutdownController = new ShutdownController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -841,7 +831,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the files window.
      */
     public void doFiles() {
-        activityDAO.insert(username, instance, "INSTANCE", "Manage instance files button");
         try {
             FileController fileController = new FileController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -858,7 +847,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the backup window to create a backup job.
      */
     public void doBackup() {
-        activityDAO.insert(username, instance, "INSTANCE", "Backup instance button");
         try {
             BackupController backupController = new BackupController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -875,7 +863,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Opens the restore window to create a restore job.
      */
     public void doRestore() {
-        activityDAO.insert(username, instance, "INSTANCE", "Restore instance button");
         try {
             RestoreController restoreController = new RestoreController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
@@ -892,7 +879,6 @@ public class InstanceController extends Vbox implements AfterCompose, BeforeComp
      * Creates a job to upgrade this instance.
      */
     public void doUpgrade() {
-        activityDAO.insert(username, instance, "INSTANCE", "Upgrade instance button");
         try {
             UpgradeController upgradeController = new UpgradeController(instance, username, jobHelper);
             //Only show window if it is not already being diplayed
