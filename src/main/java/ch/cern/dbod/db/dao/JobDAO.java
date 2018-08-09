@@ -62,7 +62,7 @@ public class JobDAO {
     public List<Job> selectByInstance(Instance instance) {
         ArrayList<Job> jobs = null;
         try {
-            jobs = RestHelper.getObjectListFromRestApi("api/v1/instance/" + instance.getDbName() + "/job", Job.class, null, "response");
+            jobs = RestHelper.getObjectListFromRestApi("api/v1/instance/" + instance.getDbName() + "/job", null, Job.class, null, "response");
         } catch (Exception ex) {
             Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "Error getting jobs for instance: " + instance.getDbName(), ex);
         } finally {
