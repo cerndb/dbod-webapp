@@ -321,133 +321,31 @@ public class InstanceDAO {
      * @return 1 if the operation was successful, 0 otherwise.
      */
     public int update(Instance oldInstance, Instance newInstance, String requester) {
-        Connection connection = null;
-        PreparedStatement updateStatement = null;
-        PreparedStatement insertStatement = null;
         int updateResult = 0;
-        //try {
-            /**
-             * Insert or update attributes
-             */
-            for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
-                if (oldInstance.getAttribute(entry.getKey()) == null) {
-                    // The attribute is not present in old copy of the instance -> Create it
-                    JsonObject postJson = new JsonObject();
-                    postJson.addProperty(entry.getKey(), entry.getValue());
-                    RestHelper.postJsonToRestApi(postJson, "api/v1/instance/" + newInstance.getDbName() + "/attribute");
-                } else if (!oldInstance.getAttribute(entry.getKey()).equals(newInstance.getAttribute(entry.getKey()))) {
-                    // The attribute existed -> Update it
-                    RestHelper.putValueToRestApi(entry.getValue(), "api/v1/instance/" + newInstance.getDbName() + "/attribute/" + entry.getKey());
-                }
+        /**
+         * Insert or update attributes
+         */
+        for (Entry<String, String> entry : newInstance.getAttributes().entrySet()) {
+            if (oldInstance.getAttribute(entry.getKey()) == null) {
+                // The attribute is not present in old copy of the instance -> Create it
+                JsonObject postJson = new JsonObject();
+                postJson.addProperty(entry.getKey(), entry.getValue());
+                RestHelper.postJsonToRestApi(postJson, "api/v1/instance/" + newInstance.getDbName() + "/attribute");
+            } else if (!oldInstance.getAttribute(entry.getKey()).equals(newInstance.getAttribute(entry.getKey()))) {
+                // The attribute existed -> Update it
+                RestHelper.putValueToRestApi(entry.getValue(), "api/v1/instance/" + newInstance.getDbName() + "/attribute/" + entry.getKey());
             }
+        }
 
-            JsonObject json = RestHelper.parseObject(RestHelper.toJson(newInstance));
-            boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getId());
-            if (!restResult) {
-                //throw new NamingException("Error updating attributes.");
-                updateResult = 0;
-            } else {
-                updateResult = 1;
-            }
-            
-            //Get connection
-            /*connection = getConnection();
-            connection.setAutoCommit(false);
-            
-            //If update was successful log the change
-            if (updateResult > 0) {
-                String insertQuery = "INSERT INTO dod_instance_changes (username, db_name, attribute, change_date, requester, old_value, new_value) VALUES (?,?,?,?,?,?,?)";
-                insertStatement = connection.prepareStatement(insertQuery);
-                //Check for changes on fields editable by users
-                if ((oldInstance.getEGroup() == null && newInstance.getEGroup() != null)
-                        || (oldInstance.getEGroup() != null && !oldInstance.getEGroup().equals(newInstance.getEGroup()))) {
-                    insertStatement.setString(1, newInstance.getOwner());
-                    insertStatement.setString(2, newInstance.getDbName());
-                    insertStatement.setString(3, "e-Group");
-                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
-                    insertStatement.setString(5, requester);
-                    insertStatement.setString(6, oldInstance.getEGroup());
-                    insertStatement.setString(7, newInstance.getEGroup());
-                    insertStatement.addBatch();
-                }
-                if ((oldInstance.getExpiryDate() == null && newInstance.getExpiryDate() != null)
-                        || (oldInstance.getExpiryDate() != null && !oldInstance.getExpiryDate().equals(newInstance.getExpiryDate()))) {
-                    DateFormat dateFormatter = new SimpleDateFormat(CommonConstants.DATE_FORMAT);
-                    insertStatement.setString(1, newInstance.getOwner());
-                    insertStatement.setString(2, newInstance.getDbName());
-                    insertStatement.setString(3, "Expiry Date");
-                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
-                    insertStatement.setString(5, requester);
-                    if (oldInstance.getExpiryDate() != null)
-                        insertStatement.setString(6, dateFormatter.format(oldInstance.getExpiryDate()));
-                    else
-                        insertStatement.setString(6, null);
-                    if (newInstance.getExpiryDate() != null)
-                        insertStatement.setString(7, dateFormatter.format(newInstance.getExpiryDate()));
-                    else
-                        insertStatement.setString(7, null);
-                    insertStatement.addBatch();
-                }
-                if ((oldInstance.getProject() == null && newInstance.getProject() != null)
-                        || (oldInstance.getProject() != null && !oldInstance.getProject().equals(newInstance.getProject()))) {
-                    insertStatement.setString(1, newInstance.getOwner());
-                    insertStatement.setString(2, newInstance.getDbName());
-                    insertStatement.setString(3, "Project");
-                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
-                    insertStatement.setString(5, requester);
-                    insertStatement.setString(6, oldInstance.getProject());
-                    insertStatement.setString(7, newInstance.getProject());
-                    insertStatement.addBatch();
-                }
-                if ((oldInstance.getDescription() == null && newInstance.getDescription() != null)
-                        || (oldInstance.getDescription() != null && !oldInstance.getDescription().equals(newInstance.getDescription()))) {
-                    insertStatement.setString(1, newInstance.getOwner());
-                    insertStatement.setString(2, newInstance.getDbName());
-                    insertStatement.setString(3, "Description");
-                    insertStatement.setTimestamp(4, new java.sql.Timestamp((new java.util.Date()).getTime()));
-                    insertStatement.setString(5, requester);
-                    insertStatement.setString(6, oldInstance.getDescription());
-                    insertStatement.setString(7, newInstance.getDescription());
-                    insertStatement.addBatch();
-                }
-                int[] results = insertStatement.executeBatch();
-                for (int i=0; i<results.length; i++){
-                    if (results[i] == PreparedStatement.EXECUTE_FAILED) {
-                        updateResult = 0;
-                        connection.rollback();                        
-                        break;
-                    }
-                }
-            }
-            
-            //Commit transaction
-            connection.commit();
-
-        } catch (NamingException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getOwner() + " AND DB_NAME " + oldInstance.getDbName(), ex);
-        } catch (SQLException ex) {
+        JsonObject json = RestHelper.parseObject(RestHelper.toJson(newInstance));
+        boolean restResult = RestHelper.putJsonToRestApi(json, "api/v1/instance/" + newInstance.getId());
+        if (!restResult) {
+            //throw new NamingException("Error updating attributes.");
             updateResult = 0;
-            try {
-                connection.rollback();
-            } catch (Exception e) {
-                Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR ROLLING BACK INSTANCE UPDATE", ex);
-            }
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, "ERROR UPDATING INSTANCE FOR USERNAME " + oldInstance.getOwner() + " AND DB_NAME " + oldInstance.getDbName(), ex);
+        } else {
+            updateResult = 1;
         }
-        catch (ParseException ex) {
-            Logger.getLogger(InstanceDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
-            try {
-                insertStatement.close();
-            } catch (Exception e) {}
-            try {
-                connection.setAutoCommit(true);
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
-        }*/
+        
         return updateResult;
     }
     
@@ -525,49 +423,6 @@ public class InstanceDAO {
      */
     public List<InstanceChange> selectInstanceChanges(Instance instance) {
         return new ArrayList<>();
-        /*Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
-        ArrayList<InstanceChange> changes = new ArrayList<>();
-        try {
-            //Get connection
-            connection = getConnection();
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT username, db_name, attribute, change_date, requester, old_value, new_value"
-                            + " FROM dod_instance_changes WHERE username = ? AND db_name = ? ORDER BY change_date DESC";
-            statement = connection.prepareStatement(query);
-            //Assign values to variables
-            statement.setString(1, instance.getOwner());
-            statement.setString(2, instance.getDbName());
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                InstanceChange change = new InstanceChange();
-                change.setUsername(result.getString(1));
-                change.setDbName(result.getString(2));
-                change.setAttribute(result.getString(3));
-                change.setChangeDate(new java.util.Date(result.getTimestamp(4).getTime()));
-                change.setRequester(result.getString(5));
-                change.setOldValue(result.getString(6));
-                change.setNewValue(result.getString(7));
-                changes.add(change);
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING CHANGES FOR USERNAME " + instance.getOwner() + " AND DB_NAME " + instance.getDbName(), ex);
-        } finally {
-            try {
-                result.close();
-            } catch (Exception e) {}
-            try {
-                statement.close();
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
-        }
-        return changes;*/
     }
     
     /**
