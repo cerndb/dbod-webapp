@@ -9,6 +9,7 @@
 
 package ch.cern.dbod.db.entity;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
@@ -58,6 +59,14 @@ public class Job {
      */
     @SerializedName("admin_action")
     private int adminAction;
+    
+    @SerializedName("name")
+    @Expose(serialize = false)
+    private String instance_name;
+    
+    @SerializedName("type")
+    @Expose(serialize = false)
+    private String instance_type;
 
     /**
      * State of the job
@@ -126,5 +135,25 @@ public class Job {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getInstance_name()
+    {
+        return instance_name;
+    }
+
+    public void setInstance_name(String instance_name)
+    {
+        this.instance_name = instance_name;
+    }
+
+    public String getInstance_type()
+    {
+        return instance_type;
+    }
+
+    public void setInstance_type(String instance_type)
+    {
+        this.instance_type = instance_type;
     }
 }
