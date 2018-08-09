@@ -20,6 +20,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,51 +116,21 @@ public class JobDAO {
      * Obtains the list of last executed jobs.
      * @return list of last executed jobs.
      */
-    public List<Job> selectLastJobs() {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet result = null;
+    public List<Job> selectLastJobs(String username) {
         ArrayList<Job> jobs = new ArrayList<>();
-        /*try {
-            //Get connection
-            connection = getConnection();
-            //Prepare query for the prepared statement (to avoid SQL injection)
-            String query = "SELECT username, db_name, command_name, type, creation_date, completion_date, state "
-                            + " FROM dod_jobs "
-                            + " ORDER BY creation_date DESC, completion_date DESC ";
-            
-            statement = connection.prepareStatement(query);
-            //Assign values to variables
-            statement.setMaxRows(500);
-            //Execute query
-            result = statement.executeQuery();
-
-            //Instantiate instance objects
-            while (result.next()) {
-                Job job = new Job();
-                job.setUsername(result.getString(1));
-                job.setDbName(result.getString(2));
-                job.setCommandName(result.getString(3));
-                job.setType(result.getString(4));
-                job.setCreationDate(new java.util.Date(result.getTimestamp(5).getTime()));
-                if (result.getTimestamp(6) != null)
-                    job.setCompletionDate(new java.util.Date(result.getTimestamp(6).getTime()));
-                job.setState(result.getString(7));
-                jobs.add(job);
-            }
-        } catch (NamingException | SQLException ex) {
-            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "ERROR SELECTING LAST EXECUTED JOBS", ex);
+        try {
+            JsonObject authHeader = new JsonObject();
+            authHeader.addProperty("owner", username);
+            authHeader.addProperty("groups", "[]");
+            authHeader.addProperty("admin", true);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("size", "500");
+            return RestHelper.getObjectListFromRestApi("api/v1/job", params, Job.class, authHeader.toString(), "response");
+        } catch (Exception ex) {
+            Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, "Error getting last executed jobs", ex);
         } finally {
-            try {
-                result.close();
-            } catch (Exception e) {}
-            try {
-                statement.close();
-            } catch (Exception e) {}
-            try {
-                connection.close();
-            } catch (Exception e) {}
-        }*/
+            
+        }
         return jobs;
     }
     
