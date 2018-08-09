@@ -45,8 +45,8 @@ public class LastJobsRenderer implements RowRenderer {
         row.setStyle("padding-top: 0px; padding-bottom: 0px");
         row.setHeight("24px");
         // the data append to each row with simple label
-        //row.appendChild(new Label(job.getDbName()));
-        //row.appendChild(new Label(job.getType()));
+        row.appendChild(new Label(job.getInstance_name()));
+        row.appendChild(new Label(job.getInstance_type()));
         row.appendChild(new Label(Labels.getLabel(CommonConstants.LABEL_JOB + job.getCommandName())));
         
         row.appendChild(new Label(dateTimeFormatter.format(job.getCreationDate())));
