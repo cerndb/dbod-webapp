@@ -15,8 +15,7 @@ import ch.cern.dbod.ui.model.DestroyListModel;
 import ch.cern.dbod.ui.renderer.DestroyGridRenderer;
 import ch.cern.dbod.util.CommonConstants;
 import java.util.List;
-import org.zkoss.zk.ui.Sessions;
-import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.*;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.ext.BeforeCompose;
 import org.zkoss.zul.*;
@@ -34,15 +33,21 @@ public class ExpiredController extends Vbox implements BeforeCompose, AfterCompo
      * List of instances to be destroyed.
      */
     private List<Instance> toDestroy;
+    /**
+     * User authenticated in the system.
+     */
+    private String username;
 
     /**
      * Method executed before the page is composed. Obtains instances from DB.
      */
     @Override
     public void beforeCompose() {
+        Execution execution = Executions.getCurrent();
+        username = execution.getHeader(CommonConstants.ADFS_LOGIN);
         //Select instances
         instanceDAO = new InstanceDAO();
-        toDestroy = instanceDAO.selectToDestroy();
+        toDestroy = instanceDAO.selectToDestroy(username);
     }
 
     /**
@@ -93,7 +98,7 @@ public class ExpiredController extends Vbox implements BeforeCompose, AfterCompo
      */
     public void refreshInstances(){
         //Get instances to destroy
-        toDestroy = instanceDAO.selectToDestroy();
+        toDestroy = instanceDAO.selectToDestroy(username);
         
         int activePage = 0;
         

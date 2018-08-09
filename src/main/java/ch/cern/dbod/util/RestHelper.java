@@ -10,8 +10,8 @@ package ch.cern.dbod.util;
 
 import com.google.gson.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -99,36 +100,46 @@ public class RestHelper {
         return null;
     }
     
-    public static <T> ArrayList<T> getObjectListFromRestApi(String path, Class<T> object, String auth, String response) throws IOException, ParseException, IllegalStateException {
+    public static <T> ArrayList<T> getObjectListFromRestApi(String path, HashMap<String, String> params, Class<T> object, String auth, String response) throws IOException, ParseException, IllegalStateException {
         Gson gson = init();
         ArrayList<T> objectList = new ArrayList<>();
         
-        HttpClient httpclient = HttpClientBuilder.create().build();
-
-        HttpGet request = new HttpGet(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
-        addAuthorizationHeader(request);
-        if (auth != null) {
-            request.addHeader("auth", auth);
-        }
-
-        HttpResponse resp = httpclient.execute(request);
-        if (resp.getStatusLine().getStatusCode() == 200)
-        {
-            String respStr = EntityUtils.toString(resp.getEntity());
-            EntityUtils.consume(resp.getEntity());
-            JsonArray jList;
-            if (response != null) {
-                jList = parseObject(respStr).getAsJsonArray(response);
-            } else {
-                jList = parseList(respStr).getAsJsonArray();
+        try {
+            HttpClient httpclient = HttpClientBuilder.create().build();
+            URIBuilder builder = new URIBuilder(ConfigLoader.getProperty(CommonConstants.DBOD_API_LOCATION) + path);
+            if (params != null) {
+                for (Map.Entry<String, String> param : params.entrySet()) {
+                    builder.setParameter(param.getKey(), param.getValue());
+                }
             }
-            
-            Iterator<JsonElement> itr = jList.iterator();
-            while (itr.hasNext()) {
-                JsonObject jItem = itr.next().getAsJsonObject();
-                T item = gson.fromJson(jItem, object);
-                objectList.add(item);
+
+            HttpGet request = new HttpGet(builder.build());
+            addAuthorizationHeader(request);
+            if (auth != null) {
+                request.addHeader("auth", auth);
             }
+
+            HttpResponse resp = httpclient.execute(request);
+            if (resp.getStatusLine().getStatusCode() == 200)
+            {
+                String respStr = EntityUtils.toString(resp.getEntity());
+                EntityUtils.consume(resp.getEntity());
+                JsonArray jList;
+                if (response != null) {
+                    jList = parseObject(respStr).getAsJsonArray(response);
+                } else {
+                    jList = parseList(respStr).getAsJsonArray();
+                }
+
+                Iterator<JsonElement> itr = jList.iterator();
+                while (itr.hasNext()) {
+                    JsonObject jItem = itr.next().getAsJsonObject();
+                    T item = gson.fromJson(jItem, object);
+                    objectList.add(item);
+                }
+            }
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(RestHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return objectList;
