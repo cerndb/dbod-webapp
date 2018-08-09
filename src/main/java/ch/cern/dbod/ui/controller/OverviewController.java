@@ -11,7 +11,6 @@ package ch.cern.dbod.ui.controller;
 
 import ch.cern.dbod.db.dao.InstanceDAO;
 import ch.cern.dbod.db.dao.UpgradeDAO;
-import ch.cern.dbod.db.dao.ActivityDAO;
 import ch.cern.dbod.db.entity.Instance;
 import ch.cern.dbod.db.entity.Upgrade;
 import ch.cern.dbod.ui.model.OverviewTreeModel;
@@ -41,10 +40,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
      * Instance DAO
      */
     private InstanceDAO instanceDAO;
-    /**
-     * Activity DAO
-     */
-    private ActivityDAO activityDAO;
     /**
      * List of instances. In this case, all the instances in the database.
      */
@@ -80,9 +75,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         //Get instances
         instanceDAO = new InstanceDAO();
         instances = instanceDAO.selectByUserNameAndEGroups(username, eGroups, upgrades);
-        
-        //Activity stats
-        activityDAO = new ActivityDAO();
     }
 
     /**
@@ -151,8 +143,6 @@ public class OverviewController extends Vbox implements BeforeCompose, AfterComp
         else {
             showAll(false);
         }
-        
-        activityDAO.insert(username, null, "OVERVIEW", "Loaded overview page");
     }
     
     /**
