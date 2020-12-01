@@ -37,9 +37,9 @@
                 <vbox style="margin-right:10%;margin-top:55px;float:right" align="right">
                     ${c:l('contactMessage')}
                     <hbox>
-                        <h:a href="https://cern.service-now.com/service-portal/report-ticket.do?name=incident&amp;se=database-on-demand" class="z-label" target="_blank">${c:l('contactIncident')}</h:a>
+                        <h:a href="https://cern.service-now.com/service-portal?id=sc_cat_item&name=incident&se=database-on-demand" class="z-label" target="_blank">${c:l('contactIncident')}</h:a>
                         <label>${c:l('contactOr')}</label>
-                        <h:a href="https://cern.service-now.com/service-portal/report-ticket.do?name=request&amp;se=database-on-demand" class="z-label" target="_blank">${c:l('contactRequest')}</h:a>
+                        <h:a href="https://cern.service-now.com/service-portal?id=sc_cat_item&name=request&se=database-on-demand" class="z-label" target="_blank">${c:l('contactRequest')}</h:a>
                     </hbox>
                 </vbox>
             </hbox>
